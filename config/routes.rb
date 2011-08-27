@@ -1,4 +1,10 @@
 Home::Application.routes.draw do
+  resources :clothing_logs
+
+  resources :clothing do
+    get :autocomplete_clothing_name, :on => :collection
+  end
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
@@ -48,7 +54,7 @@ Home::Application.routes.draw do
 
   # You can have the root of your site routed with "root"
   # just remember to delete public/index.html.
-  # root :to => "welcome#index"
+  root :to => "home#index"
 
   # See how all your routes lay out with "rake routes"
 

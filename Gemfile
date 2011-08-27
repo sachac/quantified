@@ -4,9 +4,13 @@ gem 'rails', '3.0.10'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
-
+gem 'jquery-rails'
 gem 'sqlite3'
-
+gem 'haml'
+gem 'haml-rails'
+gem 'formtastic'
+gem 'handles_sortable_columns'
+gem 'gdata'
 # Use unicorn as the web server
 # gem 'unicorn'
 
@@ -29,3 +33,5 @@ gem 'sqlite3'
 # group :development, :test do
 #   gem 'webrat'
 # end
+gem 'rails3-jquery-autocomplete'
+gem 'acts-as-taggable-on', '~>2.1.0'

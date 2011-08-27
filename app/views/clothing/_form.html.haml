@@ -1,0 +1,11 @@
+= semantic_form_for @clothing do |f|
+  -if @clothing.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@clothing.errors.count, "error")} prohibited this clothing from being saved:"
+      %ul
+        - @clothing.errors.full_messages.each do |msg|
+          %li= msg
+  = f.inputs
+  .actions
+    = f.submit 'Save'
+= set_focus_to_id("clothing_label")

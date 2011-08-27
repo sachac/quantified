@@ -1,0 +1,12 @@
+= semantic_form_for @clothing_log do |f|
+  -if @clothing_log.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@clothing_log.errors.count, "error")} prohibited this clothing_log from being saved:"
+      %ul
+        - @clothing_log.errors.full_messages.each do |msg|
+          %li= msg
+  = f.inputs do
+    = f.input :date, :as => :string
+    = f.input :clothing, :collection => Clothing.all.map { |x| [ "#{x.number} - #{x.name}", x.id ] }
+  .actions
+    = f.submit 'Save'

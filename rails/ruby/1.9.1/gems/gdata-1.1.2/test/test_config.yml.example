@@ -1,0 +1,7 @@
+--- 
+username: myaccount
+password: mypassword
+# uncomment to test authsub
+#authsub_token: someauthsubtoken
+# uncomment to test secure authsub
+#authsub_private_key: /path/to/private/key

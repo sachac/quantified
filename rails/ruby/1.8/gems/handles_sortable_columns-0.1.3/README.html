@@ -1,0 +1,140 @@
+<head>
+  <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+  <link href="dev/github.css" rel="stylesheet" type="text/css" />
+</head>
+
+<h1 id="sortable-table-columns">Sortable Table Columns</h1>
+
+<h2 id="introduction">Introduction</h2>
+
+<p>A simple yet flexible Rails gem/plugin to quickly add sortable table columns to your controller and views.</p>
+
+<h2 id="setup-rails-3">Setup (Rails 3)</h2>
+
+<p>In your app’s <code>Gemfile</code>, add:</p>
+
+<pre><code>gem "handles_sortable_columns"
+</code></pre>
+
+<p>To install the gem with RDoc/ri documentation, do a:</p>
+
+<pre><code>$ gem install handles_sortable_columns
+</code></pre>
+
+<p>Otherwise, do a <code>bundle install</code>.</p>
+
+<h2 id="setup-rails-2">Setup (Rails 2)</h2>
+
+<p>In your app’s <code>config/environment.rb</code> add:</p>
+
+<pre><code>config.gem "handles_sortable_columns"
+</code></pre>
+
+<p>To install the gem, do a:</p>
+
+<pre><code>$ gem sources --add http://rubygems.org
+$ gem install handles_sortable_columns
+</code></pre>
+
+<p>, or use <code>rake gems:install</code>.</p>
+
+<h2 id="basic-usage">Basic Usage</h2>
+
+<p>Activate the feature in your controller class:</p>
+
+<pre><code>class MyController &lt; ApplicationController
+  handles_sortable_columns
+  ...
+</code></pre>
+
+<p>In a view, mark up sortable columns by using the <tt>sortable_column</tt> helper:</p>
+
+<pre><code>&lt;%= sortable_column "Product" %&gt;
+&lt;%= sortable_column "Price" %&gt;
+</code></pre>
+
+<p>In controller action, fetch and use the order clause according to current state of sortable columns:</p>
+
+<pre><code>def index
+  order = sortable_column_order
+  @records = Article.order(order)           # Rails 3.
+  @records = Article.all(:order =&gt; order)   # Rails 2.
+end
+</code></pre>
+
+<p>That’s it for basic usage. Production usage may require passing additional parameters to listed methods.</p>
+
+<h2 id="production-usage">Production Usage</h2>
+
+<p>Please take time to read the gem’s full <a href="http://rdoc.info/projects/dadooda/handles_sortable_columns">RDoc documentation</a>. This README has a limited coverage.</p>
+
+<h3 id="configuration">Configuration</h3>
+
+<p>Change names of GET parameters used for sorting and pagination:</p>
+
+<pre><code>class MyController &lt; ApplicationController
+  handles_sortable_columns do |conf|
+    conf.sort_param = "s"
+    conf.page_param = "p"
+  end
+  ...
+</code></pre>
+
+<p>Change CSS class of all sortable column <code>&lt;a&gt;</code> tags:</p>
+
+<pre><code>handles_sortable_columns do |conf|
+  conf.class = "SortableLink"
+  conf.indicator_class = {:asc =&gt; "AscSortableLink", :desc =&gt; "DescSortableLink"}
+end
+</code></pre>
+
+<p>Change how text-based sort indicator looks like:</p>
+
+<pre><code>handles_sortable_columns do |conf|
+  conf.indicator_text = {:asc =&gt; "[asc]", :desc =&gt; "[desc]"}
+end
+</code></pre>
+
+<p>Disable text-based sort indicator completely:</p>
+
+<pre><code>handles_sortable_columns do |conf|
+  conf.indicator_text = {}
+end
+</code></pre>
+
+<h3 id="helper-options">Helper Options</h3>
+
+<p>Explicitly specify column name:</p>
+
+<pre><code>&lt;%= sortable_column "Highest Price", :column =&gt; "max_price" %&gt;
+</code></pre>
+
+<p>Specify CSS class for this particular link:</p>
+
+<pre><code>&lt;%= sortable_column "Name", :class =&gt; "SortableLink" %&gt;
+</code></pre>
+
+<p>Specify sort direction on first click:</p>
+
+<pre><code>&lt;%= sortable_column "Created At", :direction =&gt; :asc %&gt;
+</code></pre>
+
+<h3 id="fetching-sort-order">Fetching Sort Order</h3>
+
+<p>To fetch sort order <strong>securely</strong>, with <strong>column name validation</strong>, <strong>default values</strong> and <strong>multiple sort criteria</strong>, use the block form of <code>sortable_column_order</code>:</p>
+
+<pre><code>order = sortable_column_order do |column, direction|
+  case column
+  when "name"
+    "#{column} #{direction}"
+  when "created_at", "updated_at"
+    "#{column} #{direction}, name ASC"
+  else
+    "name ASC"
+  end
+end
+</code></pre>
+
+<h2 id="feedback">Feedback</h2>
+
+<p>Send bug reports, suggestions and criticisms through <a href="http://github.com/dadooda/handles_sortable_columns">project’s page on GitHub</a>.</p>

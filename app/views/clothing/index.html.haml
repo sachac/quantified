@@ -1,0 +1,20 @@
+%h1 Listing clothing
+
+= link_to "Clothing logs", clothing_logs_path 
+= render "partials/clothing_log_entry"
+= set_focus_to_id("#clothing")
+%table
+  %tr
+    %th= sortable_column "#", :column => "number"
+    %th= sortable_column "Name"
+    %th= sortable_column "Count", :column => "clothing_logs_count", :direction => :desc
+    %th= sortable_column "Last worn"
+  - @clothing.each do |clothing|
+    %tr
+      %td= clothing.number
+      %td= link_to clothing.name, clothing
+      %td= clothing.clothing_logs_count
+      %td= (time_ago_in_words(Date.parse(clothing.last_worn)) + " ago") if clothing.last_worn
+%br
+
+= link_to 'New Clothing', new_clothing_path
