@@ -1,0 +1,24 @@
+<entry xmlns="http://www.w3.org/2005/Atom">
+  <link href="/ws/customers/joesflowers/lists/1" rel="edit" />
+  <id>http://api.constantcontact.com/ws/customers/joesflowers/lists/1</id>
+  <title type="text">General Interest</title>  
+  <updated>2008-04-16T18:39:35.710Z</updated>
+  <content type="application/vnd.ctct+xml">
+    <ContactList xmlns="http://ws.constantcontact.com/ns/1.0/" id="http://api.constantcontact.com/ws/customers/joesflowers/lists/1">
+      <OptInDefault>false</OptInDefault>
+      <Name>General Interest</Name>
+      <ShortName>General Interest</ShortName>
+      <SortOrder>1</SortOrder>
+    </ContactList>
+  </content>
+  <source>
+    <id>http://api.constantcontact.com/ws/customers/joesflowers/lists</id>
+    <title type="text">Contact Lists</title>
+    <link href="" />
+    <link href="" rel="self" />
+    <author>
+      <name>Constant Contact Web Services</name>
+    </author>
+    <updated>2008-04-16T18:39:35.717Z</updated>
+  </source>
+</entry>

@@ -1,0 +1,19 @@
+%h1 Listing decisions
+
+%table
+  %tr
+    %th Decision
+    %th Status
+    %th
+    %th
+
+  - @decisions.each do |decision|
+    %tr
+      %td= link_to decision.name, decision
+      %td= decision.status
+      %td= link_to 'Edit', edit_decision_path(decision)
+      %td= link_to 'Destroy', decision, :confirm => 'Are you sure?', :method => :delete
+
+%br
+
+= link_to 'New Decision', new_decision_path

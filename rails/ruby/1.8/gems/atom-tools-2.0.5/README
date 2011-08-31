@@ -1,0 +1,63 @@
+= atom-tools README
+
+atom-tools is an all-in-one library for parsing, creating and manipulating Atom <http://www.w3.org/2005/Atom> feeds and entries.
+It handles all the nasty XML and HTTP details so that you don't have to.
+
+== Example
+
+  require "atom/feed"
+  require "open-uri"
+
+  feed = Atom::Feed.new "http://www.tbray.org/ongoing/ongoing.atom"
+    # => <http://www.tbray.org/ongoing/ongoing.atom entries: 0 title=''>
+
+  feed.update!
+  feed.entries.length
+    # => 20
+
+  feed.title.to_s
+    # => "ongoing"
+
+  feed.authors.first.name
+    # => "Tim Bray"
+
+  entry = feed.entries.first
+    # => #<Atom::Entry id:'http://www.tbray.org/ongoing/When/200x/2006/11/07/Munich'>
+
+  entry.title.to_s
+    # => "M\303\274nchen"
+
+  entry.links.last
+    # => {"href"=>"http://www.tbray.org/ongoing/When/200x/2006/11/07/Munich#comments", "rel"=>"replies", "type" => "application/xhtml+xml"}
+
+  entry.summary.to_s
+    # => "That local spelling is nicer than the ugly English [...]"
+
+Things are explained in more detail in the RDoc.
+
+== The Atom Publishing Protocol
+
+  require "atom/service"
+
+  service = Atom::Service.new "http://necronomicorp.com/app.xml"
+  coll = service.workspaces.first.collections.first
+    # => <http://necronomicorp.com/testatom?app entries: 0 title='testing: entry endpoint'>
+
+  coll.feed.update!
+    # => <http://necronomicorp.com/testatom?app entries: 10 title='testing the APP'>
+
+  entry = coll.feed.entries.first
+  entry.title
+    # => 'html entities'#text
+
+  # modify the title
+  entry.title = "HTML entities"
+
+  # store the modified entry
+  coll.put! entry
+    # => #<Net::HTTPOK 200 OK readbody=true>
+
+  coll.feed.entries.first.title
+    # => 'HTML entities'#text
+
+For details on authentication, see the documentation for Atom::HTTP.

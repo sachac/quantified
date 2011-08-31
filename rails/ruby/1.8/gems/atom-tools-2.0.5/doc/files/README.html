@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>File: README</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="Content-Script-Type" content="text/javascript" />
+  <link rel="stylesheet" href=".././rdoc-style.css" type="text/css" media="screen" />
+  <script type="text/javascript">
+  // <![CDATA[
+
+  function popupCode( url ) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+
+  function toggleCode( id ) {
+    if ( document.getElementById )
+      elem = document.getElementById( id );
+    else if ( document.all )
+      elem = eval( "document.all." + id );
+    else
+      return false;
+
+    elemStyle = elem.style;
+    
+    if ( elemStyle.display != "block" ) {
+      elemStyle.display = "block"
+    } else {
+      elemStyle.display = "none"
+    }
+
+    return true;
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln( "<style type=\"text/css\">div.method-source-code { display: none }</style>" )
+  
+  // ]]>
+  </script>
+
+</head>
+<body>
+
+
+
+  <div id="fileHeader">
+    <h1>README</h1>
+    <table class="header-table">
+    <tr class="top-aligned-row">
+      <td><strong>Path:</strong></td>
+      <td>README
+      </td>
+    </tr>
+    <tr class="top-aligned-row">
+      <td><strong>Last Update:</strong></td>
+      <td>Fri May 01 08:04:57 -0600 2009</td>
+    </tr>
+    </table>
+  </div>
+  <!-- banner header -->
+
+  <div id="bodyContent">
+
+
+
+  <div id="contextContent">
+
+    <div id="description">
+      <h1>atom-tools README</h1>
+<p>
+atom-tools is an all-in-one library for parsing, creating and manipulating
+Atom &lt;<a href="http://www.w3.org/2005/Atom">www.w3.org/2005/Atom</a>&gt;
+feeds and entries. It handles all the nasty XML and HTTP details so that
+you don&#8216;t have to.
+</p>
+<h2>Example</h2>
+<pre>
+  require &quot;atom/feed&quot;
+  require &quot;open-uri&quot;
+
+  feed = Atom::Feed.new &quot;http://www.tbray.org/ongoing/ongoing.atom&quot;
+    # =&gt; &lt;http://www.tbray.org/ongoing/ongoing.atom entries: 0 title=''&gt;
+
+  feed.update!
+  feed.entries.length
+    # =&gt; 20
+
+  feed.title.to_s
+    # =&gt; &quot;ongoing&quot;
+
+  feed.authors.first.name
+    # =&gt; &quot;Tim Bray&quot;
+
+  entry = feed.entries.first
+    # =&gt; #&lt;Atom::Entry id:'http://www.tbray.org/ongoing/When/200x/2006/11/07/Munich'&gt;
+
+  entry.title.to_s
+    # =&gt; &quot;M\303\274nchen&quot;
+
+  entry.links.last
+    # =&gt; {&quot;href&quot;=&gt;&quot;http://www.tbray.org/ongoing/When/200x/2006/11/07/Munich#comments&quot;, &quot;rel&quot;=&gt;&quot;replies&quot;, &quot;type&quot; =&gt; &quot;application/xhtml+xml&quot;}
+
+  entry.summary.to_s
+    # =&gt; &quot;That local spelling is nicer than the ugly English [...]&quot;
+</pre>
+<p>
+Things are explained in more detail in the RDoc.
+</p>
+<h2>The Atom Publishing Protocol</h2>
+<pre>
+  require &quot;atom/service&quot;
+
+  service = Atom::Service.new &quot;http://necronomicorp.com/app.xml&quot;
+  coll = service.workspaces.first.collections.first
+    # =&gt; &lt;http://necronomicorp.com/testatom?app entries: 0 title='testing: entry endpoint'&gt;
+
+  coll.feed.update!
+    # =&gt; &lt;http://necronomicorp.com/testatom?app entries: 10 title='testing the APP'&gt;
+
+  entry = coll.feed.entries.first
+  entry.title
+    # =&gt; 'html entities'#text
+
+  # modify the title
+  entry.title = &quot;HTML entities&quot;
+
+  # store the modified entry
+  coll.put! entry
+    # =&gt; #&lt;Net::HTTPOK 200 OK readbody=true&gt;
+
+  coll.feed.entries.first.title
+    # =&gt; 'HTML entities'#text
+</pre>
+<p>
+For details on authentication, see the documentation for <a
+href="../classes/Atom/HTTP.html">Atom::HTTP</a>.
+</p>
+
+    </div>
+
+
+   </div>
+
+
+  </div>
+
+
+    <!-- if includes -->
+
+    <div id="section">
+
+
+
+
+
+      
+
+
+    <!-- if method_list -->
+
+
+  </div>
+
+
+<div id="validator-badges">
+  <p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+</div>
+
+</body>
+</html>

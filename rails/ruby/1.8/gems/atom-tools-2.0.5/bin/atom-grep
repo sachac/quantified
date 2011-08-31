@@ -1,0 +1,78 @@
+#!/usr/bin/env ruby
+
+=begin
+Usage: atom-grep [options] regexp [source]
+    prints a feed containing every entry in the source feed whose
+  text content matches regexp to stdout
+
+    'source' can be a path on the local filesystem, the
+  URL of an Atom Collection or '-' for stdin.
+=end
+
+require 'atom/tools'
+include Atom::Tools
+
+def parse_options
+  options = { :regexp_options => 0 }
+
+  opts = OptionParser.new do |opts|
+    opts.banner = <<END
+Usage: #{$0} [options] regexp [source]
+    prints a feed containing every entry in the source feed whose
+  text content matches regexp to stdout
+
+    'source' can be a path on the local filesystem, the
+  URL of an Atom Collection or '-' for stdin.
+END
+
+    opts.on('-c', '--complete', "follow previous and next links in the source feed to obtain the entire logical feed") do
+     options[:complete] = true
+    end
+
+    opts.on('-v', '--invert-match', 'select only non-matching entries') do
+      options[:invert] = true
+    end
+
+    opts.on('-i', '--ignore-case', 'ignore case distinctions when matching') do
+      options[:regexp_options] |= Regexp::IGNORECASE
+    end
+
+    atom_options opts, options
+  end
+
+  opts.parse!(ARGV)
+
+  if ARGV.length < 1  or ARGV.length > 2
+    puts opts
+    exit
+  end
+
+  options
+end
+
+if __FILE__ == $0
+  require 'optparse'
+
+  options = parse_options
+
+  regexp = Regexp.new(ARGV[0], options[:regexp_options])
+
+  source = ARGV[1]
+  source ||= '-'
+
+  entries = parse_input source, options
+
+  pred = if options[:invert]
+           lambda do |e|
+             (e.title =~ regexp) or (e.content.to_s =~ regexp)
+           end
+         else
+           lambda do |e|
+             (e.title !~ regexp) and (e.content.to_s !~ regexp)
+           end
+         end
+
+  entries.reject! &pred
+
+  entries_to_stdout entries
+end

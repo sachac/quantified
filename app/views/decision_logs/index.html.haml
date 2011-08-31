@@ -1,0 +1,17 @@
+%h1 Listing decision_logs
+
+%table
+  %tr
+    %th
+    %th
+    %th
+
+  - @decision_logs.each do |decision_log|
+    %tr
+      %td= link_to 'Show', decision_log
+      %td= link_to 'Edit', edit_decision_log_path(decision_log)
+      %td= link_to 'Destroy', decision_log, :confirm => 'Are you sure?', :method => :delete
+
+%br
+
+= link_to 'New Decision log', new_decision_log_path

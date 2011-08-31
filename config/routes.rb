@@ -1,6 +1,11 @@
 Home::Application.routes.draw do
-  resources :clothing_logs
+  resources :decision_logs
 
+  resources :decisions
+
+  match 'time' => 'time#index'
+  match 'time/graph' => 'time#graph'
+  resources :clothing_logs
   resources :clothing do
     get :autocomplete_clothing_name, :on => :collection
   end

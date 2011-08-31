@@ -1,0 +1,137 @@
+
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<!--
+
+    Methods
+
+  -->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Methods</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="rdoc-style.css" type="text/css" />
+  <base target="docwin" />
+</head>
+<body>
+<div id="index">
+  <h1 class="section-bar">Methods</h1>
+  <div id="index-entries">
+    <a href="classes/Atom/FileCache.html#M000061">[] (Atom::FileCache)</a><br />
+    <a href="classes/Atom/AttrEl.html#M000023">[] (Atom::AttrEl)</a><br />
+    <a href="classes/Atom/NilCache.html#M000064">[] (Atom::NilCache)</a><br />
+    <a href="classes/Atom/FileCache.html#M000062">[]= (Atom::FileCache)</a><br />
+    <a href="classes/Atom/NilCache.html#M000065">[]= (Atom::NilCache)</a><br />
+    <a href="classes/Atom/AttrEl.html#M000024">[]= (Atom::AttrEl)</a><br />
+    <a href="files/lib/atom/cache_rb.html#M000004">_entry_disposition (lib/atom/cache.rb)</a><br />
+    <a href="files/lib/atom/cache_rb.html#M000002">_parse_cache_control (lib/atom/cache.rb)</a><br />
+    <a href="files/lib/atom/cache_rb.html#M000003">_updateCache (lib/atom/cache.rb)</a><br />
+    <a href="classes/Atom/Collection.html#M000103">accepts (Atom::Collection)</a><br />
+    <a href="classes/Atom/Collection.html#M000104">accepts= (Atom::Collection)</a><br />
+    <a href="classes/Atom/Element.html#M000095">append_elem (Atom::Element)</a><br />
+    <a href="classes/Atom/Converters.html#M000046">atom_attrb (Atom::Converters)</a><br />
+    <a href="classes/Atom/Converters.html#M000041">atom_element (Atom::Converters)</a><br />
+    <a href="classes/Atom/Converters.html#M000044">atom_elements (Atom::Converters)</a><br />
+    <a href="classes/Atom/Converters.html#M000047">atom_link (Atom::Converters)</a><br />
+    <a href="classes/Atom/Tools.html#M000033">atom_options (Atom::Tools)</a><br />
+    <a href="classes/Atom/Converters.html#M000037">atom_string (Atom::Converters)</a><br />
+    <a href="classes/Atom/Converters.html#M000039">atom_time (Atom::Converters)</a><br />
+    <a href="classes/Atom/Converters.html#M000045">attrb (Atom::Converters)</a><br />
+    <a href="classes/Atom/Element.html#M000088">build (Atom::Element)</a><br />
+    <a href="classes/Atom/Converters.html#M000036">build_plain (Atom::Converters)</a><br />
+    <a href="classes/Atom/Element.html#M000085">builders (Atom::Element)</a><br />
+    <a href="classes/Atom/Service.html#M000099">collections (Atom::Service)</a><br />
+    <a href="classes/Atom/Element.html#M000090">def_get (Atom::Element)</a><br />
+    <a href="classes/Atom/Element.html#M000091">def_set (Atom::Element)</a><br />
+    <a href="classes/Atom/NilCache.html#M000066">delete (Atom::NilCache)</a><br />
+    <a href="classes/Atom/FileCache.html#M000063">delete (Atom::FileCache)</a><br />
+    <a href="classes/Atom/HTTP.html#M000071">delete (Atom::HTTP)</a><br />
+    <a href="classes/Atom/Collection.html#M000109">delete! (Atom::Collection)</a><br />
+    <a href="classes/Atom/DigestAuth.html#M000022">digest_authenticate (Atom::DigestAuth)</a><br />
+    <a href="classes/Atom/Tools.html#M000026">dir_to_entries (Atom::Tools)</a><br />
+    <a href="classes/Atom/Service.html#M000100">discover (Atom::Service)</a><br />
+    <a href="classes/Atom/Element.html#M000084">do_parsing (Atom::Element)</a><br />
+    <a href="classes/Atom/Converters.html#M000040">element (Atom::Converters)</a><br />
+    <a href="classes/Atom/Converters.html#M000043">elements (Atom::Converters)</a><br />
+    <a href="classes/Atom/HTTPResponse.html#M000009">end2end_headers (Atom::HTTPResponse)</a><br />
+    <a href="classes/Atom/Tools.html#M000029">entries_to_dir (Atom::Tools)</a><br />
+    <a href="classes/Atom/Tools.html#M000028">entries_to_http (Atom::Tools)</a><br />
+    <a href="classes/Atom/Tools.html#M000030">entries_to_stdout (Atom::Tools)</a><br />
+    <a href="classes/Atom/HasLinks.html#M000011">find_link (Atom::HasLinks)</a><br />
+    <a href="classes/Atom/Service.html#M000101">from_rsd (Atom::Service)</a><br />
+    <a href="classes/Atom/HTTP.html#M000068">get (Atom::HTTP)</a><br />
+    <a href="classes/Atom/Element.html#M000096">get (Atom::Element)</a><br />
+    <a href="classes/Atom/Element.html#M000081">get_atom_attrb (Atom::Element)</a><br />
+    <a href="classes/Atom/Element.html#M000079">get_atom_elem (Atom::Element)</a><br />
+    <a href="classes/Atom/Element.html#M000080">get_atom_elems (Atom::Element)</a><br />
+    <a href="classes/Atom/HTTP.html#M000073">get_atom_entry (Atom::HTTP)</a><br />
+    <a href="classes/Atom/Element.html#M000077">get_elem (Atom::Element)</a><br />
+    <a href="classes/Atom/Element.html#M000078">get_elems (Atom::Element)</a><br />
+    <a href="classes/Atom/DigestAuth.html#M000020">h (Atom::DigestAuth)</a><br />
+    <a href="classes/Atom/Text.html#M000054">html (Atom::Text)</a><br />
+    <a href="classes/Atom/Tools.html#M000025">http_to_entries (Atom::Tools)</a><br />
+    <a href="classes/Atom/HasLinks.html#M000010">included (Atom::HasLinks)</a><br />
+    <a href="classes/Atom/HasCategories.html#M000017">included (Atom::HasCategories)</a><br />
+    <a href="classes/Atom/Element.html#M000076">is_atom_element (Atom::Element)</a><br />
+    <a href="classes/Atom/Element.html#M000075">is_element (Atom::Element)</a><br />
+    <a href="classes/Atom/DigestAuth.html#M000021">kd (Atom::DigestAuth)</a><br />
+    <a href="classes/Object.html#M000007">meta_def (Object)</a><br />
+    <a href="classes/Object.html#M000006">meta_eval (Object)</a><br />
+    <a href="classes/Object.html#M000005">metaclass (Object)</a><br />
+    <a href="classes/Atom/FileCache.html#M000058">new (Atom::FileCache)</a><br />
+    <a href="classes/Atom/Collection.html#M000105">new (Atom::Collection)</a><br />
+    <a href="classes/Atom/Service.html#M000098">new (Atom::Service)</a><br />
+    <a href="classes/Atom/Text.html#M000051">new (Atom::Text)</a><br />
+    <a href="classes/Atom/Element.html#M000092">new (Atom::Element)</a><br />
+    <a href="classes/Atom/HTTP.html#M000067">new (Atom::HTTP)</a><br />
+    <a href="files/lib/atom/cache_rb.html#M000001">normalize_header_names (lib/atom/cache.rb)</a><br />
+    <a href="classes/Atom/Tools.html#M000034">obtain_password (Atom::Tools)</a><br />
+    <a href="classes/Atom/Element.html#M000083">on_build (Atom::Element)</a><br />
+    <a href="classes/Atom/Element.html#M000093">on_init (Atom::Element)</a><br />
+    <a href="classes/Atom/Parsers.html#M000012">on_parse (Atom::Parsers)</a><br />
+    <a href="classes/Atom/Parsers.html#M000013">on_parse_attr (Atom::Parsers)</a><br />
+    <a href="classes/Atom/Parsers.html#M000014">on_parse_many (Atom::Parsers)</a><br />
+    <a href="classes/Atom/Parsers.html#M000015">on_parse_root (Atom::Parsers)</a><br />
+    <a href="classes/Atom/Link.html#M000050">parse (Atom::Link)</a><br />
+    <a href="classes/Atom/Element.html#M000086">parse (Atom::Element)</a><br />
+    <a href="classes/Atom/Collection.html#M000106">parse (Atom::Collection)</a><br />
+    <a href="classes/Atom/Tools.html#M000031">parse_input (Atom::Tools)</a><br />
+    <a href="classes/Atom/Parsers.html#M000016">parse_plain (Atom::Parsers)</a><br />
+    <a href="classes/Atom/DigestAuth.html#M000019">parse_wwwauth_digest (Atom::DigestAuth)</a><br />
+    <a href="classes/Atom/HTTP.html#M000069">post (Atom::HTTP)</a><br />
+    <a href="classes/Atom/Collection.html#M000107">post! (Atom::Collection)</a><br />
+    <a href="classes/Atom/Collection.html#M000110">post_media! (Atom::Collection)</a><br />
+    <a href="classes/Atom/HTTP.html#M000070">put (Atom::HTTP)</a><br />
+    <a href="classes/Atom/Collection.html#M000108">put! (Atom::Collection)</a><br />
+    <a href="classes/Atom/HTTP.html#M000074">put_atom_entry (Atom::HTTP)</a><br />
+    <a href="classes/Atom/Collection.html#M000111">put_media! (Atom::Collection)</a><br />
+    <a href="classes/Atom/Link.html#M000049">rel (Atom::Link)</a><br />
+    <a href="classes/Atom/Element.html#M000094">run_initters (Atom::Element)</a><br />
+    <a href="classes/Atom/FileCache.html#M000060">safe (Atom::FileCache)</a><br />
+    <a href="classes/Atom/Categories.html#M000057">scheme= (Atom::Categories)</a><br />
+    <a href="classes/Atom/Element.html#M000097">set (Atom::Element)</a><br />
+    <a href="classes/Atom/Element.html#M000082">set_atom_attrb (Atom::Element)</a><br />
+    <a href="classes/Atom/Tools.html#M000035">setup_http (Atom::Tools)</a><br />
+    <a href="classes/Atom/Content.html#M000048">src= (Atom::Content)</a><br />
+    <a href="classes/Atom/Tools.html#M000027">stdin_to_entries (Atom::Tools)</a><br />
+    <a href="classes/Atom/Converters.html#M000042">strings (Atom::Converters)</a><br />
+    <a href="classes/Atom/HasCategories.html#M000018">tag_with (Atom::HasCategories)</a><br />
+    <a href="classes/Atom/Converters.html#M000038">time (Atom::Converters)</a><br />
+    <a href="classes/Atom/Collection.html#M000102">title (Atom::Collection)</a><br />
+    <a href="classes/Atom/FileCache.html#M000059">to_file (Atom::FileCache)</a><br />
+    <a href="classes/Atom/Text.html#M000053">to_s (Atom::Text)</a><br />
+    <a href="classes/Atom/Element.html#M000089">to_s (Atom::Element)</a><br />
+    <a href="classes/Atom/Element.html#M000087">to_xml (Atom::Element)</a><br />
+    <a href="classes/Atom/Text.html#M000052">type (Atom::Text)</a><br />
+    <a href="classes/Atom/Text.html#M000056">type= (Atom::Text)</a><br />
+    <a href="classes/Atom/HTTPResponse.html#M000008">validate_content_type (Atom::HTTPResponse)</a><br />
+    <a href="classes/Atom/HTTP.html#M000072">when_auth (Atom::HTTP)</a><br />
+    <a href="classes/Atom/Tools.html#M000032">write_output (Atom::Tools)</a><br />
+    <a href="classes/Atom/Text.html#M000055">xml (Atom::Text)</a><br />
+  </div>
+</div>
+</body>
+</html>

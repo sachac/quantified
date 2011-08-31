@@ -35,3 +35,8 @@ gem 'gdata'
 # end
 gem 'rails3-jquery-autocomplete'
 gem 'acts-as-taggable-on', '~>2.1.0'
+gem 'chronic'
+gem 'sparklines'
+gem 'sparklines_generator'
+gem 'rmagick'
+gem 'workflow'
