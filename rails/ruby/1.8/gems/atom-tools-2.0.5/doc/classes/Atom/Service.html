@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Class: Atom::Service</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="Content-Script-Type" content="text/javascript" />
+  <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
+  <script type="text/javascript">
+  // <![CDATA[
+
+  function popupCode( url ) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+
+  function toggleCode( id ) {
+    if ( document.getElementById )
+      elem = document.getElementById( id );
+    else if ( document.all )
+      elem = eval( "document.all." + id );
+    else
+      return false;
+
+    elemStyle = elem.style;
+    
+    if ( elemStyle.display != "block" ) {
+      elemStyle.display = "block"
+    } else {
+      elemStyle.display = "none"
+    }
+
+    return true;
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln( "<style type=\"text/css\">div.method-source-code { display: none }</style>" )
+  
+  // ]]>
+  </script>
+
+</head>
+<body>
+
+
+
+    <div id="classHeader">
+        <table class="header-table">
+        <tr class="top-aligned-row">
+          <td><strong>Class</strong></td>
+          <td class="class-name-in-header">Atom::Service</td>
+        </tr>
+        <tr class="top-aligned-row">
+            <td><strong>In:</strong></td>
+            <td>
+                <a href="../../files/lib/atom/service_rb.html">
+                lib/atom/service.rb
+                </a>
+        <br />
+            </td>
+        </tr>
+
+        <tr class="top-aligned-row">
+            <td><strong>Parent:</strong></td>
+            <td>
+                <a href="Element.html">
+                Atom::Element
+               </a>
+            </td>
+        </tr>
+        </table>
+    </div>
+  <!-- banner header -->
+
+  <div id="bodyContent">
+
+
+
+  <div id="contextContent">
+
+    <div id="description">
+      <p>
+<a href="Service.html">Atom::Service</a> represents an Atom Publishing
+Protocol service document. Its only child is workspaces, which is an Array
+of <a href="Workspace.html">Atom::Workspace</a> s
+</p>
+
+    </div>
+
+
+   </div>
+
+    <div id="method-list">
+      <h3 class="section-bar">Methods</h3>
+
+      <div class="name-list">
+      <a href="#M000099">collections</a>&nbsp;&nbsp;
+      <a href="#M000100">discover</a>&nbsp;&nbsp;
+      <a href="#M000101">from_rsd</a>&nbsp;&nbsp;
+      <a href="#M000098">new</a>&nbsp;&nbsp;
+      </div>
+    </div>
+
+  </div>
+
+
+    <!-- if includes -->
+
+    <div id="section">
+
+
+
+
+
+      
+
+
+    <!-- if method_list -->
+    <div id="methods">
+      <h3 class="section-bar">Public Class methods</h3>
+
+      <div id="method-M000100" class="method-detail">
+        <a name="M000100"></a>
+
+        <div class="method-heading">
+          <a href="#M000100" class="method-signature">
+          <span class="method-name">discover</span><span class="method-args">(url, http = Atom::HTTP.new)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+given a URL, attempt to find a service document
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000100-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000100-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/atom/service.rb, line 53</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">discover</span> <span class="ruby-identifier">url</span>, <span class="ruby-identifier">http</span> = <span class="ruby-constant">Atom</span><span class="ruby-operator">::</span><span class="ruby-constant">HTTP</span>.<span class="ruby-identifier">new</span>
+      <span class="ruby-identifier">res</span> = <span class="ruby-identifier">http</span>.<span class="ruby-identifier">get</span>(<span class="ruby-identifier">url</span>, <span class="ruby-value str">'Accept'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value str">'application/atomsvc+xml, text/html'</span>)
+
+      <span class="ruby-keyword kw">case</span> <span class="ruby-identifier">res</span>.<span class="ruby-identifier">content_type</span>
+      <span class="ruby-keyword kw">when</span> <span class="ruby-regexp re">/application\/atomsvc\+xml/</span>
+        <span class="ruby-constant">Service</span>.<span class="ruby-identifier">parse</span> <span class="ruby-identifier">res</span>.<span class="ruby-identifier">body</span>, <span class="ruby-identifier">url</span>
+      <span class="ruby-keyword kw">when</span> <span class="ruby-regexp re">/html/</span>
+        <span class="ruby-keyword kw">begin</span>
+          <span class="ruby-identifier">require</span> <span class="ruby-value str">'hpricot'</span>
+        <span class="ruby-keyword kw">rescue</span>
+          <span class="ruby-identifier">raise</span> <span class="ruby-value str">'autodiscovering from HTML requires Hpricot.'</span>
+        <span class="ruby-keyword kw">end</span>
+
+        <span class="ruby-identifier">h</span> = <span class="ruby-constant">Hpricot</span>(<span class="ruby-identifier">res</span>.<span class="ruby-identifier">body</span>)
+
+        <span class="ruby-identifier">links</span> = <span class="ruby-identifier">h</span>.<span class="ruby-identifier">search</span>(<span class="ruby-value str">'//link'</span>)
+
+        <span class="ruby-identifier">service_links</span> = <span class="ruby-identifier">links</span>.<span class="ruby-identifier">select</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">l</span><span class="ruby-operator">|</span> (<span class="ruby-value str">' '</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">l</span>[<span class="ruby-value str">'rel'</span>] <span class="ruby-operator">+</span> <span class="ruby-value str">' '</span>).<span class="ruby-identifier">match</span>(<span class="ruby-regexp re">/ service /i</span>) }
+
+        <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">service_links</span>.<span class="ruby-identifier">empty?</span>
+          <span class="ruby-identifier">url</span> = <span class="ruby-identifier">url</span>.<span class="ruby-identifier">to_uri</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">service_links</span>.<span class="ruby-identifier">first</span>[<span class="ruby-value str">'href'</span>]
+          <span class="ruby-keyword kw">return</span> <span class="ruby-constant">Service</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">url</span>.<span class="ruby-identifier">to_s</span>, <span class="ruby-identifier">http</span>)
+        <span class="ruby-keyword kw">end</span>
+
+        <span class="ruby-identifier">rsd_links</span> = <span class="ruby-identifier">links</span>.<span class="ruby-identifier">select</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">l</span><span class="ruby-operator">|</span> (<span class="ruby-value str">' '</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">l</span>[<span class="ruby-value str">'rel'</span>] <span class="ruby-operator">+</span> <span class="ruby-value str">' '</span>).<span class="ruby-identifier">match</span>(<span class="ruby-regexp re">/ EditURI /i</span>) }
+
+        <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">rsd_links</span>.<span class="ruby-identifier">empty?</span>
+          <span class="ruby-identifier">url</span> = <span class="ruby-identifier">url</span>.<span class="ruby-identifier">to_uri</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">rsd_links</span>.<span class="ruby-identifier">first</span>[<span class="ruby-value str">'href'</span>]
+          <span class="ruby-keyword kw">return</span> <span class="ruby-constant">Service</span>.<span class="ruby-identifier">from_rsd</span>(<span class="ruby-identifier">url</span>, <span class="ruby-identifier">http</span>)
+        <span class="ruby-keyword kw">end</span>
+
+        <span class="ruby-identifier">raise</span> <span class="ruby-constant">AutodiscoveryFailure</span>, <span class="ruby-value str">&quot;couldn't find any autodiscovery links in the HTML&quot;</span>
+      <span class="ruby-keyword kw">else</span>
+        <span class="ruby-identifier">raise</span> <span class="ruby-constant">AutodiscoveryFailure</span>, <span class="ruby-node">&quot;can't autodiscover from a document of type #{res.content_type}&quot;</span>
+      <span class="ruby-keyword kw">end</span>
+    <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000101" class="method-detail">
+        <a name="M000101"></a>
+
+        <div class="method-heading">
+          <a href="#M000101" class="method-signature">
+          <span class="method-name">from_rsd</span><span class="method-args">(url, http = Atom::HTTP.new)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000101-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000101-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/atom/service.rb, line 90</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">from_rsd</span> <span class="ruby-identifier">url</span>, <span class="ruby-identifier">http</span> = <span class="ruby-constant">Atom</span><span class="ruby-operator">::</span><span class="ruby-constant">HTTP</span>.<span class="ruby-identifier">new</span>
+      <span class="ruby-identifier">rsd</span> = <span class="ruby-identifier">http</span>.<span class="ruby-identifier">get</span>(<span class="ruby-identifier">url</span>)
+
+      <span class="ruby-identifier">doc</span> = <span class="ruby-constant">REXML</span><span class="ruby-operator">::</span><span class="ruby-constant">Document</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">rsd</span>.<span class="ruby-identifier">body</span>)
+
+      <span class="ruby-identifier">atom</span> = <span class="ruby-constant">REXML</span><span class="ruby-operator">::</span><span class="ruby-constant">XPath</span>.<span class="ruby-identifier">first</span>(<span class="ruby-identifier">doc</span>, <span class="ruby-value str">'/rsd/service/apis/api[@name=&quot;Atom&quot;]'</span>)
+
+      <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">atom</span>
+        <span class="ruby-identifier">raise</span> <span class="ruby-constant">AutodiscoveryFailure</span>, <span class="ruby-value str">&quot;couldn't find an Atom link in the RSD&quot;</span>
+      <span class="ruby-keyword kw">end</span>
+
+      <span class="ruby-identifier">url</span> = <span class="ruby-identifier">url</span>.<span class="ruby-identifier">to_uri</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">atom</span>.<span class="ruby-identifier">attributes</span>[<span class="ruby-value str">'apiLink'</span>]
+
+      <span class="ruby-constant">Service</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">url</span>.<span class="ruby-identifier">to_s</span>, <span class="ruby-identifier">http</span>)
+    <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000098" class="method-detail">
+        <a name="M000098"></a>
+
+        <div class="method-heading">
+          <a href="#M000098" class="method-signature">
+          <span class="method-name">new</span><span class="method-args">(service_url = &quot;&quot;, http = Atom::HTTP.new)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+retrieves and parses an Atom service document.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000098-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000098-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/atom/service.rb, line 27</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">service_url</span> = <span class="ruby-value str">&quot;&quot;</span>, <span class="ruby-identifier">http</span> = <span class="ruby-constant">Atom</span><span class="ruby-operator">::</span><span class="ruby-constant">HTTP</span>.<span class="ruby-identifier">new</span>)
+      <span class="ruby-keyword kw">super</span>()
+
+      <span class="ruby-ivar">@http</span> = <span class="ruby-identifier">http</span>
+
+      <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">service_url</span>.<span class="ruby-identifier">empty?</span>
+
+      <span class="ruby-identifier">base</span> = <span class="ruby-constant">URI</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-identifier">service_url</span>)
+
+      <span class="ruby-identifier">rxml</span> = <span class="ruby-keyword kw">nil</span>
+
+      <span class="ruby-identifier">res</span> = <span class="ruby-ivar">@http</span>.<span class="ruby-identifier">get</span>(<span class="ruby-identifier">base</span>, <span class="ruby-value str">&quot;Accept&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value str">&quot;application/atomsvc+xml&quot;</span>)
+      <span class="ruby-identifier">res</span>.<span class="ruby-identifier">validate_content_type</span>([<span class="ruby-value str">&quot;application/atomsvc+xml&quot;</span>])
+
+      <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">res</span>.<span class="ruby-identifier">code</span> <span class="ruby-operator">==</span> <span class="ruby-value str">&quot;200&quot;</span>
+        <span class="ruby-identifier">raise</span> <span class="ruby-constant">Atom</span><span class="ruby-operator">::</span><span class="ruby-constant">HTTPException</span>, <span class="ruby-node">&quot;Unexpected HTTP response code: #{res.code}&quot;</span>
+      <span class="ruby-keyword kw">end</span>
+
+      <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-identifier">res</span>.<span class="ruby-identifier">body</span>, <span class="ruby-identifier">base</span>, <span class="ruby-keyword kw">self</span>)
+    <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="section-bar">Public Instance methods</h3>
+
+      <div id="method-M000099" class="method-detail">
+        <a name="M000099"></a>
+
+        <div class="method-heading">
+          <a href="#M000099" class="method-signature">
+          <span class="method-name">collections</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000099-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000099-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/atom/service.rb, line 48</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">collections</span>
+      <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">workspaces</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">ws</span><span class="ruby-operator">|</span> <span class="ruby-identifier">ws</span>.<span class="ruby-identifier">collections</span> }.<span class="ruby-identifier">flatten</span>
+    <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+
+
+  </div>
+
+
+<div id="validator-badges">
+  <p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+</div>
+
+</body>
+</html>

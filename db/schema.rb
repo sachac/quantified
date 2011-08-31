@@ -1,4 +1,3 @@
-# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -11,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110827030504) do
+ActiveRecord::Schema.define(:version => 20110829042946) do
 
   create_table "books", :force => true do |t|
     t.string   "title"
@@ -37,6 +36,27 @@ ActiveRecord::Schema.define(:version => 20110827030504) do
     t.date    "date"
   end
 
+  create_table "decision_logs", :force => true do |t|
+    t.text     "notes"
+    t.text     "notes_html"
+    t.date     "date"
+    t.string   "status"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "decision_id"
+  end
+
+  create_table "decisions", :force => true do |t|
+    t.string   "name"
+    t.date     "date"
+    t.text     "notes"
+    t.text     "notes_html"
+    t.string   "status"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "rating"
+  end
+
   create_table "taggings", :force => true do |t|
     t.integer  "tag_id"
     t.integer  "taggable_id"
@@ -52,6 +72,14 @@ ActiveRecord::Schema.define(:version => 20110827030504) do
 
   create_table "tags", :force => true do |t|
     t.string "name"
+  end
+
+  create_table "time_records", :force => true do |t|
+    t.string   "name"
+    t.datetime "start_time"
+    t.datetime "end_time"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
 end

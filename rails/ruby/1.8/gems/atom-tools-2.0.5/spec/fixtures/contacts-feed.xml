@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <id>http://api.constantcontact.com/ws/customers/foo/contacts</id>
+  <title type="text">Contacts for Customer: Foo</title>
+  <link href="contacts"></link>
+  <link href="contacts" rel="self"></link>
+  <author>
+    <name>Foo</name>
+  </author>
+  <updated>2010-05-18T13:45:29.352Z</updated>
+  <link href="/ws/customers/Foo/contacts" rel="first"></link>
+  <link href="/ws/customers/Foo/contacts?email=tropix50%40hotmail.com" rel="current"></link>
+  <entry>
+    <link href="/ws/customers/Foo/contacts/42" rel="edit"></link>
+    <id>http://api.constantcontact.com/ws/customers/foo/contacts/42</id>
+    <title type="text">Contact: foo@example.com</title>
+    <updated>2010-05-18T13:45:29.372Z</updated>
+    <author>
+      <name>Constant Contact</name>
+    </author>
+    <content type="application/vnd.ctct+xml">
+      <Contact xmlns="http://ws.constantcontact.com/ns/1.0/" id="http://api.constantcontact.com/ws/customers/foo/contacts/42">
+        <Status>Active</Status>
+        <EmailAddress>foo@example.com</EmailAddress>
+        <EmailType>HTML</EmailType>
+        <Name>Bar, Foo</Name>
+        <OptInTime>2008-09-22T15:03:18.894Z</OptInTime>
+        <OptInSource>ACTION_BY_CUSTOMER</OptInSource>
+        <Confirmed>false</Confirmed>
+        <InsertTime>2008-09-22T15:03:18.894Z</InsertTime>
+      </Contact>
+    </content>
+  </entry>
+</feed>

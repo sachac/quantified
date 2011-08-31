@@ -1,0 +1,26 @@
+<h2>Distribution</h2>
+<div id="canvas" style="width: <%= @width %>px; height: <%= @height %>px"></div>
+<script type="text/javascript">
+  var sets = new Array();
+  window.onload = function() {
+    var p = Raphael("canvas");
+    <% @distribution.each do |d| %>
+      if (!sets['<%= d[:class] %>']) { sets['<%= d[:class] %>'] = p.set(); }
+      <%= "var r = p.rect(#{d[:x]}, #{d[:y]}, #{@day_width}, #{d[:height]}).attr({fill: '#{d[:color]}', stroke: 'none', title: '#{d[:title]}'});".html_safe %>
+      r.hover(function(event) { sets['<%= d[:class] %>'].attr({'stroke': '#000'}); },
+        function(event) { sets['<%= d[:class] %>'].attr({'stroke': 'none'}); });
+      sets['<%= d[:class] %>'].push(r);
+    <% end %>
+    <% [0, 3, 6, 9, 12, 15, 18, 21].each do |hour|
+       y = hour * 3600 * @second_height %>
+       <%= "var l = p.path('M0 #{y.to_i}L#{@width} #{y.to_i}').attr({stroke: 'gray', 'stroke-width': 0.5, 'stroke-opacity': 0.5});" %>
+    <% end %>
+    <% @days.each do |d| %>
+      if (!sets['<%= d[:class] %>']) { sets['<%= d[:class] %>'] = p.set(); }
+      <%= "var r = p.rect(#{d[:x]}, #{d[:y]}, #{@day_width}, #{d[:height]}).attr({fill: '#{d[:color]}', stroke: 'none', title: '#{d[:title]}'});".html_safe %>
+      r.hover(function(event) { sets['<%= d[:class] %>'].attr({'stroke': '#000'}); },
+        function(event) { sets['<%= d[:class] %>'].attr({'stroke': 'none'}); });
+      sets['<%= d[:class] %>'].push(r);
+    <% end %>
+  }
+</script>

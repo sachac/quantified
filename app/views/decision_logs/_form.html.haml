@@ -1,0 +1,18 @@
+= semantic_form_for @decision_log do |f|
+  -if @decision_log.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@decision_log.errors.count, "error")} prohibited this decision_log from being saved:"
+      %ul
+        - @decision_log.errors.full_messages.each do |msg|
+          %li= msg
+  = f.inputs do
+    -if @decision_log.decision then
+      = "#{@decision_log.decision.name} (#{@decision_log.decision.date})"
+      %pre= @decision_log.decision.notes
+    -else
+      = f.input :decision_id
+    = f.input :date, :as => :string
+    = f.input :notes
+    = f.input :status, :as => :radio, :collection => ["Pending", "Good", "Bad", "Uncertain"]
+  .actions
+    = f.submit 'Save'

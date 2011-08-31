@@ -1,0 +1,51 @@
+== 2.2.8.1 Jul 02, 2010
+* Call html_safe only when it's available.
+
+== 2.2.8 Jun 14, 2010
+* Fix html for <li> marking it as html_safe when using rails_xss plugin
+
+== 2.2.7 Jun 12, 2010
+* Fix generated html marking it as html_safe when using rails_xss plugin
+
+== 2.2.6 May 27, 2010
+* Fix wrapper_dom_id with false values for keys
+
+== 2.2.5 May 21, 2010
+* Fix wrapper_dom_id with empty values
+
+== 2.2.4 April 15, 2010
+* Fix wrapper_dom_id join options
+
+== 2.2.3 March 10, 2010
+* Fix validation of current_user to show linked stars
+
+== 2.2.2 March 9, 2010
+* Fix bug for jRuby
+* Fixed user self relational model to be rater and rateable.
+
+== 2.2.1 March 8, 2010
+* Changed :force_dynamic for its opposite :force_static.
+* Fixed I18n texts.
+* Fixed missed quotes for Rate belongs_to association with User class
+* Detailed wrapper DOM id with passed hash.
+
+== 2.2.0 March 7, 2010
+* Improved model methods and options.
+* Works now with inherited models.
+* Removed HTML and CSS options for helper for sake of simpleness.
+* Renamed helper option :small_stars to :small.
+* Changed whole helper approach. It should work the same as before.
+  (Except for the renamed and removed options)
+* Removed :force_dynamic, you should exclude the helper from cache since it uses
+  authorization.
+* Fixed opened bugs so far.
+
+== 2.1.5 January 28, 2010
+* Renamed options method name to avoid collapse.
+* Removed CSS duplication.
+
+== 2.1.4 January 25, 2010
+* Added option for showing current_user's rate instead of global average
+
+== 2.1.0 July 25, 2009
+* AjaxfulRating is now available as a gem

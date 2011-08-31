@@ -1,0 +1,14 @@
+= semantic_form_for @decision do |f|
+  -if @decision.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@decision.errors.count, "error")} prohibited this decision from being saved:"
+      %ul
+        - @decision.errors.full_messages.each do |msg|
+          %li= msg
+  = f.inputs do
+    = f.input :date, :as => :string
+    = f.input :name
+    = f.input :notes
+    = f.input :status, :as => :radio, :collection => ["Good", "Bad", "Uncertain"]
+  .actions
+    = f.submit 'Save'

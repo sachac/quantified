@@ -1,0 +1,12 @@
+%p#notice= notice
+
+%h1 @decision.name
+= @decision.status
+
+%pre= @decision.notes
+
+%p= link_to 'Add decision log', new_decision_log_path + "?decision_id=#{@decision.id}"
+
+= link_to 'Edit', edit_decision_path(@decision)
+\|
+= link_to 'Back', decisions_path

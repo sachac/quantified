@@ -1,0 +1,159 @@
+#!/usr/bin/env ruby
+
+=begin
+Usage: atom-cp [options] source destination
+    copy the contents of an Atom Collection
+
+    'source' and 'destination' can be a path on the local filesystem, the
+  URL of an Atom Collection or '-' for stdin/stdout
+=end
+
+require 'atom/tools'
+include Atom::Tools
+
+def parse_options
+  options = { }
+
+  opts = OptionParser.new do |opts|
+    opts.banner = <<END
+Usage: #{$0} [options] source destination
+    copy an Atom Collection
+
+    'source' and 'destination' can be a path on the local filesystem, the
+  URL of an Atom Collection or '-' for stdin/stdout
+
+END
+
+    opts.on('-c', '--complete', "follow previous and next links in the source feed to obtain the entire logical feed") do
+     options[:complete] = true
+    end
+
+    opts.on('-s', '--infer-slugs', 'try to infer entry slugs') { options[:infer_slugs] = true }
+
+    opts.on('-v', '--verbose') { options[:verbose] = true }
+
+    atom_options opts, options
+  end
+
+  opts.parse!(ARGV)
+
+  if ARGV.length != 2
+    puts opts
+    exit
+  end
+
+  options
+end
+
+# like dir_to_entries, but returns an Array of [slug, entry] pairs
+def dir_to_entries_with_slug path
+  raise ArgumentError, "#{path} is not a directory" unless File.directory? path
+
+  Dir[path+'/*.atom'].map do |e|
+    slug = e.match(/.*\/(.*)\.atom/)[1]
+    slug = nil if slug and slug.match /^0x/
+
+    entry = Atom::Entry.parse(File.read(e))
+
+    [slug, entry]
+  end
+end
+
+# like entries_to_http, but takes an Array of [slug, entry] pairs
+def entries_to_http_with_slug entries, url, http = Atom::HTTP.new
+  coll = Atom::Collection.new url, http
+
+  entries.each do |slug, entry|
+    coll.post! entry, slug
+  end
+end
+
+# like entries_to_dir, but takes an Array of [slug, entry] pairs
+def entries_to_dir_with_slug entries, path
+  if File.exists? path
+    raise "directory #{path} already exists"
+  else
+    Dir.mkdir path
+  end
+
+  entries.each do |slug,entry|
+    e = entry.to_s
+
+    new_filename = if slug
+                     path + '/' + slug + '.atom'
+                   else
+                     path + '/0x' + MD5.new(e).hexdigest[0,8] + '.atom'
+                   end
+
+    File.open(new_filename, 'w') { |f| f.write e }
+  end
+end
+
+def parse_input_with_slug source, options
+  entries = if source.match /^http/
+    http = Atom::HTTP.new
+
+    setup_http http, options
+
+    http_to_entries(source, options[:complete], http).map do |e|
+      [nil, e]
+    end
+  elsif source == '-'
+    stdin_to_entries.map do |e|
+      [nil, e]
+    end
+  else
+    dir_to_entries_with_slug source
+  end
+
+  if options[:verbose]
+    entries.each do |slug,entry|
+      print "got #{entry.title}  "
+      puts (slug ? "(/#{slug})" : '')
+    end
+  end
+
+  if options[:infer_slugs]
+    entries.map! do |slug,entry|
+      slug ||= infer_slug entry
+
+      [slug, entry]
+    end
+  end
+
+  entries
+end
+
+def write_output_with_slug entries, dest, options
+  if dest.match /^http/
+    http = Atom::HTTP.new
+
+    setup_http http, options
+
+    entries_to_http_with_slug entries, dest, http
+  elsif dest == '-'
+    entries_to_stdout entries.map { |s,e| e }
+  else
+    entries_to_dir_with_slug entries, dest
+  end
+end
+
+# make up a slug based on the alternate link
+def infer_slug entry
+  slug = nil
+  alt = e.links.find { |l| l['rel'] == 'alternate' }
+
+  alt and alt['href'].split('/').last
+end
+
+if __FILE__ == $0
+  require 'optparse'
+
+  options = parse_options
+
+  source = ARGV[0]
+  dest = ARGV[1]
+
+  entries = parse_input_with_slug source, options
+  write_output_with_slug entries, dest, options
+end

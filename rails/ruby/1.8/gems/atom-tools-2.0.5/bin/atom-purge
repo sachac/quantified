@@ -1,0 +1,82 @@
+#!/usr/bin/env ruby
+
+=begin
+Usage: atom-purge [options] collection
+    delete all the entries in an Atom Collection
+
+    'collection' can be a path on the local filesystem, the
+  URL of an Atom Collection or '-' for stdin. the feed is parsed
+  and every Member URI found in it is DELETEd.
+=end
+
+require 'atom/tools'
+include Atom::Tools
+
+def parse_options
+  options = {}
+
+  opts = OptionParser.new do |opts|
+    opts.banner = <<END
+Usage: #{$0} [options] collection
+    delete all the entries in an Atom Collection
+
+    'collection' can be a path on the local filesystem, the
+  URL of an Atom Collection or '-' for stdin. the feed is parsed
+  and every Member URI found in it is DELETEd.
+
+END
+
+    opts.on('-c', '--no-complete', "don't follow previous and next links in the source feed") do
+     options[:complete] = false
+    end
+
+    opts.on('-v', '--verbose') { options[:verbose] = true }
+
+    opts.on('-i', '--interactive', "ask before each DELETE") { options[:interactive] = true }
+
+    atom_options opts, options
+  end
+
+  opts.parse!(ARGV)
+
+  if ARGV.length != 1
+    puts opts
+    exit
+  end
+
+  options
+end
+
+if __FILE__ == $0
+  require 'optparse'
+
+  options = parse_options
+
+  source = ARGV[0]
+  dest = ARGV[1]
+
+  entries = parse_input source, options
+
+  http = Atom::HTTP.new
+  setup_http http, options
+
+  tty = File.open('/dev/tty', 'w+') if options[:interactive]
+
+  uris = entries.each do |e|
+    next unless (uri = e.edit_url)
+
+    puts "deleting #{uri}" if options[:verbose]
+
+    if options[:interactive]
+      tty.puts "delete #{uri}"
+      tty.puts "title: #{e.title}"
+      tty.puts e.content.to_s
+      tty.puts
+      tty.print "? "
+
+      next unless ['y', 'yes'].member? tty.gets.chomp
+    end
+
+    http.delete uri
+  end
+end

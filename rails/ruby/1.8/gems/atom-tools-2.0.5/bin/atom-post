@@ -1,0 +1,73 @@
+#!/usr/bin/env ruby
+
+=begin
+Usage: atom-post [options] destination [file]
+  posts an Atom Entry or a file to an Atom Collection
+
+  'destination' is the URL of an Atom Collection
+  'file' is the path to a file to POST (default is stdin)
+=end
+
+require 'rubygems'
+require 'atom/tools'
+include Atom::Tools
+
+def parse_options
+  options = {
+    :mimetype => 'application/atom+xml;type=entry'
+  }
+
+  opts = OptionParser.new do |opts|
+    opts.banner = <<END
+Usage: #{$0} [options] destination [file]
+  posts an Atom Entry or a file to an Atom Collection
+
+  'destination' is the URL of an Atom Collection
+  'file' is the path to a file to POST (default is stdin)
+END
+
+    opts.on('-m', '--mime-type TYPE', 'what to send in the Content-Type header') do |t|
+      options[:mimetype] = t
+    end
+
+    opts.on('-s', '--slug SLUG') do |s|
+      options[:slug] = s
+    end
+
+    atom_options opts, options
+  end
+
+  opts.parse!(ARGV)
+
+  if ARGV.length < 1 or ARGV.length > 2
+    puts opts
+    exit
+  end
+
+  options
+end
+
+if __FILE__ == $0
+  require 'optparse'
+
+  options = parse_options
+
+  dest = ARGV[0]
+
+  data = if ARGV[1]
+           File.read(ARGV[1])
+         else
+           $stdin.read
+         end
+
+  http = Atom::HTTP.new
+  setup_http http, options
+
+  headers = { 'Content-Type' => options[:mimetype] }
+
+  if options[:slug]
+    headers['Slug'] = options[:slug]
+  end
+
+  http.post dest, data, headers
+end

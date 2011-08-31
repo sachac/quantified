@@ -1,0 +1,33 @@
+<feed xmlns='http://www.w3.org/2005/Atom'
+      xmlns:thr='http://purl.org/syndication/thread/1.0'
+      xml:base='http://www.tbray.org/ongoing/ongoing.atom'
+      xml:lang='en-us'>
+ <title>ongoing</title>
+ <id>http://www.tbray.org/ongoing/</id>
+ <link href='./' />
+ <link rel='self' href='' />
+ <link rel='replies'       thr:count='101'       href='/home/tbray.org/www/html/ongoing/comments.atom' />
+ <logo>rsslogo.jpg</logo>
+ <icon>/favicon.ico</icon>
+ <updated>2008-03-17T02:04:49-07:00</updated>
+ <author><name>Tim Bray</name></author>
+ <subtitle>ongoing fragmented essay by Tim Bray</subtitle>
+ <rights>All content written by Tim Bray and photos by Tim Bray Copyright Tim Bray, some rights reserved, see /ongoing/misc/Copyright</rights>
+ <generator uri='/misc/Colophon'>Generated from XML source code using Perl, Expat, Emacs, Mysql, Ruby, Java, and ImageMagick.  Industrial-strength technology, baby.</generator>
+<entry xml:base='When/200x/2008/03/13/'>
+ <title>Maui Bound</title>
+ <link href='Maui' />
+ <link rel='replies'        thr:count='1'        type='application/xhtml+xml'        href='Maui#comments' />
+ <id>http://www.tbray.org/ongoing/When/200x/2008/03/13/Maui</id>
+ <published>2008-03-13T02:00:00-07:00</published>
+ <updated>2008-03-13T17:23:47-07:00</updated>
+ <category scheme='http://www.tbray.org/ongoing/What/' term='The World/Places/Hawaii' />
+ <category scheme='http://www.tbray.org/ongoing/What/' term='The World' />
+ <category scheme='http://www.tbray.org/ongoing/What/' term='Places' />
+ <category scheme='http://www.tbray.org/ongoing/What/' term='Hawaii' />
+<content type='xhtml'><div xmlns='http://www.w3.org/1999/xhtml'>
+<p>I’m off with the family tomorrow for ten days in Maui, 15th through the
+24th.  We’ll be meeting an Aussie friend.  Anyone else I know who’ll be there,
+drop me a line and we’ll get together for a Mai Tai.</p>
+</div></content></entry>
+</feed>
