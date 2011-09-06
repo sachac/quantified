@@ -34,6 +34,11 @@ class TimeTrackerLog
     while list do 
       parsed = list.to_xml.elements.each("entry") do |e| 
         text = e.elements["title"].text 
+        case text
+          when "Work": text = "A - Work"
+          when "Sleep": text = "A - Sleep"
+          when "Routine - Exercise": text = "Routines - Exercise"
+        end
         event_start = Time.parse(e.elements["gd:when"].attributes["startTime"])
         event_end = Time.parse(e.elements["gd:when"].attributes["endTime"])
         if (event_end >= start_time) then
@@ -69,13 +74,8 @@ class TimeTrackerLog
     result = Hash.new
     total = 0.seconds
     list.each do |x|
-      if (x.name == 'Work' || x.name == 'Sleep') then
-        result['! ' + x.name] ||= 0.seconds
-        result['! ' + x.name] += (x.end_time - x.start_time)
-      else
-        result[x.name] ||= 0.seconds
-        result[x.name] += (x.end_time - x.start_time)
-      end  
+      result[x.name] ||= 0.seconds
+      result[x.name] += (x.end_time - x.start_time)
       if (x.name =~ /^Disc\./) then
         result['! Disc.'] ||= 0.seconds
         result['! Disc.'] += (x.end_time - x.start_time)
@@ -86,13 +86,13 @@ class TimeTrackerLog
       puts "#{x.name} - #{(x.end_time - x.start_time) / 3600.0}"
       total += (x.end_time - x.start_time)
     end
-    result["! Sleep"] ||= 0.seconds
+    result["A - Sleep"] ||= 0.seconds
     puts end_time.to_s
     puts start_time.to_s
     puts (total / 3600.0)
     puts ((end_time - start_time - total) / 3600.00)
     puts "--"
-    result["! Sleep"] += end_time - start_time - total
+    result["A - Sleep"] += end_time - start_time - total
     result
   end
 

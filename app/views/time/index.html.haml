@@ -3,10 +3,21 @@
 %table{:border => 1, :cellspacing => 0, :cellpadding => 3}
   %tr
     %th Activity
-    %th= link_to "This week", "/time?refresh=this_week"
+    %th
+      = link_to "This week", "/time?refresh=this_week"
     %th= link_to "Last week", "/time?refresh=last_week"
     %th= link_to "The other week", "/time?refresh=other_week"
     %th Delta
+  %tr
+    %th Start
+    - ["this_week", "last_week", "other_week"].each do |w|
+      %td= @limits[w][0].strftime("%m-%d")
+    %th The other week
+  %tr
+    %th End
+    - ["this_week", "last_week", "other_week"].each do |w|
+      %td= @limits[w][1].strftime("%m-%d")
+    %th Last week
   - all_keys.each do |key|
     %tr
       %td= key
