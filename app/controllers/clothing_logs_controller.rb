@@ -47,7 +47,7 @@ class ClothingLogsController < ApplicationController
       else
         @clothing = Clothing.new(:name => params[:clothing], :number => Clothing.maximum(:number) + 1)
         @clothing.save
-        flash[:notice] = "Saved new clothing ID #{@clothing.number}".
+        flash[:notice] = "Saved new clothing ID #{@clothing.number}."
         params[:clothing_id] = @clothing.id
       end
     end

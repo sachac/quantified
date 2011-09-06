@@ -19,9 +19,9 @@ class TimeController < ApplicationController
   end
 
   def graph
-    @width = 800
-    @height = 400
-    @time_bottom = @height / 2
+    @width = 1200
+    @height = 500
+    @time_bottom = @height 
     @start = (!params[:start].blank? ? Time.parse(params[:start]) : Date.new(Date.today.year, Date.today.month, 1)).midnight
     @end = (!params[:end].blank? ? Time.parse(params[:end]) : Date.new(Date.today.year, Date.today.month + 1, 1)).midnight
     entries = TimeRecord.find(:all, :conditions => ["start_time >= ? AND start_time < ?", @start, @end], :order => "start_time")
@@ -83,5 +83,6 @@ class TimeController < ApplicationController
         @days << hash
       end     
     end
+
   end
 end
