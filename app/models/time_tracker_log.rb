@@ -22,6 +22,18 @@ class TimeTrackerLog
     TimeRecord.destroy_all(["start_time >= ? AND end_time <= ?", start_time, end_time])
   end
 
+  def create_record(event_start, event_end, text) 
+    puts "#{event_start} #{event_end} #{text}"
+    # If the event starts before midnight
+    if (event_start < event_end.midnight) then
+      rec = TimeRecord.new(:name => text, :start_time => event_start, :end_time => event_end.midnight)
+      rec.save
+      event_start = event_end.midnight
+    end
+    rec = TimeRecord.new(:name => text, :start_time => event_start, :end_time => event_end)
+    rec.save
+  end
+
   def refresh(start_time, end_time)
     # Retrieve the entries
     start_fmt = (start_time - 1.day).xmlschema
@@ -34,26 +46,14 @@ class TimeTrackerLog
     while list do 
       parsed = list.to_xml.elements.each("entry") do |e| 
         text = e.elements["title"].text 
-        case text
-          when "Work": text = "A - Work"
-          when "Sleep": text = "A - Sleep"
-          when "Routine - Exercise": text = "Routines - Exercise"
-        end
         event_start = Time.parse(e.elements["gd:when"].attributes["startTime"])
         event_end = Time.parse(e.elements["gd:when"].attributes["endTime"])
         if (event_end >= start_time) then
           # Chop off start time and end time according to time
           event_start = [event_start, start_time].max
           event_end = [event_end, end_time].min
-          # If the event starts before midnight
-          if (event_start < event_end.midnight) then
-            rec = TimeRecord.new(:name => text, :start_time => event_start, :end_time => event_end.midnight)
-            rec.save
-            event_start = event_end.midnight
-          end
-          rec = TimeRecord.new(:name => text, :start_time => event_start, :end_time => event_end)
-          rec.save
         end
+        create_record(event_start, event_end, text)
       end
       next_url = list.to_xml.elements["link[@rel='next']"]
       if next_url then
@@ -63,6 +63,52 @@ class TimeTrackerLog
       end
     end
     entries(start_time, end_time)
+  end
+
+  def refresh_from_csv(filename)
+    # Parse the file and determine start and end times
+    Time.zone = "America/Toronto"
+    if filename.is_a? String then
+      file = File.new(filename, 'r')
+    else
+      file = filename
+    end
+    entries = Array.new
+    min = max = nil
+    file.each_line do |line|
+      row = line.split(',')
+      if (row[0] == 'Date') then
+        next  # Skip the header row
+      end
+      # Parse the date
+      if !row[2].blank? then
+        start_time = Time.parse("#{row[0]} #{row[2]} America/Toronto", "%d.%m.%Y %H:%M %Z")
+        end_time = Time.parse("#{row[0]} #{row[3]} America/Toronto", "%d.%m.%Y %H:%M %Z")
+        if (start_time > end_time) then
+          end_time += 1.day    # Must have checked in on the next day
+        end
+        cat = row[5]
+        total = (end_time - start_time) / 3600.0
+        entry = Hash[ :start => start_time.to_time, :end => end_time.to_time, :text => cat ]
+        if min.nil? then
+          min = start_time
+          max = end_time
+        else
+          min = [start_time, min].min
+          max = [end_time, max].max
+        end
+        entries.push entry
+        # puts "#{start_time}\t#{end_time}\t#{cat}\t#{total}\t#{accuracy}"
+      end
+    end
+    # Delete the entries from start to end
+    if (!min.nil?) then
+      self.clear(min.to_time, max.to_time)
+      entries.each do |e|
+        create_record(e[:start], e[:end], e[:text])
+      end
+      # TODO Update Google Calendar also
+    end
   end
 
   def entries(start_time, end_time)
@@ -76,12 +122,15 @@ class TimeTrackerLog
     list.each do |x|
       result[x.name] ||= 0.seconds
       result[x.name] += (x.end_time - x.start_time)
-      if (x.name =~ /^Disc\./) then
-        result['! Disc.'] ||= 0.seconds
-        result['! Disc.'] += (x.end_time - x.start_time)
-      elsif (x.name =~ /^Routines?/) then
-        result['! Routines'] ||= 0.seconds
-        result['! Routines'] += (x.end_time - x.start_time)
+      if (x.name =~ /^D -/) then
+        result['! Discretionary'] ||= 0.seconds
+        result['! Discretionary'] += (x.end_time - x.start_time)
+      elsif (x.name =~ /^P - ?/) then
+        result['! Personal care'] ||= 0.seconds
+        result['! Personal care'] += (x.end_time - x.start_time)
+      elsif (x.name =~ /^UW - ?/) then
+        result['! Unpaid work'] ||= 0.seconds
+        result['! Unpaid work'] += (x.end_time - x.start_time)
       end
       puts "#{x.name} - #{(x.end_time - x.start_time) / 3600.0}"
       total += (x.end_time - x.start_time)

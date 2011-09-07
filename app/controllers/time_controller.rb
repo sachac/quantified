@@ -4,9 +4,15 @@ class TimeController < ApplicationController
   def refresh
     # Challenge: Time Recording does not update old Google Calendar entries when you rename tasks
     # Approach: Upload work unit CSV and replace entries covering that span of time
-    
-    
   end
+
+  # POST
+  def refresh_from_csv
+    @log = TimeTrackerLog.new
+    @log.login
+    @log.refresh_from_csv(params[:file].tempfile)
+    redirect_to :action => "graph"
+  end 
 
   def index
     @log = TimeTrackerLog.new
@@ -28,9 +34,9 @@ class TimeController < ApplicationController
   end
 
   def graph
-    @width = 1200
+    @width = 910
     @height = 500
-    @time_bottom = @height 
+    @time_bottom = @height
     @start = (!params[:start].blank? ? Time.parse(params[:start]) : Date.new(Date.today.year, Date.today.month, 1)).midnight
     @end = (!params[:end].blank? ? Time.parse(params[:end]) : Date.new(Date.today.year, Date.today.month + 1, 1)).midnight
     entries = TimeRecord.find(:all, :conditions => ["start_time >= ? AND start_time < ?", @start, @end], :order => "start_time")
@@ -44,16 +50,18 @@ class TimeController < ApplicationController
       x = @day_width * ((e.start_time.midnight - @start.midnight) / 86400.0)
       y = @second_height * (e.start_time - e.start_time.midnight)
       item_height = @second_height * (e.end_time - e.start_time)
-      if e.name == "Sleep" then
-        next
-      elsif e.name == "Work" then
-        color = "#85acaa"
-      elsif e.name.match(/^Disc/) then
-        color = "#83b877"
-      elsif e.name.match(/^Routine/) then
-        color = "#dd9843"
-      end
       class_name = e.name.downcase.gsub(/[^a-z]/, '')
+      if e.name == "A - Sleep" then
+        next
+      elsif e.name == "A - Work" then
+        color = "#85acaa"
+      elsif e.name.match(/^D - /) then
+        color = "#c2d6cb"
+      elsif e.name.match(/^UW - /) then
+        color = "#dd9843"
+      elsif e.name.match(/^P - /) then
+        color = "#acaa85"
+      end
       title = "#{e.start_time.strftime('%Y-%m-%d %H:%M')} - #{e.end_time.strftime('%H:%M')} #{e.name}" 
       @distribution << { :x => x, :y => y, :height => item_height, 
         :color => color,
@@ -71,27 +79,38 @@ class TimeController < ApplicationController
       @totals[e.name][:value] ||= 0
       @totals[e.name][:color] = color
       @totals[e.name][:class] = class_name
+      @totals[e.name][:title] = e.name
       @totals[e.name][:value] += (e.end_time - e.start_time)
     end
     @totals.each do |name,val|
       @totals[name][:percent] = @totals[name][:value] * 100.0 / total_time
+      @totals[name][:title] +=  " (#{"%.1f%%" % (@totals[name][:percent])})"
     end
     @distribution_offset = @width / 2;
     @days = Array.new
+    # Sort by name
+    keys = @totals.keys.sort
     days.each do |k, vals|
       x = @distribution_offset + @day_width * ((k.midnight - @start.midnight) / 86400.0)
       y = @time_bottom
-      vals = vals.sort { |a,b| a[0] <=> b[0] }
-      vals.each do |name,hash|
-        height = @second_height * hash[:value]
-        y = y - height
-        hash[:height] = height
-        hash[:y] = y
-        hash[:x] = x
-        hash[:title] = hash[:title] + " (#{"%.1f%%" % (@totals[hash[:title]][:percent])})"
-        @days << hash
+      keys.each do |name|
+        hash = vals[name]
+        if hash
+          height = @second_height * hash[:value]
+          y = y - height
+          hash[:height] = height
+          hash[:y] = y
+          hash[:x] = x
+          hash[:title] = k.strftime("%Y-%m-%d") + " - " + hash[:title] + " (#{"%.1f%%" % (@totals[hash[:title]][:percent])})"
+          @days << hash
+        end
       end     
     end
-
+    @labels = Array.new
+    keys.each do |name|
+      if !name.blank? then
+        @labels << "<a href=\"#\" class=\"#{@totals[name][:class]}\">#{@totals[name][:title]}</a>".html_safe
+      end
+    end
   end
 end

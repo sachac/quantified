@@ -7,7 +7,8 @@ Home::Application.routes.draw do
 
   match 'time' => 'time#index'
   match 'time/graph' => 'time#graph'
-  match 'time/refresh' => 'time#refresh'
+  match 'time/refresh' => 'time#refresh_from_csv', :as => :refresh_from_csv, :via => :post
+  match 'time/refresh' => 'time#refresh', :as => :refresh_time
   resources :clothing_logs
   resources :clothing do
     get :autocomplete_clothing_name, :on => :collection
