@@ -1,4 +1,9 @@
 <h2>Distribution</h2>
+<% form_tag do %>
+  Start: <%= text_field_tag :start, @start.strftime("%Y-%m-%d") %>
+  End: <%= text_field_tag :end, @end.strftime("%Y-%m-%d") %>
+  <%= submit_tag "Go" %>
+<% end %>
 <div id="canvas" style="width: <%= @width %>px; height: <%= @height %>px"></div>
 <script type="text/javascript">
   var sets = new Array();
@@ -23,4 +28,10 @@
       sets['<%= d[:class] %>'].push(r);
     <% end %>
   }
+</script>
+<div class="selector"><%= @labels.join(" | ").html_safe %></div>
+<script type="text/javascript">
+  $(".selector a").hover(
+    function() { sets[$(this).attr("class")].attr({'stroke': '#000'}); },
+    function() { sets[$(this).attr("class")].attr({'stroke': 'none'}); });
 </script>
