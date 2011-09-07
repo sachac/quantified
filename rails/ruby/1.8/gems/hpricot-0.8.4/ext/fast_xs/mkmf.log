@@ -1,0 +1,10 @@
+have_header: checking for stdio.h... -------------------- yes
+
+"gcc -E -I. -I/home/sacha/.rvm/rubies/ruby-1.8.7-p352/lib/ruby/1.8/x86_64-linux -I.    -g -O2  -fPIC    conftest.c -o conftest.i"
+checked program was:
+/* begin */
+1: #include <stdio.h>
+/* end */
+
+--------------------
+

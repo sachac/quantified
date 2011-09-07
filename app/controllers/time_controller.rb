@@ -1,4 +1,13 @@
+# Challenges: 
+# I have to manually create my time graphs
 class TimeController < ApplicationController
+  def refresh
+    # Challenge: Time Recording does not update old Google Calendar entries when you rename tasks
+    # Approach: Upload work unit CSV and replace entries covering that span of time
+    
+    
+  end
+
   def index
     @log = TimeTrackerLog.new
     @limits = {"this_week" => [Chronic.parse("last Saturday").midnight, Time.now],
