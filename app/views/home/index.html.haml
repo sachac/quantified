@@ -1,4 +1,8 @@
-%p#notice= notice
-= render "partials/clothing_log_entry"
-= set_focus_to_id("#clothing")
+#block-text.block
+  .content
+    %h2.title Home
+    .inner
+      %p.first
+        = render "partials/clothing_log_entry"
+        = set_focus_to_id("#clothing")
 

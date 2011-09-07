@@ -1,10 +1,13 @@
 Home::Application.routes.draw do
+  devise_for :users
+
   resources :decision_logs
 
   resources :decisions
 
   match 'time' => 'time#index'
   match 'time/graph' => 'time#graph'
+  match 'time/refresh' => 'time#refresh'
   resources :clothing_logs
   resources :clothing do
     get :autocomplete_clothing_name, :on => :collection

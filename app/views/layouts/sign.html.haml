@@ -1,0 +1,9 @@
+%html
+  %head
+    %title Sacha Chua
+    = stylesheet_link_tag "web-app-theme/base", "web-app-theme/themes/warehouse/style", "web-app-theme/override", :cache => true
+    = csrf_meta_tag
+  %body
+    #container
+      #box
+        = yield

@@ -1,27 +1,31 @@
 - all_keys = (@summary["this_week"].keys | @summary["last_week"].keys | @summary["other_week"].keys).sort
 
-%table{:border => 1, :cellspacing => 0, :cellpadding => 3}
-  %tr
-    %th Activity
-    %th
-      = link_to "This week", "/time?refresh=this_week"
-    %th= link_to "Last week", "/time?refresh=last_week"
-    %th= link_to "The other week", "/time?refresh=other_week"
-    %th Delta
-  %tr
-    %th Start
-    - ["this_week", "last_week", "other_week"].each do |w|
-      %td= @limits[w][0].strftime("%m-%d")
-    %th The other week
-  %tr
-    %th End
-    - ["this_week", "last_week", "other_week"].each do |w|
-      %td= @limits[w][1].strftime("%m-%d")
-    %th Last week
-  - all_keys.each do |key|
-    %tr
-      %td= key
-      - ["this_week", "last_week", "other_week"].each do |k|
-        %td{:align=>"right"}= @summary[k][key] ? ("%.2f" % (@summary[k][key] / 3600.0)) : ""
-      %td{:align=>"right"}= "%.2f" % (((@summary["last_week"][key] || 0) - (@summary["other_week"][key] || 0)) / 3600.0)
+#block-text.block
+  .content
+    .inner
+      %p.first     
+        %table.lined
+          %tr
+            %th Activity
+            %th
+              = link_to "This week", "/time?refresh=this_week"
+            %th= link_to "Last week", "/time?refresh=last_week"
+            %th= link_to "The other week", "/time?refresh=other_week"
+            %th Delta
+          %tr
+            %th Start
+            - ["this_week", "last_week", "other_week"].each do |w|
+              %td= @limits[w][0].strftime("%m-%d")
+            %th The other week
+          %tr
+            %th End
+            - ["this_week", "last_week", "other_week"].each do |w|
+              %td= @limits[w][1].strftime("%m-%d")
+            %th Last week
+          - all_keys.each do |key|
+            %tr
+              %td= key
+              - ["this_week", "last_week", "other_week"].each do |k|
+                %td{:align=>"right"}= @summary[k][key] ? ("%.2f" % (@summary[k][key] / 3600.0)) : ""
+              %td{:align=>"right"}= "%.2f" % (((@summary["last_week"][key] || 0) - (@summary["other_week"][key] || 0)) / 3600.0)
 
