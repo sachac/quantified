@@ -1,0 +1,9 @@
+#block-text.block
+  .content
+    %h2.title Home
+    .inner
+      %p.first
+        - form_tag(refresh_from_csv_path, { :multipart => true }) do
+          = label_tag(:file, "Work unit overview CSV")
+          = file_field_tag :file
+          = submit_tag "Submit"
