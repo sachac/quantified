@@ -132,16 +132,11 @@ class TimeTrackerLog
         result['! Unpaid work'] ||= 0.seconds
         result['! Unpaid work'] += (x.end_time - x.start_time)
       end
-      puts "#{x.name} - #{(x.end_time - x.start_time) / 3600.0}"
       total += (x.end_time - x.start_time)
     end
-    result["A - Sleep"] ||= 0.seconds
-    puts end_time.to_s
-    puts start_time.to_s
-    puts (total / 3600.0)
-    puts ((end_time - start_time - total) / 3600.00)
-    puts "--"
-    result["A - Sleep"] += end_time - start_time - total
+    result["A - Sleep"] = end_time - start_time
+    result["A - Sleep"] -= (result['! Discretionary'] || 0) + (result['! Personal care'] || 0) + (result['! Unpaid work'] || 0) + (result['A - Work'] || 0)
+    puts "#{end_time.to_s} #{start_time.to_s} #{result['! Discretionary']} #{result['! Personal care']} #{result['! Unpaid work']} #{result['A - Work']}\n"
     result
   end
 

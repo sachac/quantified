@@ -1,0 +1,54 @@
+- all_keys = (@summary["this_week"].keys | @summary["last_week"].keys).sort
+
+#block-text.block
+  .content
+    .inner
+      %p.first
+        %table.lined
+          %tr
+            %td= "|"
+            %th Start
+            %td= "|"
+            - ["this_week", "last_week"].each do |w|
+              %td= @limits[w][0].strftime("%m-%d")
+              %td= "|"
+            %td= ""
+            %td= "|"
+            %td= ""
+            %td= "|"
+          %tr
+            %td= "|"
+            %th End
+            %td= "|"
+            - ["this_week", "last_week"].each do |w|
+              %td= (@limits[w][1] - 1.day).strftime("%m-%d")
+              %td= "|"
+            %th Last week
+            %td= "|"
+            %td= ""
+            %td= "|"
+          %tr
+            %th= "|" 
+            %th Activity
+            %th= "|" 
+            %th= link_to "This week", "/time?refresh=this_week"
+            %th= "|" 
+            %th= link_to "Last week", "/time?refresh=last_week"
+            %th= "|" 
+            %th Delta
+            %th= "|"
+            %th Notes
+            %th= "|" 
+          - all_keys.each do |key|
+            %tr
+              %td= "|"
+              %td= key
+              %td= "|"
+              - ["this_week", "last_week"].each do |k|
+                %td{:align=>"right"}= @summary[k][key] ? ("%.1f" % (@summary[k][key] / 3600.0)) : ""
+                %td= "|"
+              %td{:align=>"right"}= "%.1f" % (((@summary["this_week"][key] || 0) - (@summary["last_week"][key] || 0)) / 3600.0)
+              %td= "|"
+              %td= ""
+              %td= "|"
+

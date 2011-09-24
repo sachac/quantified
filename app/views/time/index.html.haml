@@ -20,7 +20,7 @@
           %tr
             %th End
             - ["this_week", "last_week", "other_week"].each do |w|
-              %td= @limits[w][1].strftime("%m-%d")
+              %td= (@limits[w][1] - 1.day).strftime("%m-%d") 
             %th Last week
           - all_keys.each do |key|
             %tr

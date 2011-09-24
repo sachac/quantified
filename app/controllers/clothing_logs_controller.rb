@@ -59,7 +59,7 @@ class ClothingLogsController < ApplicationController
 
     respond_to do |format|
       if @clothing_log.save
-        format.html { redirect_to(clothing_logs_path, :notice => "Logged #{@clothing_log.date}.") }
+        format.html { redirect_to(clothing_index_path, :notice => "Logged #{@clothing_log.date}.") }
         format.xml  { render :xml => @clothing_log, :status => :created, :location => @clothing_log }
       else
         format.html { render :action => "new" }
