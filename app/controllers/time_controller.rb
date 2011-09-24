@@ -16,11 +16,10 @@ class TimeController < ApplicationController
 
   def index
     @log = TimeTrackerLog.new
-    @limits = {"this_week" => [Chronic.parse("last Saturday").midnight, Time.now],
-      "last_week" => [Chronic.parse("last Saturday").midnight - 1.week,
-                      Chronic.parse("last Saturday").midnight],
-      "other_week" => [Chronic.parse("last Saturday").midnight - 2.weeks,
-                       Chronic.parse("last Saturday").midnight - 1.week]}
+    base = Chronic.parse("last Saturday").midnight
+    @limits = {"this_week" => [base, base + 1.week],
+      "last_week" => [base - 1.week, base],
+      "other_week" => [base - 2.weeks, base - 1.week]}
     if params[:refresh] && @limits[params[:refresh]]
       @log.login
       @log.refresh(@limits[params[:refresh]][0], @limits[params[:refresh]][1])
@@ -30,6 +29,11 @@ class TimeController < ApplicationController
     # Current week
     @limits.each do |k,l|
       @summary[k] = @log.summarize(l[0], l[1])
+    end
+    if params[:format] == 'org'
+      render "index_org"
+    else
+      render "index"
     end
   end
 
