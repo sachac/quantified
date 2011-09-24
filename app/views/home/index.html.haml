@@ -5,4 +5,15 @@
       %p.first
         = render "partials/clothing_log_entry"
         = set_focus_to_id("#clothing")
+      %table
+        %tr
+          %td
+            %h3 Toronto weather
+            %a{:href => "http://www.wunderground.com/cgi-bin/findweather/getForecast?query=zmw:00000.1.71265&bannertypeclick=wu_clean2day"}
+              %img{:src => "http://weathersticker.wunderground.com/weathersticker/cgi-bin/banner/ban/wxBanner?bannertype=wu_clean2day_metric_cond&airportcode=CYTZ&ForcedCity=Toronto&ForcedState=ON&wmo=71265&language=EN", :alt => "Click for Toronto, Ontario Forecast", :height => "100", :width => "300"}
+          %td
+            %h3 Manila weather
+            %a{:href => "http://www.wunderground.com/cgi-bin/findweather/getForecast?query=zmw:00000.1.71265&bannertypeclick=wu_clean2day"}
+              %img{:src => "http://weathersticker.wunderground.com/weathersticker/cgi-bin/banner/ban/wxBanner?bannertype=wu_clean2day_metric_cond&airportcode=RPLL&ForcedCity=Manila&ForcedState=&wmo=98429&language=EN", :alt => "Click for Forecast", :height => "100", :width => "300"}
+            
 

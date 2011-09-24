@@ -6,12 +6,14 @@
 %table
   %tr
     %th= sortable_column "#", :column => "number"
+    %th Wear
     %th= sortable_column "Name"
     %th= sortable_column "Count", :column => "clothing_logs_count", :direction => :desc
     %th= sortable_column "Last worn"
   - @clothing.each do |clothing|
     %tr
       %td= clothing.number
+      %td= link_to 'Wear', clothing_logs_path + "?clothing_id=" + clothing.id.to_s + "&date=" + Date.today.to_s, :method => :post
       %td= link_to clothing.name, clothing
       %td= clothing.clothing_logs_count
       %td= (time_ago_in_words(Date.parse(clothing.last_worn)) + " ago") if clothing.last_worn
