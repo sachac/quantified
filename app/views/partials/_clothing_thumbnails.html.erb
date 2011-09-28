@@ -1,0 +1,1 @@
+<% @clothing.each do |clothing| %><% if File.exist?("#{RAILS_ROOT}/public/images/clothing/small-#{clothing.number}.jpg") %><%= link_to image_tag("clothing/small-#{clothing.number}.jpg"), clothing_path(clothing) %><% end %><% end %>
