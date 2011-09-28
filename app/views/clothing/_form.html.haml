@@ -5,7 +5,16 @@
       %ul
         - @clothing.errors.full_messages.each do |msg|
           %li= msg
-  = f.inputs
+  = f.inputs do
+    = f.input :name
+    %li
+      Tags
+      = f.text_field :tag_list
+    = f.input :clothing_type
+    = f.input :colour
+    = f.input :status
+    = f.input :notes, :as => :text
+    = f.input :cost
   .actions
     = f.submit 'Save'
 = set_focus_to_id("clothing_label")

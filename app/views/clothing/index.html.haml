@@ -1,22 +1,40 @@
 %h1 Listing clothing
 
+- today = Date.today.strftime('%Y-%m-%d')
 = link_to "Clothing logs", clothing_logs_path 
 = render "partials/clothing_log_entry"
 = set_focus_to_id("#clothing")
+
+- Clothing.tag_counts do |tag, css_class|
+  = link_to tag.name, { :action => :tag, :id => tag.name }, :class => css_class
+
+= render "clothing_thumbnails"
+
 %table
   %tr
     %th= sortable_column "#", :column => "number"
     %th Wear
+    %th Plan
     %th= sortable_column "Name"
     %th= sortable_column "Count", :column => "clothing_logs_count", :direction => :desc
     %th= sortable_column "Last worn"
+    %th Colour
   - @clothing.each do |clothing|
     %tr
       %td= clothing.number
       %td= link_to 'Wear', clothing_logs_path + "?clothing_id=" + clothing.id.to_s + "&date=" + Date.today.to_s, :method => :post
+      %td= link_to 'Plan', clothing_logs_path + "?clothing_id=" + clothing.id.to_s + "&date=" + Date.tomorrow.to_s, :method => :post
       %td= link_to clothing.name, clothing
       %td= clothing.clothing_logs_count
-      %td= (time_ago_in_words(Date.parse(clothing.last_worn)) + " ago") if clothing.last_worn
+      %td
+        - if clothing.last_worn and clothing.last_worn >= today
+          today
+        - else   
+          = (time_ago_in_words(Date.parse(clothing.last_worn)) + " ago") if clothing.last_worn
+      %td
+        - clothing.colour.split(",").each do |x|
+          .color-box{:style => "background: ##{x}"}
+            &nbsp;
 %br
 
 = link_to 'New Clothing', new_clothing_path

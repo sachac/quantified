@@ -15,5 +15,17 @@
             %h3 Manila weather
             %a{:href => "http://www.wunderground.com/cgi-bin/findweather/getForecast?query=zmw:00000.1.71265&bannertypeclick=wu_clean2day"}
               %img{:src => "http://weathersticker.wunderground.com/weathersticker/cgi-bin/banner/ban/wxBanner?bannertype=wu_clean2day_metric_cond&airportcode=RPLL&ForcedCity=Manila&ForcedState=&wmo=98429&language=EN", :alt => "Click for Forecast", :height => "100", :width => "300"}
-            
+      %h2
+        = pluralize @library_items.count, "library book"
+        = link_to "(refresh)", library_refresh_path
+      %table
+        %tr
+          %th Due
+          %th Title
+          %th Author
+        - @library_items.each do |item|
+          %tr
+            %td= item.due.strftime("%Y-%m-%d %a")
+            %td= item.title
+            %td= item.author
 
