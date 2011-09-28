@@ -1,0 +1,6 @@
+- if colours.is_a? String
+  - colours = colours.split(',')
+- colours.each do |x|
+  .color-box{:style => "background: ##{x}"}
+    = x
+ 

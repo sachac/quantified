@@ -134,7 +134,7 @@ class TimeTrackerLog
       end
       total += (x.end_time - x.start_time)
     end
-    result["A - Sleep"] = end_time - start_time
+    result["A - Sleep"] = [end_time, Time.now].min - start_time
     result["A - Sleep"] -= (result['! Discretionary'] || 0) + (result['! Personal care'] || 0) + (result['! Unpaid work'] || 0) + (result['A - Work'] || 0)
     puts "#{end_time.to_s} #{start_time.to_s} #{result['! Discretionary']} #{result['! Personal care']} #{result['! Unpaid work']} #{result['A - Work']}\n"
     result
