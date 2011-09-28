@@ -1,7 +1,14 @@
 %ul.navigation
-  %li= link_to "Clothing", "/clothing" 
+  %li
+    =link_to "Clothing", "/clothing"
+    %ul
+      %li= link_to "Office", "/clothing/tag/office"
+      %li= link_to "Casual", "/clothing/tag/casual" 
   %li= link_to "Clothing logs", clothing_logs_path 
   %li= link_to "Decisions", decisions_path 
   %li= link_to "Decision logs", decision_logs_path 
   %li= link_to "Time tracker", time_path 
   %li= link_to "Time tracker graph", "/time/graph"
+  
+%a{:href => "http://www.wunderground.com/cgi-bin/findweather/getForecast?query=zmw:00000.1.71265&bannertypeclick=wu_clean2day"}
+  %img{:src => "http://weathersticker.wunderground.com/weathersticker/cgi-bin/banner/ban/wxBanner?bannertype=wu_clean2day_metric_cond&airportcode=CYTZ&ForcedCity=Toronto&ForcedState=ON&wmo=71265&language=EN", :alt => "Click for Toronto, Ontario Forecast", :height => "100", :width => "300"}

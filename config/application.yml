@@ -1,0 +1,21 @@
+defaults: &defaults
+  library_cards:
+    -
+      card: 27131019163536
+      pin: 2669
+      name: Sacha
+    -
+      card: 27131017960420
+      pin: 0140
+      name: Wayne
+    -
+      card: 27131024269534
+      pin: 0140
+      name: Jessie
+ 
+development:
+  <<: *defaults
+test:
+  <<: *defaults
+production:
+  <<: *defaults
