@@ -21,3 +21,23 @@ th {
 .flash .alert {
   border: 1px solid #ffbbbb;
   background-color: #ffdddd; }
+
+.color-box {
+  display: inline-block;
+  width: 50px;
+  height: 30px; }
+
+.clear-both {
+  clear: both; }
+
+.image {
+  float: right; }
+
+.clear-left {
+  clear: left; }
+
+.date-change td {
+  border-top: 1pt solid gray; }
+
+dd {
+  display: inline-block; }
