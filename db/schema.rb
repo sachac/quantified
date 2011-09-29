@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110918021046) do
+ActiveRecord::Schema.define(:version => 20110928030551) do
 
   create_table "books", :force => true do |t|
     t.string   "title"
@@ -30,6 +30,10 @@ ActiveRecord::Schema.define(:version => 20110918021046) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "status"
+    t.float    "hue"
+    t.float    "saturation"
+    t.float    "brightness"
+    t.float    "cost"
   end
 
   create_table "clothing_logs", :force => true do |t|
@@ -56,6 +60,18 @@ ActiveRecord::Schema.define(:version => 20110918021046) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "rating"
+  end
+
+  create_table "library_items", :force => true do |t|
+    t.string   "library_id"
+    t.string   "dewey"
+    t.string   "title"
+    t.string   "author"
+    t.date     "due"
+    t.integer  "rating"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "status"
   end
 
   create_table "taggings", :force => true do |t|
