@@ -115,6 +115,24 @@ class TimeTrackerLog
     TimeRecord.find(:all, :conditions => ["start_time >= ? AND end_time <= ?", start_time, end_time])
   end
 
+  def by_day(entries)
+    days = Hash.new
+    days_total = Hash.new
+    entries.each do |e|
+      days[e.start_time.midnight] ||= Hash.new
+      days[e.start_time.midnight][e.name] ||= 0
+      days[e.start_time.midnight][e.name] += (e.end_time - e.start_time)
+      unless (e.name == 'A - Sleep') then
+        days_total[e.start_time.midnight] ||= 0
+        days_total[e.start_time.midnight] += (e.end_time - e.start_time)
+      end
+    end
+    # Go back and fill in sleep
+    days.each do |date,list|
+      days[date]['A - Sleep'] = 86400 - days_total[date]
+    end
+    days
+  end
   def summarize(start_time, end_time)
     list = entries(start_time, end_time)
     result = Hash.new
