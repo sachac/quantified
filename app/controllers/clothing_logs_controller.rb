@@ -2,8 +2,13 @@ class ClothingLogsController < ApplicationController
   # GET /clothing_logs
   # GET /clothing_logs.xml
   def index
-    @clothing_logs = ClothingLog.order("date DESC").all
-
+    @clothing_logs = ClothingLog.find(:all, :order => "date DESC, clothing.clothing_type", :include => [:clothing])
+    @by_date = Hash.new
+    @clothing_logs.each do |l|
+      @by_date[l.date] ||= Array.new
+      @by_date[l.date] << l
+    end
+    @dates = @by_date.keys.sort { |a,b| b <=> a }
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @clothing_logs }
@@ -59,7 +64,7 @@ class ClothingLogsController < ApplicationController
 
     respond_to do |format|
       if @clothing_log.save
-        format.html { redirect_to(clothing_index_path, :notice => "Logged #{@clothing_log.date}.") }
+        format.html { redirect_to(:back, :notice => "Logged #{@clothing_log.date}.") }
         format.xml  { render :xml => @clothing_log, :status => :created, :location => @clothing_log }
       else
         format.html { render :action => "new" }
