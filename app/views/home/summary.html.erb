@@ -1,0 +1,11 @@
+<% form_tag do %>
+  Start: <%= text_field_tag :start, @start.strftime("%Y-%m-%d") %>
+  End: <%= text_field_tag :end, @end.strftime("%Y-%m-%d") %>
+  <%= submit_tag "Go" %>
+<% end %>
+
+<div style="font-size: 20px">
+Work: <span class="sparkline-bar"><%= @time_graphs['A - Work'].join(',') %></span><br />
+Life: <span class="sparkline-bar"><%= @time_graphs['A - Sleep'].join(',') %></span>
+</div>
+   
