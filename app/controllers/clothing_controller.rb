@@ -6,8 +6,10 @@ class ClothingController < ApplicationController
   # GET /clothing.xml
   def index
     order = sortable_column_order
-    order ||= "last_worn asc"
-    @clothing = Clothing.find(:all, :select => 'clothing.*, count(clothing_logs.id) as clothing_logs_count, max(clothing_logs.date) AS last_worn',
+    order ||= "clothing_type asc, hue asc"
+    @clothing = Clothing.find(:all, 
+                              :conditions => ["status is null OR status != 'donated'"],
+                              :select => 'clothing.*, count(clothing_logs.id) as clothing_logs_count, max(clothing_logs.date) AS last_worn',
                               :joins => 'left outer join clothing_logs ON clothing.id=clothing_logs.clothing_id', :group => 'clothing.id', :order => order)
 
     respond_to do |format|
@@ -21,6 +23,25 @@ class ClothingController < ApplicationController
   def show
     @clothing = Clothing.find(params[:id])
     @logs = ClothingLog.find(:all, :conditions => ["clothing_id=?", @clothing.id], :order => 'date DESC')
+    tags = @clothing.tag_list
+    search = Array.new
+    if tags.include? "bottom"
+      search << "top"
+    elsif tags.include? "top"
+      search << "bottom"
+    end
+    if tags.include? "office"
+      search << "office"
+    elsif tags.include? "casual"
+      search << "casual"
+    end
+    if search.size > 0 then
+      @matches = Clothing.tagged_with(search[0])
+      if (search.size > 1) then
+        @matches = @matches.tagged_with(search[1])
+      end
+    end
+
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @clothing }
@@ -31,7 +52,7 @@ class ClothingController < ApplicationController
   # GET /clothing/new.xml
   def new
     @clothing = Clothing.new
-    @clothing.number = Clothing.maximum(:number) + 1
+    @clothing.number = Clothing.maximum(:id) + 1
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @clothing }
@@ -85,5 +106,13 @@ class ClothingController < ApplicationController
       format.html { redirect_to(clothing_index_url) }
       format.xml  { head :ok }
     end
+  end
+
+  def tag
+    # Show by tags
+    order = sortable_column_order
+    order ||= "clothing_type asc, last_worn asc"
+    @clothing = Clothing.tagged_with(params[:name]).joins('left outer join clothing_logs ON clothing.id=clothing_logs.clothing_id').select('clothing.*, count(clothing_logs.id) as clothing_logs_count, max(clothing_logs.date) AS last_worn').group('clothing.id').order(order)
+    render :index
   end
 end
