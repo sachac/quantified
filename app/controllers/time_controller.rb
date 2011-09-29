@@ -38,22 +38,23 @@ class TimeController < ApplicationController
   end
 
   def graph
-    @width = 910
-    @height = 500
+    @day_height = 15;
+    @width = 900
     @time_bottom = @height
     @start = (!params[:start].blank? ? Time.parse(params[:start]) : Date.new(Date.today.year, Date.today.month, 1)).midnight
     @end = (!params[:end].blank? ? Time.parse(params[:end]) : Date.new(Date.today.year, Date.today.month + 1, 1)).midnight
+    @height = (@day_height * (@end - @start) / 86400.0).to_i
     entries = TimeRecord.find(:all, :conditions => ["start_time >= ? AND start_time < ?", @start, @end], :order => "start_time")
     total_time = (@end - @start).to_f
-    @distribution = Array.new
-    @day_width = ((@width - 10) / 2) * 86400.0 / (@end.midnight - @start.midnight)
-    @second_height = @time_bottom / 86400.0
+    @time_records = Array.new
+    @day_height = (@height * 86400.0) / (@end.midnight - @start.midnight)
+    @second_width = (@width / 2 - 5) / 86400.0
     days = Hash.new
     @totals = Hash.new
     entries.each do |e|
-      x = @day_width * ((e.start_time.midnight - @start.midnight) / 86400.0)
-      y = @second_height * (e.start_time - e.start_time.midnight)
-      item_height = @second_height * (e.end_time - e.start_time)
+      x = ((@second_width * (e.start_time - e.start_time.midnight))).to_i
+      y = ((@day_height * (e.start_time.midnight - @start.midnight) / 86400.0)).to_i
+      item_width = @second_width * (e.end_time - e.start_time)
       class_name = e.name.downcase.gsub(/[^a-z]/, '')
       if e.name == "A - Sleep" then
         next
@@ -67,7 +68,7 @@ class TimeController < ApplicationController
         color = "#acaa85"
       end
       title = "#{e.start_time.strftime('%Y-%m-%d %H:%M')} - #{e.end_time.strftime('%H:%M')} #{e.name}" 
-      @distribution << { :x => x, :y => y, :height => item_height, 
+      @time_records << { :x => x, :y => y, :width => item_width, 
         :color => color,
         :name => e.name,
         :class => class_name,
@@ -95,18 +96,19 @@ class TimeController < ApplicationController
     # Sort by name
     keys = @totals.keys.sort
     days.each do |k, vals|
-      x = @distribution_offset + @day_width * ((k.midnight - @start.midnight) / 86400.0)
-      y = @time_bottom
+      x = @distribution_offset
+      y = @day_height * ((k.midnight - @start.midnight) / 86400.0)
       keys.each do |name|
         hash = vals[name]
         if hash
-          height = @second_height * hash[:value]
-          y = y - height
-          hash[:height] = height
+          width = @second_width * hash[:value]
+          hash[:width] = width
           hash[:y] = y
           hash[:x] = x
           hash[:title] = k.strftime("%Y-%m-%d") + " - " + hash[:title] + " (#{"%.1f%%" % (@totals[hash[:title]][:percent])})"
           @days << hash
+          x = x + width
+          puts "#{k} #{x} #{width} #{hash[:title]}"
         end
       end     
     end
