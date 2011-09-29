@@ -6,7 +6,10 @@
     = javascript_include_tag :defaults, :cache => true
     = csrf_meta_tag
     = javascript_include_tag "autocomplete-rails.js"
-    = javascript_include_tag "raphael-min.js"  
+    = javascript_include_tag "raphael-min.js"
+    = javascript_include_tag "jquery.sparkline.min.js"
+    :javascript
+      $(function() { $('.sparkline-bar').sparkline('html', {type: 'bar'}); });
   %body
     #container
       #header
