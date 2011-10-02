@@ -1,7 +1,6 @@
 %h1 Listing clothing
 
 - today = Date.today.strftime('%Y-%m-%d')
-= link_to "Clothing logs", clothing_logs_path 
 = render "partials/clothing_log_entry"
 = set_focus_to_id("#clothing")
 
@@ -13,21 +12,26 @@
 %table
   %tr
     %th= sortable_column "#", :column => "number"
-    %th Wear
-    %th Plan
+    - if user_signed_in?
+      %th Wear
+      %th Plan
     %th= sortable_column "Name"
     %th= sortable_column "Count", :column => "clothing_logs_count", :direction => :desc
     %th= sortable_column "Last worn"
     %th Colour
+    %th Tags
   - @clothing.each do |clothing|
     %tr
       %td= clothing.number
-      %td= link_to 'Wear', clothing_logs_path + "?clothing_id=" + clothing.id.to_s + "&date=" + Date.today.to_s, :method => :post
-      %td= link_to 'Plan', clothing_logs_path + "?clothing_id=" + clothing.id.to_s + "&date=" + Date.tomorrow.to_s, :method => :post
+      - if user_signed_in?
+        %td= link_to 'Wear', clothing_logs_path + "?clothing_id=" + clothing.id.to_s + "&date=" + Date.today.to_s, :method => :post
+        %td= link_to 'Plan', clothing_logs_path + "?clothing_id=" + clothing.id.to_s + "&date=" + Date.tomorrow.to_s, :method => :post
       %td= link_to clothing.name, clothing
       %td= clothing.clothing_logs_count
       %td
-        - if clothing.last_worn and clothing.last_worn >= today
+        - if clothing.last_worn and Date.parse(clothing.last_worn) > Date.today then
+          = clothing.last_worn
+        - elsif clothing.last_worn and Date.parse(clothing.last_worn) >= Date.today
           today
         - else   
           = (time_ago_in_words(Date.parse(clothing.last_worn)) + " ago") if clothing.last_worn
@@ -35,6 +39,10 @@
         - clothing.colour.split(",").each do |x|
           .color-box{:style => "background: ##{x}"}
             &nbsp;
+      %td
+        - clothing.tag_list.each do |tag|
+          = link_to tag, { :action => :tag, :id => tag }
+
 %br
 
 = link_to 'New Clothing', new_clothing_path
