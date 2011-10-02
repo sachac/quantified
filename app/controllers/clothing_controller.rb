@@ -1,6 +1,7 @@
 class ClothingController < ApplicationController
   autocomplete :clothing, :name, :display_value => :autocomplete_view, :extra_data => [:number], :full => true
   handles_sortable_columns
+  before_filter :authenticate_user!, :except => [:index, :tag, :show]
 
   # GET /clothing
   # GET /clothing.xml
@@ -112,7 +113,7 @@ class ClothingController < ApplicationController
     # Show by tags
     order = sortable_column_order
     order ||= "clothing_type asc, last_worn asc"
-    @clothing = Clothing.tagged_with(params[:name]).joins('left outer join clothing_logs ON clothing.id=clothing_logs.clothing_id').select('clothing.*, count(clothing_logs.id) as clothing_logs_count, max(clothing_logs.date) AS last_worn').group('clothing.id').order(order)
+    @clothing = Clothing.tagged_with(params[:id]).joins('left outer join clothing_logs ON clothing.id=clothing_logs.clothing_id').select('clothing.*, count(clothing_logs.id) as clothing_logs_count, max(clothing_logs.date) AS last_worn').group('clothing.id').order(order)
     render :index
   end
 end
