@@ -9,7 +9,11 @@
     = javascript_include_tag "raphael-min.js"
     = javascript_include_tag "jquery.sparkline.min.js"
     :javascript
-      $(function() { $('.sparkline-bar').sparkline('html', {type: 'bar'}); });
+      $(function() { $('.sparkline-bar').sparkline('html', {type: 'bar', barColor: '#85acaa', chartRangeMin: 0}); });
+      var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+      document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+      var pageTracker = _gat._getTracker("UA-596973-1");
+      pageTracker._trackPageview();
   %body
     #container
       #header
@@ -17,12 +21,15 @@
           %a{:href => "/"} Sacha Chua
         #user-navigation
           %ul.wat-cf
-            %li
-              %a{:href => "#"}= t("web-app-theme.profile", :default => "Profile")
-            %li
-              %a{:href => "#"}= t("web-app-theme.settings", :default => "Settings")
-            %li
-              = link_to t("web-app-theme.logout", :default => "Logout"), destroy_user_session_path, :method => "delete"
+            - if user_signed_in?
+              %li
+                %a{:href => "#"}= t("web-app-theme.profile", :default => "Profile")
+              %li
+                %a{:href => "#"}= t("web-app-theme.settings", :default => "Settings")
+              %li
+                = link_to t("web-app-theme.logout", :default => "Log out"), destroy_user_session_path, :method => "delete"
+            - else
+              %li= link_to 'Log in', new_user_session_path
         #main-navigation
           %ul.wat-cf
       #wrapper.wat-cf

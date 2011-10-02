@@ -1,6 +1,7 @@
 # Challenges: 
 # I have to manually create my time graphs
 class TimeController < ApplicationController
+  before_filter :authenticate_user!, :except => [:graph]
   def refresh
     # Challenge: Time Recording does not update old Google Calendar entries when you rename tasks
     # Approach: Upload work unit CSV and replace entries covering that span of time
@@ -118,5 +119,23 @@ class TimeController < ApplicationController
         @labels << "<a href=\"#\" class=\"#{@totals[name][:class]}\">#{@totals[name][:title]}</a>".html_safe
       end
     end
+    @log = TimeTrackerLog.new
+    @time_by_day = @log.by_day(entries)
+    day = @start
+    @time_graphs = Hash.new
+    @cat = keys
+    @cat << "A - Sleep"
+    @cat.each do |t| @time_graphs[t] = Array.new end
+    while day < @end
+      @cat.each do |t|
+        if @time_by_day[day.strftime('%Y-%m-%d')] then
+          @time_graphs[t] << (@time_by_day[day.strftime('%Y-%m-%d')][t] || 0) / 3600
+        else
+          @time_graphs[t] << 0
+        end
+      end
+      day += 1.day
+    end
+
   end
 end

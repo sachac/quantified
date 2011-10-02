@@ -1,0 +1,10 @@
+<div style="font-size: 20px">
+<table>
+<% cat.sort.each do |label|
+   list = time_graphs[label] %> 
+<tr><td><%= label %></td><td><span class="sparkline-bar"><%= list.join(',') %></span></tr>
+<%   end %>
+</table>
+
+</div>
+   

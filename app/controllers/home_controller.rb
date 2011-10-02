@@ -10,12 +10,12 @@ class HomeController < ApplicationController
     @time_by_day = @log.by_day(@entries)
     day = @start
     @time_graphs = Hash.new
-    cat = ['A - Work', 'A - Sleep']
-    cat.each do |t| @time_graphs[t] = Array.new end
+    @cat = (@time_by_day.map { |x,y| y.keys }).flatten.uniq
+    @cat.each do |t| @time_graphs[t] = Array.new end
     while day < @end
-      cat.each do |t| 
-        if @time_by_day[day] then
-          @time_graphs[t] << (@time_by_day[day][t] || 0) / 3600
+      @cat.each do |t| 
+        if @time_by_day[day.strftime('%Y-%m-%d')] then
+          @time_graphs[t] << (@time_by_day[day.strftime('%Y-%m-%d')][t] || 0) / 3600
         else
           @time_graphs[t] << 0
         end
