@@ -1,9 +1,10 @@
-<h2>Distribution</h2>
+<h2>Time use</h2>
 <% form_tag do %>
   Start: <%= text_field_tag :start, @start.strftime("%Y-%m-%d") %>
   End: <%= text_field_tag :end, @end.strftime("%Y-%m-%d") %>
   <%= submit_tag "Go" %>
 <% end %>
+<%= render :partial => "partials/time_sparklines", :locals => { :cat => @cat, :time_graphs => @time_graphs } %>
 <div class="day">
 <div id="canvas" style="width: <%= @width %>px; height: <%= @height %>px"></div>
 <script type="text/javascript">
