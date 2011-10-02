@@ -119,12 +119,13 @@ class TimeTrackerLog
     days = Hash.new
     days_total = Hash.new
     entries.each do |e|
-      days[e.start_time.midnight] ||= Hash.new
-      days[e.start_time.midnight][e.name] ||= 0
-      days[e.start_time.midnight][e.name] += (e.end_time - e.start_time)
+      mn = e.start_time.midnight.strftime('%Y-%m-%d')
+      days[mn] ||= Hash.new
+      days[mn][e.name] ||= 0
+      days[mn][e.name] += (e.end_time - e.start_time)
       unless (e.name == 'A - Sleep') then
-        days_total[e.start_time.midnight] ||= 0
-        days_total[e.start_time.midnight] += (e.end_time - e.start_time)
+        days_total[mn] ||= 0
+        days_total[mn] += (e.end_time - e.start_time)
       end
     end
     # Go back and fill in sleep

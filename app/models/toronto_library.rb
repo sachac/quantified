@@ -38,6 +38,7 @@ class TorontoLibrary
         rec = LibraryItem.where("library_id = ?", item[:library_id]).first
         if rec then
           rec.due = item[:due]
+	  rec.updated_at = stamp
         else
           rec = LibraryItem.create(item)
         end
