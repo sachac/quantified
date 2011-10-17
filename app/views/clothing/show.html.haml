@@ -8,8 +8,7 @@
 = @clothing.status
 
 .image
-  - if File.exist?("#{RAILS_ROOT}/public/images/clothing/#{@clothing.number}.jpg")
-    = image_tag("clothing/#{@clothing.number}.jpg")
+  = clothing_thumbnail(@clothing, :size => :large)
 
 %tags
   Tags:
@@ -48,15 +47,15 @@
 - if @matches
   = render :partial => 'clothing_thumbnails', :locals => { :list => @matches }
 
-= @clothing.notes
+%p= @clothing.notes
 
 - if @logs
   %ul
     - @logs.each do |c|
       %li
         = "#{link_to c.date, clothing_log_path(c)}: ".html_safe
-        - entries = ClothingLog.find(:all, :select => 'clothing.name, clothing.id', :order => 'clothing.name', :joins => 'INNER JOIN clothing ON clothing_logs.clothing_id=clothing.id', :conditions => ["date >= ? and date < ?", c.date, c.date + 1.day]).map{ |x| link_to x.name, ('/clothing/' + x.id.to_s) }
-        = entries.join(', ').html_safe
+        - ClothingLog.find(:all, :select => 'clothing_id, clothing.name, clothing.id', :order => 'clothing.name', :joins => 'INNER JOIN clothing ON clothing_logs.clothing_id=clothing.id', :conditions => ["date >= ? and date < ?", c.date, c.date + 1.day]).each do |x| 
+          = clothing_thumbnail x.clothing
 
 - if user_signed_in?      
   = link_to 'Edit', edit_clothing_path(@clothing)

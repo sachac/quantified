@@ -41,3 +41,9 @@ th {
 
 dd {
   display: inline-block; }
+
+.entry {
+  float: left;
+  padding-left: 10px; }
+  .entry .item {
+    float: left; }

@@ -1,5 +1,9 @@
 %h1 Listing clothing
 
+= link_to 'all', clothing_index_path
+- tag_cloud(@tags, %w(css1 css2 css3 css4)) do |tag, css_class| 
+  = link_to tag.name, { :action => :tag, :id => tag.name }, :class => css_class 
+
 - today = Date.today.strftime('%Y-%m-%d')
 = render "partials/clothing_log_entry"
 = set_focus_to_id("#clothing")
@@ -36,9 +40,10 @@
         - else   
           = (time_ago_in_words(Date.parse(clothing.last_worn)) + " ago") if clothing.last_worn
       %td
-        - clothing.colour.split(",").each do |x|
-          .color-box{:style => "background: ##{x}"}
-            &nbsp;
+        - if clothing.colour then
+          - clothing.colour.split(",").each do |x|
+            .color-box{:style => "background: ##{x}"}
+              &nbsp;
       %td
         - clothing.tag_list.each do |tag|
           = link_to tag, { :action => :tag, :id => tag }
