@@ -1,6 +1,7 @@
 class HomeController < ApplicationController
   def index
     @library_items = LibraryItem.where("status = 'due' OR status IS NULL").order(:due)
+    @clothing_today = ClothingLog.where('date = ?', Date.today)
   end
   def summary
     @start = (!params[:start].blank? ? Time.parse(params[:start]) : Date.new(Date.today.year, Date.today.month, 1)).midnight
