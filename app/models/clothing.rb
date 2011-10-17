@@ -16,7 +16,7 @@ class Clothing < ActiveRecord::Base
   end
 
   def get_color
-    base = self.colour.split(',')[0]
+    base = self.colour.split(',')[0] if self.colour
     unless base.nil? then
       Color::RGB.from_html(base)
     end
