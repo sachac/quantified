@@ -12,8 +12,10 @@ Home::Application.routes.draw do
   resources :clothing_logs
   resources :clothing do
     get :autocomplete_clothing_name, :on => :collection
+    get :analyze, :on => :collection, :as => :clothing_analysis
   end
   match 'clothing/tag/:id' => 'clothing#tag', :as => :clothing_by_tag
+  match 'clothing/analyze/:start/:end' => 'clothing#analyze', :as => :clothing_analyze
   match 'library/update' => 'library#update', :as => :library_refresh
   match 'summary' => 'home#summary', :as => :summary
   # The priority is based upon order of creation:
