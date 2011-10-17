@@ -1,11 +1,12 @@
 class ClothingController < ApplicationController
   autocomplete :clothing, :name, :display_value => :autocomplete_view, :extra_data => [:number], :full => true
   handles_sortable_columns
-  before_filter :authenticate_user!, :except => [:index, :tag, :show]
+  before_filter :authenticate_user!, :except => [:index, :tag, :show, :analyze]
 
   # GET /clothing
   # GET /clothing.xml
   def index
+    @tags = Clothing.tag_counts_on(:tags).sort_by(&:name)
     order = sortable_column_order
     order ||= "clothing_type asc, hue asc"
     @clothing = Clothing.find(:all, 
@@ -113,7 +114,55 @@ class ClothingController < ApplicationController
     # Show by tags
     order = sortable_column_order
     order ||= "clothing_type asc, last_worn asc"
+    @tags = Clothing.tag_counts_on(:tags).sort_by(&:name)
     @clothing = Clothing.tagged_with(params[:id]).joins('left outer join clothing_logs ON clothing.id=clothing_logs.clothing_id').select('clothing.*, count(clothing_logs.id) as clothing_logs_count, max(clothing_logs.date) AS last_worn').group('clothing.id').order(order)
     render :index
+  end
+  
+  def analyze
+    @start_date = params[:start] ? Date.parse(params[:start]) : (Date.today - 1.week)
+    @end_date = params[:end] ? Date.parse(params[:end]) : Date.today
+    # Straight chart
+    logs = ClothingLog.where("date >= ? AND date <= ?", @start_date, @end_date).order("date ASC")
+    @clothes = Hash.new
+    @logs = Hash.new
+    @matches = Hash.new
+    @tops = Hash.new
+    bottoms = Hash.new
+    tops = Hash.new
+    logs.each do |l|
+      @clothes[l.clothing_id] ||= Clothing.find(l.clothing_id)
+      @logs[l.clothing_id] ||= Hash.new
+      @logs[l.clothing_id][l.date] = l
+      tags = l.clothing.tag_list
+      if (tags.include? "bottom") then
+        bottoms[l.date] ||= Hash.new
+        bottoms[l.date][l.outfit_id || 1] = l.clothing_id
+      elsif not (tags.include? "vest" or tags.include? "sweater" or tags.include? "blazer")
+        tops[l.date] ||= Hash.new
+        tops[l.date][l.outfit_id || 1] = l.clothing_id
+        @tops[l.clothing_id] ||= @clothes[l.clothing_id] 
+      end
+    end
+    
+    # Match tops and bottoms
+    bottoms.each do |date, outfit|
+      outfit.each do |id, clothing_id|
+        @matches[clothing_id] ||= Hash.new
+        @matches[clothing_id][tops[date][id] || 0] ||= Array.new
+        @matches[clothing_id][tops[date][id] || 0] <<= date
+      end
+    end
+    tops.each do |date, outfit|
+      outfit.each do |id, clothing_id|
+        unless bottoms[date] && bottoms[date][id] 
+          @matches[0] ||= Hash.new
+          @matches[0][clothing_id] ||= Array.new
+          @matches[0][clothing_id] <<= date
+        end
+      end
+    end
+    @matches = @matches.sort
+    @tops = @tops.sort
   end
 end

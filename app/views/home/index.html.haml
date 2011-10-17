@@ -5,6 +5,8 @@
       %p.first
         = render "partials/clothing_log_entry"
         = set_focus_to_id("#clothing")
+        - @clothing_today.each do |c|
+          = clothing_thumbnail c.clothing, :link => clothing_log_path(c)
       %table
         %tr
           %td

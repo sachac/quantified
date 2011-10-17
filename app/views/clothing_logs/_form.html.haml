@@ -7,6 +7,7 @@
           %li= msg
   = f.inputs do
     = f.input :date, :as => :string
+    = f.input :outfit_id
     = f.input :clothing, :collection => Clothing.all.map { |x| [ "#{x.number} - #{x.name}", x.id ] }
   .actions
     = f.submit 'Save'
