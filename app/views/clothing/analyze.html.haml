@@ -1,0 +1,63 @@
+%h1 Analyzing clothing
+
+- form_tag(nil, :method => :get) do 
+  Start: 
+  = text_field_tag :start, @start_date.strftime("%Y-%m-%d"), {:class => "datepicker"}
+  End: 
+  = text_field_tag :end, @end_date.strftime("%Y-%m-%d"), {:class => "datepicker"}
+  = submit_tag "Go" 
+
+%h2 Logs
+
+- col_total = Hash.new
+%table.lined
+  %tr
+    %th Clothing item
+    - date = @start_date
+    - new_end = @end_date + 1.day
+    - while date < new_end
+      %th{:title => l(date, :format => :short)}= date.strftime("%d")
+      - date = date + 1.day
+    %th Total
+  - @clothes.each do |id,item|
+    %tr
+      %th.left= link_to item.name, item
+      - date = @start_date
+      - row_total = 0
+      - while date < new_end
+        - if @logs[id][date] then
+          %td= link_to "ABCDEFG"[(@logs[id][date].outfit_id || 1) - 1,1], current_user ? edit_clothing_log_path(@logs[id][date]) : clothing_log_path(@logs[id][date])
+          - row_total += 1
+          - col_total[date] ||= 0
+          - col_total[date] += 1
+        - else
+          %td &nbsp;
+        - date = date + 1.day
+      %td= row_total 
+  %tr
+    %th Total
+    - date = @start_date
+    - while date < new_end
+      %td= col_total[date]
+      - date = date + 1.day
+    %td &nbsp;
+
+%h2 Matches
+
+%table.lined
+  %tr 
+    %th Bottoms \ Tops
+    - @tops.each do |id, clothing|
+      - if clothing
+        %th= clothing_thumbnail(clothing)
+      - else
+        %th &nbsp;
+  - @matches.each do |id, top_list|
+    %tr 
+      %th= id == 0 ? "By itself" : clothing_thumbnail(@clothes[id])
+      - @tops.each do |top_id, t|
+        - if top_list[top_id] then
+          %td= (top_list[top_id].sort.join "<br>").html_safe
+        - else
+          %td &nbsp;
+   
