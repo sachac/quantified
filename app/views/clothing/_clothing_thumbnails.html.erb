@@ -1,2 +1,2 @@
 <% list ||= @clothing %>
-<% list.each do |clothing| %><% if File.exist?("#{RAILS_ROOT}/public/images/clothing/small-#{clothing.number}.jpg") %><%= link_to image_tag("clothing/small-#{clothing.number}.jpg"), clothing_path(clothing), :title => clothing.name %><% end %><% end %>
+<% list.each do |clothing| %><%= clothing_thumbnail clothing %><% end %>

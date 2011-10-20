@@ -12,6 +12,7 @@ gem 'color'
 gem 'formtastic'
 gem 'handles_sortable_columns'
 gem 'gdata'
+gem 'cancan'
 # Use unicorn as the web server
 # gem 'unicorn'
 
