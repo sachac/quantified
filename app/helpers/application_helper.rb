@@ -4,7 +4,7 @@ module ApplicationHelper
   end
   def google_analytics_js
   end	
-  def clothing_thumbnail(clothing, options = {})
+  def clothing_image(clothing, options = {})
     if clothing then
       case options[:size]  
         when :large then
@@ -17,9 +17,29 @@ module ApplicationHelper
       else
         image = "clothing/clothing_unknown.jpg"
       end
-      link_to image_tag(image), options[:path] ? options[:path] : clothing_path(clothing), { :title => clothing.name }
+    end
+    image || nil
+  end
+  def clothing_thumbnail(clothing, options = {})
+    title = clothing.name
+    if clothing.last_worn then
+      title += " - #{clothing.clothing_logs_count} - #{date_ago_future clothing.last_worn}"
+    end
+    if clothing then
+      link_to image_tag(clothing_image(clothing, options)), options[:path] ? options[:path] : clothing_path(clothing), { :title => title }
     else
       "Unknown"
+    end
+  end
+  def date_ago_future(d)
+    if d then
+      if d >= Date.tomorrow then
+        d
+      elsif d >= Date.today then
+        'today'
+      else
+        time_ago_in_words(d) + " ago"
+      end
     end
   end
 end
