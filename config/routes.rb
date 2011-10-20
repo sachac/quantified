@@ -13,8 +13,10 @@ Home::Application.routes.draw do
   resources :clothing do
     get :autocomplete_clothing_name, :on => :collection
     get :analyze, :on => :collection, :as => :clothing_analysis
+    get :graph, :on => :collection, :as => :clothing_graph
   end
   match 'clothing/tag/:id' => 'clothing#tag', :as => :clothing_by_tag
+  match 'clothing/status/:status' => 'clothing#by_status', :as => :clothing_by_status
   match 'clothing/analyze/:start/:end' => 'clothing#analyze', :as => :clothing_analyze
   match 'library/update' => 'library#update', :as => :library_refresh
   match 'summary' => 'home#summary', :as => :summary

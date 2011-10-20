@@ -1,6 +1,13 @@
 class Clothing < ActiveRecord::Base
   acts_as_taggable_on :tags
   has_many :clothing_logs
+  has_and_belongs_to_many :clothing_matches, \
+  :class_name => "Clothing", \
+  :join_table => "clothing_matches", \
+  :foreign_key => :clothing_a_id, \
+  :association_foreign_key => :clothing_b_id, \
+  :readonly => true
+ 
   before_save :update_hsl
   def autocomplete_view
     "#{self.number} - #{self.name}"
@@ -16,9 +23,21 @@ class Clothing < ActiveRecord::Base
   end
 
   def get_color
-    base = self.colour.split(',')[0] if self.colour
+    base = self.colour.split(',')[0] unless self.colour.blank? 
     unless base.nil? then
       Color::RGB.from_html(base)
     end
   end
+
+  def update_stats!
+    last = self.clothing_logs.order('date DESC').first
+    if last then
+      self.last_worn = last.date
+      self.last_clothing_log_id = last.id
+    else
+      self.last_worn = self.last_clothing_log_id = nil
+    end
+    self
+  end
+
 end
