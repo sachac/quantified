@@ -11,8 +11,7 @@ class ClothingController < ApplicationController
     order ||= "clothing_type asc, hue asc"
     @clothing = Clothing.find(:all, 
                               :conditions => ["status is null OR status != 'donated'"],
-                              :select => 'clothing.*, count(clothing_logs.id) as clothing_logs_count, max(clothing_logs.date) AS last_worn',
-                              :joins => 'left outer join clothing_logs ON clothing.id=clothing_logs.clothing_id', :group => 'clothing.id', :order => order)
+                              :order => order)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -38,12 +37,29 @@ class ClothingController < ApplicationController
       search << "casual"
     end
     if search.size > 0 then
-      @matches = Clothing.tagged_with(search[0])
-      if (search.size > 1) then
-        @matches = @matches.tagged_with(search[1])
+      matches = Clothing.tagged_with(search[0])
+      if search.size > 1 then
+        matches = matches.tagged_with(search[1])
+      end
+      matches = matches.order('last_worn')
+      list = Hash.new
+      matches.each do |m|
+        list[m.id] = m
       end
     end
-
+    @matches = Array.new
+    list ||= Hash.new
+    @past_matches = @clothing.clothing_matches.count(:group => :clothing_b_id).sort { |a,b| b[1] <=> a[1] }.each do |id, count| 
+      list[id] ||= Clothing.find(id)
+      list[id].name += " (#{count})"
+      @matches << list[id]
+      list.delete(id)
+    end
+    matches.each do |m|
+      if list[m.id] then
+        @matches << m
+      end
+    end
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @clothing }
@@ -89,7 +105,7 @@ class ClothingController < ApplicationController
 
     respond_to do |format|
       if @clothing.update_attributes(params[:clothing])
-        format.html { redirect_to(@clothing, :notice => 'Clothing was successfully updated.') }
+        format.html { redirect_to(clothing_path(@clothing), :notice => 'Clothing was successfully updated.') and return }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }
@@ -115,7 +131,20 @@ class ClothingController < ApplicationController
     order = sortable_column_order
     order ||= "clothing_type asc, last_worn asc"
     @tags = Clothing.tag_counts_on(:tags).sort_by(&:name)
-    @clothing = Clothing.tagged_with(params[:id]).joins('left outer join clothing_logs ON clothing.id=clothing_logs.clothing_id').select('clothing.*, count(clothing_logs.id) as clothing_logs_count, max(clothing_logs.date) AS last_worn').group('clothing.id').order(order)
+    @clothing = Clothing.tagged_with(params[:id]).where('status IS NULL OR status != ?', 'donated').order(order)
+    render :index
+  end
+  
+  def by_status
+    # Show by tags
+    order = sortable_column_order
+    order ||= "clothing_type asc, last_worn asc"
+    @tags = Clothing.tag_counts_on(:tags).sort_by(&:name)
+    @status = params[:status] || 'all'
+    @clothing = Clothing.order(order)
+    if @status != 'all' then
+      @clothing = @clothing.where('status = ?', @status)
+    end
     render :index
   end
   
@@ -164,5 +193,14 @@ class ClothingController < ApplicationController
     end
     @matches = @matches.sort
     @tops = @tops.sort
+  end
+
+  def graph
+    # Create a bipartite graph of tops and bottoms
+    @tops = Clothing.tagged_with('top')
+    @bottoms = Clothing.tagged_with('bottom')
+    @start = params[:start] || ClothingLog.minimum(:date)
+    @end = params[:end] || ClothingLog.maximum(:date)
+    @matches = ClothingMatch.joins('INNER JOIN clothing_logs ON clothing_log_a_id = clothing_logs.id').where('clothing_a_id < clothing_b_id AND clothing_logs.date >= ? AND clothing_logs.date <= ?', @start, @end).count(:group => ['clothing_a_id', 'clothing_b_id'])
   end
 end
