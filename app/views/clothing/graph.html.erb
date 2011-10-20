@@ -1,0 +1,17 @@
+<h2>Clothing use</h2>
+<% @width = 800; @height = 200 %>
+<% form_tag do %>
+  Start: <%= text_field_tag :start, @start.strftime("%Y-%m-%d") %>
+  End: <%= text_field_tag :end, @end.strftime("%Y-%m-%d") %>
+  <%= submit_tag "Go" %>
+<% end %>
+<div id="canvas" style="width: <%= @width %>px; height: <%= @height %>px"></div>
+<script type="text/javascript">
+  var sets = new Array();
+  window.onload = function() {
+    var p = Raphael("canvas");
+  }
+</script>
+<% @matches.each do |m| %>
+  <%= "#{m[0][0]} - #{m[0][1]} (#{m[1]})" %><br/>
+<% end %>
