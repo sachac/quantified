@@ -49,14 +49,15 @@
 
 %p= @clothing.notes
 
+.clear-both
 - if @logs
-  %ul
-    - @logs.each do |c|
-      %li
-        = "#{link_to c.date, clothing_log_path(c)}: ".html_safe
-        - ClothingLog.find(:all, :select => 'clothing_id, clothing.name, clothing.id', :order => 'clothing.name', :joins => 'INNER JOIN clothing ON clothing_logs.clothing_id=clothing.id', :conditions => ["date >= ? and date < ?", c.date, c.date + 1.day]).each do |x| 
-          = clothing_thumbnail x.clothing
-
+  - @logs.each do |c|
+    .entry
+      .date= "#{link_to c.date, clothing_log_path(c)}: ".html_safe
+      .clothes
+        - ClothingLog.find(:all, :select => 'clothing_logs.id, clothing_id, clothing.name', :order => 'clothing.name', :joins => 'INNER JOIN clothing ON clothing_logs.clothing_id=clothing.id', :conditions => ["date >= ? and date < ? and outfit_id=?", c.date, c.date + 1.day, c.outfit_id]).each do |x| 
+          .item= clothing_thumbnail x.clothing, { :path => clothing_log_path(x)}
+.clear-both
 - if user_signed_in?      
   = link_to 'Edit', edit_clothing_path(@clothing)
   \|

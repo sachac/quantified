@@ -37,6 +37,7 @@ GEM
       tzinfo (>= 0.3.14)
     bcrypt-ruby (3.0.1)
     builder (2.1.2)
+    cancan (1.6.7)
     chronic (0.6.4)
     color (1.4.1)
     devise (1.4.7)
@@ -128,6 +129,7 @@ PLATFORMS
 DEPENDENCIES
   acts-as-taggable-on (~> 2.1.0)
   barometer
+  cancan
   chronic
   color
   devise
