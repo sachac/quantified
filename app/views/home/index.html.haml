@@ -1,8 +1,35 @@
 #block-text.block
   .content
-    %h2.title Home
+    - if @memento_mori then
+      %h2.title
+        = pluralize number_with_delimiter(@memento_mori[:years]), 'year'
+        or
+        = pluralize number_with_delimiter(@memento_mori[:months]), 'month'
+        or
+        = pluralize number_with_delimiter(@memento_mori[:weeks]), 'weeks'
+        left - make the most of them!
+    - else
+      %h2.title Home
+
     .inner
-      %p.first
+      %p.days
+        %table
+          %tr
+            %td 
+              %h3 Yesterday
+              = semantic_form_for @yesterday do |f|
+                = f.inputs do
+                  = f.input :temperature
+                  = f.input :clothing_temperature      
+                = f.buttons
+            %td
+              %h3 Today
+              = semantic_form_for @today do |f|
+                = f.inputs do
+                  = f.input :temperature
+                  = f.input :clothing_temperature      
+                = f.buttons
+      %p.clothing
         = render "partials/clothing_log_entry"
         = set_focus_to_id("#clothing")
         - @clothing_today.each do |c|
@@ -18,16 +45,17 @@
             %a{:href => "http://www.wunderground.com/cgi-bin/findweather/getForecast?query=zmw:00000.1.71265&bannertypeclick=wu_clean2day"}
               %img{:src => "http://weathersticker.wunderground.com/weathersticker/cgi-bin/banner/ban/wxBanner?bannertype=wu_clean2day_metric_cond&airportcode=RPLL&ForcedCity=Manila&ForcedState=&wmo=98429&language=EN", :alt => "Click for Forecast", :height => "100", :width => "300"}
       %h2
-        = pluralize @library_items.count, "library book"
+        = pluralize @library_items.count, "library item"
         = link_to "(refresh)", library_refresh_path
+      = (pluralize @pickup_count, "item") + " to pick up"
       %table
         %tr
-          %th Due
+          %th{:width => 100} Due
           %th Title
           %th Author
         - @library_items.each do |item|
           %tr
             %td= item.due.strftime("%Y-%m-%d %a")
-            %td= item.title
+            %td= link_to item.title, item
             %td= item.author
 
