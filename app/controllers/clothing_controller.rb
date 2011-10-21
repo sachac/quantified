@@ -48,11 +48,12 @@ class ClothingController < ApplicationController
       end
     end
     @matches = Array.new
+    @previous_matches = Array.new
     list ||= Hash.new
     @past_matches = @clothing.clothing_matches.count(:group => :clothing_b_id).sort { |a,b| b[1] <=> a[1] }.each do |id, count| 
       list[id] ||= Clothing.find(id)
       list[id].name += " (#{count})"
-      @matches << list[id]
+      @previous_matches << list[id]
       list.delete(id)
     end
     matches.each do |m|

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111020103009) do
+ActiveRecord::Schema.define(:version => 20111021012013) do
 
   create_table "books", :force => true do |t|
     t.string   "title"
@@ -54,6 +54,28 @@ ActiveRecord::Schema.define(:version => 20111020103009) do
     t.datetime "updated_at"
   end
 
+  create_table "csa_foods", :force => true do |t|
+    t.integer  "food_id"
+    t.integer  "quantity"
+    t.string   "unit"
+    t.string   "date_received"
+    t.string   "disposition"
+    t.text     "notes"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "days", :force => true do |t|
+    t.date     "date"
+    t.integer  "temperature"
+    t.string   "clothing_temperature"
+    t.integer  "library_checked_out"
+    t.integer  "library_pickup"
+    t.integer  "library_transit"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "decision_logs", :force => true do |t|
     t.text     "notes"
     t.text     "notes_html"
@@ -75,6 +97,13 @@ ActiveRecord::Schema.define(:version => 20111020103009) do
     t.integer  "rating"
   end
 
+  create_table "foods", :force => true do |t|
+    t.string   "name"
+    t.string   "notes"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "library_items", :force => true do |t|
     t.string   "library_id"
     t.string   "dewey"
@@ -85,6 +114,10 @@ ActiveRecord::Schema.define(:version => 20111020103009) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "status"
+    t.date     "checkout_date"
+    t.date     "return_date"
+    t.date     "read_date"
+    t.integer  "toronto_library_id"
   end
 
   create_table "taggings", :force => true do |t|
@@ -112,13 +145,24 @@ ActiveRecord::Schema.define(:version => 20111020103009) do
     t.datetime "updated_at"
   end
 
+  create_table "toronto_libraries", :force => true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "name"
+    t.string   "card"
+    t.string   "pin"
+    t.date     "last_checked"
+    t.integer  "pickup_count"
+    t.integer  "library_item_count"
+  end
+
   create_table "users", :force => true do |t|
-    t.string   "email",                                 :default => "", :null => false
-    t.string   "encrypted_password",     :limit => 128, :default => "", :null => false
+    t.string   "email",                                   :default => "", :null => false
+    t.string   "encrypted_password",       :limit => 128, :default => "", :null => false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",                         :default => 0
+    t.integer  "sign_in_count",                           :default => 0
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
@@ -127,6 +171,8 @@ ActiveRecord::Schema.define(:version => 20111020103009) do
     t.datetime "updated_at"
     t.date     "birthdate"
     t.float    "life_expectancy"
+    t.integer  "life_expectancy_in_years"
+    t.date     "projected_end"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
