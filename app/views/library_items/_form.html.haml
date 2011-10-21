@@ -1,0 +1,10 @@
+= semantic_form_for @library_item do |f|
+  -if @library_item.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@library_item.errors.count, "error")} prohibited this library_item from being saved:"
+      %ul
+        - @library_item.errors.full_messages.each do |msg|
+          %li= msg
+  = f.inputs
+  .actions
+    = f.submit 'Save'

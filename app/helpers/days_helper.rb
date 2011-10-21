@@ -1,0 +1,2 @@
+module DaysHelper
+end
