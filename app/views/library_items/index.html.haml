@@ -1,0 +1,21 @@
+%h1 Listing library_items
+
+%table
+  %tr
+    %th Due
+    %th Name
+    %th
+    %th
+    %th
+
+  - @library_items.each do |library_item|
+    %tr
+      %td= link_to library_item.due, library_item
+      %td= link_to library_item.title, library_item
+      %td= link_to 'Show', library_item
+      %td= link_to 'Edit', edit_library_item_path(library_item)
+      %td= link_to 'Destroy', library_item, :confirm => 'Are you sure?', :method => :delete
+
+%br
+
+= link_to 'New Library item', new_library_item_path
