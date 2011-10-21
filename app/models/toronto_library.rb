@@ -1,24 +1,40 @@
-class TorontoLibrary 
+class TorontoLibrary < ActiveRecord::Base
   attr_accessor :agent
-  def login(c)
+#  attr_accessible :card, :pin, :name
+  def login
     @agent ||= Mechanize.new
-    logout
+    self.logout
     page = @agent.get 'http://beta.torontopubliclibrary.ca/youraccount'
     form = page.form_with :name => 'form_signin'
-    form.userId = c["card"]
-    form.password = c["pin"]
-    form.submit
+    if form
+      form.userId = self.read_attribute('card')
+      form.password = self.read_attribute('pin')
+      form.submit
+    end
     self
   end
 
   def list_items
-    @agent.page.parser.css("#renewcharge").css('input').map do |x|
-      info = x.attributes['name'].value.split('^')
-      due_string = x.parent.parent.inner_html
-      match_data = due_string.match(/<!-- Print the date due -->[\r\n\t]*([^\r\n\t<\/]+)\/([^\r\n\t<\/]+)\/([^\r\n\t<\/,]+)/)
-
-      {:library_id => info[1], :dewey => info[2], :author => info[4], :title => info[5], :due => Date.new(match_data[3].to_i, match_data[2].to_i, match_data[1].to_i)}
+    @agent.page.parser.css('#renewcharge').css('input').map do |x|
+      if x.attributes['name'] && x.attributes['name'].value != 'id' then
+        info = x.attributes['name'].value.split('^')
+        due_string = x.parent.parent.inner_html
+        match_data = due_string.match(/<!-- Print the date due -->[\r\n\t]*([^\r\n\t<\/]+)\/([^\r\n\t<\/]+)\/([^\r\n\t<\/,]+)/)
+        status = due_string.match(/<!-- Status -->[ \r\n\t]*([^\r\n\t<]+)/)
+        {:library_id => info[1], 
+         :dewey => info[2], 
+         :author => info[4], 
+         :title => info[5], 
+         :toronto_library_id => self.id,
+         :status => !status || status[1].blank? ? 'due' : status[1].strip.downcase,
+         :due => Date.new(match_data[3].to_i, match_data[2].to_i, match_data[1].to_i)}
+      end
     end
+  end
+
+  def count_pickups!
+    self.pickup_count = @agent.page.parser.css('#avail_list').css('input').count { |x| x.attributes['name'] && x.attributes['name'].value != 'id' }
+    self 
   end
 
   def logout
@@ -30,24 +46,24 @@ class TorontoLibrary
   def refresh_items
     # Replace this with selective updating
     stamp = Time.now
-    Settings.library_cards.each do |c|
-      login(c)
-      items = list_items
-      items.each do |item|
-        # Does the item exist?
-        rec = LibraryItem.where("library_id = ?", item[:library_id]).first
-        if rec then
-          rec.due = item[:due]
-	  rec.updated_at = stamp
-        else
-          rec = LibraryItem.create(item)
-        end
-        rec.save
-        status = "due"
+    self.login
+    self.count_pickups!
+    items = list_items
+    items.each do |item|
+      # Does the item exist?
+      rec = LibraryItem.where("library_id = ?", item[:library_id]).first
+      if rec then
+        rec.due = item[:due]
+        rec.updated_at = stamp
+      else
+        rec = LibraryItem.create(item)
+        rec.checkout_date ||= Date.today
       end
+      rec.status = item[:status]
+      rec.save
     end
     # Mark all the un-updated due books as returned
-    LibraryItem.find(:all, :conditions => ["updated_at < ? AND (status IS NULL OR status='due')", stamp]).each do |item|
+    LibraryItem.find(:all, :conditions => ["toronto_library_id = ? AND updated_at < ? AND (status IS NULL OR status='due')", self.id, stamp]).each do |item|
       item.status = "returned"
       item.save
     end

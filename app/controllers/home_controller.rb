@@ -1,7 +1,13 @@
 class HomeController < ApplicationController
   def index
+    @pickup_count = TorontoLibrary.sum('pickup_count')
     @library_items = LibraryItem.where("status = 'due' OR status IS NULL").order(:due)
     @clothing_today = ClothingLog.where('date = ?', Date.today)
+    if current_user then
+      @memento_mori = current_user.memento_mori
+    end
+    @yesterday = Day.yesterday
+    @today = Day.today
   end
   def summary
     @start = (!params[:start].blank? ? Time.parse(params[:start]) : Date.new(Date.today.year, Date.today.month, 1)).midnight
