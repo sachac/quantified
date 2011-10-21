@@ -1,0 +1,17 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  food_id: 1
+  quantity: 1
+  unit: MyString
+  date_received: MyString
+  disposition: MyString
+  notes: MyText
+
+two:
+  food_id: 1
+  quantity: 1
+  unit: MyString
+  date_received: MyString
+  disposition: MyString
+  notes: MyText

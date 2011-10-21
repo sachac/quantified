@@ -1,0 +1,13 @@
+= semantic_form_for @user do |f|
+  -if @user.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@user.errors.count, "error")} prohibited this user from being saved:"
+      %ul
+        - @user.errors.full_messages.each do |msg|
+          %li= msg
+  = f.inputs do
+    = f.input :email
+    = f.input :birthdate, :as => :string
+    = f.input :life_expectancy_in_years
+  .actions
+    = f.submit 'Save'
