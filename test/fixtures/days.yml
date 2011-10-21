@@ -1,0 +1,17 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  date: 2011-10-20
+  temperature: 1
+  clothing_temperature: MyString
+  library_checked_out: 1
+  library_pickup: 1
+  library_transit: 1
+
+two:
+  date: 2011-10-20
+  temperature: 1
+  clothing_temperature: MyString
+  library_checked_out: 1
+  library_pickup: 1
+  library_transit: 1
