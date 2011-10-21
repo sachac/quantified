@@ -1,0 +1,21 @@
+%h1 Listing foods
+
+%table
+  %tr
+    %th Name
+    %th Notes
+    %th
+    %th
+    %th
+
+  - @foods.each do |food|
+    %tr
+      %td= food.name
+      %td= food.notes
+      %td= link_to 'Show', food
+      %td= link_to 'Edit', edit_food_path(food)
+      %td= link_to 'Destroy', food, :confirm => 'Are you sure?', :method => :delete
+
+%br
+
+= link_to 'New Food', new_food_path
