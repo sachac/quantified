@@ -4,8 +4,9 @@ class LibraryController < ApplicationController
   end
 
   def update
-    l = TorontoLibrary.new
-    l.refresh_items
+    TorontoLibrary.all.each do |l|
+      l.refresh_items
+    end
     redirect_to(root_path, :notice => "Library books refreshed.") and return
   end
 end
