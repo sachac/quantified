@@ -1,0 +1,29 @@
+%h1 Listing csa_foods
+
+%table
+  %tr
+    %th Food
+    %th Quantity
+    %th Unit
+    %th Date received
+    %th Disposition
+    %th Notes
+    %th
+    %th
+    %th
+
+  - @csa_foods.each do |csa_food|
+    %tr
+      %td= csa_food.food_id
+      %td= csa_food.quantity
+      %td= csa_food.unit
+      %td= csa_food.date_received
+      %td= csa_food.disposition
+      %td= csa_food.notes
+      %td= link_to 'Show', csa_food
+      %td= link_to 'Edit', edit_csa_food_path(csa_food)
+      %td= link_to 'Destroy', csa_food, :confirm => 'Are you sure?', :method => :delete
+
+%br
+
+= link_to 'New Csa food', new_csa_food_path

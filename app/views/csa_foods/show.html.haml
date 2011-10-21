@@ -1,0 +1,21 @@
+%p#notice= notice
+
+%p
+  %b Food:
+  = link_to @csa_food.food.name, @csa_food.food
+%p
+  %b Quantity: 
+  = "#{@csa_food.quantity}#{@csa_food.unit}"
+%p
+  %b Date received:
+  = @csa_food.date_received
+%p
+  %b Disposition:
+  = @csa_food.disposition
+%p
+  %b Notes:
+  = @csa_food.notes
+
+= link_to 'Edit', edit_csa_food_path(@csa_food)
+\|
+= link_to 'Back', csa_foods_path
