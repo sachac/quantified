@@ -1,9 +1,17 @@
 Home::Application.routes.draw do
-  devise_for :users
+  resources :days
+
+  resources :csa_foods
+
+  resources :foods
+
+  devise_for :users, :path_prefix => 'd'
+  resources :users
 
   resources :decision_logs
 
   resources :decisions
+  resources :library_items
 
   match 'time' => 'time#index'
   match 'time/graph' => 'time#graph'

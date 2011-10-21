@@ -47,3 +47,6 @@ dd {
   padding-left: 10px; }
   .entry .item {
     float: left; }
+
+body formtastic.fieldset > ol > li label {
+  width: auto; }
