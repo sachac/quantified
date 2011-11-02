@@ -45,6 +45,7 @@ class ClothingController < ApplicationController
         matches = matches.tagged_with(search[1])
       end
       matches = matches.order('last_worn')
+      matches = matches.where('status = ?', 'active')
       list = Hash.new
       matches.each do |m|
         list[m.id] = m
