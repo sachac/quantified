@@ -10,7 +10,7 @@ class ClothingController < ApplicationController
     order = sortable_column_order
     order ||= "clothing_type asc, hue asc"
     @clothing = Clothing.find(:all, 
-                              :conditions => ["status is null OR status != 'donated'"],
+                              :conditions => ["status IS 'active' OR status IS NULL OR status=''"],
                               :order => order)
 
     respond_to do |format|
@@ -24,6 +24,9 @@ class ClothingController < ApplicationController
   def show
     @clothing = Clothing.find(params[:id])
     @logs = ClothingLog.find(:all, :conditions => ["clothing_id=?", @clothing.id], :order => 'date DESC')
+    @previous = @clothing.previous_by_id
+    @next = @clothing.next_by_id
+
     tags = @clothing.tag_list
     search = Array.new
     if tags.include? "bottom"
@@ -56,9 +59,11 @@ class ClothingController < ApplicationController
       @previous_matches << list[id]
       list.delete(id)
     end
-    matches.each do |m|
-      if list[m.id] then
-        @matches << m
+    if matches then
+      matches.each do |m|
+        if list[m.id] then
+          @matches << m
+        end
       end
     end
     respond_to do |format|
@@ -71,7 +76,7 @@ class ClothingController < ApplicationController
   # GET /clothing/new.xml
   def new
     @clothing = Clothing.new
-    @clothing.number = Clothing.maximum(:id) + 1
+    @clothing.status = 'active'
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @clothing }
@@ -132,7 +137,7 @@ class ClothingController < ApplicationController
     order = sortable_column_order
     order ||= "clothing_type asc, last_worn asc"
     @tags = Clothing.tag_counts_on(:tags).sort_by(&:name)
-    @clothing = Clothing.tagged_with(params[:id]).where('status IS NULL OR status != ?', 'donated').order(order)
+    @clothing = Clothing.tagged_with(params[:id]).where("status='active' or status='' or status is null").order(order)
     render :index
   end
   
@@ -203,5 +208,23 @@ class ClothingController < ApplicationController
     @start = params[:start] || ClothingLog.minimum(:date)
     @end = params[:end] || ClothingLog.maximum(:date)
     @matches = ClothingMatch.joins('INNER JOIN clothing_logs ON clothing_log_a_id = clothing_logs.id').where('clothing_a_id < clothing_b_id AND clothing_logs.date >= ? AND clothing_logs.date <= ?', @start, @end).count(:group => ['clothing_a_id', 'clothing_b_id'])
+  end
+
+  def bulk
+    if params[:bulk] and params[:op] then
+      params[:bulk].compact.each do |i|
+        clothing = Clothing.find(i)
+        case params[:op]
+          when 'Store'
+            clothing.status = 'stored'
+          when 'Activate'
+            clothing.status = 'active'
+          when 'Donate'
+            clothing.status = 'donated'
+        end
+        clothing.save
+      end
+    end
+    redirect_to :back and return
   end
 end

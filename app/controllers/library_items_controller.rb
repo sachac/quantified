@@ -1,9 +1,17 @@
 class LibraryItemsController < ApplicationController
+  handles_sortable_columns
+  before_filter :authenticate_user!, :except => [:index, :show, :tag]
+
   # GET /library_items
   # GET /library_items.xml
   def index
-    @library_items = LibraryItem.order('due DESC')
-
+    if can? :view_all, LibraryItem
+      @tags = LibraryItem.tag_counts_on(:tags).sort_by(&:name)
+      @library_items = LibraryItem.order('due DESC')
+    else
+      @tags = LibraryItem.where('public=1').tag_counts_on(:tags).sort_by(&:name)
+      @library_items = LibraryItem.where('public=1').order('due DESC')
+    end
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @library_items }
@@ -14,7 +22,7 @@ class LibraryItemsController < ApplicationController
   # GET /library_items/1.xml
   def show
     @library_item = LibraryItem.find(params[:id])
-
+    authorize! :read, @library_item
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @library_item }
@@ -35,6 +43,9 @@ class LibraryItemsController < ApplicationController
   # GET /library_items/1/edit
   def edit
     @library_item = LibraryItem.find(params[:id])
+    [:read_date, :status].each do |v|
+      @library_item.send(v.to_s + '=', params[v]) if params[v]
+    end
   end
 
   # POST /library_items
@@ -60,7 +71,7 @@ class LibraryItemsController < ApplicationController
 
     respond_to do |format|
       if @library_item.update_attributes(params[:library_item])
-        format.html { redirect_to(@library_item, :notice => 'Library item was successfully updated.') }
+        format.html { redirect_to(:back, :notice => 'Library item was successfully updated.') }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }
@@ -79,5 +90,35 @@ class LibraryItemsController < ApplicationController
       format.html { redirect_to(library_items_url) }
       format.xml  { head :ok }
     end
+  end
+
+  def tag
+    # Show by tags
+    order = sortable_column_order
+    order ||= "due DESC"
+    if can? :view_all, LibraryItem
+      @tags = LibraryItem.tag_counts_on(:tags).sort_by(&:name)
+      @library_items = LibraryItem.tagged_with(params[:id]).order(order)
+    else
+      @tags = LibraryItem.where('public=1').tag_counts_on(:tags).sort_by(&:name)
+      @library_items = LibraryItem.where('public=1').tagged_with(params[:id]).order(order)
+    end
+    render :index
+  end
+
+  def bulk
+    if params[:bulk] and params[:op] then
+      params[:bulk].compact.each do |i|
+        item = LibraryItem.find(i)
+        case params[:op]
+          when 'Make public'
+            item.public = true
+          when 'Make private'
+            item.public = false
+        end
+        item.save
+      end
+    end
+    redirect_to :back and return
   end
 end
