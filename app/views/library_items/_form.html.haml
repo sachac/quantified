@@ -5,6 +5,20 @@
       %ul
         - @library_item.errors.full_messages.each do |msg|
           %li= msg
-  = f.inputs
+  = f.inputs do
+    = f.input :title
+    = f.input :author
+    = f.input :public
+    = f.input :tag_list
+    = f.input :rating
+    = f.input :isbn
+    = f.input :price
+    = f.input :pages
+    = f.input :notes
+    = f.input :due
+    = f.input :checkout_date
+    = f.input :read_date
+    = f.input :return_date
+    = f.input :status
   .actions
     = f.submit 'Save'
