@@ -1,0 +1,16 @@
+%h1= @date
+= link_to 'Previous', clothing_logs_by_date_path(@previous_date)
+\|
+= link_to 'Next', clothing_logs_by_date_path(@next_date)
+
+- if can? :create, ClothingLog
+  = render "partials/clothing_log_entry", :locals => { :default_date => @date }
+  = set_focus_to_id("#clothing")
+- last_date = nil
+
+%div
+  .clothes
+    .entry
+      - @clothing_logs.each do |item|
+        .item= clothing_thumbnail(item.clothing, :size => :large)
+  .clear-both

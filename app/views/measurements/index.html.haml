@@ -1,0 +1,30 @@
+%h1 Listing measurements
+
+%table.lined
+  %tr
+    %th
+    %th Name
+    %th Notes
+    %th Average
+    %th Max
+    %th Min
+    %th Unit
+    %th
+    %th
+
+  - @measurements.each do |measurement|
+    %tr
+      %td= link_to 'Log', new_measurement_log_path(:measurement_id => measurement.id)
+      %td= link_to measurement.name, measurement
+      %td= measurement.notes
+      %td= measurement.average
+      %td= measurement.max
+      %td= measurement.min
+      %td= measurement.unit
+      %td= link_to 'Show', measurement
+      %td= link_to 'Edit', edit_measurement_path(measurement)
+      -#%td= link_to 'Destroy', measurement, :confirm => 'Are you sure?', :method => :delete
+
+%br
+
+= link_to 'New Measurement', new_measurement_path

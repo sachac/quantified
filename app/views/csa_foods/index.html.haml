@@ -14,7 +14,7 @@
 
   - @csa_foods.each do |csa_food|
     %tr
-      %td= csa_food.food_id
+      %td= link_to csa_food.food.name, csa_food.food
       %td= csa_food.quantity
       %td= csa_food.unit
       %td= csa_food.date_received

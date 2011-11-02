@@ -1,0 +1,13 @@
+= semantic_form_for @measurement_log do |f|
+  -if @measurement_log.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@measurement_log.errors.count, "error")} prohibited this measurement_log from being saved:"
+      %ul
+        - @measurement_log.errors.full_messages.each do |msg|
+          %li= msg
+  = f.inputs do
+    = f.input :value
+    = f.input :measurement_id, :as => 'select', :collection => Measurement.all.collect { |x| [ "#{x.unit} - #{x.name}", x.id ] }
+    = f.input :datetime
+    = f.input :notes
+  = f.buttons

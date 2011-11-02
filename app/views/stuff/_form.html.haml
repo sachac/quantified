@@ -1,0 +1,10 @@
+= semantic_form_for @stuff do |f|
+  -if @stuff.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@stuff.errors.count, "error")} prohibited this stuff from being saved:"
+      %ul
+        - @stuff.errors.full_messages.each do |msg|
+          %li= msg
+  = f.inputs
+  .actions
+    = f.submit 'Save'

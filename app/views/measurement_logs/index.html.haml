@@ -1,0 +1,25 @@
+%h1 Listing measurement_logs
+
+%table.lined.full
+  %tr
+    %th Category
+    %th Date
+    %th Notes
+    %th Value
+    %th
+    %th
+    %th
+
+  - @measurement_logs.each do |measurement_log|
+    %tr
+      %td= link_to measurement_log.measurement.name, measurement_log.measurement
+      %td= l measurement_log.datetime, :format => :short
+      %td= measurement_log.notes
+      %td= measurement_log.value
+      %td= link_to 'Show', measurement_log
+      %td= link_to 'Edit', edit_measurement_log_path(measurement_log)
+      %td= link_to 'Destroy', measurement_log, :confirm => 'Are you sure?', :method => :delete
+
+%br
+
+= link_to 'New Measurement log', new_measurement_log_path

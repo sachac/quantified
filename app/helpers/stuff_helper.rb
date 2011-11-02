@@ -1,0 +1,2 @@
+module StuffHelper
+end

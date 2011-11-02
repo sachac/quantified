@@ -1,6 +1,15 @@
 %p#notice= notice
 
+%h1= @library_item.title
+= @library_item.author
 
-= link_to 'Edit', edit_library_item_path(@library_item)
-\|
-= link_to 'Back', library_items_path
+%tags
+  Tags:
+  - @library_item.tags.each do |t|
+    = link_to t.name, { :action => :tag, :id => t.name }
+
+%p
+  - if can? :edit, @library_item
+    = link_to 'Edit', edit_library_item_path(@library_item)
+    \|
+  = link_to 'Back', library_items_path
