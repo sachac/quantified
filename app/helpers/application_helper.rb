@@ -38,7 +38,7 @@ module ApplicationHelper
       elsif d >= Date.today then
         'today'
       else
-        time_ago_in_words(d) + " ago"
+        pluralize((Date.today - d.to_date).to_i, "day") + " ago"
       end
     end
   end
