@@ -14,10 +14,12 @@ class ClothingLog < ActiveRecord::Base
     # Delete old matches
     ClothingMatch.recreate(self)
     Clothing.reset_counters self.clothing_id, :clothing_logs
-    Clothing.reset_counters self.clothing_id_was, :clothing_logs
+    if (self.clothing_id_was) then
+      Clothing.reset_counters self.clothing_id_was, :clothing_logs
+    end
     # Update the counts, too
     self.clothing.update_stats!.save
-    if self.clothing_id_changed?
+    if self.clothing_id_changed? and self.clothing_id_was
       Clothing.find(self.clothing_id_was).update_stats!.save
     end
   end

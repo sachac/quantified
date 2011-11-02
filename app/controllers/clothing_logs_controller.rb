@@ -1,7 +1,7 @@
 class ClothingLogsController < ApplicationController
   # GET /clothing_logs
   # GET /clothing_logs.xml
-  before_filter :authenticate_user!, :except => [:index, :show]
+  before_filter :authenticate_user!, :except => [:index, :show, :by_date]
   def index
     @clothing_logs = ClothingLog.find(:all, :order => "date DESC, outfit_id DESC, clothing.clothing_type", :include => [:clothing])
     @by_date = Hash.new
@@ -48,12 +48,12 @@ class ClothingLogsController < ApplicationController
   def create
     if (params[:clothing] && params[:clothing_id].blank?) then
       if params[:clothing].is_numeric? then
-        @clothing = Clothing.where(:number => params[:clothing]).first
+        @clothing = Clothing.where(:id => params[:clothing]).first
         params[:clothing_id] = @clothing.id
       else
-        @clothing = Clothing.new(:name => params[:clothing], :number => Clothing.maximum(:number) + 1)
+        @clothing = Clothing.new(:name => params[:clothing])
         @clothing.save
-        flash[:notice] = "Saved new clothing ID #{@clothing.number}."
+        flash[:notice] = "Saved new clothing ID #{@clothing.id}."
         params[:clothing_id] = @clothing.id
       end
     end
@@ -100,5 +100,12 @@ class ClothingLogsController < ApplicationController
       format.html { redirect_to(clothing_logs_url) }
       format.xml  { head :ok }
     end
+  end
+
+  def by_date
+    @date = Date.parse(params[:date])
+    @clothing_logs = ClothingLog.where('date = ?', @date).includes(:clothing).order('outfit_id, clothing.clothing_type')
+    @previous_date = @date - 1.day
+    @next_date = @date + 1.day
   end
 end

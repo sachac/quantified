@@ -4,7 +4,7 @@ class CsaFoodsController < ApplicationController
   # GET /csa_foods
   # GET /csa_foods.xml
   def index
-    @csa_foods = CsaFood.all
+    @csa_foods = CsaFood.find(:all, :include => :food)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -44,6 +44,7 @@ class CsaFoodsController < ApplicationController
   # POST /csa_foods.xml
   def create
     food = Food.find_by_name(params[:csa_food][:food_id])
+    food = Food.find_by_name(params[:csa_food][:food_id].pluralize) unless food
     unless food
       food = Food.create(:name => params[:csa_food][:food_id])
       food.save

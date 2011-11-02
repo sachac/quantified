@@ -42,6 +42,9 @@ th {
 dd {
   display: inline-block; }
 
+.right {
+  text-align: right; }
+
 .entry {
   float: left;
   padding-left: 10px; }

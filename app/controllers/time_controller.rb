@@ -43,7 +43,7 @@ class TimeController < ApplicationController
     @width = 900
     @time_bottom = @height
     @start = (!params[:start].blank? ? Time.parse(params[:start]) : Date.new(Date.today.year, Date.today.month, 1)).midnight
-    @end = (!params[:end].blank? ? Time.parse(params[:end]) : Date.new(Date.today.year, Date.today.month + 1, 1)).midnight
+    @end = (!params[:end].blank? ? Time.parse(params[:end]) : Date.tomorrow).midnight
     @height = (@day_height * (@end - @start) / 86400.0).to_i
     entries = TimeRecord.find(:all, :conditions => ["start_time >= ? AND start_time < ?", @start, @end], :order => "start_time")
     total_time = (@end - @start).to_f
@@ -126,16 +126,41 @@ class TimeController < ApplicationController
     @cat = keys
     @cat << "A - Sleep"
     @cat.each do |t| @time_graphs[t] = Array.new end
+    @by_day = Hash.new
+    @count_days = Hash.new
+    ['Work', 'Sleep', 'Discretionary', 'Unpaid work', 'Personal care'].each do |x|
+      @by_day[x] ||= Hash.new
+    end
     while day < @end
+      @count_days[day.wday] ||= 0
+      @count_days[day.wday] += 1
       @cat.each do |t|
         if @time_by_day[day.strftime('%Y-%m-%d')] then
           @time_graphs[t] << (@time_by_day[day.strftime('%Y-%m-%d')][t] || 0) / 3600
         else
           @time_graphs[t] << 0
         end
+        if @time_by_day[day.strftime('%Y-%m-%d')] then
+          cat = nil
+          time = (@time_by_day[day.strftime('%Y-%m-%d')][t] || 0) / 3600
+          if t.match /^A - Work/ 
+            cat = 'Work'
+          elsif t.match /^A - Sleep/ 
+            cat = 'Sleep'
+          elsif t.match /^D - / 
+            cat = 'Discretionary'
+          elsif t.match /^UW - / 
+            cat = 'Unpaid work'
+          elsif t.match /^P - / 
+            cat = 'Personal care'
+          end
+          if cat
+            @by_day[cat][day.wday] ||= 0
+            @by_day[cat][day.wday] += time
+          end
+        end
       end
       day += 1.day
     end
-
   end
 end
