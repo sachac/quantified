@@ -1,0 +1,17 @@
+%h1 Listing toronto_libraries
+
+%table
+  %tr
+    %th
+    %th
+    %th
+
+  - @toronto_libraries.each do |toronto_library|
+    %tr
+      %td= link_to 'Show', toronto_library
+      %td= link_to 'Edit', edit_toronto_library_path(toronto_library)
+      %td= link_to 'Destroy', toronto_library, :confirm => 'Are you sure?', :method => :delete
+
+%br
+
+= link_to 'New Toronto library', new_toronto_library_path

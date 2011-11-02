@@ -1,0 +1,10 @@
+= form_for @toronto_library do |f|
+  -if @toronto_library.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@toronto_library.errors.count, "error")} prohibited this toronto_library from being saved:"
+      %ul
+        - @toronto_library.errors.full_messages.each do |msg|
+          %li= msg
+
+  .actions
+    = f.submit 'Save'

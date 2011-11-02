@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111021012013) do
+ActiveRecord::Schema.define(:version => 20111101101955) do
 
   create_table "books", :force => true do |t|
     t.string   "title"
@@ -21,7 +21,6 @@ ActiveRecord::Schema.define(:version => 20111021012013) do
   end
 
   create_table "clothing", :force => true do |t|
-    t.integer  "number"
     t.string   "name"
     t.string   "colour"
     t.string   "clothing_type"
@@ -118,7 +117,47 @@ ActiveRecord::Schema.define(:version => 20111021012013) do
     t.date     "return_date"
     t.date     "read_date"
     t.integer  "toronto_library_id"
+    t.string   "isbn"
+    t.boolean  "public"
+    t.text     "notes"
+    t.decimal  "price"
+    t.integer  "pages"
   end
+
+  create_table "measurement_logs", :force => true do |t|
+    t.integer  "measurement_id"
+    t.datetime "datetime"
+    t.text     "notes"
+    t.decimal  "value"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "measurements", :force => true do |t|
+    t.string   "name"
+    t.text     "notes"
+    t.string   "unit"
+    t.decimal  "average"
+    t.decimal  "max"
+    t.decimal  "min"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.decimal  "sum"
+  end
+
+  create_table "stuff", :force => true do |t|
+    t.string   "name"
+    t.string   "status"
+    t.string   "location"
+    t.decimal  "price"
+    t.date     "purchase_date"
+    t.text     "notes"
+    t.string   "long_name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "stuff", ["name"], :name => "index_stuff_on_name"
 
   create_table "taggings", :force => true do |t|
     t.integer  "tag_id"
