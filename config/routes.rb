@@ -1,4 +1,8 @@
 Home::Application.routes.draw do
+  resources :measurement_logs
+
+  resources :measurements
+  resources :stuff
   resources :days
 
   resources :csa_foods
@@ -11,18 +15,24 @@ Home::Application.routes.draw do
   resources :decision_logs
 
   resources :decisions
-  resources :library_items
+  resources :library_items do
+    get :tag, :on => :collection
+  end
+
+  match 'clothing/bulk', :as => :clothing_bulk, :via => :post
+  match 'library_items/bulk', :as => :library_item_bulk, :via => :post
 
   match 'time' => 'time#index'
-  match 'time/graph' => 'time#graph'
+  match 'time/graph(/:start(/:end))' => 'time#graph'
   match 'time/refresh' => 'time#refresh_from_csv', :as => :refresh_from_csv, :via => :post
   match 'time/refresh' => 'time#refresh', :as => :refresh_time
-  resources :clothing_logs
   resources :clothing do
     get :autocomplete_clothing_name, :on => :collection
     get :analyze, :on => :collection, :as => :clothing_analysis
     get :graph, :on => :collection, :as => :clothing_graph
   end
+  resources :clothing_logs
+  match 'clothing_logs/by_date/:date' => 'clothing_logs#by_date', :as => :clothing_logs_by_date
   match 'clothing/tag/:id' => 'clothing#tag', :as => :clothing_by_tag
   match 'clothing/status/:status' => 'clothing#by_status', :as => :clothing_by_status
   match 'clothing/analyze/:start/:end' => 'clothing#analyze', :as => :clothing_analyze

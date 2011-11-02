@@ -1,11 +1,25 @@
 %p#notice= notice
 
+%nav
+  %p
+    - if @previous
+      = link_to '<< Previous', clothing_path(@previous)
+    - if @next
+      = link_to 'Next >>', clothing_path(@next)
+
 %h1
   = @clothing.name
   - if user_signed_in?
-    = link_to '(wear)', clothing_logs_path + "?clothing_id=" + @clothing.id.to_s + "&date=" + Date.today.to_s, :method => :post
-    = link_to '(plan)', clothing_logs_path + "?clothing_id=" + @clothing.id.to_s + "&date=" + Date.tomorrow.to_s, :method => :post
-= @clothing.status
+    = link_to '(yesterday)', clothing_logs_path + "?clothing_id=" + @clothing.id.to_s + "&date=" + Date.yesterday.to_s, :method => :post
+    = link_to '(today)', clothing_logs_path + "?clothing_id=" + @clothing.id.to_s + "&date=" + Date.today.to_s, :method => :post
+    = link_to '(tomorrow)', clothing_logs_path + "?clothing_id=" + @clothing.id.to_s + "&date=" + Date.tomorrow.to_s, :method => :post
+
+%p
+  = @clothing.status
+  - {'store' => 'stored', 'activate' => 'active', 'donate' => 'donated'}.each do |action,status|
+    - unless @clothing.status == status
+      = link_to action, clothing_path(@clothing.id) + '?clothing[status]=' + status, :method => :put
+
 
 .image
   = clothing_thumbnail(@clothing, :size => :large)
