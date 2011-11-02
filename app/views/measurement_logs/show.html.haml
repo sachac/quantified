@@ -1,0 +1,19 @@
+%p#notice= notice
+
+%p
+  %b Measurement:
+  = link_to @measurement_log.measurement.name, @measurement_log.measurement
+%p
+  %b Date:
+  = @measurement_log.datetime
+%p
+  %b Value:
+  = @measurement_log.value
+  = @measurement_log.measurement.unit
+%p
+  %b Notes:
+  = @measurement_log.notes
+
+= link_to 'Edit', edit_measurement_log_path(@measurement_log)
+\|
+= link_to 'Back', measurement_logs_path

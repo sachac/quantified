@@ -10,5 +10,5 @@
 # end
 
 ActiveSupport::Inflector.inflections do |inflect|
-  inflect.uncountable %w{ clothing }
+  inflect.uncountable %w{ clothing stuff }
 end

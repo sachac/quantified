@@ -1,0 +1,2 @@
+module MeasurementLogsHelper
+end

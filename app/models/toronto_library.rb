@@ -67,5 +67,6 @@ class TorontoLibrary < ActiveRecord::Base
       item.status = "returned"
       item.save
     end
+    self.save
   end
 end
