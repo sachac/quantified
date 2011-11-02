@@ -1,37 +1,38 @@
 #block-text.block
   .content
-    - if @memento_mori then
-      %h2.title
-        = pluralize number_with_delimiter(@memento_mori[:years]), 'year'
-        or
-        = pluralize number_with_delimiter(@memento_mori[:months]), 'month'
-        or
-        = pluralize number_with_delimiter(@memento_mori[:weeks]), 'weeks'
+    %h2.title
+      = pluralize number_with_delimiter(@memento_mori[:years]), 'year'
+      or
+      = pluralize number_with_delimiter(@memento_mori[:months]), 'month'
+      or
+      = pluralize number_with_delimiter(@memento_mori[:weeks]), 'weeks'
+      - if current_user and @memento_mori then
         left - make the most of them!
-    - else
-      %h2.title Home
-
+      - else
+        left - working on making the most of them!
     .inner
-      %p.days
-        %table
-          %tr
-            %td 
-              %h3 Yesterday
-              = semantic_form_for @yesterday do |f|
-                = f.inputs do
-                  = f.input :temperature
-                  = f.input :clothing_temperature      
-                = f.buttons
-            %td
-              %h3 Today
-              = semantic_form_for @today do |f|
-                = f.inputs do
-                  = f.input :temperature
-                  = f.input :clothing_temperature      
-                = f.buttons
+      - if current_user
+        %p.days
+          %table
+            %tr
+              %td 
+                %h3 Yesterday
+                = semantic_form_for @yesterday do |f|
+                  = f.inputs do
+                    = f.input :temperature
+                    = f.input :clothing_temperature      
+                  = f.buttons
+              %td
+                %h3 Today
+                = semantic_form_for @today do |f|
+                  = f.inputs do
+                    = f.input :temperature
+                    = f.input :clothing_temperature      
+                  = f.buttons
       %p.clothing
-        = render "partials/clothing_log_entry"
-        = set_focus_to_id("#clothing")
+        - if can? :create, ClothingLog
+          = render "partials/clothing_log_entry"
+          = set_focus_to_id("#clothing")
         - @clothing_today.each do |c|
           = clothing_thumbnail c.clothing, :link => clothing_log_path(c)
       %table
@@ -48,14 +49,31 @@
         = pluralize @library_items.count, "library item"
         = link_to "(refresh)", library_refresh_path
       = (pluralize @pickup_count, "item") + " to pick up"
-      %table
-        %tr
-          %th{:width => 100} Due
-          %th Title
-          %th Author
-        - @library_items.each do |item|
-          %tr
-            %td= item.due.strftime("%Y-%m-%d %a")
-            %td= link_to item.title, item
-            %td= item.author
-
+      - if can? :update, LibraryItem
+        = form_tag library_item_bulk_path do
+          = select_tag 'op', options_for_select(['Make public', 'Make private'])
+          = submit_tag
+          %table.lined
+            %tr
+              %th{:width => 100} Due
+              - if can? :update, LibraryItem
+                %th
+                %th
+              %th Title
+              %th Author
+            - @library_items.each do |item|
+              - if can? :view, item
+                %tr
+                  %td= item.due.strftime("%Y-%m-%d %a")
+                  %td
+                    - if can? :update, item
+                      = link_to 'Read', edit_library_item_path(item.id) + '?status=read&read_date=' + Date.today.to_s
+                    = 'DONE' if item.read_date
+                  - if can? :update, item
+                    %td
+                      = check_box_tag 'bulk[]', item.id
+                  %td
+                    = '(*)' unless item.public
+                    = link_to item.title, can?(:update, item) ? edit_library_item_path(item.id) : item 
+                  %td= item.author
+          = submit_tag

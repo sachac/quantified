@@ -1,14 +1,15 @@
 %h1 Clothing log
 
-= render "partials/clothing_log_entry"
-= set_focus_to_id("#clothing")
+- if can? :create, ClothingLog
+  = render "partials/clothing_log_entry"
+  = set_focus_to_id("#clothing")
 - last_date = nil
 
 %div
   - @dates.each do |date|
     .entry
       - list = @by_date[date]
-      .date= date
+      .date= link_to date, clothing_logs_by_date_path(date)
       .clothes
         - list.each do |item|
           .item= clothing_thumbnail(item.clothing)
@@ -28,15 +29,16 @@
     - row_class = (clothing_log.date != last_date) ? "date-change" : ""
     - last_date = clothing_log.date  
     %tr{:class => row_class}
-      - if user_signed_in?
+      - if can? :create, ClothingLog
         %td= link_to 'Wear today', clothing_logs_path + "?clothing_id=" + clothing_log.clothing_id.to_s + "&date=" + Date.today.to_s, :method => :post
-      %td= link_to clothing_log.date, clothing_log
-      %td= clothing_log.clothing.number
+      %td= link_to clothing_log.date, clothing_logs_by_date_path(clothing_log.date)
+      %td= clothing_log.clothing.id
       %td= link_to clothing_log.clothing.name, clothing_path(clothing_log.clothing) unless clothing_log.clothing.nil?
-      - if user_signed_in?
+      - if can? :update, clothing_log
         %td= link_to 'Edit', edit_clothing_log_path(clothing_log)
         %td= link_to 'Delete', clothing_log, :confirm => 'Are you sure?', :method => :delete
       %td= render :partial => "partials/colours", :locals => { :colours => clothing_log.clothing.colour }
 %br
 
-= link_to 'New log entry', new_clothing_log_path
+- if can? :create, ClothingLog
+  = link_to 'New log entry', new_clothing_log_path

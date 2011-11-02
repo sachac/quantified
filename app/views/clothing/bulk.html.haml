@@ -1,0 +1,66 @@
+%h1 In the closet 
+
+= link_to 'all', clothing_index_path
+- tag_cloud(@tags, %w(css1 css2 css3 css4)) do |tag, css_class| 
+  = link_to tag.name, { :action => :tag, :id => tag.name }, :class => css_class
+%p
+  Status:
+  = link_to 'all', clothing_by_status_path('all')
+  - statuses = Clothing.select('DISTINCT(status)')
+  - statuses.each do |s|
+    - if s and !s.status.blank?
+      = link_to s.status, clothing_by_status_path(s.status)
+
+- today = Date.today.strftime('%Y-%m-%d')
+= render "partials/clothing_log_entry"
+= set_focus_to_id("#clothing")
+
+- Clothing.tag_counts do |tag, css_class|
+  = link_to tag.name, { :action => :tag, :id => tag.name }, :class => css_class
+
+ 
+- if can? :create, Clothing
+  %p= link_to 'New Clothing', new_clothing_path
+
+= render "clothing_thumbnails"
+
+%table
+  %tr
+    %th= sortable_column "#", :column => "id"
+    - if user_signed_in?
+      %th Wear
+    %th= sortable_column "Name"
+    %th= sortable_column "Count", :column => "clothing_logs_count", :direction => :desc
+    %th= sortable_column "Last worn"
+    %th Colour
+    %th Tags
+  - @clothing.each do |clothing|
+    %tr
+      %td= clothing.id
+      - if user_signed_in?
+        %td
+          = link_to 'Yesterday', clothing_logs_path + "?clothing_id=" + clothing.id.to_s + "&date=" + Date.yesterday.to_s, :method => :post
+          = link_to 'Today', clothing_logs_path + "?clothing_id=" + clothing.id.to_s + "&date=" + Date.today.to_s, :method => :post
+          = link_to 'Tomorrow', clothing_logs_path + "?clothing_id=" + clothing.id.to_s + "&date=" + Date.tomorrow.to_s, :method => :post
+      %td= link_to clothing.name, clothing
+      %td= clothing.clothing_logs_count
+      %td
+        - if clothing.last_worn and clothing.last_worn > Date.today then
+          = clothing.last_worn
+        - elsif clothing.last_worn and clothing.last_worn >= Date.today
+          today
+        - else   
+          = (time_ago_in_words(clothing.last_worn) + " ago") if clothing.last_worn
+      %td
+        - if clothing.colour then
+          - clothing.colour.split(",").each do |x|
+            .color-box{:style => "background: ##{x}"}
+              &nbsp;
+      %td
+        - clothing.tag_list.each do |tag|
+          = link_to tag, { :action => :tag, :id => tag }
+
+%br
+
+- if can? :create, Clothing
+  = link_to 'New Clothing', new_clothing_path

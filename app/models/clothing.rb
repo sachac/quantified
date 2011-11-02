@@ -10,7 +10,7 @@ class Clothing < ActiveRecord::Base
  
   before_save :update_hsl
   def autocomplete_view
-    "#{self.number} - #{self.name}"
+    "#{self.id} - #{self.name}"
   end
   def update_hsl
     c = self.get_color
@@ -40,4 +40,10 @@ class Clothing < ActiveRecord::Base
     self
   end
 
+  def previous_by_id
+    self.class.first(:conditions => ['id < ?', self.id], :order => 'id desc')
+  end
+  def next_by_id
+    self.class.first(:conditions => ['id > ?', self.id], :order => 'id asc')
+  end
 end

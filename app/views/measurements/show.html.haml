@@ -1,0 +1,43 @@
+%p#notice= notice
+
+%h1
+  = @measurement.name
+  = link_to '(log)', new_measurement_log_path + '?measurement_id=' + @measurement.id.to_s
+
+- unless @measurement.notes.blank?
+  %p
+    %b Notes:
+    = @measurement.notes
+%p
+  %b Unit:
+  = @measurement.unit
+%table.lined
+  %tr
+    %th Average
+    %td= @measurement.average
+  %tr 
+    %th Max
+    %td= @measurement.max
+  %tr
+    %th Min
+    %td= @measurement.min
+  %tr
+    %th Sum
+    %td= @measurement.sum
+
+= link_to 'Log entry', new_measurement_log_path + '?measurement_id=' + @measurement.id.to_s
+
+%table.lined
+  %tr
+    %th Date
+    %th Value
+    %th Notes
+  - @measurement.measurement_logs.order('datetime DESC').each do |x|
+    %tr
+      %td= link_to l(x.datetime, :format => :long), x
+      %td= x.value
+      %td= x.notes
+
+= link_to 'Edit', edit_measurement_path(@measurement)
+\|
+= link_to 'Back', measurements_path
