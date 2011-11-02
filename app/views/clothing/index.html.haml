@@ -54,13 +54,7 @@
         %td= link_to clothing.name, clothing
         %td= clothing.status
         %td= clothing.clothing_logs_count
-        %td
-          - if clothing.last_worn and clothing.last_worn > Date.today then
-            = clothing.last_worn
-          - elsif clothing.last_worn and clothing.last_worn >= Date.today
-            today
-          - else   
-            = (time_ago_in_words(clothing.last_worn) + " ago") if clothing.last_worn
+        %td= date_ago_future(clothing.last_worn)
         %td
           - if clothing.colour then
             - clothing.colour.split(",").each do |x|
