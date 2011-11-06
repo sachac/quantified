@@ -1,0 +1,15 @@
+- dates ||= @dates
+- by_date ||= @by_date
+- size ||= :small
+%div
+  - dates.each do |date|
+    .entry
+      - list = by_date[date]
+      .date= link_to date, clothing_logs_by_date_path(date)
+      .clothes
+        - if list
+          - list.each do |item|
+            .item= clothing_thumbnail(item.clothing, :size => size)
+        - else
+          No records
+.clear-both

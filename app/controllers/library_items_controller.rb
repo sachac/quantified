@@ -1,6 +1,6 @@
 class LibraryItemsController < ApplicationController
   handles_sortable_columns
-  before_filter :authenticate_user!, :except => [:index, :show, :tag]
+  before_filter :authenticate_user!, :except => [:index, :show, :tag, :current]
 
   # GET /library_items
   # GET /library_items.xml
@@ -115,10 +115,18 @@ class LibraryItemsController < ApplicationController
             item.public = true
           when 'Make private'
             item.public = false
+          when 'Mark read'
+            item.status = 'read'
+            item.read_date ||= Date.today
         end
         item.save
       end
     end
     redirect_to :back and return
+  end
+
+  def current
+    public_only = cannot? :view_all, LibraryItem
+    @library_items = LibraryItem.current_items(public_only)
   end
 end

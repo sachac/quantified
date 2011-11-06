@@ -1,0 +1,10 @@
+- if stuff.order('name')
+  %table.lined
+    %tr
+      %th Name
+      %th Last logged
+    - stuff.order('name').each do |s|
+      - if can? :view, s
+        %tr
+          %td= link_to s.name, s
+          %td= l s.updated_at, :format => :long
