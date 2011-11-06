@@ -1,20 +1,22 @@
 %h1 Listing foods
-
-%table
+= link_to "Food log index", csa_foods_path
+%table.lined
   %tr
     %th Name
-    %th Notes
-    %th
-    %th
+    %th Total quantity
+    %th Remaining
     %th
 
   - @foods.each do |food|
     %tr
-      %td= food.name
-      %td= food.notes
-      %td= link_to 'Show', food
+      %td= link_to food.name, food
+      %td
+        = @info[food.id][:total] if @info[food.id]
+        = @info[food.id][:unit] if @info[food.id]
+      %td
+        = @info[food.id][:remaining] if @info[food.id]
+        = @info[food.id][:unit] if @info[food.id]
       %td= link_to 'Edit', edit_food_path(food)
-      %td= link_to 'Destroy', food, :confirm => 'Are you sure?', :method => :delete
 
 %br
 

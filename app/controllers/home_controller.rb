@@ -1,11 +1,6 @@
 class HomeController < ApplicationController
   before_filter :authenticate_user!, :except => [:index]
   def index
-    @pickup_count = TorontoLibrary.sum('pickup_count')
-    @library_items = LibraryItem.where("status = 'due' OR status IS NULL OR status = 'read'").order(:due, :status)
-    if cannot? :view_all, LibraryItem then
-      @library_items.where('public=1')
-    end
     @clothing_today = ClothingLog.where('date = ?', Date.today)
     if current_user then
       @memento_mori = current_user.memento_mori
@@ -14,6 +9,9 @@ class HomeController < ApplicationController
     else
       @memento_mori = User.find(1).memento_mori
     end
+    @clothing_logs = ClothingLog.includes(:clothing).where('date >= ? and date <= ?', Date.today - 1.week, Date.today).order('date, outfit_id DESC, clothing.clothing_type')
+    @by_date = ClothingLog.by_date(@clothing_logs)
+    @dates = 7.downto(0).collect { |i| Date.today - i.days }
   end
   def summary
     @start = (!params[:start].blank? ? Time.parse(params[:start]) : Date.new(Date.today.year, Date.today.month, 1)).midnight
@@ -62,5 +60,8 @@ class HomeController < ApplicationController
     
     # Summarize weekends and weekdays
 
+  end
+
+  def menu
   end
 end

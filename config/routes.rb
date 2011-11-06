@@ -2,10 +2,15 @@ Home::Application.routes.draw do
   resources :measurement_logs
 
   resources :measurements
-  resources :stuff
+  resources :locations
+  resources :stuff 
+  resources :location_histories
+  match 'stuff/log', :via => :post, :as => :log_stuff
+  match 'menu' => 'home#menu', :as => :menu
   resources :days
 
-  resources :csa_foods
+  match 'csa_foods/bulk_update', :as => :bulk_update_csa_foods, :via => :post
+  resources :csa_foods 
 
   resources :foods
 
@@ -17,6 +22,7 @@ Home::Application.routes.draw do
   resources :decisions
   resources :library_items do
     get :tag, :on => :collection
+    get :current, :on => :collection
   end
 
   match 'clothing/bulk', :as => :clothing_bulk, :via => :post

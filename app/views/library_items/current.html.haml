@@ -1,0 +1,34 @@
+- read = @library_items.where('status="read"').count
+- total = @library_items.count
+
+%h1= "#{read} read, #{total - read} to go"
+
+= form_tag library_item_bulk_path do
+  - if can? :update, LibraryItem
+    = select_tag 'op', options_for_select(['Make public', 'Make private', 'Mark read'])
+    = submit_tag
+  %table.lined
+    %tr
+      %th{:width => 100} Due
+      - if can? :update, LibraryItem
+        %th
+        %th
+      %th Title
+      %th Author
+    - @library_items.each do |item|
+      - if can? :view, item
+        %tr
+          %td= item.due.strftime("%Y-%m-%d %a")
+          %td
+            - if can? :update, item
+              = link_to 'Read', edit_library_item_path(item.id) + '?status=read&read_date=' + Date.today.to_s
+            = 'DONE' if item.read_date
+          - if can? :update, item
+            %td
+              = check_box_tag 'bulk[]', item.id
+          %td
+            = '(*)' unless item.public
+            = link_to item.title, can?(:update, item) ? edit_library_item_path(item.id) : item 
+          %td= item.author
+  - if can? :update, LibraryItem
+    = submit_tag

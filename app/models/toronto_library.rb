@@ -59,14 +59,18 @@ class TorontoLibrary < ActiveRecord::Base
         rec = LibraryItem.create(item)
         rec.checkout_date ||= Date.today
       end
-      rec.status = item[:status]
+      rec.status ||= item[:status]
       rec.save
     end
     # Mark all the un-updated due books as returned
-    LibraryItem.find(:all, :conditions => ["toronto_library_id = ? AND updated_at < ? AND (status IS NULL OR status='due')", self.id, stamp]).each do |item|
+    LibraryItem.find(:all, :conditions => ["toronto_library_id = ? AND updated_at < ? AND (status IS NULL OR status='due' OR status='read')", self.id, stamp]).each do |item|
       item.status = "returned"
       item.save
     end
     self.save
+  end
+
+  def self.pickup_count
+    TorontoLibrary.sum('pickup_count')
   end
 end
