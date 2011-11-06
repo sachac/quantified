@@ -8,6 +8,7 @@
   %li= link_to "Clothing - analyze", "/clothing/analyze" 
   %li= link_to "Library", library_items_path
   - if user_signed_in?
+    %li= link_to "Stuff", stuff_index_path
     %li= link_to "Measurements", measurements_path
     %li= link_to "Decisions", decisions_path 
     %li= link_to "Decision logs", decision_logs_path 

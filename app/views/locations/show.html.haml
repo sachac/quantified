@@ -1,0 +1,14 @@
+%p#notice= notice
+
+%h1= @location.name
+
+%h2 Current stuff
+= render :partial => 'stuff/list', :locals => { :stuff => @location.stuff.order('name') }
+
+%h2 Log history          
+= render :partial => 'location_histories/list', :locals => { :histories =>  @location.location_histories, :show_location => false }
+ 
+- if can? :update, @location
+  = link_to 'Edit', edit_location_path(@location)
+  \|
+= link_to 'Back', locations_path

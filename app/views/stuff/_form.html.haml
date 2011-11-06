@@ -5,6 +5,9 @@
       %ul
         - @stuff.errors.full_messages.each do |msg|
           %li= msg
-  = f.inputs
+  = f.inputs do
+    = f.input :name
+    = f.input :home_location, :collection => (Location.all + Stuff.all).sort_by(&:name).collect { |x| [x.name, "#{x.id}-#{x.class.name}"] }
+    = f.input :notes
   .actions
     = f.submit 'Save'
