@@ -1,5 +1,5 @@
 class LibraryController < ApplicationController
-  before_filter :authenticate_user!, :except => [:index]
+  before_filter :authenticate_user!, :except => [:index, :current]
 
   def index
     @items = LibraryItem.all
@@ -11,4 +11,5 @@ class LibraryController < ApplicationController
     end
     redirect_to(root_path, :notice => "Library books refreshed.") and return
   end
+
 end

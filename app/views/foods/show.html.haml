@@ -1,12 +1,25 @@
-%p#notice= notice
+%h1
+  = link_to 'Food', foods_path
+  &gt;
+  = @food.name.capitalize
+= @food.notes
 
-%p
-  %b Name:
-  = @food.name
-%p
-  %b Notes:
-  = @food.notes
+= form_tag bulk_update_csa_foods_path do
+  - if can? :update, CsaFood
+    = submit_tag 'Update records'
+  %table.lined
+    - @food.csa_foods.order('date_received DESC').each do |l|
+      %tr
+        %td= link_to l(l.date_received, :format => :long), l
+        %td= l.quantity
+        %td= l.unit
+        %td
+          - if can? :update, l
+            = text_field_tag "bulk[#{l.id}]", l.disposition
+          - else
+            = l.disposition
+        %td= l.notes
 
-= link_to 'Edit', edit_food_path(@food)
-\|
+- if can? :edit, @food
+  = link_to 'Edit', edit_food_path(@food)
 = link_to 'Back', foods_path
