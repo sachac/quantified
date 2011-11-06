@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111101101955) do
+ActiveRecord::Schema.define(:version => 20111104102959) do
 
   create_table "books", :force => true do |t|
     t.string   "title"
@@ -57,11 +57,11 @@ ActiveRecord::Schema.define(:version => 20111101101955) do
     t.integer  "food_id"
     t.integer  "quantity"
     t.string   "unit"
-    t.string   "date_received"
     t.string   "disposition"
     t.text     "notes"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.date     "date_received"
   end
 
   create_table "days", :force => true do |t|
@@ -124,6 +124,23 @@ ActiveRecord::Schema.define(:version => 20111101101955) do
     t.integer  "pages"
   end
 
+  create_table "location_histories", :force => true do |t|
+    t.integer  "stuff_id"
+    t.integer  "location_id"
+    t.string   "location_type"
+    t.datetime "datetime"
+    t.text     "notes"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "locations", :force => true do |t|
+    t.string   "name"
+    t.text     "notes"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "measurement_logs", :force => true do |t|
     t.integer  "measurement_id"
     t.datetime "datetime"
@@ -148,15 +165,21 @@ ActiveRecord::Schema.define(:version => 20111101101955) do
   create_table "stuff", :force => true do |t|
     t.string   "name"
     t.string   "status"
-    t.string   "location"
     t.decimal  "price"
     t.date     "purchase_date"
     t.text     "notes"
     t.string   "long_name"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "location_id"
+    t.string   "location_type"
+    t.integer  "home_location_id"
+    t.string   "home_location_type"
+    t.boolean  "in_place"
   end
 
+  add_index "stuff", ["location_id"], :name => "index_stuff_on_location_id"
+  add_index "stuff", ["name", "location_id"], :name => "index_stuff_on_name_and_location_id"
   add_index "stuff", ["name"], :name => "index_stuff_on_name"
 
   create_table "taggings", :force => true do |t|

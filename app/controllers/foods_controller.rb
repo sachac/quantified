@@ -2,8 +2,18 @@ class FoodsController < ApplicationController
   # GET /foods
   # GET /foods.xml
   def index
+    @info = Hash.new
+    CsaFood.all.each do |log|
+      @info[log.food_id] ||= Hash.new
+      @info[log.food_id][:unit] = log.unit
+      @info[log.food_id][:total] ||= 0
+      @info[log.food_id][:total] += log.quantity
+      @info[log.food_id][:remaining] ||= 0
+      if log.disposition.blank?
+        @info[log.food_id][:remaining] += log.quantity
+      end
+    end
     @foods = Food.all
-
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @foods }

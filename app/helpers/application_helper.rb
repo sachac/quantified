@@ -26,7 +26,11 @@ module ApplicationHelper
       title += " - #{clothing.clothing_logs_count} - #{date_ago_future clothing.last_worn}"
     end
     if clothing then
-      link_to image_tag(clothing_image(clothing, options)), options[:path] ? options[:path] : clothing_path(clothing), { :title => title }
+      if options[:size] == :tiny
+        link_to image_tag(clothing_image(clothing, options), :width => 27), options[:path] ? options[:path] : clothing_path(clothing), { :title => title }
+      else
+        link_to image_tag(clothing_image(clothing, options)), options[:path] ? options[:path] : clothing_path(clothing), { :title => title }
+      end
     else
       "Unknown"
     end
@@ -42,4 +46,32 @@ module ApplicationHelper
       end
     end
   end
+
+  def return_stuff(stuff)
+    link_to stuff.home_location.name, log_stuff_path(:stuff_name => stuff.name, :destination => request.url, :location_name => stuff.home_location.name), :method => :post
+  end
+
+  def set_stuff_home(stuff, loc)
+    loc = Stuff.get_location(loc)
+    link_to 'Set home', stuff_path(stuff.id, :destination => request.url, :stuff => {:home_location => loc}), :method => :put
+  end
+
+  def return_stuff_info(stuff)
+    if stuff.location 
+      if stuff.home_location
+        "<strong>#{link_to stuff.name, stuff}</strong> #{stuff.location.name} #{h '=>'} #{return_stuff(stuff)}".html_safe
+      else
+        "<strong>#{link_to stuff.name, stuff}</strong> #{stuff.location.name} #{h '=>'} #{set_stuff_home(stuff, stuff.location)}".html_safe
+      end
+    end
+  end
+
+  def recent_locations(stuff)
+    loc = stuff.distinct_locations
+    stuff.recent_locations = loc.map { |l|
+      url_helpers.link_to(l.location.name, url_helpers.log_stuff_path(:stuff_name => stuff.name, :location_name => l.location.name), :method => :post) if l and l.location
+    }.join(' ').html_safe
+  end
+
+
 end

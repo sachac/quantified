@@ -1,28 +1,16 @@
-= form_for @csa_food do |f|
+= semantic_form_for @csa_food do |f|
   -if @csa_food.errors.any?
     #error_explanation
       %h2= "#{pluralize(@csa_food.errors.count, "error")} prohibited this csa_food from being saved:"
       %ul
         - @csa_food.errors.full_messages.each do |msg|
           %li= msg
-
-  .field
-    = f.label :food_id
-    = f.text_field :food_id, :autofocus => 'true'
-  .field
-    = f.label :quantity
-    = f.text_field :quantity
-  .field
-    = f.label :unit
-    = f.text_field :unit
-  .field
-    = f.label :date_received
-    = f.text_field :date_received
-  .field
-    = f.label :disposition
-    = f.text_field :disposition
-  .field
-    = f.label :notes
-    = f.text_area :notes
-  .actions
-    = f.submit 'Save'
+  = f.inputs do
+    = f.input :food
+    = f.input :quantity
+    = f.input :unit
+    = f.input :disposition, :input_html => { :autofocus => !@csa_food.quantity.blank? }
+    = f.input :date_received
+    = f.input :notes
+  = f.buttons    
+    

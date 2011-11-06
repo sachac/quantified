@@ -1,17 +1,40 @@
-%h1 Listing stuff
+%h1 Where's my stuff?
 
-%table
+= render :partial => 'quicklog'
+%table.lined
   %tr
-    %th Stuff
-    %th
+    %th= sortable_column "Name", :column => "name"
+    %th= sortable_column "Last location", :column => "location_id"
+    %th= sortable_column "In place?", :column => "in_place"
+    %th= sortable_column "Last logged", :column => "updated_at"
+    - if can? :update, Stuff
+      %th
 
   - @stuff.each do |stuff|
-    %tr
-      %td= link_to stuff.name, stuff
-      %td
-        = link_to 'Edit', edit_stuff_path(stuff)
-        = link_to 'Delete', stuff, :confirm => 'Are you sure?', :method => :delete
-
-%br
-
-= link_to 'New Stuff', new_stuff_path
+    - if can? :view, stuff
+      %tr
+        %td= link_to stuff.name, stuff
+        %td= link_to stuff.location.name, stuff.location if stuff.location
+        %td
+          - if stuff.home_location
+            - if stuff.location == stuff.home_location
+              .home
+                Yay!
+            - else
+              .out
+                - if can? :update, stuff
+                  = link_to "Return to #{stuff.home_location.name}", log_stuff_path(:stuff_name => stuff.name, :location_name => stuff.home_location.name), :method => :post
+                  - if stuff.location
+                    \-
+                    = link_to 'Set current', stuff_path(stuff.id, :destination => request.url, :stuff => {:home_location_id => "#{stuff.location_id}-#{stuff.location_type}"}), :method => :put
+                - else
+                  Home:
+                  = stuff.home.location.name
+          - else
+            No home?
+            - if stuff.location and can? :update, @stuff
+              = link_to 'Set current', stuff_path(stuff.id, :destination => request.url, :stuff => {:home_location_id => "#{stuff.location_id}-#{stuff.location_type}"}), :method => :put
+        %td= l stuff.updated_at, :format => :short
+        - if can? :update, stuff
+          %td
+            = link_to 'Edit', edit_stuff_path(stuff)

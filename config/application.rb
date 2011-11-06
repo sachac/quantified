@@ -38,6 +38,7 @@ module Home
 
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [:password]
+    config.active_record.observers = :stuff_observer
     config.to_prepare do
       Devise::SessionsController.layout "sign"
     end
