@@ -1,29 +1,36 @@
-%h1 Listing csa_foods
+%h1
+  Community-supported agriculture - 
+  = pluralize @remaining, 'gram'
+  to go
 
-%table
-  %tr
-    %th Food
-    %th Quantity
-    %th Unit
-    %th Date received
-    %th Disposition
-    %th Notes
-    %th
-    %th
-    %th
-
-  - @csa_foods.each do |csa_food|
+= form_tag bulk_update_csa_foods_path do
+  - if can? :update, CsaFood
+    = submit_tag 'Update'
+  %table.lined
     %tr
-      %td= link_to csa_food.food.name, csa_food.food
-      %td= csa_food.quantity
-      %td= csa_food.unit
-      %td= csa_food.date_received
-      %td= csa_food.disposition
-      %td= csa_food.notes
-      %td= link_to 'Show', csa_food
-      %td= link_to 'Edit', edit_csa_food_path(csa_food)
-      %td= link_to 'Destroy', csa_food, :confirm => 'Are you sure?', :method => :delete
+      %th Date received
+      %th Food
+      %th Quantity
+      %th Unit
+      %th Disposition
+      %th Notes
+      %th
 
+    - @csa_foods.each do |csa_food|
+      %tr
+        %td= link_to csa_food.date_received, csa_food
+        %td= link_to csa_food.food.name, csa_food.food
+        %td= csa_food.quantity
+        %td= csa_food.unit
+        %td
+          - if can? :update, csa_food
+            = text_field_tag "bulk[#{csa_food.id}]", csa_food.disposition
+          - else
+            = csa_food.disposition
+        %td= csa_food.notes
+        %td
+          - if can?(:update, csa_food)
+            = link_to 'Edit', edit_csa_food_path(csa_food)
 %br
 
 = link_to 'New Csa food', new_csa_food_path

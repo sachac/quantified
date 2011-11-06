@@ -1,7 +1,0 @@
-en:
-  formtastic:
-    :yes: 'Yes'
-    :no: 'No'
-    :create: 'Create %{model}'
-    :update: 'Update %{model}'
-    :required: 'required'

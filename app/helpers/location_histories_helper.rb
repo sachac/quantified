@@ -1,0 +1,2 @@
+module LocationHistoriesHelper
+end

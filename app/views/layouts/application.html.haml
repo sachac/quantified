@@ -11,8 +11,8 @@
     = javascript_include_tag "jquery.sparkline.min.js"
     :javascript
       $(function() { $('.sparkline-bar').sparkline('html', {type: 'bar', barColor: '#85acaa', chartRangeMin: 0}); });
-  %body
-    #container
+  %body.full
+    #container{:class => @skip_sidebar ? 'no-sidebar' : 'has-sidebar'}
       #header
         %h1
           %a{:href => "/"} Sacha Chua
@@ -40,9 +40,15 @@
             .block
               %p
                 Copyright &copy; #{Time.now.year} Sacha Chua
-        #sidebar
-          - if content_for?(:sidebar)
-            = content_for(:sidebar)
-          - else
-            = render :partial => "partials/sidebar"
+                - if session
+                  - if session['layout'] == 'mobile'
+                    = link_to 'Full', :layout => 'full'
+                  - else 
+                    = link_to 'Mobile', :layout => 'mobile'
+        - unless @skip_sidebar        
+          #sidebar
+            - if content_for?(:sidebar)
+              = content_for(:sidebar)
+            - else
+              = render :partial => "partials/sidebar"
 
