@@ -1,0 +1,17 @@
+- show_name = true if show_name.nil?
+- show_location = true if show_location.nil?
+- histories ||= LocationHistory
+%table.lined
+  %tr
+    - if show_name
+      %th Name
+    - if show_location
+      %th Location
+    %th Date/time
+  - histories.order('datetime DESC').each do |h|
+    %tr
+      - if show_name
+        %td= link_to h.stuff.name, h.stuff
+      - if show_location
+        %td= link_to h.location.name, h.location
+      %td= link_to l(h.datetime, :format => :long), h

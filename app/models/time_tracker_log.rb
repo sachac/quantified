@@ -112,7 +112,10 @@ class TimeTrackerLog
   end
 
   def entries(start_time, end_time)
-    TimeRecord.find(:all, :conditions => ["start_time >= ? AND end_time <= ?", start_time, end_time])
+    start_time = Date.parse(start_time) unless start_time.is_a? Date
+    end_time = Date.parse(end_time) unless end_time.is_a? Date
+    
+    TimeRecord.find(:all, :conditions => ["date(start_time, 'localtime') >= ? and date(end_time, 'localtime') <= ?", start_time, end_time])
   end
 
   def by_day(entries)
@@ -153,9 +156,8 @@ class TimeTrackerLog
       end
       total += (x.end_time - x.start_time)
     end
-    result["A - Sleep"] = [end_time, Time.now].min - start_time
+    result["A - Sleep"] = (end_time - start_time + 1) * 86400
     result["A - Sleep"] -= (result['! Discretionary'] || 0) + (result['! Personal care'] || 0) + (result['! Unpaid work'] || 0) + (result['A - Work'] || 0)
-    puts "#{end_time.to_s} #{start_time.to_s} #{result['! Discretionary']} #{result['! Personal care']} #{result['! Unpaid work']} #{result['A - Work']}\n"
     result
   end
 

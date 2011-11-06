@@ -32,5 +32,12 @@ class ClothingLog < ActiveRecord::Base
     ClothingMatch.delete_matches(self)
   end
 
-
+  def self.by_date(query)
+    by_date = Hash.new
+    query.each do |l|
+      by_date[l.date] ||= Array.new
+      by_date[l.date] << l
+    end
+    by_date
+  end
 end

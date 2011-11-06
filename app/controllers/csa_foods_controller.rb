@@ -4,14 +4,22 @@ class CsaFoodsController < ApplicationController
   # GET /csa_foods
   # GET /csa_foods.xml
   def index
-    @csa_foods = CsaFood.find(:all, :include => :food)
-
+    @csa_foods = CsaFood.includes(:food).order('date_received DESC, disposition ASC')
+    @remaining = CsaFood.remaining
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @csa_foods }
     end
   end
 
+  def bulk_update
+    if params[:bulk]
+      params[:bulk].each do |key, val|
+        CsaFood.find(key).update_attributes(:disposition => val)
+      end
+    end
+    redirect_to csa_foods_path
+  end
   # GET /csa_foods/1
   # GET /csa_foods/1.xml
   def show
@@ -69,7 +77,7 @@ class CsaFoodsController < ApplicationController
 
     respond_to do |format|
       if @csa_food.update_attributes(params[:csa_food])
-        format.html { redirect_to(@csa_food, :notice => 'Csa food was successfully updated.') }
+        format.html { redirect_to(csa_foods_path, :notice => 'Csa food was successfully updated.') }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }

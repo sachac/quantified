@@ -1,5 +1,12 @@
+body {
+  font: normal 12px "Lucida Grande", "Helvetica Neue", Arial, sans-serif;
+  line-height: auto; }
+
 .ui-autocomplete {
   background: white; }
+
+th, td {
+  vertical-align: top; }
 
 table.lined {
   border-width: 1px;
@@ -47,9 +54,43 @@ dd {
 
 .entry {
   float: left;
-  padding-left: 10px; }
+  padding-right: 10px; }
   .entry .item {
     float: left; }
 
 body formtastic.fieldset > ol > li label {
   width: auto; }
+
+body #container.no-sidebar {
+  width: auto;
+  min-width: 0; }
+  body #container.no-sidebar #main {
+    width: 100%; }
+
+.locations {
+  font-size: x-large; }
+
+ul, ol, dl {
+  margin-left: 10px; }
+
+.mobile #container {
+  width: 100%; }
+.mobile #main {
+  width: 100%; }
+
+.menu {
+  font-size: large; }
+  .menu li {
+    list-style-type: none; }
+  .menu a {
+    width: 100%;
+    display: block;
+    border: 1pt solid darkgray;
+    padding: 3px; }
+
+.summary {
+  font-size: large; }
+  .summary .category {
+    margin-bottom: 10px; }
+  .summary .entry, .summary .stuff .list {
+    font-size: small; }
