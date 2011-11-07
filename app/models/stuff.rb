@@ -1,4 +1,5 @@
 class Stuff < ActiveRecord::Base
+  belongs_to :user
   delegate :url_helpers, :to => 'Rails.application.routes' 
 
   has_many :location_histories

@@ -6,13 +6,21 @@ class ClothingController < ApplicationController
   # GET /clothing
   # GET /clothing.xml
   def index
-    @tags = Clothing.tag_counts_on(:tags).sort_by(&:name)
-    order = sortable_column_order
-    order ||= "clothing_type asc, hue asc"
-    @clothing = Clothing.find(:all, 
-                              :conditions => ["status IS 'active' OR status IS NULL OR status=''"],
-                              :order => order)
-
+    @tags = current_account.clothing.tag_counts_on(:tags).sort_by(&:name)
+    params[:sort] ||= 'clothing_type'
+    order = nil
+    sortable_column_order do |column, direction|
+      case column
+      when 'clothing_type', 'id', 'name', 'status', 'clothing_logs_count', 'last_worn'
+        order = "#{column} #{direction}"
+      else
+        order = 'clothing_type ASC, hue ASC'
+      end
+    end
+    @clothing = current_account.clothing
+    @clothing = @clothing.find(:all, 
+                               :conditions => ["status IS 'active' OR status IS NULL OR status=''"],
+                               :order => order)
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @clothing }
@@ -22,8 +30,8 @@ class ClothingController < ApplicationController
   # GET /clothing/1
   # GET /clothing/1.xml
   def show
-    @clothing = Clothing.find(params[:id])
-    @logs = ClothingLog.find(:all, :conditions => ["clothing_id=?", @clothing.id], :order => 'date DESC')
+    @clothing = current_account.clothing.find(params[:id])
+    @logs = current_account.clothing_logs.find(:all, :conditions => ["clothing_id=?", @clothing.id], :order => 'date DESC')
     @previous = @clothing.previous_by_id
     @next = @clothing.next_by_id
 
@@ -78,6 +86,7 @@ class ClothingController < ApplicationController
   def new
     @clothing = Clothing.new
     @clothing.status = 'active'
+    @clothing.user_id = current_account.id
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @clothing }
@@ -86,14 +95,14 @@ class ClothingController < ApplicationController
 
   # GET /clothing/1/edit
   def edit
-    @clothing = Clothing.find(params[:id])
+    @clothing = current_account.clothing.find(params[:id])
   end
 
   # POST /clothing
   # POST /clothing.xml
   def create
     @clothing = Clothing.new(params[:clothing])
-
+    @clothing.user_id = current_account.id
     respond_to do |format|
       if @clothing.save
         format.html { redirect_to(new_clothing_path, :notice => 'Clothing was successfully created.') }
@@ -109,7 +118,6 @@ class ClothingController < ApplicationController
   # PUT /clothing/1.xml
   def update
     @clothing = Clothing.find(params[:id])
-
     respond_to do |format|
       if @clothing.update_attributes(params[:clothing])
         format.html { redirect_to(clothing_path(@clothing), :notice => 'Clothing was successfully updated.') and return }
