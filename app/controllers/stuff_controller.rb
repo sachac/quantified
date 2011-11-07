@@ -96,10 +96,10 @@ class StuffController < ApplicationController
     @stuff = Stuff.find(params[:id])
     # Change params[:stuff][:home_location]
     loc = nil
-    if params[:stuff][:home_location_id] 
+    if !params[:stuff][:home_location_id].blank?
       loc = Stuff.get_location(params[:stuff][:home_location_id])
-      params[:stuff].delete(:home_location_id)
     end
+    params[:stuff].delete(:home_location_id)
     result = @stuff.update_attributes(params[:stuff])
     unless loc.blank? || !result
       @stuff.home_location = loc
