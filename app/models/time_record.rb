@@ -1,4 +1,5 @@
 class TimeRecord < ActiveRecord::Base
+  belongs_to :user
   def starts_at
     @start_time
   end
