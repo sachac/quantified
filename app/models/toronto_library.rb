@@ -1,4 +1,5 @@
 class TorontoLibrary < ActiveRecord::Base
+  belongs_to :user
   attr_accessor :agent
 #  attr_accessible :card, :pin, :name
   def login
@@ -70,7 +71,7 @@ class TorontoLibrary < ActiveRecord::Base
     self.save
   end
 
-  def self.pickup_count
-    TorontoLibrary.sum('pickup_count')
+  def self.pickup_count(account)
+    TorontoLibrary.where('user_id=?', account.id).sum('pickup_count')
   end
 end
