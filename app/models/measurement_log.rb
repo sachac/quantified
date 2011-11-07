@@ -1,4 +1,5 @@
 class MeasurementLog < ActiveRecord::Base
+  belongs_to :user
   belongs_to :measurement
   after_save :update_measurement
   after_destroy :update_measurement
