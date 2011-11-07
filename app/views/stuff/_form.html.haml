@@ -7,6 +7,7 @@
           %li= msg
   = f.inputs do
     = f.input :name
+    = f.input :status
     = f.input :home_location, :collection => (Location.all + Stuff.all).sort_by(&:name).collect { |x| [x.name, "#{x.id}-#{x.class.name}"] }
     = f.input :notes
   .actions
