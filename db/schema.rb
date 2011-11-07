@@ -10,15 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111104102959) do
-
-  create_table "books", :force => true do |t|
-    t.string   "title"
-    t.string   "library_code"
-    t.date     "due_date"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
+ActiveRecord::Schema.define(:version => 20111107120811) do
 
   create_table "clothing", :force => true do |t|
     t.string   "name"
@@ -36,13 +28,19 @@ ActiveRecord::Schema.define(:version => 20111104102959) do
     t.date     "last_worn"
     t.integer  "clothing_logs_count",  :default => 0
     t.integer  "last_clothing_log_id"
+    t.integer  "user_id"
   end
+
+  add_index "clothing", ["user_id"], :name => "index_clothing_on_user_id"
 
   create_table "clothing_logs", :force => true do |t|
     t.integer "clothing_id"
     t.date    "date"
     t.integer "outfit_id",   :default => 1
+    t.integer "user_id"
   end
+
+  add_index "clothing_logs", ["user_id"], :name => "index_clothing_logs_on_user_id"
 
   create_table "clothing_matches", :id => false, :force => true do |t|
     t.integer  "clothing_a_id"
@@ -51,7 +49,10 @@ ActiveRecord::Schema.define(:version => 20111104102959) do
     t.integer  "clothing_log_b_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "user_id"
   end
+
+  add_index "clothing_matches", ["user_id"], :name => "index_clothing_matches_on_user_id"
 
   create_table "csa_foods", :force => true do |t|
     t.integer  "food_id"
@@ -62,7 +63,10 @@ ActiveRecord::Schema.define(:version => 20111104102959) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.date     "date_received"
+    t.integer  "user_id"
   end
+
+  add_index "csa_foods", ["user_id"], :name => "index_csa_foods_on_user_id"
 
   create_table "days", :force => true do |t|
     t.date     "date"
@@ -73,7 +77,10 @@ ActiveRecord::Schema.define(:version => 20111104102959) do
     t.integer  "library_transit"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "user_id"
   end
+
+  add_index "days", ["user_id"], :name => "index_days_on_user_id"
 
   create_table "decision_logs", :force => true do |t|
     t.text     "notes"
@@ -83,7 +90,10 @@ ActiveRecord::Schema.define(:version => 20111104102959) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "decision_id"
+    t.integer  "user_id"
   end
+
+  add_index "decision_logs", ["user_id"], :name => "index_decision_logs_on_user_id"
 
   create_table "decisions", :force => true do |t|
     t.string   "name"
@@ -94,14 +104,20 @@ ActiveRecord::Schema.define(:version => 20111104102959) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "rating"
+    t.integer  "user_id"
   end
+
+  add_index "decisions", ["user_id"], :name => "index_decisions_on_user_id"
 
   create_table "foods", :force => true do |t|
     t.string   "name"
     t.string   "notes"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "user_id"
   end
+
+  add_index "foods", ["user_id"], :name => "index_foods_on_user_id"
 
   create_table "library_items", :force => true do |t|
     t.string   "library_id"
@@ -122,7 +138,10 @@ ActiveRecord::Schema.define(:version => 20111104102959) do
     t.text     "notes"
     t.decimal  "price"
     t.integer  "pages"
+    t.integer  "user_id"
   end
+
+  add_index "library_items", ["user_id"], :name => "index_library_items_on_user_id"
 
   create_table "location_histories", :force => true do |t|
     t.integer  "stuff_id"
@@ -132,14 +151,20 @@ ActiveRecord::Schema.define(:version => 20111104102959) do
     t.text     "notes"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "user_id"
   end
+
+  add_index "location_histories", ["user_id"], :name => "index_location_histories_on_user_id"
 
   create_table "locations", :force => true do |t|
     t.string   "name"
     t.text     "notes"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "user_id"
   end
+
+  add_index "locations", ["user_id"], :name => "index_locations_on_user_id"
 
   create_table "measurement_logs", :force => true do |t|
     t.integer  "measurement_id"
@@ -148,7 +173,10 @@ ActiveRecord::Schema.define(:version => 20111104102959) do
     t.decimal  "value"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "user_id"
   end
+
+  add_index "measurement_logs", ["user_id"], :name => "index_measurement_logs_on_user_id"
 
   create_table "measurements", :force => true do |t|
     t.string   "name"
@@ -160,7 +188,21 @@ ActiveRecord::Schema.define(:version => 20111104102959) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.decimal  "sum"
+    t.integer  "user_id"
   end
+
+  add_index "measurements", ["user_id"], :name => "index_measurements_on_user_id"
+
+  create_table "settings", :force => true do |t|
+    t.string   "var",                      :null => false
+    t.text     "value"
+    t.integer  "thing_id"
+    t.string   "thing_type", :limit => 30
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "settings", ["thing_type", "thing_id", "var"], :name => "index_settings_on_thing_type_and_thing_id_and_var", :unique => true
 
   create_table "stuff", :force => true do |t|
     t.string   "name"
@@ -176,11 +218,13 @@ ActiveRecord::Schema.define(:version => 20111104102959) do
     t.integer  "home_location_id"
     t.string   "home_location_type"
     t.boolean  "in_place"
+    t.integer  "user_id"
   end
 
   add_index "stuff", ["location_id"], :name => "index_stuff_on_location_id"
   add_index "stuff", ["name", "location_id"], :name => "index_stuff_on_name_and_location_id"
   add_index "stuff", ["name"], :name => "index_stuff_on_name"
+  add_index "stuff", ["user_id"], :name => "index_stuff_on_user_id"
 
   create_table "taggings", :force => true do |t|
     t.integer  "tag_id"
@@ -205,7 +249,10 @@ ActiveRecord::Schema.define(:version => 20111104102959) do
     t.datetime "end_time"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "user_id"
   end
+
+  add_index "time_records", ["user_id"], :name => "index_time_records_on_user_id"
 
   create_table "toronto_libraries", :force => true do |t|
     t.datetime "created_at"
@@ -216,7 +263,10 @@ ActiveRecord::Schema.define(:version => 20111104102959) do
     t.date     "last_checked"
     t.integer  "pickup_count"
     t.integer  "library_item_count"
+    t.integer  "user_id"
   end
+
+  add_index "toronto_libraries", ["user_id"], :name => "index_toronto_libraries_on_user_id"
 
   create_table "users", :force => true do |t|
     t.string   "email",                                   :default => "", :null => false
@@ -235,6 +285,8 @@ ActiveRecord::Schema.define(:version => 20111104102959) do
     t.float    "life_expectancy"
     t.integer  "life_expectancy_in_years"
     t.date     "projected_end"
+    t.string   "role"
+    t.string   "username"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
