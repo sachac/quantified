@@ -1,4 +1,3 @@
-%h1 Sacha Chua
 .block#block-login
   %h2 Sign in
   .content.login
@@ -8,8 +7,8 @@
           %p= message
     = form_for(resource, :as => resource_name, :url => session_path(resource_name), :html => { :class => "form login" }) do |f|
       .group.wat-cf
-        .left= f.label :email, :class => "label right"
-        .right= f.text_field :email, :class => "text_field"
+        .left= f.label :username, :class => "label right"
+        .right= f.text_field :username, :class => "text_field"
       .group.wat-cf
         .left= f.label :password, :class => "label right"
         .right= f.password_field :password, :class => "text_field"
@@ -22,5 +21,6 @@
         .right
           %button.button{ :type => "submit" }
             = image_tag "web-app-theme/icons/key.png"
-            Login
+            Log in
     = render :partial => "devise/shared/links"
+    
