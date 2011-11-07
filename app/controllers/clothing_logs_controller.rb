@@ -3,7 +3,7 @@ class ClothingLogsController < ApplicationController
   # GET /clothing_logs.xml
   before_filter :authenticate_user!, :except => [:index, :show, :by_date]
   def index
-    @clothing_logs = ClothingLog.find(:all, :order => "date DESC, outfit_id DESC, clothing.clothing_type", :include => [:clothing])
+    @clothing_logs = current_account.clothing_logs.find(:all, :order => "date DESC, outfit_id DESC, clothing.clothing_type", :include => [:clothing])
     @by_date = Hash.new
     @clothing_logs.each do |l|
       @by_date[l.date] ||= Array.new

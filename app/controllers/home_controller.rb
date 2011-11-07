@@ -2,16 +2,14 @@ class HomeController < ApplicationController
   before_filter :authenticate_user!, :except => [:index]
   def index
     @clothing_today = ClothingLog.where('date = ?', Date.today)
-    if current_user then
-      @memento_mori = current_user.memento_mori
+    if current_account then
+      @memento_mori = current_account.memento_mori
       @yesterday = Day.yesterday
       @today = Day.today
-    else
-      @memento_mori = User.find(1).memento_mori
+      @clothing_logs = current_account.clothing_logs.includes(:clothing).where('date >= ? and date <= ?', Date.today - 1.week, Date.today).order('date, outfit_id DESC, clothing.clothing_type')
+      @by_date = current_account.clothing_logs.by_date(@clothing_logs)
+      @dates = 7.downto(0).collect { |i| Date.today - i.days }
     end
-    @clothing_logs = ClothingLog.includes(:clothing).where('date >= ? and date <= ?', Date.today - 1.week, Date.today).order('date, outfit_id DESC, clothing.clothing_type')
-    @by_date = ClothingLog.by_date(@clothing_logs)
-    @dates = 7.downto(0).collect { |i| Date.today - i.days }
   end
   def summary
     @start = (!params[:start].blank? ? Time.parse(params[:start]) : Date.new(Date.today.year, Date.today.month, 1)).midnight

@@ -40,7 +40,7 @@ gem 'cancan'
 #   gem 'webrat'
 # end
 gem 'rails3-jquery-autocomplete'
-gem 'acts-as-taggable-on', '~>2.1.0'
+gem 'acts-as-taggable-on', :git => 'git://github.com/mbleigh/acts-as-taggable-on.git'
 gem 'chronic'
 #gem 'sparklines'
 #gem 'sparklines_generator'
@@ -51,9 +51,9 @@ gem 'ruby_parser'
 gem 'sass'
 gem 'barometer'
 gem 'mechanize'
-gem 'settingslogic'
+gem 'rails-settings-cached', :require => 'rails-settings'
 gem 'color'
-
+gem 'subdomain-fu', :git => "git://github.com/nhowell/subdomain-fu.git"
 group :development, :test do
   gem 'cucumber'
   gem 'hpricot'
@@ -62,6 +62,8 @@ group :development, :test do
   gem 'rspec'
   gem 'rspec-rails'
   gem 'factory_girl'
+  gem 'factory_girl_rails'  
+  gem 'forgery'
 end
 gem 'yaml_db'
-
+gem 'email_validator'

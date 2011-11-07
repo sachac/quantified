@@ -1,4 +1,5 @@
 class Clothing < ActiveRecord::Base
+  belongs_to :user
   acts_as_taggable_on :tags
   has_many :clothing_logs
   has_and_belongs_to_many :clothing_matches, \
