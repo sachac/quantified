@@ -7,12 +7,19 @@ class ClothingController < ApplicationController
   # GET /clothing.xml
   def index
     @tags = Clothing.tag_counts_on(:tags).sort_by(&:name)
-    order = sortable_column_order
-    order ||= "clothing_type asc, hue asc"
+    params[:sort] ||= 'clothing_type'
+    order = sortable_column_order do |column, direction|
+      case column 
+      when 'name', 'status', 'clothing_logs_count', 'last_worn', 'hue'
+        "#{column} #{direction}"
+      else
+        "clothing_type ASC, hue ASC"
+      end
+    end
     @clothing = Clothing.find(:all, 
-                              :conditions => ["status IS 'active' OR status IS NULL OR status=''"],
+                              :conditions => ["status='active' OR status IS NULL OR status=''"],
                               :order => order)
-
+    
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @clothing }
