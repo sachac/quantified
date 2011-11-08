@@ -49,12 +49,6 @@ class User < ActiveRecord::Base
     end
   end
   
-  def self.find_for_database_authentication(warden_conditions)
-    conditions = warden_conditions.dup
-    username = conditions.delete(:username)
-    where(conditions).where(["lower(username) = :value OR lower(email) = :value", { :value => username.downcase }]).first
-  end
-
   protected
 
   # Attempt to find a user by email. If a record is found, send new
