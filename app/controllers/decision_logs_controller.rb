@@ -2,7 +2,7 @@ class DecisionLogsController < ApplicationController
   # GET /decision_logs
   # GET /decision_logs.xml
   def index
-    @decision_logs = DecisionLog.all
+    @decision_logs = current_account.decision_logs.all
 
     respond_to do |format|
       format.html # index.html.erb
@@ -13,7 +13,7 @@ class DecisionLogsController < ApplicationController
   # GET /decision_logs/1
   # GET /decision_logs/1.xml
   def show
-    @decision_log = DecisionLog.find(params[:id])
+    @decision_log = current_account.decision_logs.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -37,14 +37,14 @@ class DecisionLogsController < ApplicationController
 
   # GET /decision_logs/1/edit
   def edit
-    @decision_log = DecisionLog.find(params[:id])
+    @decision_log = current_account.decision_logs.find(params[:id])
   end
 
   # POST /decision_logs
   # POST /decision_logs.xml
   def create
     @decision_log = DecisionLog.new(params[:decision_log])
-
+    @decision_log.user = current_account
     respond_to do |format|
       if @decision_log.save
         format.html { redirect_to(@decision_log, :notice => 'Decision log was successfully created.') }
@@ -59,7 +59,7 @@ class DecisionLogsController < ApplicationController
   # PUT /decision_logs/1
   # PUT /decision_logs/1.xml
   def update
-    @decision_log = DecisionLog.find(params[:id])
+    @decision_log = current_account.decision_logs.find(params[:id])
 
     respond_to do |format|
       if @decision_log.update_attributes(params[:decision_log])
@@ -75,7 +75,7 @@ class DecisionLogsController < ApplicationController
   # DELETE /decision_logs/1
   # DELETE /decision_logs/1.xml
   def destroy
-    @decision_log = DecisionLog.find(params[:id])
+    @decision_log = current_account.decision_logs.find(params[:id])
     @decision_log.destroy
 
     respond_to do |format|

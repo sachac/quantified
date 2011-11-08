@@ -49,6 +49,23 @@ class User < ActiveRecord::Base
       { :days => days.to_i, :months => (days * 1.day / 1.month).to_i, :years => (days * 1.day / 1.year).to_i, :weeks => (days * 1.day / 1.week).to_i }
     end
   end
+
+  def get_location(val)
+    if val.is_a? String
+      if match = val.match(/^([0-9]+)-(Stuff|Location)/)
+        id = match[1]
+        model = match[2]
+        model.classify.constantize.find(id)
+      else  
+        loc = self.stuff.find(:first, :conditions => ['lower(name)=?', val.downcase.strip])
+        loc ||= self.locations.find(:first, :conditions => ['lower(name)=?', val.downcase.strip])
+        loc ||= self.locations.create(:name => val.strip)
+      end
+    else
+      val
+    end
+  end
+
   
   protected
 
@@ -97,4 +114,6 @@ class User < ActiveRecord::Base
     login = conditions.delete(:login)
     where(conditions).where(["lower(username) = :value OR lower(email) = :value", { :value => login.downcase }]).first
   end
+
+
 end
