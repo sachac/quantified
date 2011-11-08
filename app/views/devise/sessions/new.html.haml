@@ -7,8 +7,8 @@
           %p= message
     = form_for(resource, :as => resource_name, :url => session_path(resource_name), :html => { :class => "form login" }) do |f|
       .group.wat-cf
-        .left= f.label :username, :class => "label right"
-        .right= f.text_field :username, :class => "text_field"
+        .left= f.label :login, :class => "label right"
+        .right= f.text_field :login, :class => "text_field"
       .group.wat-cf
         .left= f.label :password, :class => "label right"
         .right= f.password_field :password, :class => "text_field"
