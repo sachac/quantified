@@ -19,7 +19,7 @@ class StuffController < ApplicationController
         "name DESC"
       end
     end
-    @stuff = Stuff.order(order).includes(:location)
+    @stuff = current_account.stuff.order(order).includes(:location)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -32,7 +32,7 @@ class StuffController < ApplicationController
     unless @stuff
       @stuff = Stuff.create(:name => params[:stuff_name].strip)
     end
-    @location = Stuff.get_location(params[:location_name])
+    @location = current_account.get_location(params[:location_name])
     @stuff.location = @location
     logger.info "Stuff: #{@stuff.id}"
     logger.info "Location: #{@location.id}"
@@ -44,7 +44,7 @@ class StuffController < ApplicationController
   # GET /stuff/1
   # GET /stuff/1.xml
   def show
-    @stuff = Stuff.find(params[:id])
+    @stuff = current_account.stuff.find(params[:id])
     @location_histories = @stuff.location_histories.order(:updated_at)
     respond_to do |format|
       format.html # show.html.erb
@@ -65,7 +65,7 @@ class StuffController < ApplicationController
 
   # GET /stuff/1/edit
   def edit
-    @stuff = Stuff.find(params[:id])
+    @stuff = current_account.stuff.find(params[:id])
   end
 
   # POST /stuff
@@ -73,12 +73,13 @@ class StuffController < ApplicationController
   def create
     loc = nil
     if params[:stuff][:home_location_id] 
-      loc = Stuff.get_location(params[:stuff][:home_location_id])
+      loc = current_account.get_location(params[:stuff][:home_location_id])
       params[:stuff].delete(:home_location_id)
     end
     @stuff = Stuff.new(params[:stuff])
     @stuff.home_location = loc
     @stuff.location = @stuff.home_location
+    @stuff.user = current_account
     respond_to do |format|
       if @stuff.save
         format.html { redirect_to(@stuff, :notice => 'Stuff was successfully created.') }
@@ -93,11 +94,11 @@ class StuffController < ApplicationController
   # PUT /stuff/1
   # PUT /stuff/1.xml
   def update
-    @stuff = Stuff.find(params[:id])
+    @stuff = current_account.stuff.find(params[:id])
     # Change params[:stuff][:home_location]
     loc = nil
     if !params[:stuff][:home_location_id].blank?
-      loc = Stuff.get_location(params[:stuff][:home_location_id])
+      loc = current_account.get_location(params[:stuff][:home_location_id])
     end
     params[:stuff].delete(:home_location_id)
     result = @stuff.update_attributes(params[:stuff])
@@ -119,7 +120,7 @@ class StuffController < ApplicationController
   # DELETE /stuff/1
   # DELETE /stuff/1.xml
   def destroy
-    @stuff = Stuff.find(params[:id])
+    @stuff = current_account.stuff.find(params[:id])
     @stuff.destroy
 
     respond_to do |format|
