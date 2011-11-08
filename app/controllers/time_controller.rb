@@ -9,14 +9,14 @@ class TimeController < ApplicationController
 
   # POST
   def refresh_from_csv
-    @log = TimeTrackerLog.new
+    @log = TimeTrackerLog.new(current_account)
     @log.login
     @log.refresh_from_csv(params[:file].tempfile)
     redirect_to :action => "graph"
   end 
 
   def index
-    @log = TimeTrackerLog.new
+    @log = TimeTrackerLog.new(current_account)
     base = Chronic.parse("last Saturday").midnight
     @limits = {"this_week" => [base, base + 1.week],
       "last_week" => [base - 1.week, base],
@@ -119,7 +119,7 @@ class TimeController < ApplicationController
         @labels << "<a href=\"#\" class=\"#{@totals[name][:class]}\">#{@totals[name][:title]}</a>".html_safe
       end
     end
-    @log = TimeTrackerLog.new
+    @log = TimeTrackerLog.new(current_account)
     @time_by_day = @log.by_day(entries)
     day = @start
     @time_graphs = Hash.new

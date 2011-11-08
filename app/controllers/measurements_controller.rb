@@ -2,7 +2,7 @@ class MeasurementsController < ApplicationController
   # GET /measurements
   # GET /measurements.xml
   def index
-    @measurements = Measurement.all
+    @measurements = current_account.measurements.all
 
     respond_to do |format|
       format.html # index.html.erb
@@ -13,7 +13,7 @@ class MeasurementsController < ApplicationController
   # GET /measurements/1
   # GET /measurements/1.xml
   def show
-    @measurement = Measurement.find(params[:id])
+    @measurement = current_account.measurements.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -34,14 +34,14 @@ class MeasurementsController < ApplicationController
 
   # GET /measurements/1/edit
   def edit
-    @measurement = Measurement.find(params[:id])
+    @measurement = current_account.measurements.find(params[:id])
   end
 
   # POST /measurements
   # POST /measurements.xml
   def create
     @measurement = Measurement.new(params[:measurement])
-
+    @measurement.user = current_account
     respond_to do |format|
       if @measurement.save
         format.html { redirect_to(@measurement, :notice => 'Measurement was successfully created.') }
@@ -56,7 +56,7 @@ class MeasurementsController < ApplicationController
   # PUT /measurements/1
   # PUT /measurements/1.xml
   def update
-    @measurement = Measurement.find(params[:id])
+    @measurement = current_account.measurements.find(params[:id])
 
     respond_to do |format|
       if @measurement.update_attributes(params[:measurement])
@@ -72,7 +72,7 @@ class MeasurementsController < ApplicationController
   # DELETE /measurements/1
   # DELETE /measurements/1.xml
   def destroy
-    @measurement = Measurement.find(params[:id])
+    @measurement = current_account.measurements.find(params[:id])
     @measurement.destroy
 
     respond_to do |format|
