@@ -39,7 +39,7 @@
         %th= sortable_column "Status"
         %th= sortable_column "Count", :column => "clothing_logs_count", :direction => :desc
         %th= sortable_column "Last worn"
-        %th Colour
+        %th= sortable_column "Colour", :column => "hue"
         %th Tags
       - @clothing.each do |clothing|
         %tr

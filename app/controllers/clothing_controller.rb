@@ -9,12 +9,12 @@ class ClothingController < ApplicationController
     @tags = current_account.clothing.tag_counts_on(:tags).sort_by(&:name)
     params[:sort] ||= 'clothing_type'
     order = nil
-    sortable_column_order do |column, direction|
-      case column
-      when 'clothing_type', 'id', 'name', 'status', 'clothing_logs_count', 'last_worn'
-        order = "#{column} #{direction}"
+    order = sortable_column_order do |column, direction|
+      case column 
+      when 'name', 'status', 'clothing_logs_count', 'last_worn', 'hue'
+        "#{column} #{direction}"
       else
-        order = 'clothing_type ASC, hue ASC'
+        "clothing_type ASC, hue ASC"
       end
     end
     @clothing = current_account.clothing
