@@ -28,9 +28,10 @@ class User < ActiveRecord::Base
   # :token_authenticatable, :encryptable, :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, 
          :recoverable, :rememberable, :trackable, :validatable
+  attr_accessor :login
 
   # Setup accessible (or protected) attributes for your model
-  attr_accessible :email, :password, :password_confirmation, :remember_me
+  attr_accessible :email, :password, :password_confirmation, :remember_me, :username, :login
   before_save :update_memento_mori 
 
   acts_as_tagger
@@ -89,5 +90,11 @@ class User < ActiveRecord::Base
 
   def self.find_record(username)
     where(["username = :value OR email = :value", { :value => username }]).first
+  end
+
+  def self.find_for_database_authentication(warden_conditions)
+    conditions = warden_conditions.dup
+    login = conditions.delete(:login)
+    where(conditions).where(["lower(username) = :value OR lower(email) = :value", { :value => login.downcase }]).first
   end
 end
