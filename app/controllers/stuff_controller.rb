@@ -1,10 +1,6 @@
 class StuffController < ApplicationController
   load_and_authorize_resource
   handles_sortable_columns
-  before_filter :no_sidebar
-  def no_sidebar
-    @skip_sidebar = true
-  end
   # GET /stuff
   # GET /stuff.xml
   def index
@@ -30,7 +26,8 @@ class StuffController < ApplicationController
   def log
     @stuff = Stuff.find(:first, :conditions => [ 'lower(name) = ?', params[:stuff_name].strip.downcase ])
     unless @stuff
-      @stuff = Stuff.create(:name => params[:stuff_name].strip)
+      @stuff = Stuff.new(:name => params[:stuff_name].strip)
+      @stuff.user = current_account
     end
     @location = current_account.get_location(params[:location_name])
     @stuff.location = @location
