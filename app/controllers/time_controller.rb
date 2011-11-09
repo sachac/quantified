@@ -1,7 +1,7 @@
 # Challenges: 
 # I have to manually create my time graphs
 class TimeController < ApplicationController
-  before_filter :authenticate_user!, :except => [:graph]
+  before_filter :authenticate_user!, :except => [:graph, :clock]
   def refresh
     # Challenge: Time Recording does not update old Google Calendar entries when you rename tasks
     # Approach: Upload work unit CSV and replace entries covering that span of time
@@ -184,7 +184,6 @@ class TimeController < ApplicationController
         start_minutes = ((adjusted_start - adjusted_start.midnight) / 60).to_i
         duration = (([r.end_time, @end].min - adjusted_start) / 60).to_i # also deals with wrapping
         end_minutes = start_minutes + duration - 1
-        logger.info("Start minutes #{start_minutes} END minutes #{end_minutes}")
         start_minutes.upto(end_minutes) do |i|
           k.upto(max_key) do |cat|
             @cumulative[cat][i % minutes] ||= 0
