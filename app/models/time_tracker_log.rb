@@ -1,6 +1,7 @@
 class TimeTrackerLog
   attr_accessor :calendar
-  def initialize
+  def initialize(account)
+    @account = account
   end
   def login
     @client = GData::Client::Calendar.new
@@ -112,10 +113,10 @@ class TimeTrackerLog
   end
 
   def entries(start_time, end_time)
-    start_time = Date.parse(start_time) unless start_time.is_a? Date
-    end_time = Date.parse(end_time) unless end_time.is_a? Date
+    start_time = Date.parse(start_time) unless start_time.is_a? Date or start_time.is_a? Time
+    end_time = Date.parse(end_time) unless end_time.is_a? Date or end_time.is_a? Time
     
-    TimeRecord.find(:all, :conditions => ["date(start_time, 'localtime') >= ? and date(end_time, 'localtime') <= ?", start_time, end_time])
+    @account.time_records.find(:all, :conditions => ["date(start_time, 'localtime') >= ? and date(end_time, 'localtime') <= ?", start_time, end_time])
   end
 
   def by_day(entries)

@@ -1,7 +1,7 @@
 # Challenges: 
 # I have to manually create my time graphs
 class TimeController < ApplicationController
-  before_filter :authenticate_user!, :except => [:graph]
+  before_filter :authenticate_user!, :except => [:graph, :clock]
   def refresh
     # Challenge: Time Recording does not update old Google Calendar entries when you rename tasks
     # Approach: Upload work unit CSV and replace entries covering that span of time
@@ -9,14 +9,14 @@ class TimeController < ApplicationController
 
   # POST
   def refresh_from_csv
-    @log = TimeTrackerLog.new
+    @log = TimeTrackerLog.new(current_account)
     @log.login
     @log.refresh_from_csv(params[:file].tempfile)
     redirect_to :action => "graph"
   end 
 
   def index
-    @log = TimeTrackerLog.new
+    @log = TimeTrackerLog.new(current_account)
     base = Chronic.parse("last Saturday").midnight
     @limits = {"this_week" => [base, base + 1.week],
       "last_week" => [base - 1.week, base],
@@ -45,7 +45,7 @@ class TimeController < ApplicationController
     @start = (!params[:start].blank? ? Time.parse(params[:start]) : Date.new(Date.today.year, Date.today.month, 1)).midnight
     @end = (!params[:end].blank? ? Time.parse(params[:end]) : Date.tomorrow).midnight
     @height = (@day_height * (@end - @start) / 86400.0).to_i
-    entries = TimeRecord.find(:all, :conditions => ["start_time >= ? AND start_time < ?", @start, @end], :order => "start_time")
+    entries = current_account.time_records.find(:all, :conditions => ["start_time >= ? AND start_time < ?", @start, @end], :order => "start_time")
     total_time = (@end - @start).to_f
     @time_records = Array.new
     @day_height = (@height * 86400.0) / (@end.midnight - @start.midnight)
@@ -119,7 +119,7 @@ class TimeController < ApplicationController
         @labels << "<a href=\"#\" class=\"#{@totals[name][:class]}\">#{@totals[name][:title]}</a>".html_safe
       end
     end
-    @log = TimeTrackerLog.new
+    @log = TimeTrackerLog.new(current_account)
     @time_by_day = @log.by_day(entries)
     day = @start
     @time_graphs = Hash.new
@@ -161,6 +161,36 @@ class TimeController < ApplicationController
         end
       end
       day += 1.day
+    end
+  end
+
+  def clock
+    # Calculate the data
+    params[:start] ||= (Date.today - 14.days).strftime('%Y-%m-%d')
+    params[:end] ||= (Date.today - 8.day).strftime('%Y-%m-%d')
+    @start = Time.parse(params[:start])
+    @end = Time.parse(params[:end])
+    @numdays = (@end - @start) / 1.day
+    records = current_account.time_records.where("end_time >= ? AND start_time <= ?", @start, @end + 1.day)
+    @keys = ["Discretionary", "Work", "Personal care", "Unpaid work"]
+    minutes = 60 * 24
+    @cumulative = Array.new(@keys.length) { Array.new(minutes) { 0 } }
+    max_key = @keys.length - 1
+    records.each do |r|
+      # Determine the index
+      k = @keys.index(r.category)
+      if k
+        adjusted_start = [r.start_time, @start].max
+        start_minutes = ((adjusted_start - adjusted_start.midnight) / 60).to_i
+        duration = (([r.end_time, @end].min - adjusted_start) / 60).to_i # also deals with wrapping
+        end_minutes = start_minutes + duration - 1
+        start_minutes.upto(end_minutes) do |i|
+          k.upto(max_key) do |cat|
+            @cumulative[cat][i % minutes] ||= 0
+            @cumulative[cat][i % minutes] += 1
+          end
+        end
+      end
     end
   end
 end
