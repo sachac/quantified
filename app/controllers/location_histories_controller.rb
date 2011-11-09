@@ -42,7 +42,7 @@ class LocationHistoriesController < ApplicationController
   # POST /location_histories.xml
   def create
     @location_history = LocationHistory.new(params[:location_history])
-
+    @location_history.user = current_account
     respond_to do |format|
       if @location_history.save
         format.html { redirect_to(@location_history, :notice => 'Location history was successfully created.') }

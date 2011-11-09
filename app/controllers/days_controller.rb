@@ -25,7 +25,7 @@ class DaysController < ApplicationController
   # GET /days/new.xml
   def new
     @day = Day.new
-
+    
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @day }
@@ -41,7 +41,7 @@ class DaysController < ApplicationController
   # POST /days.xml
   def create
     @day = Day.new(params[:day])
-
+    @day.user_id = current_account.id
     respond_to do |format|
       if @day.save
         format.html { redirect_to(:back, :notice => 'Day was successfully created.') }

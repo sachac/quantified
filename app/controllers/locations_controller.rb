@@ -43,7 +43,7 @@ class LocationsController < ApplicationController
   # POST /locations.xml
   def create
     @location = Location.new(params[:location])
-
+    @location.user = current_account
     respond_to do |format|
       if @location.save
         format.html { redirect_to(@location, :notice => 'Location was successfully created.') }
