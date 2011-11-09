@@ -27,7 +27,8 @@
           - due = LibraryItem.current_items(current_account).minimum('due')
           - if due
             = " - first due: #{due.strftime('%a %b %e')}"
-          = link_to "(refresh)", library_refresh_path
+          - if can? :refresh_library, current_account  
+            = link_to "(refresh)", library_refresh_path
         .food.category
           - remaining = (current_account.csa_foods.where('disposition = ""').sum(:quantity) / 1000.0)
           - days = current_account.csa_foods.next_delivery - Date.today

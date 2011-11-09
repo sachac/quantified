@@ -29,6 +29,7 @@ class DecisionLogsController < ApplicationController
     if params[:decision_id] then
       @decision_log.decision_id = params[:decision_id]
     end
+    @decision_log.user_id = current_account.id
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @decision_log }
