@@ -163,4 +163,35 @@ class TimeController < ApplicationController
       day += 1.day
     end
   end
+
+  def clock
+    # Calculate the data
+    params[:start] ||= (Date.today - 14.days).strftime('%Y-%m-%d')
+    params[:end] ||= (Date.today - 8.day).strftime('%Y-%m-%d')
+    @start = Time.parse(params[:start])
+    @end = Time.parse(params[:end])
+    @numdays = (@end - @start) / 1.day
+    records = current_account.time_records.where("end_time >= ? AND start_time <= ?", @start, @end + 1.day)
+    @keys = ["Discretionary", "Work", "Personal care", "Unpaid work"]
+    minutes = 60 * 24
+    @cumulative = Array.new(@keys.length) { Array.new(minutes) { 0 } }
+    max_key = @keys.length - 1
+    records.each do |r|
+      # Determine the index
+      k = @keys.index(r.category)
+      if k
+        adjusted_start = [r.start_time, @start].max
+        start_minutes = ((adjusted_start - adjusted_start.midnight) / 60).to_i
+        duration = (([r.end_time, @end].min - adjusted_start) / 60).to_i # also deals with wrapping
+        end_minutes = start_minutes + duration - 1
+        logger.info("Start minutes #{start_minutes} END minutes #{end_minutes}")
+        start_minutes.upto(end_minutes) do |i|
+          k.upto(max_key) do |cat|
+            @cumulative[cat][i % minutes] ||= 0
+            @cumulative[cat][i % minutes] += 1
+          end
+        end
+      end
+    end
+  end
 end
