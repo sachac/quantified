@@ -19,7 +19,7 @@ class StuffController < ApplicationController
         "name DESC"
       end
     end
-    @stuff = Stuff.order(order).includes(:location)
+    @stuff = Stuff.where('status=?', 'active').order(order).includes(:location)
 
     respond_to do |format|
       format.html # index.html.erb
