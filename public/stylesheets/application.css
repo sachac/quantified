@@ -49,7 +49,7 @@ th {
 dd {
   display: inline-block; }
 
-.right {
+.align_right {
   text-align: right; }
 
 .entry {
@@ -94,3 +94,6 @@ ul, ol, dl {
     margin-bottom: 10px; }
   .summary .entry, .summary .stuff .list {
     font-size: small; }
+
+body #sidebar ul.navigation li a:link, body #sidebar ul.navigation li a:visited {
+  padding-left: 0px; }

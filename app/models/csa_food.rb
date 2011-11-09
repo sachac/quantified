@@ -1,8 +1,7 @@
 class CsaFood < ActiveRecord::Base
+  belongs_to :user
   belongs_to :food
-  def self.remaining
-    CsaFood.where('disposition = ""').sum(:quantity)
-  end
+  
   def self.next_delivery(date = nil)
     date ||= Date.today
     d = date.wday
