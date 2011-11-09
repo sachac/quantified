@@ -33,7 +33,7 @@ class LibraryItemsController < ApplicationController
   # GET /library_items/new.xml
   def new
     @library_item = LibraryItem.new
-
+    
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @library_item }
@@ -52,7 +52,7 @@ class LibraryItemsController < ApplicationController
   # POST /library_items.xml
   def create
     @library_item = LibraryItem.new(params[:library_item])
-
+    @library_item.user_id = current_account.id
     respond_to do |format|
       if @library_item.save
         format.html { redirect_to(@library_item, :notice => 'Library item was successfully created.') }

@@ -19,7 +19,7 @@ class ClothingController < ApplicationController
     end
     @clothing = current_account.clothing
     @clothing = @clothing.find(:all, 
-                               :conditions => ["status IS 'active' OR status IS NULL OR status=''"],
+                               :conditions => ["status='active' OR status IS NULL OR status=''"],
                                :order => order)
     respond_to do |format|
       format.html # index.html.erb
