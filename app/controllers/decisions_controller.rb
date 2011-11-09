@@ -2,7 +2,7 @@ class DecisionsController < ApplicationController
   # GET /decisions
   # GET /decisions.xml
   def index
-    @decisions = Decision.all
+    @decisions = current_account.decisions.all
 
     respond_to do |format|
       format.html # index.html.erb
@@ -13,7 +13,7 @@ class DecisionsController < ApplicationController
   # GET /decisions/1
   # GET /decisions/1.xml
   def show
-    @decision = Decision.find(params[:id])
+    @decision = current_account.decisions.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -34,14 +34,14 @@ class DecisionsController < ApplicationController
 
   # GET /decisions/1/edit
   def edit
-    @decision = Decision.find(params[:id])
+    @decision = current_account.decisions.find(params[:id])
   end
 
   # POST /decisions
   # POST /decisions.xml
   def create
-    @decision = Decision.new(params[:decision])
-
+    @decision = current_account.decisions.new(params[:decision])
+    @decision.user = current_account
     respond_to do |format|
       if @decision.save
         format.html { redirect_to(@decision, :notice => 'Decision was successfully created.') }
@@ -56,7 +56,7 @@ class DecisionsController < ApplicationController
   # PUT /decisions/1
   # PUT /decisions/1.xml
   def update
-    @decision = Decision.find(params[:id])
+    @decision = current_account.decisions.find(params[:id])
 
     respond_to do |format|
       if @decision.update_attributes(params[:decision])
@@ -72,7 +72,7 @@ class DecisionsController < ApplicationController
   # DELETE /decisions/1
   # DELETE /decisions/1.xml
   def destroy
-    @decision = Decision.find(params[:id])
+    @decision = current_account.decisions.find(params[:id])
     @decision.destroy
 
     respond_to do |format|
