@@ -6,7 +6,7 @@
 %p
   Status:
   = link_to 'all', clothing_by_status_path('all')
-  - statuses = Clothing.select('DISTINCT(status)')
+  - statuses = current_account.clothing.select('DISTINCT(status)')
   - statuses.each do |s|
     - if s and !s.status.blank?
       = link_to s.status, clothing_by_status_path(s.status)
@@ -18,55 +18,55 @@
 - Clothing.tag_counts do |tag, css_class|
   = link_to tag.name, { :action => :tag, :id => tag.name }, :class => css_class
 
- 
 - if can? :create, Clothing
   %p= link_to 'New Clothing', new_clothing_path
 
 = render "clothing_thumbnails"
 
-= form_tag clothing_bulk_path do
-  - if can? :update, Clothing
-    = select_tag 'op', options_for_select(['Store', 'Donate', 'Activate'])
-    = submit_tag
-  %table.lined
-    %tr
-      - if can? :update, Clothing
-        %th
-      %th= sortable_column "#", :column => "id"
-      - if user_signed_in?
-        %th Wear
-      %th= sortable_column "Name"
-      %th= sortable_column "Status"
-      %th= sortable_column "Count", :column => "clothing_logs_count", :direction => :desc
-      %th= sortable_column "Last worn"
-      %th= sortable_column "Colour", :column => "hue"
-      %th Tags
-    - @clothing.each do |clothing|
+- if @clothing.count > 0
+  = form_tag clothing_bulk_path do
+    - if can? :update, Clothing
+      = select_tag 'op', options_for_select(['Store', 'Donate', 'Activate'])
+      = submit_tag
+    %table.lined
       %tr
         - if can? :update, Clothing
-          %td= check_box_tag 'bulk[]', clothing.id
-        %td= clothing.id
+          %th
+        %th= sortable_column "#", :column => "id"
         - if user_signed_in?
+          %th Wear
+        %th= sortable_column "Name"
+        %th= sortable_column "Status"
+        %th= sortable_column "Count", :column => "clothing_logs_count", :direction => :desc
+        %th= sortable_column "Last worn"
+        %th= sortable_column "Colour", :column => "hue"
+        %th Tags
+      - @clothing.each do |clothing|
+        %tr
+          - if can? :update, Clothing
+            %td= check_box_tag 'bulk[]', clothing.id
+          %td= clothing.id
+          - if user_signed_in?
+            %td
+              = link_to 'Yesterday', clothing_logs_path + "?clothing_id=" + clothing.id.to_s + "&date=" + Date.yesterday.to_s, :method => :post
+              = link_to 'Today', clothing_logs_path + "?clothing_id=" + clothing.id.to_s + "&date=" + Date.today.to_s, :method => :post
+              = link_to 'Tomorrow', clothing_logs_path + "?clothing_id=" + clothing.id.to_s + "&date=" + Date.tomorrow.to_s, :method => :post
+          %td= link_to clothing.name, clothing
+          %td= clothing.status
+          %td= clothing.clothing_logs_count
+          %td= date_ago_future(clothing.last_worn)
           %td
-            = link_to 'Yesterday', clothing_logs_path + "?clothing_id=" + clothing.id.to_s + "&date=" + Date.yesterday.to_s, :method => :post
-            = link_to 'Today', clothing_logs_path + "?clothing_id=" + clothing.id.to_s + "&date=" + Date.today.to_s, :method => :post
-            = link_to 'Tomorrow', clothing_logs_path + "?clothing_id=" + clothing.id.to_s + "&date=" + Date.tomorrow.to_s, :method => :post
-        %td= link_to clothing.name, clothing
-        %td= clothing.status
-        %td= clothing.clothing_logs_count
-        %td= date_ago_future(clothing.last_worn)
-        %td
-          - if clothing.colour then
-            - clothing.colour.split(",").each do |x|
-              .color-box{:style => "background: ##{x}"}
-                &nbsp;
-        %td
-          - clothing.tag_list.each do |tag|
-            = link_to tag, { :action => :tag, :id => tag }
-  - if can? :update, Clothing
-    = submit_tag
+            - if clothing.colour then
+              - clothing.colour.split(",").each do |x|
+                .color-box{:style => "background: ##{x}"}
+                  &nbsp;
+          %td
+            - clothing.tag_list.each do |tag|
+              = link_to tag, { :action => :tag, :id => tag }
+    - if can? :update, Clothing
+      = submit_tag
 
 %br
 
 - if can? :create, Clothing
-  = link_to 'New Clothing', new_clothing_path
+  = link_to 'New clothing', new_clothing_path
