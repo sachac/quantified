@@ -1,0 +1,50 @@
+<h2>Circle</h2>
+<%= form_tag do %>
+  Start: <%= text_field_tag :start, @start.strftime("%Y-%m-%d"), :class => 'datepicker' %>
+  End: <%= text_field_tag :end, @end.strftime("%Y-%m-%d"), :class => 'datepicker' %>
+  <%= submit_tag "Go" %>
+<% end %>
+<%= link_to 'View as bars', time_graph_path(:start => @start.strftime("%Y-%m-%d"), :end => @end.strftime("%Y-%m-%d")) %>
+<%
+   radius = 200
+   margin_top = 20
+   separation = 10
+%>
+<div class="day">
+<p><div id="canvas" style="width: <%= radius * 4 + 10 %>px; height: <%= margin_top + radius * 2 %>px"></div></p>
+<script type="text/javascript">
+  window.onload = function() {
+    var p = Raphael("canvas");
+    var radius = <%= radius %>;
+    var margin_top = <%= margin_top %>;
+    var separation = <%= separation %>;
+    // Draw the two circles
+    c = p.circle(radius, margin_top + radius, radius - 1);
+    c.attr({fill: "#ccc"});
+    c = p.circle(radius * 3 + separation, margin_top + radius, radius - 1);
+    c.attr({fill: "#ccc"});
+    // Draw the curves
+    <% noon = 12 * 60
+       midnight = noon * 2
+       theta_inc = (2.0 * Math::PI) / (12 * 60)
+       angle = -Math::PI / 2
+       keys = [["Discretionary", "#c2d6cb"], ["Work", "#85acaa"], ["Personal care", "#acaa85"], ["Unpaid work", "#dd9843"]]
+       keys.reverse.each_with_index do |item, i|
+         data = @cumulative[keys.length - i - 1] || 0 %>
+         // Determine the first data point and move to it
+         line = p.path("M<%= (radius + (radius - 1) * data[0] * Math.cos(angle) / @numdays).to_i %>,<%= (margin_top + radius + (radius - 1) * data[0] * Math.sin(angle) / @numdays).to_i %><% 1.upto(noon).each do |j| %>L<%= (radius + (radius - 1) * data[j] * Math.cos(angle + j * theta_inc) / @numdays) %>,<%= (margin_top + radius + (radius - 1) * data[j] * Math.sin(angle + j * theta_inc) / @numdays) %><% end %>Z");
+         line.attr({fill: "<%= item[1] %>", title: "<%= item[0] %>"});
+         
+         line = p.path("M<%= (separation + 3 * radius + (radius - 1) * data[noon] * Math.cos(angle) / @numdays).to_i %>,<%= (margin_top + radius + (radius - 1) * data[noon] * Math.sin(angle) / @numdays).to_i %><% noon.upto(midnight - 1).each do |j| %>L<%= (separation + 3 * radius + (radius - 1) * data[j] * Math.cos(angle + (j - noon) * theta_inc) / @numdays) %>,<%= (margin_top + radius + (radius - 1) * data[j] * Math.sin(angle + (j - noon) * theta_inc) / @numdays) %><% end %>Z");
+         line.attr({fill: "<%= item[1] %>", title: "<%= item[0] %>"});
+    <% end %>
+    c = p.path("<%= "M#{radius},#{margin_top + 1}L#{radius},#{2*radius-2}M1,#{radius + margin_top}L#{radius*2-1},#{radius + margin_top}" %>");
+    c.attr({fill: "#000", "stroke-opacity": "0.1"});
+    c = p.path("<%= "M#{separation + 3*radius},#{margin_top + 1}L#{separation + 3*radius},#{2*radius-2}M#{2*radius + separation + 1},#{radius + margin_top}L#{4*radius+separation},#{radius + margin_top}" %>");
+    c.attr({fill: "#000", "stroke-opacity": "0.1"});
+    c = p.text(<%= radius %>, <%= margin_top / 2 %>, "A.M.");
+    c.attr({'font-size': '14px'});
+    c = p.text(<%= radius * 3 + separation + 1 %>, <%= margin_top / 2 %>, "P.M.");
+    c.attr({'font-size': '14px'});
+  }
+</script>
