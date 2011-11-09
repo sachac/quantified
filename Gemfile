@@ -12,7 +12,7 @@ gem 'mysql'
 
 gem 'haml-rails'
 gem 'color'
-
+gem 'narray'
 gem 'formtastic'
 gem 'handles_sortable_columns'
 gem 'gdata'

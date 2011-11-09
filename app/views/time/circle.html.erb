@@ -1,0 +1,27 @@
+<h2>Circle</h2>
+<% form_tag do %>
+  Start: <%= text_field_tag :start, @start.strftime("%Y-%m-%d"), :class => 'datepicker' %>
+  End: <%= text_field_tag :end, @end.strftime("%Y-%m-%d"), :class => 'datepicker' %>
+  <%= submit_tag "Go" %>
+<% end %>
+<% radius = 200 %>
+<div class="day">
+<div id="canvas" style="width: <%= radius * 4 %>px; height: <%= radius * 2 %>px"></div>
+<script type="text/javascript">
+  window.onload = function() {
+    var p = Raphael("canvas");
+    // Draw the two circles
+    c = p.circle(radius, radius, radius);
+    c.attr({fill: "#ccc"});
+    c = p.circle(radius * 3, radius, radius);
+    c.attr({fill: "#ccc"});
+    // Draw the curves
+    <% noon = 12 * 60
+       theta_inc = 2 * Math::PI / (12 * 60)
+       angle = Math::PI / 2
+       [["Discretionary", "#c2d6cb"]].each_index do |pair, i|
+         data = @cumulative[i] %>
+         line = p.path("M<%= radius %>,<%= radius %>L<%= radius + radius * Math.cos(angle) %>,<%= radius + radius * Math.sin(angle) %>");
+    <% end %>
+  }
+</script>
