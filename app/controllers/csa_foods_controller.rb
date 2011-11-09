@@ -4,8 +4,8 @@ class CsaFoodsController < ApplicationController
   # GET /csa_foods
   # GET /csa_foods.xml
   def index
-    @csa_foods = CsaFood.includes(:food).order('date_received DESC, disposition ASC')
-    @remaining = CsaFood.remaining
+    @csa_foods = current_account.csa_foods.includes(:food).order('date_received DESC, disposition ASC')
+    @remaining = CsaFood.remaining(current_user)
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @csa_foods }
@@ -15,7 +15,7 @@ class CsaFoodsController < ApplicationController
   def bulk_update
     if params[:bulk]
       params[:bulk].each do |key, val|
-        CsaFood.find(key).update_attributes(:disposition => val)
+        current_account.csa_foods.find(key).update_attributes(:disposition => val)
       end
     end
     redirect_to csa_foods_path
