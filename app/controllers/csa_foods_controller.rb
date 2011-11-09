@@ -59,6 +59,7 @@ class CsaFoodsController < ApplicationController
     end
     params[:csa_food][:food_id] = food.id
     @csa_food = CsaFood.new(params[:csa_food])
+    @csa_food.user_id = current_account.id
     respond_to do |format|
       if @csa_food.save
         format.html { redirect_to(new_csa_food_path, :notice => 'Csa food was successfully created.') }

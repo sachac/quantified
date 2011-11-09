@@ -41,7 +41,7 @@ class TorontoLibrariesController < ApplicationController
   # POST /toronto_libraries.xml
   def create
     @toronto_library = TorontoLibrary.new(params[:toronto_library])
-
+    @toronto_library.user = current_account
     respond_to do |format|
       if @toronto_library.save
         format.html { redirect_to(@toronto_library, :notice => 'Toronto library was successfully created.') }
