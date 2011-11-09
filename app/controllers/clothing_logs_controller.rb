@@ -52,6 +52,7 @@ class ClothingLogsController < ApplicationController
         params[:clothing_id] = @clothing.id
       else
         @clothing = Clothing.new(:name => params[:clothing])
+        @clothing.user_id = current_account.id
         @clothing.save
         flash[:notice] = "Saved new clothing ID #{@clothing.id}."
         params[:clothing_id] = @clothing.id
@@ -62,7 +63,7 @@ class ClothingLogsController < ApplicationController
     else
       @clothing_log = ClothingLog.new(params[:clothing_log])
     end
-
+    @clothing_log.user_id = current_account.id
     respond_to do |format|
       if @clothing_log.save
         format.html { redirect_to(:back, :notice => "Logged #{@clothing_log.date}.") }
