@@ -129,6 +129,7 @@ GEM
     multi_json (1.0.3)
     multi_xml (0.4.1)
     mysql (2.8.1)
+    narray (0.6.0.1)
     net-http-digest_auth (1.1.1)
     net-http-persistent (1.9)
     nokogiri (1.5.0)
@@ -229,6 +230,7 @@ DEPENDENCIES
   jquery-rails
   mechanize
   mysql
+  narray
   rails (= 3.0.10)
   rails-settings-cached
   rails3-jquery-autocomplete
