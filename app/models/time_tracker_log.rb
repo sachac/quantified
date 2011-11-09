@@ -28,10 +28,12 @@ class TimeTrackerLog
     # If the event starts before midnight
     if (event_start < event_end.midnight) then
       rec = TimeRecord.new(:name => text, :start_time => event_start, :end_time => event_end.midnight)
+      rec.user = @account
       rec.save
       event_start = event_end.midnight
     end
     rec = TimeRecord.new(:name => text, :start_time => event_start, :end_time => event_end)
+    rec.user = @account
     rec.save
   end
 
@@ -113,10 +115,10 @@ class TimeTrackerLog
   end
 
   def entries(start_time, end_time)
-    start_time = Date.parse(start_time) unless start_time.is_a? Date or start_time.is_a? Time
-    end_time = Date.parse(end_time) unless end_time.is_a? Date or end_time.is_a? Time
+    start_time = Time.zone.parse(start_time) unless start_time.is_a? Date or start_time.is_a? Time
+    end_time = Time.zone.parse(end_time) unless end_time.is_a? Date or end_time.is_a? Time
     
-    @account.time_records.find(:all, :conditions => ["date(start_time, 'localtime') >= ? and date(end_time, 'localtime') <= ?", start_time, end_time])
+    @account.time_records.find(:all, :conditions => ["start_time >= ? and end_time <= ?", start_time, end_time])
   end
 
   def by_day(entries)
@@ -134,7 +136,7 @@ class TimeTrackerLog
     end
     # Go back and fill in sleep
     days.each do |date,list|
-      days[date]['A - Sleep'] = 86400 - days_total[date]
+      days[date]['A - Sleep'] = 86400 - days_total[date].to_i
     end
     days
   end
@@ -157,7 +159,7 @@ class TimeTrackerLog
       end
       total += (x.end_time - x.start_time)
     end
-    result["A - Sleep"] = (end_time - start_time + 1) * 86400
+    result["A - Sleep"] = (end_time - start_time)
     result["A - Sleep"] -= (result['! Discretionary'] || 0) + (result['! Personal care'] || 0) + (result['! Unpaid work'] || 0) + (result['A - Work'] || 0)
     result
   end

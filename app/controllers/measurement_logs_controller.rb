@@ -43,7 +43,7 @@ class MeasurementLogsController < ApplicationController
   # POST /measurement_logs.xml
   def create
     @measurement_log = MeasurementLog.new(params[:measurement_log])
-    @measurement_log.user = current_user
+    @measurement_log.user = current_account
     respond_to do |format|
       if @measurement_log.save
         format.html { redirect_to(measurements_path, :notice => 'Measurement log was successfully created.') }

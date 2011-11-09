@@ -19,9 +19,9 @@
     var margin_top = <%= margin_top %>;
     var separation = <%= separation %>;
     // Draw the two circles
-    c = p.circle(radius, margin_top + radius, radius - 1);
+    c = p.circle(radius, margin_top + radius, radius - 2);
     c.attr({fill: "#ccc"});
-    c = p.circle(radius * 3 + separation, margin_top + radius, radius - 1);
+    c = p.circle(radius * 3 + separation, margin_top + radius, radius - 2);
     c.attr({fill: "#ccc"});
     // Draw the curves
     <% noon = 12 * 60

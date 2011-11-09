@@ -136,7 +136,7 @@ ActiveRecord::Schema.define(:version => 20111107120811) do
     t.string   "isbn"
     t.boolean  "public"
     t.text     "notes"
-    t.decimal  "price"
+    t.decimal  "price",              :precision => 10, :scale => 0
     t.integer  "pages"
     t.integer  "user_id"
   end
@@ -170,7 +170,7 @@ ActiveRecord::Schema.define(:version => 20111107120811) do
     t.integer  "measurement_id"
     t.datetime "datetime"
     t.text     "notes"
-    t.decimal  "value"
+    t.decimal  "value",          :precision => 10, :scale => 0
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "user_id"
@@ -182,12 +182,12 @@ ActiveRecord::Schema.define(:version => 20111107120811) do
     t.string   "name"
     t.text     "notes"
     t.string   "unit"
-    t.decimal  "average"
-    t.decimal  "max"
-    t.decimal  "min"
+    t.decimal  "average",    :precision => 10, :scale => 0
+    t.decimal  "max",        :precision => 10, :scale => 0
+    t.decimal  "min",        :precision => 10, :scale => 0
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.decimal  "sum"
+    t.decimal  "sum",        :precision => 10, :scale => 0
     t.integer  "user_id"
   end
 
@@ -207,7 +207,7 @@ ActiveRecord::Schema.define(:version => 20111107120811) do
   create_table "stuff", :force => true do |t|
     t.string   "name"
     t.string   "status"
-    t.decimal  "price"
+    t.decimal  "price",              :precision => 10, :scale => 0
     t.date     "purchase_date"
     t.text     "notes"
     t.string   "long_name"

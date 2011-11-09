@@ -43,7 +43,7 @@ class TimeController < ApplicationController
     @width = 900
     @time_bottom = @height
     @start = (!params[:start].blank? ? Time.parse(params[:start]) : Date.new(Date.today.year, Date.today.month, 1)).midnight
-    @end = (!params[:end].blank? ? Time.parse(params[:end]) : Date.tomorrow).midnight
+    @end = (!params[:end].blank? ? Time.parse(params[:end]) : Time.zone.now).midnight
     @height = (@day_height * (@end - @start) / 86400.0).to_i
     entries = current_account.time_records.find(:all, :conditions => ["start_time >= ? AND start_time < ?", @start, @end], :order => "start_time")
     total_time = (@end - @start).to_f
