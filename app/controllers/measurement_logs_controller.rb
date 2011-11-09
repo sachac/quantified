@@ -2,7 +2,7 @@ class MeasurementLogsController < ApplicationController
   # GET /measurement_logs
   # GET /measurement_logs.xml
   def index
-    @measurement_logs = MeasurementLog.all
+    @measurement_logs = current_account.measurement_logs.all
 
     respond_to do |format|
       format.html # index.html.erb
@@ -13,7 +13,7 @@ class MeasurementLogsController < ApplicationController
   # GET /measurement_logs/1
   # GET /measurement_logs/1.xml
   def show
-    @measurement_log = MeasurementLog.find(params[:id])
+    @measurement_log = current_account.measurement_logs.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -36,14 +36,14 @@ class MeasurementLogsController < ApplicationController
 
   # GET /measurement_logs/1/edit
   def edit
-    @measurement_log = MeasurementLog.find(params[:id])
+    @measurement_log = current_account.measurement_logs.find(params[:id])
   end
 
   # POST /measurement_logs
   # POST /measurement_logs.xml
   def create
     @measurement_log = MeasurementLog.new(params[:measurement_log])
-
+    @measurement_log.user = current_user
     respond_to do |format|
       if @measurement_log.save
         format.html { redirect_to(measurements_path, :notice => 'Measurement log was successfully created.') }
@@ -58,7 +58,7 @@ class MeasurementLogsController < ApplicationController
   # PUT /measurement_logs/1
   # PUT /measurement_logs/1.xml
   def update
-    @measurement_log = MeasurementLog.find(params[:id])
+    @measurement_log = current_account.measurement_logs.find(params[:id])
 
     respond_to do |format|
       if @measurement_log.update_attributes(params[:measurement_log])
@@ -74,7 +74,7 @@ class MeasurementLogsController < ApplicationController
   # DELETE /measurement_logs/1
   # DELETE /measurement_logs/1.xml
   def destroy
-    @measurement_log = MeasurementLog.find(params[:id])
+    @measurement_log = current_account.measurement_logs.find(params[:id])
     @measurement_log.destroy
 
     respond_to do |format|
