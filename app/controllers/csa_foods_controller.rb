@@ -5,7 +5,6 @@ class CsaFoodsController < ApplicationController
   # GET /csa_foods.xml
   def index
     @csa_foods = current_account.csa_foods.includes(:food).order('date_received DESC, disposition ASC')
-    @remaining = CsaFood.remaining(current_user)
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @csa_foods }
