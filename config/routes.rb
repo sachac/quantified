@@ -1,4 +1,6 @@
 Home::Application.routes.draw do
+  resources :contexts
+
   resources :measurement_logs
 
   resources :measurements
