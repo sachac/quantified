@@ -31,7 +31,7 @@ class ApplicationController < ActionController::Base
   
   def current_account
     if (current_subdomain.nil?)
-      @account = User.find_by_email('sacha@sachachua.com')
+      @account = User.first
     else
       @account ||= User.find_by_username(current_subdomain)  
     end
