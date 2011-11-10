@@ -6,22 +6,27 @@ FactoryGirl.define do
     password { Forgery(:basic).password }
     password_confirmation { password }
   end
-  factory :admin, :parent => :user do
+  factory :admin, :parent => :user do 
     role 'admin'
   end
-  factory :stuff do
+  factory :stuff do 
     name { Forgery(:name).full_name + ' stuff' }
     status 'active'
     user
   end
-  factory :location do
+  factory :location do 
     name { Forgery(:name).full_name + ' location' }
     user
   end
-  factory :location_history do
+  factory :location_history do 
     stuff
     location
     datetime { Time.now }
+    user
+  end
+  sequence :context_name do |n| "Context #{n}" end
+  factory :context do
+    name { Factory.next(:context_name) }
     user
   end
 end
