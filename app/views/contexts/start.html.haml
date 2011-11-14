@@ -1,0 +1,34 @@
+= title(@context.name)
+
+- if @out_of_place.length > 0
+  %h3 Stuff out of place
+  %table.out_of_place
+    %thead
+      %tr
+        %th Stuff
+        %th Current location
+        %th Destination
+    %tbody
+      - @out_of_place.each do |o|
+        - stuff = @stuff[o][:stuff]
+        %tr{:class => 'stuff_' + stuff.id.to_s}
+          %td= stuff.name
+          %td= stuff.location ? stuff.location.name : ''
+          %td= move_stuff_link(stuff, @stuff[o][:destination], request.fullpath).html_safe
+
+- if @in_place.length > 0  
+  %h3 Stuff in place
+  %table.stuff_in_place
+    %thead
+      %tr
+        %th Stuff
+        %th Current location
+        %th Destination
+    %tbody
+      - @in_place.each do |o|
+        - stuff = @stuff[o][:stuff]
+        %tr{:class => 'stuff_' + stuff.id.to_s}
+          %td= stuff.name
+          %td= stuff.location ? stuff.location.name : ''
+
+= link_to 'Complete', complete_context_path(@context.id), :method => :put          
