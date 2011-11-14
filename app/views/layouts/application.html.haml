@@ -15,7 +15,10 @@
     #container{:class => @skip_sidebar ? 'no-sidebar' : 'has-sidebar'}
       #header
         %h1
-          = link_to "Quantified Awesome: #{current_account.username}", root_path
+          - if current_account
+            = link_to "Quantified Awesome: #{current_account.username}", root_path
+          - else
+            = link_to "Quantified Awesome", root_path
         #user-navigation
           %ul.wat-cf
             - if user_signed_in?
