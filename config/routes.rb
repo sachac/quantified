@@ -1,5 +1,10 @@
 Home::Application.routes.draw do
-  resources :contexts
+  resources :contexts do
+    member do
+      get :start
+      put :complete
+    end
+  end
 
   resources :measurement_logs
 
