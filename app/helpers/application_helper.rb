@@ -84,4 +84,13 @@ module ApplicationHelper
   def devise_mapping
     @devise_mapping ||= Devise.mappings[:user]
   end
+
+  def title(title)
+    "<h2>" + title + "</h2>"
+  end
+
+  def move_stuff_link(stuff, location, destination = nil)
+    location_name = location.is_a?(String) ? location : location.name
+    link_to location_name, log_stuff_path(:stuff_name => stuff.name, :location_name => location_name, :destination => destination), :method => :post
+  end
 end
