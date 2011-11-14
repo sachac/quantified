@@ -1,0 +1,15 @@
+%p#notice= notice
+
+%p
+  %b Name:
+  = @context.name
+%p
+  %b Rules:
+  = @context.rules
+%p
+  %b User:
+  = @context.user_id
+
+= link_to 'Edit', edit_context_path(@context)
+\|
+= link_to 'Back', contexts_path
