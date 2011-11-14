@@ -64,6 +64,8 @@ group :development, :test do
   gem 'factory_girl'
   gem 'factory_girl_rails'  
   gem 'forgery'
+  gem 'database_cleaner'
+  gem 'cucumber_factory'
 end
 gem 'yaml_db'
 gem 'email_validator'
