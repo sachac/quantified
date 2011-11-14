@@ -1,0 +1,23 @@
+%h1 Listing contexts
+
+%table
+  %tr
+    %th Name
+    %th Rules
+    %th User
+    %th
+    %th
+    %th
+
+  - @contexts.each do |context|
+    %tr
+      %td= context.name
+      %td= context.rules
+      %td= context.user_id
+      %td= link_to 'Show', context
+      %td= link_to 'Edit', edit_context_path(context)
+      %td= link_to 'Destroy', context, :confirm => 'Are you sure?', :method => :delete
+
+%br
+
+= link_to 'New Context', new_context_path
