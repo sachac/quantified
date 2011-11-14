@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111107120811) do
+ActiveRecord::Schema.define(:version => 20111110021956) do
 
   create_table "clothing", :force => true do |t|
     t.string   "name"
@@ -53,6 +53,14 @@ ActiveRecord::Schema.define(:version => 20111107120811) do
   end
 
   add_index "clothing_matches", ["user_id"], :name => "index_clothing_matches_on_user_id"
+
+  create_table "contexts", :force => true do |t|
+    t.string   "name"
+    t.text     "rules"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "csa_foods", :force => true do |t|
     t.integer  "food_id"
@@ -136,7 +144,7 @@ ActiveRecord::Schema.define(:version => 20111107120811) do
     t.string   "isbn"
     t.boolean  "public"
     t.text     "notes"
-    t.decimal  "price",              :precision => 10, :scale => 0
+    t.decimal  "price"
     t.integer  "pages"
     t.integer  "user_id"
   end
@@ -170,7 +178,7 @@ ActiveRecord::Schema.define(:version => 20111107120811) do
     t.integer  "measurement_id"
     t.datetime "datetime"
     t.text     "notes"
-    t.decimal  "value",          :precision => 10, :scale => 0
+    t.decimal  "value"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "user_id"
@@ -182,12 +190,12 @@ ActiveRecord::Schema.define(:version => 20111107120811) do
     t.string   "name"
     t.text     "notes"
     t.string   "unit"
-    t.decimal  "average",    :precision => 10, :scale => 0
-    t.decimal  "max",        :precision => 10, :scale => 0
-    t.decimal  "min",        :precision => 10, :scale => 0
+    t.decimal  "average"
+    t.decimal  "max"
+    t.decimal  "min"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.decimal  "sum",        :precision => 10, :scale => 0
+    t.decimal  "sum"
     t.integer  "user_id"
   end
 
@@ -207,7 +215,7 @@ ActiveRecord::Schema.define(:version => 20111107120811) do
   create_table "stuff", :force => true do |t|
     t.string   "name"
     t.string   "status"
-    t.decimal  "price",              :precision => 10, :scale => 0
+    t.decimal  "price"
     t.date     "purchase_date"
     t.text     "notes"
     t.string   "long_name"
