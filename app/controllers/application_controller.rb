@@ -31,9 +31,9 @@ class ApplicationController < ActionController::Base
   
   def current_account
     if (current_subdomain.nil?)
-      @account = User.first
+      current_user || User.first
     else
-      @account ||= User.find_by_username(current_subdomain)  
+      User.find_by_username(current_subdomain)  
     end
   end  
   # Make this method visible to views as well  
