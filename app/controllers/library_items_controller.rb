@@ -1,16 +1,15 @@
 class LibraryItemsController < ApplicationController
   handles_sortable_columns
   before_filter :authenticate_user!, :except => [:index, :show, :tag, :current]
-
   # GET /library_items
   # GET /library_items.xml
   def index
-    if can? :view_all, LibraryItem
-      @tags = LibraryItem.tag_counts_on(:tags).sort_by(&:name)
-      @library_items = LibraryItem.order('due DESC')
+    if current_user == current_account
+      @tags = current_account.library_items.tag_counts_on(:tags).sort_by(&:name)
+      @library_items = current_account.library_items.order('due DESC')
     else
-      @tags = LibraryItem.where('public=1').tag_counts_on(:tags).sort_by(&:name)
-      @library_items = LibraryItem.where('public=1').order('due DESC')
+      @tags = current_account.library_items.where('public=1').tag_counts_on(:tags).sort_by(&:name)
+      @library_items = current_account.library_items.where('public=1').order('due DESC')
     end
     respond_to do |format|
       format.html # index.html.erb
@@ -126,7 +125,11 @@ class LibraryItemsController < ApplicationController
   end
 
   def current
-    public_only = cannot? :view_all, LibraryItem
-    @library_items = LibraryItem.current_items(public_only)
+    @library_items = current_account.library_items.where("(status = 'due' OR status IS NULL OR status = 'read')")
+    if current_account != current_user
+      @library_items = @library_items.where('public=1')
+    end
+    @tags = @library_items.tag_counts_on(:tags).sort_by(&:name)
+    @library_items = @library_items.order(:due, :status)
   end
 end
