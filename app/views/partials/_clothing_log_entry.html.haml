@@ -2,9 +2,7 @@
 - default_date ||= Date.today
 - if user_signed_in?
   = form_tag '/clothing_logs', :method => :post, :dest => root_path do
-    = label_tag 'clothing', 'Clothing: '
-    = autocomplete_field_tag 'clothing', '', autocomplete_clothing_name_clothing_index_path, :id_element => '#clothing_id'
+    = autocomplete_field_tag 'clothing', '', autocomplete_clothing_name_clothing_index_path, :id_element => '#clothing_id', :placeholder => 'Clothing'
     = hidden_field_tag 'clothing_id'
-    = label_tag 'date', 'Date: '
-    = text_field_tag 'date', default_date.to_s
+    = text_field_tag 'date', default_date.to_s, :placeholder => 'Date'
     = submit_tag 'Save'
