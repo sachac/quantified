@@ -1,48 +1,33 @@
-#block-text.block
-  .content
-    %h2.title
-      = l Date.today, :format => :long
-      - if @memento_mori
-        \- 
-        = pluralize number_with_delimiter(@memento_mori[:years]), 'year'
-        or
-        = pluralize number_with_delimiter(@memento_mori[:months]), 'month'
-        or
-        = pluralize number_with_delimiter(@memento_mori[:weeks]), 'weeks'
-        - if current_user == current_account
-          left - make the most of them!
+.inner
+  .weather
+    %h3 Toronto weather
+    %a{:href => "http://www.wunderground.com/cgi-bin/findweather/getForecast?query=zmw:00000.1.71265&bannertypeclick=wu_clean2day"}
+      %img{:src => "http://weathersticker.wunderground.com/weathersticker/cgi-bin/banner/ban/wxBanner?bannertype=wu_clean2day_metric_cond&airportcode=CYTZ&ForcedCity=Toronto&ForcedState=ON&wmo=71265&language=EN", :alt => "Click for Toronto, Ontario Forecast", :height => "100", :width => "300"}
+  - if current_account      
+    .summary
+      .clothing.category
+        = render :partial => 'clothing_logs/by_date', :locals => { :dates => @dates, :by_date => @by_date, :size => :tiny }
+      .library.category
+        = link_to "#{LibraryItem.current_items(current_account).where('status!="read"').count} of #{pluralize(LibraryItem.current_items(current_account).count, "library item")} to read,", current_library_items_path
+        = "#{pluralize TorontoLibrary.pickup_count(current_account), "item"} to pick up"
+        - due = LibraryItem.current_items(current_account).minimum('due')
+        - if due
+          = " - first due: #{due.strftime('%a %b %e')}"
+        - if can? :refresh_library, current_account  
+          = link_to "(refresh)", library_refresh_path
+      .food.category
+        - remaining = (current_account.csa_foods.where('disposition = ""').sum(:quantity) / 1000.0)
+        - days = current_account.csa_foods.next_delivery - Date.today
+        = link_to "#{'%0.1f' % remaining}kg of CSA food to go,", csa_foods_path
+        = "#{pluralize days, "day"} until next delivery = "
+        = "#{'%0.1f' % (remaining * 1.0 / days)}kg per day"
+      .stuff.category
+        - if current_account.stuff.out_of_place.count > 0
+          = link_to "#{pluralize current_account.stuff.out_of_place.count, "item"} out of place", stuff_index_path
+          .list
+            = current_account.stuff.out_of_place.map{ |stuff| return_stuff_info stuff }.join(', ').html_safe
         - else
-          left - working on making the most of them!
-    .inner
-      .weather
-        %h3 Toronto weather
-        %a{:href => "http://www.wunderground.com/cgi-bin/findweather/getForecast?query=zmw:00000.1.71265&bannertypeclick=wu_clean2day"}
-          %img{:src => "http://weathersticker.wunderground.com/weathersticker/cgi-bin/banner/ban/wxBanner?bannertype=wu_clean2day_metric_cond&airportcode=CYTZ&ForcedCity=Toronto&ForcedState=ON&wmo=71265&language=EN", :alt => "Click for Toronto, Ontario Forecast", :height => "100", :width => "300"}
-      - if current_account      
-        .summary
-          .clothing.category
-            = render :partial => 'clothing_logs/by_date', :locals => { :dates => @dates, :by_date => @by_date, :size => :tiny }
-          .library.category
-            = link_to "#{LibraryItem.current_items(current_account).where('status!="read"').count} of #{pluralize(LibraryItem.current_items(current_account).count, "library item")} to read,", current_library_items_path
-            = "#{pluralize TorontoLibrary.pickup_count(current_account), "item"} to pick up"
-            - due = LibraryItem.current_items(current_account).minimum('due')
-            - if due
-              = " - first due: #{due.strftime('%a %b %e')}"
-            - if can? :refresh_library, current_account  
-              = link_to "(refresh)", library_refresh_path
-          .food.category
-            - remaining = (current_account.csa_foods.where('disposition = ""').sum(:quantity) / 1000.0)
-            - days = current_account.csa_foods.next_delivery - Date.today
-            = link_to "#{'%0.1f' % remaining}kg of CSA food to go,", csa_foods_path
-            = "#{pluralize days, "day"} until next delivery = "
-            = "#{'%0.1f' % (remaining * 1.0 / days)}kg per day"
-          .stuff.category
-            - if current_account.stuff.out_of_place.count > 0
-              = link_to "#{pluralize current_account.stuff.out_of_place.count, "item"} out of place", stuff_index_path
-              .list
-                = current_account.stuff.out_of_place.map{ |stuff| return_stuff_info stuff }.join(', ').html_safe
-            - else
-              .green= link_to "A place for everything, and everything in its place", stuff_index_path
-          .clear-both
+          .green= link_to "A place for everything, and everything in its place", stuff_index_path
+      .clear-both
 
-          
+
