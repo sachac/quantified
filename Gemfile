@@ -66,6 +66,8 @@ group :development, :test do
   gem 'forgery'
   gem 'database_cleaner'
   gem 'cucumber_factory'
+  gem 'compass'
+  gem 'compass-bootstrap'
 end
 gem 'yaml_db'
 gem 'email_validator'
