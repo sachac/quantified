@@ -24,3 +24,14 @@ a {
 .entry .item {
   display: inline-block;
 }
+
+/* line 16, ../../app/stylesheets/application.sass */
+.image {
+  float: right;
+  margin-left: 10px;
+}
+
+/* line 19, ../../app/stylesheets/application.sass */
+.auto {
+  width: auto;
+}
