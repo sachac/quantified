@@ -1,99 +1,26 @@
+/* line 3, ../../app/stylesheets/application.sass */
 body {
-  font: normal 12px "Lucida Grande", "Helvetica Neue", Arial, sans-serif;
-  line-height: auto; }
+  font-family: Calibri, sans-serif;
+  padding-top: 40px;
+}
 
-.ui-autocomplete {
-  background: white; }
+/* line 6, ../../app/stylesheets/application.sass */
+a {
+  text-decoration: none;
+}
 
-th, td {
-  vertical-align: top; }
+/* line 8, ../../app/stylesheets/application.sass */
+.topbar h1 {
+  font-weight: bold;
+  font-size: x-large;
+  margin-bottom: 0;
+}
 
-table.lined {
-  border-width: 1px;
-  border-spacing: 0px;
-  border-style: solid;
-  border-color: gray;
-  border-collapse: collapse;
-  background-color: white; }
-  table.lined th, table.lined td {
-    border-width: 1px;
-    padding: 3px;
-    border-style: inset;
-    border-color: gray;
-    background-color: white; }
-
-th {
-  text-align: left; }
-
-.flash .alert {
-  border: 1px solid #ffbbbb;
-  background-color: #ffdddd; }
-
-.color-box {
-  display: inline-block;
-  width: 50px;
-  height: 30px; }
-
-.clear-both {
-  clear: both; }
-
-.image {
-  float: right; }
-
-.clear-left {
-  clear: left; }
-
-.date-change td {
-  border-top: 1pt solid gray; }
-
-dd {
-  display: inline-block; }
-
-.align_right {
-  text-align: right; }
-
+/* line 12, ../../app/stylesheets/application.sass */
 .entry {
-  float: left;
-  padding-right: 10px; }
-  .entry .item {
-    float: left; }
-
-body formtastic.fieldset > ol > li label {
-  width: auto; }
-
-body #container.no-sidebar {
-  width: auto;
-  min-width: 0; }
-  body #container.no-sidebar #main {
-    width: 100%; }
-
-.locations {
-  font-size: x-large; }
-
-ul, ol, dl {
-  margin-left: 10px; }
-
-.mobile #container {
-  width: 100%; }
-.mobile #main {
-  width: 100%; }
-
-.menu {
-  font-size: large; }
-  .menu li {
-    list-style-type: none; }
-  .menu a {
-    width: 100%;
-    display: block;
-    border: 1pt solid darkgray;
-    padding: 3px; }
-
-.summary {
-  font-size: large; }
-  .summary .category {
-    margin-bottom: 10px; }
-  .summary .entry, .summary .stuff .list {
-    font-size: small; }
-
-body #sidebar ul.navigation li a:link, body #sidebar ul.navigation li a:visited {
-  padding-left: 0px; }
+  display: inline-block;
+}
+/* line 14, ../../app/stylesheets/application.sass */
+.entry .item {
+  display: inline-block;
+}
