@@ -30,7 +30,7 @@
     = link_to t.name, clothing_by_tag_path(t.name)
 - unless @clothing.colour.nil?
   - colours = @clothing.colour.split(",")
-  %table  
+  %table.auto
     %tr
       %td
         = pluralize(colours.size, "Colour")
