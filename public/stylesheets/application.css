@@ -30,3 +30,8 @@ a {
   float: right;
   margin-left: 10px;
 }
+
+/* line 19, ../../app/stylesheets/application.sass */
+.auto {
+  width: auto;
+}
