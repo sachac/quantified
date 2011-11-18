@@ -97,4 +97,21 @@ class CsaFoodsController < ApplicationController
       format.xml  { head :ok }
     end
   end
+
+  def quick_entry
+    authorize! :manage_account, current_account
+    @food = current_account.foods.find_by_name(params[:food])
+    @food ||= current_account.foods.find_by_name(params[:food].singularize)
+    @food ||= current_account.foods.find_by_name(params[:food].pluralize)
+    unless @food
+      @food = Food.create(:user => current_account, :name => params[:food])
+    end
+    @log = CsaFood.create(:user => current_account, :food => @food, :quantity => params[:quantity].to_f, :unit => params[:unit], :date_received => Date.parse(params[:date]))
+    if @log
+      redirect_to csa_foods_path, :notice => 'Food successfully logged.' and return
+    else
+      flash[:error] = 'Could not log food.'
+      redirect_to csa_foods_path(:date => params[:date]) and return
+    end
+  end
 end
