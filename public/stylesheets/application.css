@@ -2972,29 +2972,30 @@ a {
 /* line 14, ../../app/stylesheets/application.sass */
 .entry {
   display: inline-block;
+  margin-left: 10px;
 }
 /* line 16, ../../app/stylesheets/application.sass */
 .entry .item {
   display: inline-block;
 }
 
-/* line 18, ../../app/stylesheets/application.sass */
+/* line 19, ../../app/stylesheets/application.sass */
 .image {
   float: right;
   margin-left: 10px;
 }
 
-/* line 21, ../../app/stylesheets/application.sass */
+/* line 22, ../../app/stylesheets/application.sass */
 .auto {
   width: auto;
 }
 
-/* line 23, ../../app/stylesheets/application.sass */
+/* line 24, ../../app/stylesheets/application.sass */
 .formtastic fieldset.inputs ol {
   list-style: none;
 }
 
-/* line 25, ../../app/stylesheets/application.sass */
+/* line 26, ../../app/stylesheets/application.sass */
 label.label {
   padding-top: 6px;
   font-size: 13px;
@@ -3008,46 +3009,46 @@ label.label {
   text-transform: none;
 }
 
-/* line 36, ../../app/stylesheets/application.sass */
+/* line 37, ../../app/stylesheets/application.sass */
 .formtastic li {
   margin-top: 3px;
   margin-bottom: 3px;
 }
-/* line 39, ../../app/stylesheets/application.sass */
+/* line 40, ../../app/stylesheets/application.sass */
 .formtastic li input {
   margin-left: 10px;
 }
 
-/* line 41, ../../app/stylesheets/application.sass */
+/* line 42, ../../app/stylesheets/application.sass */
 .formtastic .actions {
   padding-left: 320px;
 }
 
-/* line 43, ../../app/stylesheets/application.sass */
+/* line 44, ../../app/stylesheets/application.sass */
 form .clear-fix {
   margin-bottom: 10px;
   zoom: 1;
 }
 
-/* line 46, ../../app/stylesheets/application.sass */
+/* line 47, ../../app/stylesheets/application.sass */
 .actions .btn {
   margin-right: 10px;
 }
 
-/* line 50, ../../app/stylesheets/application.sass */
+/* line 51, ../../app/stylesheets/application.sass */
 .category_label {
   text-align: right;
   display: block;
   float: left;
 }
 
-/* line 55, ../../app/stylesheets/application.sass */
+/* line 56, ../../app/stylesheets/application.sass */
 .category_detail {
   padding-top: 13px;
   margin-left: 170px;
 }
 
-/* line 59, ../../app/stylesheets/application.sass */
+/* line 60, ../../app/stylesheets/application.sass */
 .contexts .category_detail {
   padding-top: 0;
 }
