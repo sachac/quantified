@@ -17,7 +17,11 @@ Home::Application.routes.draw do
   resources :days
 
   match 'csa_foods/bulk_update', :as => :bulk_update_csa_foods, :via => :post
-  resources :csa_foods 
+  resources :csa_foods do
+    collection do
+      post :quick_entry 
+    end
+  end
 
   resources :foods
 

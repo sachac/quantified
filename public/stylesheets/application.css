@@ -69,3 +69,14 @@ label.label {
 .formtastic .actions {
   padding-left: 320px;
 }
+
+/* line 41, ../../app/stylesheets/application.sass */
+form .clear-fix {
+  margin-bottom: 10px;
+  zoom: 1;
+}
+
+/* line 44, ../../app/stylesheets/application.sass */
+.actions .btn {
+  margin-right: 10px;
+}
