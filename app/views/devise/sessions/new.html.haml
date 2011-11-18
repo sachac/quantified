@@ -1,26 +1,23 @@
 .block#block-login
-  %h2 Sign in
   .content.login
-    .flash
-      - flash.each do |type, message|
-        %div{ :class => "message #{type}" }
-          %p= message
-    = form_for(resource, :as => resource_name, :url => session_path(resource_name), :html => { :class => "form login" }) do |f|
-      .group.wat-cf
-        .left= f.label :login, :class => "label right"
-        .right= f.text_field :login, :class => "text_field"
-      .group.wat-cf
-        .left= f.label :password, :class => "label right"
-        .right= f.password_field :password, :class => "text_field"
-      - if devise_mapping.rememberable?
-        .group.wat-cf
-          .right
-            = f.check_box :remember_me, :class => "checkbox"
-            = f.label :remember_me, :class => "checkbox"
-      .group.wat-cf
-        .right
-          %button.button{ :type => "submit" }
+    = form_for(resource, :as => resource_name, :url => session_path(resource_name), :html => { :class => "form" }) do |f|
+      %fieldset
+        %legend Sign in
+        .clear-fix
+          = f.label :login, :class => "label right"
+          .input= f.text_field :login, :class => "text_field"
+        .clear-fix  
+          = f.label :password, :class => "label right"
+          .input= f.password_field :password, :class => "text_field"
+        - if devise_mapping.rememberable?
+          .clear-fix
+            .input
+              .inputs-list
+                %label
+                  = f.check_box :remember_me, :class => "checkbox"
+                  Remember me
+        .actions
+          %button.btn.primary{ :type => "submit" }
             = image_tag "web-app-theme/icons/key.png"
             Log in
-    = render :partial => "devise/shared/links"
-    
+          = render :partial => "devise/shared/links"
