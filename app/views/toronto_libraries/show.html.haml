@@ -1,6 +1,19 @@
 %p#notice= notice
 
-
+%table
+  %tr
+    %td
+      %strong Name
+    %td= @toronto_library.name
+  %tr
+    %td
+      %strong Card number
+    %td= @toronto_library.card
+  %tr
+    %td
+      %strong PIN
+    %td= @toronto_library.pin
+      
 = link_to 'Edit', edit_toronto_library_path(@toronto_library)
 \|
 = link_to 'Back', toronto_libraries_path
