@@ -136,7 +136,7 @@ class TimeTrackerLog
     end
     # Go back and fill in sleep
     days.each do |date,list|
-      days[date]['A - Sleep'] = 86400 - days_total[date].to_i
+      days[date]['A - Sleep'] = 86400 - days_total[date]
     end
     days
   end
