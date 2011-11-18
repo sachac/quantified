@@ -35,3 +35,37 @@ a {
 .auto {
   width: auto;
 }
+
+/* line 21, ../../app/stylesheets/application.sass */
+.formtastic fieldset.inputs ol {
+  list-style: none;
+}
+
+/* line 23, ../../app/stylesheets/application.sass */
+label.label {
+  padding-top: 6px;
+  font-size: 13px;
+  line-height: 18px;
+  float: left;
+  width: 130px;
+  text-align: right;
+  color: #404040;
+  background: white;
+  font-weight: normal;
+  text-transform: none;
+}
+
+/* line 34, ../../app/stylesheets/application.sass */
+.formtastic li {
+  margin-top: 3px;
+  margin-bottom: 3px;
+}
+/* line 37, ../../app/stylesheets/application.sass */
+.formtastic li input {
+  margin-left: 10px;
+}
+
+/* line 39, ../../app/stylesheets/application.sass */
+.formtastic .actions {
+  padding-left: 320px;
+}
