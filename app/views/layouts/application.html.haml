@@ -34,12 +34,11 @@
               %li
                 %strong= link_to 'log in', new_user_session_path
     .container
-      .row
+      .content
         .flash
           - flash.each do |type, message|
-            %div{:class => "message #{type}"}
+            %div{:class => "alert-message #{type}"}
               %p= message
-      .content
         = yield
       %footer
         .block
