@@ -27,6 +27,7 @@ Home::Application.routes.draw do
   resources :decision_logs
 
   resources :decisions
+  resources :toronto_libraries
   resources :library_items do
     get :tag, :on => :collection
     get :current, :on => :collection
