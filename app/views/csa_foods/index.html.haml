@@ -1,4 +1,12 @@
 %h1 Community-supported agriculture
+
+= form_tag quick_entry_csa_foods_path do
+  Quick entry:
+  = text_field_tag :date, params[:date] || Date.today, :autofocus => true, :class => 'datepicker span2'
+  = text_field_tag :food, nil, :placeholder => 'Food', :autofocus => true
+  = text_field_tag :quantity, nil, :placeholder => 'Quantity', :size => 4, :class => 'span2'
+  = text_field_tag :unit, 'g', :class => 'span1'
+  = submit_tag 'Save', :class => 'button'
 .food.category
   - remaining = (current_account.csa_foods.where('disposition = ""').sum(:quantity) / 1000.0)
   - days = current_account.csa_foods.next_delivery - Date.today
