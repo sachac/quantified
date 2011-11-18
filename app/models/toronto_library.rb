@@ -52,6 +52,7 @@ class TorontoLibrary < ActiveRecord::Base
     items = list_items
     items.each do |item|
       # Does the item exist?
+      item.user = self.user
       rec = LibraryItem.where("library_id = ?", item[:library_id]).first
       if rec then
         rec.due = item[:due]
