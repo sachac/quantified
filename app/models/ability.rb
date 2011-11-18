@@ -10,6 +10,7 @@ class Ability
         can :manage, item, :user_id => user.id
         can :create, item
       end
+      can :manage_account, User, :user_id => user.id
     else # Not logged in
       can :read, LibraryItem, :public => true
     end
