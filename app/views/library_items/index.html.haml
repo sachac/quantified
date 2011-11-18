@@ -1,4 +1,5 @@
-%h1= current_user ? "All library items" : "Public library items"
+.clear_both
+%p= link_to 'Manage library cards', toronto_libraries_path, :class => 'btn'
 
 = link_to 'all', library_items_path
 \-
