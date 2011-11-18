@@ -1,5 +1,3 @@
-%p#notice= notice
-
 %nav
   %p
     - if @previous
@@ -10,9 +8,9 @@
 %h1
   = @clothing.name
   - if user_signed_in?
-    = link_to '(yesterday)', clothing_logs_path + "?clothing_id=" + @clothing.id.to_s + "&date=" + Date.yesterday.to_s, :method => :post
-    = link_to '(today)', clothing_logs_path + "?clothing_id=" + @clothing.id.to_s + "&date=" + Date.today.to_s, :method => :post
-    = link_to '(tomorrow)', clothing_logs_path + "?clothing_id=" + @clothing.id.to_s + "&date=" + Date.tomorrow.to_s, :method => :post
+    = link_to '(yesterday)', clothing_logs_path + "?clothing_id=" + @clothing.id.to_s + "&date=" + Date.yesterday.to_s, :method => :post, :class => 'btn'
+    = link_to '(today)', clothing_logs_path + "?clothing_id=" + @clothing.id.to_s + "&date=" + Date.today.to_s, :method => :post, :class => 'btn'
+    = link_to '(tomorrow)', clothing_logs_path + "?clothing_id=" + @clothing.id.to_s + "&date=" + Date.tomorrow.to_s, :method => :post, :class => 'btn'
 
 %p
   = @clothing.status
