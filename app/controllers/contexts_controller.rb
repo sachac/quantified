@@ -2,7 +2,7 @@ class ContextsController < ApplicationController
   # GET /contexts
   # GET /contexts.xml
   def index
-    @contexts = current_account.contexts
+    @contexts = current_account.contexts.order('name')
     authorize! :view_context, current_account
     respond_to do |format|
       format.html # index.html.erb
@@ -13,12 +13,7 @@ class ContextsController < ApplicationController
   # GET /contexts/1
   # GET /contexts/1.xml
   def show
-    @context = current_account.contexts.find(params[:id])
-    authorize! :view, @context
-    respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @context }
-    end
+    redirect_to start_context_path(params[:id])
   end
 
   # GET /contexts/new
