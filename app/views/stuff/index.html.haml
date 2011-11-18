@@ -1,5 +1,10 @@
 %h1 Where's my stuff?
 
+%ul.pills
+  %li.active= link_to 'Index', stuff_index_path
+  - @contexts.each do |c|
+    %li= link_to c.name, c
+    
 = render :partial => 'quicklog'
 %table.lined
   %tr
