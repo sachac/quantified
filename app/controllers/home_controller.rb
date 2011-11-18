@@ -9,6 +9,7 @@ class HomeController < ApplicationController
       @clothing_logs = current_account.clothing_logs.includes(:clothing).where('date >= ? and date <= ?', Date.today - 1.week, Date.today).order('date, outfit_id DESC, clothing.clothing_type')
       @by_date = current_account.clothing_logs.by_date(@clothing_logs)
       @dates = 7.downto(0).collect { |i| Date.today - i.days }
+      @contexts = current_account.contexts
     end
   end
   def summary
