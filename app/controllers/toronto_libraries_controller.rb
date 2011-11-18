@@ -49,7 +49,7 @@ class TorontoLibrariesController < ApplicationController
     @toronto_library.user = current_account
     respond_to do |format|
       if @toronto_library.save
-        format.html { redirect_to(@toronto_library, :notice => 'Toronto library was successfully created.') }
+        format.html { redirect_to(toronto_library_index_path, :notice => 'Library card was successfully created.') }
         format.xml  { render :xml => @toronto_library, :status => :created, :location => @toronto_library }
       else
         format.html { render :action => "new" }
@@ -66,7 +66,7 @@ class TorontoLibrariesController < ApplicationController
 
     respond_to do |format|
       if @toronto_library.update_attributes(params[:toronto_library])
-        format.html { redirect_to(@toronto_library, :notice => 'Toronto library was successfully updated.') }
+        format.html { redirect_to(@toronto_library, :notice => 'Library card was successfully updated.') }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }
