@@ -2972,7 +2972,7 @@ a {
 /* line 14, ../../app/stylesheets/application.sass */
 .entry {
   display: inline-block;
-  margin-left: 10px;
+  margin-right: 10px;
 }
 /* line 16, ../../app/stylesheets/application.sass */
 .entry .item {
