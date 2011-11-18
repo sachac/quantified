@@ -3039,16 +3039,15 @@ form .clear-fix {
   text-align: right;
   display: block;
   float: left;
-  padding-right: 10px;
 }
 
-/* line 56, ../../app/stylesheets/application.sass */
+/* line 55, ../../app/stylesheets/application.sass */
 .category_detail {
   padding-top: 13px;
-  margin-left: 160px;
+  margin-left: 170px;
 }
 
-/* line 60, ../../app/stylesheets/application.sass */
+/* line 59, ../../app/stylesheets/application.sass */
 .contexts .category_detail {
   padding-top: 0;
 }
