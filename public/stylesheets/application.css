@@ -3052,3 +3052,8 @@ form .clear-fix {
 .contexts .category_detail {
   padding-top: 0;
 }
+
+/* line 62, ../../app/stylesheets/application.sass */
+.category_detail .pills {
+  margin-bottom: 0px;
+}
