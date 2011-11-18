@@ -16,7 +16,7 @@ class StuffController < ApplicationController
       end
     end
     @stuff = current_account.stuff.where('status=?', 'active').order(order).includes(:location)
-
+    @contexts = current_account.contexts.order('name')
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @stuff }
