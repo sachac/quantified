@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'awesome'
 describe "Users" do
   it "allows users to log in with their e-mail" do
     @user = Factory(:user)
