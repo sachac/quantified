@@ -1,9 +1,10 @@
 class ContextsController < ApplicationController
+  before_filter :authenticate_user!, :except => [:index, :show, :start]
   # GET /contexts
   # GET /contexts.xml
   def index
     @contexts = current_account.contexts.order('name')
-    authorize! :view_context, current_account
+    authorize! :view_contexts, current_account
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @contexts }
