@@ -61,7 +61,6 @@ group :development, :test do
   gem 'cucumber-rails'
   gem 'rspec'
   gem 'rspec-rails'
-  gem 'factory_girl'
   gem 'factory_girl_rails'  
   gem 'forgery'
   gem 'database_cleaner'
