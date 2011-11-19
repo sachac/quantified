@@ -31,7 +31,7 @@
               %li= link_to t("web-app-theme.logout", :default => "log out"), destroy_user_session_path, :method => "delete"
             - else
               %li
-                %strong= link_to 'log in', new_user_session_path
+                %strong= link_to t('app.user.login'), new_user_session_path
     .container
       .content
         .flash
