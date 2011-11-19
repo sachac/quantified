@@ -1,3 +1,4 @@
+@life
 Feature: Development-driven behaviour
   Scenario: Check for overdue books
     When I check our library items
