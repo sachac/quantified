@@ -11,8 +11,10 @@ class Ability
         can :create, item
       end
       can :manage_account, User, :user_id => user.id
+      can :view_contexts, User
     else # Not logged in
       can :read, LibraryItem, :public => true
+      can :view_contexts, User
     end
   end
 end

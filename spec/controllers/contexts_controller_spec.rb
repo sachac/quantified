@@ -19,17 +19,14 @@ require 'spec_helper'
 # that an instance is receiving a specific message.
 
 describe ContextsController do
-
-  # This should return the minimal set of attributes required to create a valid
-  # Context. As you add validations to Context, be sure to
-  # update the return value of this method accordingly.
-  def valid_attributes
-    {}
+  before :each do
+    @user = Factory(:user)
+    as_user(@user)
+    @ability.can :manage, :all
   end
-
   describe "GET index" do
     it "assigns all contexts as @contexts" do
-      context = Context.create! valid_attributes
+      context = Factory(:context, :user => @user)
       get :index
       assigns(:contexts).should eq([context])
     end
@@ -37,9 +34,9 @@ describe ContextsController do
 
   describe "GET show" do
     it "assigns the requested context as @context" do
-      context = Context.create! valid_attributes
+      context = Factory(:context, :user => @user)
       get :show, :id => context.id
-      assigns(:context).should eq(context)
+      response.should redirect_to(start_context_path(context.id))
     end
   end
 
@@ -52,7 +49,7 @@ describe ContextsController do
 
   describe "GET edit" do
     it "assigns the requested context as @context" do
-      context = Context.create! valid_attributes
+      context = Factory(:context, :user => @user)
       get :edit, :id => context.id
       assigns(:context).should eq(context)
     end
@@ -62,18 +59,18 @@ describe ContextsController do
     describe "with valid params" do
       it "creates a new Context" do
         expect {
-          post :create, :context => valid_attributes
+          post :create, :context => Factory.attributes_for(:context) 
         }.to change(Context, :count).by(1)
       end
 
       it "assigns a newly created context as @context" do
-        post :create, :context => valid_attributes
+        post :create, :context => Factory.attributes_for(:context)
         assigns(:context).should be_a(Context)
         assigns(:context).should be_persisted
       end
 
       it "redirects to the created context" do
-        post :create, :context => valid_attributes
+        post :create, :context => Factory.attributes_for(:context)
         response.should redirect_to(Context.last)
       end
     end
@@ -98,7 +95,7 @@ describe ContextsController do
   describe "PUT update" do
     describe "with valid params" do
       it "updates the requested context" do
-        context = Context.create! valid_attributes
+        context = Factory(:context, :user => @user)
         # Assuming there are no other contexts in the database, this
         # specifies that the Context created on the previous line
         # receives the :update_attributes message with whatever params are
@@ -108,21 +105,21 @@ describe ContextsController do
       end
 
       it "assigns the requested context as @context" do
-        context = Context.create! valid_attributes
-        put :update, :id => context.id, :context => valid_attributes
+        context = Factory(:context, :user => @user)
+        put :update, :id => context.id, :context => Factory.attributes_for(:context, :user => @user)
         assigns(:context).should eq(context)
       end
 
       it "redirects to the context" do
-        context = Context.create! valid_attributes
-        put :update, :id => context.id, :context => valid_attributes
+        context = Factory(:context, :user => @user)
+        put :update, :id => context.id, :context => Factory.attributes_for(:context, :user => @user)
         response.should redirect_to(context)
       end
     end
 
     describe "with invalid params" do
       it "assigns the context as @context" do
-        context = Context.create! valid_attributes
+        context = Factory(:context, :user => @user)
         # Trigger the behavior that occurs when invalid params are submitted
         Context.any_instance.stub(:save).and_return(false)
         put :update, :id => context.id, :context => {}
@@ -130,7 +127,7 @@ describe ContextsController do
       end
 
       it "re-renders the 'edit' template" do
-        context = Context.create! valid_attributes
+        context = Factory(:context, :user => @user)
         # Trigger the behavior that occurs when invalid params are submitted
         Context.any_instance.stub(:save).and_return(false)
         put :update, :id => context.id, :context => {}
@@ -141,14 +138,14 @@ describe ContextsController do
 
   describe "DELETE destroy" do
     it "destroys the requested context" do
-      context = Context.create! valid_attributes
+      context = Factory(:context, :user => @user)
       expect {
         delete :destroy, :id => context.id
       }.to change(Context, :count).by(-1)
     end
 
     it "redirects to the contexts list" do
-      context = Context.create! valid_attributes
+      context = Factory(:context, :user => @user)
       delete :destroy, :id => context.id
       response.should redirect_to(contexts_url)
     end
