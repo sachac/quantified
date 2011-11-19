@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe "contexts/show.html.haml" do
   before(:each) do
+    @user = Factory(:user)
     @context = assign(:context, stub_model(Context,
       :name => "Name",
       :rules => "MyText",
