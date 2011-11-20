@@ -52,13 +52,12 @@ class TorontoLibrary < ActiveRecord::Base
     items = list_items
     items.each do |item|
       # Does the item exist?
-      item.user = self.user
       rec = LibraryItem.where("library_id = ?", item[:library_id]).first
       if rec then
         rec.due = item[:due]
         rec.updated_at = stamp
       else
-        rec = LibraryItem.create(item)
+        rec = LibraryItem.create(item.merge(:user => current_account))
         rec.checkout_date ||= Date.today
       end
       rec.status ||= item[:status]
