@@ -1,6 +1,7 @@
 FactoryGirl.define do
+  sequence :username do |n| "test#{n}" end
   factory :user do
-    username { Forgery(:internet).user_name }
+    username { Factory.next(:username) }
     email { "#{username}@example.org" }
     role 'user'
     password { Forgery(:basic).password }
