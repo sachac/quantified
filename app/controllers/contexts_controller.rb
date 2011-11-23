@@ -3,8 +3,9 @@ class ContextsController < ApplicationController
   # GET /contexts
   # GET /contexts.xml
   def index
-    @contexts = current_account.contexts.order('name')
     authorize! :view_contexts, current_account
+    @user = current_account
+    @contexts = current_account.contexts.order('name')
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @contexts }
@@ -14,6 +15,8 @@ class ContextsController < ApplicationController
   # GET /contexts/1
   # GET /contexts/1.xml
   def show
+    @context = current_account.contexts.find(params[:id])
+    authorize! :start, @context
     redirect_to start_context_path(params[:id])
   end
 

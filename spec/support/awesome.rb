@@ -1,10 +1,12 @@
-def login(user, options = {})
+def login(user = nil, options = {})
+  user ||= Factory(:user)
+  @user = user
   options[:with] ||= :email
   get root_path(:subdomain => user.username)
-  click_link 'Log in'
+  click_link I18n.t('app.user.login')
   fill_in 'user[login]', :with => (options[:with] == :username? ? user.username : user.email)
   fill_in 'user[password]', :with => user.password
-  click_button 'Log in'
+  click_button I18n.t('app.user.login_submit')
 end
 def setup_ability
   @ability = Object.new
@@ -16,7 +18,8 @@ def setup_ability
     controller.stub(:current_ability) { @ability }
   end
 end
-def as_user(user)
+def as_user(user = nil)
+  user ||= Factory(:user)
   @user = user
   if defined? controller
     controller.stub(:current_user) { @user }
