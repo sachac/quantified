@@ -11,6 +11,13 @@ GIT
   specs:
     subdomain-fu (1.0.0.beta2)
 
+GIT
+  remote: https://github.com/makandra/cucumber_factory.git
+  revision: 358b6280507e040cb4bb471fa322a17a1268221f
+  specs:
+    cucumber_factory (1.8.1)
+      cucumber
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -77,8 +84,6 @@ GEM
       capybara (>= 1.1.1)
       cucumber (>= 1.1.0)
       nokogiri (>= 1.5.0)
-    cucumber_factory (1.8.1)
-      cucumber
     database_cleaner (0.6.7)
     devise (1.4.7)
       bcrypt-ruby (~> 3.0)
@@ -170,6 +175,7 @@ GEM
       rdoc (~> 3.4)
       thor (~> 0.14.4)
     rake (0.9.2)
+    rcov (0.9.11)
     rdoc (3.9.4)
     rspec (2.7.0)
       rspec-core (~> 2.7.0)
@@ -228,7 +234,7 @@ DEPENDENCIES
   compass-bootstrap
   cucumber
   cucumber-rails
-  cucumber_factory
+  cucumber_factory!
   database_cleaner
   devise
   email_validator
@@ -248,6 +254,7 @@ DEPENDENCIES
   rails (= 3.0.10)
   rails-settings-cached
   rails3-jquery-autocomplete
+  rcov
   rspec
   rspec-rails
   ruby_parser

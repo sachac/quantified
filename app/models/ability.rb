@@ -16,5 +16,8 @@ class Ability
       can :read, LibraryItem, :public => true
       can :view_contexts, User
     end
+    can :view_dashboard, User
+    can :view_clothing, User
+    can :view, Clothing
   end
 end

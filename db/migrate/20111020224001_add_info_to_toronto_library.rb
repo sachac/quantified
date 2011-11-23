@@ -9,11 +9,6 @@ class AddInfoToTorontoLibrary < ActiveRecord::Migration
     add_column :toronto_libraries, :last_checked, :date
     add_column :toronto_libraries, :pickup_count, :integer
     add_column :toronto_libraries, :library_item_count, :integer
-    TorontoLibrary.reset_column_information
-    Settings.library_cards.each do |c|
-      x = TorontoLibrary.new(:name => c['name'], :card => c['card'], :pin => c['pin'])
-      x.save
-    end
   end
 
   def self.down
