@@ -1,11 +1,11 @@
 class ClothingController < ApplicationController
   autocomplete :clothing, :name, :display_value => :autocomplete_view, :extra_data => [:number], :full => true
   handles_sortable_columns
-  before_filter :authenticate_user!, :except => [:index, :tag, :show, :analyze]
 
   # GET /clothing
   # GET /clothing.xml
   def index
+    authorize! :view_clothing, current_account
     @tags = current_account.clothing.tag_counts_on(:tags).sort_by(&:name)
     params[:sort] ||= 'clothing_type'
     order = nil
@@ -31,6 +31,7 @@ class ClothingController < ApplicationController
   # GET /clothing/1.xml
   def show
     @clothing = current_account.clothing.find(params[:id])
+    authorize! :view, @clothing
     @logs = current_account.clothing_logs.find(:all, :conditions => ["clothing_id=?", @clothing.id], :order => 'date DESC')
     @previous = @clothing.previous_by_id
     @next = @clothing.next_by_id
@@ -84,6 +85,7 @@ class ClothingController < ApplicationController
   # GET /clothing/new
   # GET /clothing/new.xml
   def new
+    authorize! :create, Clothing
     @clothing = Clothing.new
     @clothing.status = 'active'
     @clothing.user_id = current_account.id
@@ -96,11 +98,13 @@ class ClothingController < ApplicationController
   # GET /clothing/1/edit
   def edit
     @clothing = current_account.clothing.find(params[:id])
+    authorize! :update, @clothing
   end
 
   # POST /clothing
   # POST /clothing.xml
   def create
+    authorize! :create, Clothing
     @clothing = Clothing.new(params[:clothing])
     @clothing.user_id = current_account.id
     respond_to do |format|
@@ -118,6 +122,7 @@ class ClothingController < ApplicationController
   # PUT /clothing/1.xml
   def update
     @clothing = Clothing.find(params[:id])
+    authorize! :update, @clothing
     respond_to do |format|
       if @clothing.update_attributes(params[:clothing])
         format.html { redirect_to(clothing_path(@clothing), :notice => 'Clothing was successfully updated.') and return }
@@ -133,6 +138,7 @@ class ClothingController < ApplicationController
   # DELETE /clothing/1.xml
   def destroy
     @clothing = Clothing.find(params[:id])
+    authorize! :delete, @clothing
     @clothing.destroy
 
     respond_to do |format|
@@ -143,6 +149,7 @@ class ClothingController < ApplicationController
 
   def tag
     # Show by tags
+    authorize! :view_clothing, current_account
     order = sortable_column_order
     order ||= "clothing_type asc, last_worn asc"
     @tags = Clothing.tag_counts_on(:tags).sort_by(&:name)
@@ -152,6 +159,7 @@ class ClothingController < ApplicationController
   
   def by_status
     # Show by tags
+    authorize! :view_clothing, current_account
     order = sortable_column_order
     order ||= "clothing_type asc, last_worn asc"
     @tags = Clothing.tag_counts_on(:tags).sort_by(&:name)
@@ -164,6 +172,7 @@ class ClothingController < ApplicationController
   end
   
   def analyze
+    authorize! :view_clothing, current_account
     @start_date = params[:start] ? Date.parse(params[:start]) : (Date.today - 1.week)
     @end_date = params[:end] ? Date.parse(params[:end]) : Date.today
     # Straight chart
@@ -211,6 +220,7 @@ class ClothingController < ApplicationController
   end
 
   def graph
+    authorize! :view_clothing, current_account
     # Create a bipartite graph of tops and bottoms
     @tops = Clothing.tagged_with('top')
     @bottoms = Clothing.tagged_with('bottom')
@@ -220,6 +230,7 @@ class ClothingController < ApplicationController
   end
 
   def bulk
+    authorize! :manage, current_account
     if params[:bulk] and params[:op] then
       params[:bulk].compact.each do |i|
         clothing = Clothing.find(i)
