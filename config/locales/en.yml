@@ -5,6 +5,12 @@ en:
   app:
     user:
       login: track your life
+      login_submit: Log in
+    layout:
+      full: Full
+      mobile: Mobile
+    error:
+      nonexistent_account: Account does not exist.
   activerecord:
     attributes:
       user:

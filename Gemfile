@@ -60,11 +60,12 @@ group :development, :test do
   gem 'webrat'
   gem 'cucumber-rails'
   gem 'rspec'
+  gem 'rcov'
   gem 'rspec-rails'
   gem 'factory_girl_rails'  
   gem 'forgery'
   gem 'database_cleaner'
-  gem 'cucumber_factory'
+  gem 'cucumber_factory', :git => 'https://github.com/makandra/cucumber_factory.git'
   gem 'compass'
   gem 'compass-bootstrap'
 end

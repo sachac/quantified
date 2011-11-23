@@ -6,6 +6,10 @@
     = stylesheet_link_tag "formtastic"
     = stylesheet_link_tag 'application', :media => 'screen, projection'              
     - conditional_html
+    - if session['layout'] == 'mobile'
+      %meta{:name => "HandheldFriendly", :content=>"true"}
+      %meta{:name => "viewport", :content => "width=device-width, height=device-height, user-scalable=yes"}
+      = stylesheet_link_tag 'mobile'  
     = javascript_include_tag :defaults
     = javascript_include_tag "autocomplete-rails.js"
     = javascript_include_tag "raphael-min.js"
@@ -45,6 +49,6 @@
             Copyright &copy; #{Time.now.year} Sacha Chua
             - if session
               - if session['layout'] == 'mobile'
-                = link_to 'Full', :layout => 'full'
+                = link_to I18n.t('app.layout.full'), params.merge(:layout => 'full')
               - else 
-                = link_to 'Mobile', :layout => 'mobile'
+                = link_to I18n.t('app.layout.mobile'), params.merge(:layout => 'mobile')
