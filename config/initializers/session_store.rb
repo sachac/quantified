@@ -3,7 +3,7 @@
 if Rails.env.production?
   Home::Application.config.session_store :cookie_store, :key => 'quantifiedawesome' #, :domain => '.quantifiedawesome.com'
 else
-  Home::Application.config.session_store :cookie_store, :key => 'quantifiedawesome' #, :domain => '.dev.quantifiedawesome.com'
+  Home::Application.config.session_store :cookie_store, :key => 'quantifiedawesome', :domain => :all
 end
 # Use the database for sessions instead of the cookie-based default,
 # which shouldn't be used to store highly confidential information

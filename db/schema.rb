@@ -290,7 +290,6 @@ ActiveRecord::Schema.define(:version => 20111110021956) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.date     "birthdate"
-    t.float    "life_expectancy"
     t.integer  "life_expectancy_in_years"
     t.date     "projected_end"
     t.string   "role"

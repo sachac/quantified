@@ -1,6 +1,8 @@
 class HomeController < ApplicationController
-  before_filter :authenticate_user!, :except => [:index]
   def index
+    logger.info "CURRENT ACCOUNT: #{current_account.inspect}"
+    authorize! :view_dashboard, current_account
+    flash.keep
     @clothing_today = ClothingLog.where('date = ?', Date.today)
     if current_account then
       @memento_mori = current_account.memento_mori
