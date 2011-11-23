@@ -20,9 +20,16 @@ require 'spec_helper'
 
 describe ContextsController do
   before :each do
-    @user = Factory(:user)
-    as_user(@user)
-    @ability.can :manage, :all
+    as_user
+    @ability.can :manage, Context
+    @ability.can :manage, Stuff
+    @ability.can :view_contexts, User
+  end
+  # This should return the minimal set of attributes required to create a valid
+  # Context. As you add validations to Context, be sure to
+  # update the return value of this method accordingly.
+  def valid_attributes
+    {}
   end
   describe "GET index" do
     it "assigns all contexts as @contexts" do
