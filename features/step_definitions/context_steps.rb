@@ -44,21 +44,6 @@ Then /^nothing should be reported as out of place$/ do
   page.body.should_not include "out_of_place"
 end
 
-Given /^I am a user$/ do
-  @user = Factory(:user)
-end
-
-Given /^I am logged in$/ do
-  host!(@user.username + ".dev")
-  visit root_path
-  click_link I18n.t('app.user.login')
-  fill_in 'Login', :with => @user.email
-  fill_in 'Password', :with => @user.password
-  click_button "Log in"
-  page.body.should_not include 'Log in'
-  page.body.should include "quantified awesome: #{@user.username}"
-end
-
 Given /^I have the following stuff:$/ do |table|
   table.hashes.each do |o|
     stuff = Factory(:stuff, :name => o['Name'], :user => @user)
@@ -70,6 +55,6 @@ end
 
 When /^I create a context called "([^"]*)"$/ do |arg1|
   visit new_context_path
-  fill_in "Name", :with => arg1
+  fill_in 'context[name]', :with => arg1
 end
 

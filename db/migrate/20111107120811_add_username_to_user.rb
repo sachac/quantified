@@ -3,8 +3,10 @@ class AddUsernameToUser < ActiveRecord::Migration
     add_column :users, :username, :string
     User.reset_column_information
     x = User.find_by_email('sacha@sachachua.com')
-    x.username = 'sacha'
-    x.save
+    if x
+      x.username = 'sacha'
+      x.save
+    end
   end
 
   def self.down
