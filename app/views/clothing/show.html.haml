@@ -57,9 +57,9 @@
           .color-box{:style => "background: #{tr2.html}"}= tr2.html
 
 - if @previous_matches.size > 0
-  %p= render :partial => 'clothing_thumbnails', :locals => { :list => @previous_matches }
+  .previous_matches= render :partial => 'clothing_thumbnails', :locals => { :list => @previous_matches }
 - if @matches.size > 0
-  %p= render :partial => 'clothing_thumbnails', :locals => { :list => @matches }
+  .matches= render :partial => 'clothing_thumbnails', :locals => { :list => @matches }
 
 %p= @clothing.notes
 
