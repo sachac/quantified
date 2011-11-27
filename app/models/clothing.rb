@@ -2,12 +2,7 @@ class Clothing < ActiveRecord::Base
   belongs_to :user
   acts_as_taggable_on :tags
   has_many :clothing_logs
-  has_and_belongs_to_many :clothing_matches, \
-  :class_name => "Clothing", \
-  :join_table => "clothing_matches", \
-  :foreign_key => :clothing_a_id, \
-  :association_foreign_key => :clothing_b_id, \
-  :readonly => true
+  has_many :clothing_matches, :foreign_key => :clothing_a_id
  
   before_save :update_hsl
   def autocomplete_view

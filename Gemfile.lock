@@ -210,10 +210,6 @@ GEM
     warden (1.0.5)
       rack (>= 1.0)
     web-app-theme (0.7.0)
-    webrat (0.7.3)
-      nokogiri (>= 1.2.0)
-      rack (>= 1.0)
-      rack-test (>= 0.5.3)
     webrobots (0.0.12)
       nokogiri (>= 1.4.4)
     workflow (0.8.1)
@@ -228,6 +224,7 @@ DEPENDENCIES
   acts-as-taggable-on!
   barometer
   cancan
+  capybara
   chronic
   color
   compass
@@ -262,6 +259,5 @@ DEPENDENCIES
   sqlite3
   subdomain-fu!
   web-app-theme
-  webrat
   workflow
   yaml_db

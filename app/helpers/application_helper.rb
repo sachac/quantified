@@ -12,7 +12,7 @@ module ApplicationHelper
         else	
 	  base = "small-#{clothing.id}.jpg"
       end
-      if File.exist?("#{RAILS_ROOT}/public/images/clothing/#{base}") then
+      if File.exist?("#{Rails.root}/public/images/clothing/#{base}") then
         image = "clothing/#{base}"
       else
         image = "clothing/clothing_unknown.jpg"
@@ -27,9 +27,9 @@ module ApplicationHelper
     end
     if clothing then
       if options[:size] == :tiny
-        link_to image_tag(clothing_image(clothing, options), :width => 27), options[:path] ? options[:path] : clothing_path(clothing), { :title => title }
+        link_to image_tag(clothing_image(clothing, options), :width => 27), options[:path] ? options[:path] : clothing_path(clothing), { :title => title, :class => "clothing_#{clothing.id}"}
       else
-        link_to image_tag(clothing_image(clothing, options)), options[:path] ? options[:path] : clothing_path(clothing), { :title => title }
+        link_to image_tag(clothing_image(clothing, options)), options[:path] ? options[:path] : clothing_path(clothing), { :title => title, :class => "clothing_#{clothing.id}"}
       end
     else
       "Unknown"

@@ -1,5 +1,8 @@
 .clear_both
-%p= link_to 'Manage library cards', toronto_libraries_path, :class => 'btn'
+%ul.pills
+  = link_to 'All', library_items_path
+  = link_to 'Current items', current_library_items_path
+  = link_to 'Library cards', toronto_libraries_path
 
 = link_to 'all', library_items_path
 \-

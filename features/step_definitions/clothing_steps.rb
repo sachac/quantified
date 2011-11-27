@@ -1,6 +1,8 @@
 Given /^I have the following clothing items:$/ do |table|
   table.hashes.each do |h|
-    Factory(:clothing, :user => @user, :name => h['Name'], :status => h['Status'])
+    c = Factory(:clothing, :user => @user, :name => h['Name'], :status => h['Status'])
+    c.tag_list = h['Tags']
+    c.save!
   end
 end
 

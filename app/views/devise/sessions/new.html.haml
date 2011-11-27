@@ -19,5 +19,5 @@
         .actions
           %button.btn.primary{ :type => "submit" }
             = image_tag "web-app-theme/icons/key.png"
-            Log in
+            = I18n.t('app.user.login_submit')
           = render :partial => "devise/shared/links"
