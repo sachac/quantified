@@ -12,11 +12,13 @@
       %h2 Stuff
     .category_detail
       - if current_account.stuff.out_of_place.count > 0
-        = link_to "#{pluralize current_account.stuff.out_of_place.count, "item"} out of place", stuff_index_path
+        %span.label.important= "#{pluralize current_account.stuff.out_of_place.count, "item"}"
+        = link_to "out of place", stuff_index_path
         .list
           = current_account.stuff.out_of_place.map{ |stuff| return_stuff_info stuff }.join(', ').html_safe
       - else
         .green= link_to "A place for everything, and everything in its place", stuff_index_path
+        %span.label.notice Yay!
   .weather.category
     .category_label
       %h2 Toronto weather
@@ -37,9 +39,10 @@
         = "#{pluralize TorontoLibrary.pickup_count(current_account), "item"} to pick up"
         - due = LibraryItem.current_items(current_account).minimum('due')
         - if due
-          %strong= " - first due: #{due.strftime('%a %b %e')}"
+          %span.label{:class => (due > Date.today) ? 'notice' : 'important' }
+            = due.strftime('%a %b %e')
         - if can? :refresh_library, current_account  
-          = link_to "(refresh)", library_refresh_path
+          = link_to "refresh", library_refresh_path, :class => 'btn', :style => 'margin-left: 5px'
     .food.category
       .category_label
         %h2 Food

@@ -1,5 +1,3 @@
-require 'webrat'
-
 When /^I define the following rules:$/ do |table|
   fill_in "Rules", :with => table.raw.map { |x| x[0] }.join("\n")
 end
@@ -42,15 +40,6 @@ end
 
 Then /^nothing should be reported as out of place$/ do
   page.body.should_not include "out_of_place"
-end
-
-Given /^I have the following stuff:$/ do |table|
-  table.hashes.each do |o|
-    stuff = Factory(:stuff, :name => o['Name'], :user => @user)
-    stuff.home_location = @user.get_location(o['Home location']) unless o['Home location'].blank?
-    stuff.location = @user.get_location(o['Current location']) unless o['Current location'].blank?
-    stuff.save
-  end
 end
 
 When /^I create a context called "([^"]*)"$/ do |arg1|
