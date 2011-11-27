@@ -2,7 +2,8 @@ def login(user = nil, options = {})
   user ||= Factory(:user)
   @user = user
   options[:with] ||= :email
-  get root_path(:subdomain => user.username)
+  get root_url #(:subdomain => user.username)
+  puts page.body
   click_link I18n.t('app.user.login')
   fill_in 'user[login]', :with => (options[:with] == :username? ? user.username : user.email)
   fill_in 'user[password]', :with => user.password

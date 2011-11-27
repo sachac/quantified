@@ -7,16 +7,7 @@ class ClothingController < ApplicationController
   def index
     authorize! :view_clothing, current_account
     @tags = current_account.clothing.tag_counts_on(:tags).sort_by(&:name)
-    params[:sort] ||= 'clothing_type'
-    order = nil
-    order = sortable_column_order do |column, direction|
-      case column 
-      when 'name', 'status', 'clothing_logs_count', 'last_worn', 'hue'
-        "#{column} #{direction}"
-      else
-        "clothing_type ASC, hue ASC"
-      end
-    end
+    order = filter_sortable_column_order %w{clothing_type name status clothing_logs_count last_worn hue}
     @clothing = current_account.clothing
     @clothing = @clothing.find(:all, 
                                :conditions => ["status='active' OR status IS NULL OR status=''"],
@@ -49,7 +40,7 @@ class ClothingController < ApplicationController
       search << "casual"
     end
     if search.size > 0 then
-      matches = Clothing.tagged_with(search[0])
+      matches = current_account.clothing.tagged_with(search[0])
       if search.size > 1 then
         matches = matches.tagged_with(search[1])
       end
@@ -64,7 +55,7 @@ class ClothingController < ApplicationController
     @previous_matches = Array.new
     list ||= Hash.new
     @past_matches = @clothing.clothing_matches.count(:group => :clothing_b_id).sort { |a,b| b[1] <=> a[1] }.each do |id, count| 
-      list[id] ||= Clothing.find(id)
+      list[id] ||= current_account.clothing.find(id)
       list[id].name += " (#{count})"
       @previous_matches << list[id]
       list.delete(id)
@@ -121,7 +112,7 @@ class ClothingController < ApplicationController
   # PUT /clothing/1
   # PUT /clothing/1.xml
   def update
-    @clothing = Clothing.find(params[:id])
+    @clothing = current_account.clothing.find(params[:id])
     authorize! :update, @clothing
     respond_to do |format|
       if @clothing.update_attributes(params[:clothing])
@@ -137,7 +128,7 @@ class ClothingController < ApplicationController
   # DELETE /clothing/1
   # DELETE /clothing/1.xml
   def destroy
-    @clothing = Clothing.find(params[:id])
+    @clothing = current_account.clothing.find(params[:id])
     authorize! :delete, @clothing
     @clothing.destroy
 
@@ -150,21 +141,19 @@ class ClothingController < ApplicationController
   def tag
     # Show by tags
     authorize! :view_clothing, current_account
-    order = sortable_column_order
-    order ||= "clothing_type asc, last_worn asc"
-    @tags = Clothing.tag_counts_on(:tags).sort_by(&:name)
-    @clothing = Clothing.tagged_with(params[:id]).where("status='active' or status='' or status is null").order(order)
+    order = filter_sortable_column_order %w{clothing_type name status clothing_logs_count last_worn hue}
+    @tags = current_account.clothing.tag_counts_on(:tags).sort_by(&:name)
+    @clothing = current_account.clothing.tagged_with(params[:id]).where("status='active' or status='' or status is null").order(order)
     render :index
   end
   
   def by_status
     # Show by tags
     authorize! :view_clothing, current_account
-    order = sortable_column_order
-    order ||= "clothing_type asc, last_worn asc"
-    @tags = Clothing.tag_counts_on(:tags).sort_by(&:name)
+    order = filter_sortable_column_order %w{clothing_type name status clothing_logs_count last_worn hue}
+    @tags = current_account.clothing.tag_counts_on(:tags).sort_by(&:name)
     @status = params[:status] || 'all'
-    @clothing = Clothing.order(order)
+    @clothing = current_account.clothing.order(order)
     if @status != 'all' then
       @clothing = @clothing.where('status = ?', @status)
     end
@@ -176,7 +165,8 @@ class ClothingController < ApplicationController
     @start_date = params[:start] ? Date.parse(params[:start]) : (Date.today - 1.week)
     @end_date = params[:end] ? Date.parse(params[:end]) : Date.today
     # Straight chart
-    logs = ClothingLog.where("date >= ? AND date <= ?", @start_date, @end_date).order("date ASC")
+    logs = current_account.clothing_logs.where("date >= ? AND date <= ?", @start_date, @end_date).order("date ASC")
+    logger.info "CLOTHING LOGS: " + logs.inspect
     @clothes = Hash.new
     @logs = Hash.new
     @matches = Hash.new
@@ -184,7 +174,7 @@ class ClothingController < ApplicationController
     bottoms = Hash.new
     tops = Hash.new
     logs.each do |l|
-      @clothes[l.clothing_id] ||= Clothing.find(l.clothing_id)
+      @clothes[l.clothing_id] ||= current_account.clothing.find(l.clothing_id)
       @logs[l.clothing_id] ||= Hash.new
       @logs[l.clothing_id][l.date] = l
       tags = l.clothing.tag_list
@@ -222,29 +212,29 @@ class ClothingController < ApplicationController
   def graph
     authorize! :view_clothing, current_account
     # Create a bipartite graph of tops and bottoms
-    @tops = Clothing.tagged_with('top')
-    @bottoms = Clothing.tagged_with('bottom')
-    @start = params[:start] || ClothingLog.minimum(:date)
-    @end = params[:end] || ClothingLog.maximum(:date)
-    @matches = ClothingMatch.joins('INNER JOIN clothing_logs ON clothing_log_a_id = clothing_logs.id').where('clothing_a_id < clothing_b_id AND clothing_logs.date >= ? AND clothing_logs.date <= ?', @start, @end).count(:group => ['clothing_a_id', 'clothing_b_id'])
+    @tops = current_account.clothing.tagged_with('top')
+    @bottoms = current_account.clothing.tagged_with('bottom')
+    @start = params[:start] || current_account.clothing_logs.minimum(:date)
+    @end = params[:end] || current_account.clothing_logs.maximum(:date)
+    @matches = current_account.clothing_matches.joins('INNER JOIN clothing_logs ON clothing_log_a_id = clothing_logs.id').where('clothing_a_id < clothing_b_id AND clothing_logs.date >= ? AND clothing_logs.date <= ?', @start, @end).count(:group => ['clothing_a_id', 'clothing_b_id'])
   end
 
   def bulk
     authorize! :manage, current_account
     if params[:bulk] and params[:op] then
       params[:bulk].compact.each do |i|
-        clothing = Clothing.find(i)
+        clothing = current_account.clothing.find(i)
         case params[:op]
-          when 'Store'
+          when I18n.t('app.clothing.actions.store')
             clothing.status = 'stored'
-          when 'Activate'
+          when I18n.t('app.clothing.actions.activate')
             clothing.status = 'active'
-          when 'Donate'
+          when I18n.t('app.clothing.actions.donate')
             clothing.status = 'donated'
         end
         clothing.save
       end
     end
-    redirect_to :back and return
+    redirect_to params[:destination] || clothing_index_path
   end
 end
