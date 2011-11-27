@@ -46,15 +46,17 @@ Home::Application.routes.draw do
   match 'time/refresh' => 'time#refresh_from_csv', :as => :refresh_from_csv, :via => :post
   match 'time/refresh' => 'time#refresh', :as => :refresh_time
   resources :clothing do
-    get :autocomplete_clothing_name, :on => :collection
-    get :analyze, :on => :collection, :as => :clothing_analysis
-    get :graph, :on => :collection, :as => :clothing_graph
+    collection do
+      get :autocomplete_clothing_name
+      get :analyze
+      get :graph
+    end
   end
   resources :clothing_logs
   match 'clothing_logs/by_date/:date' => 'clothing_logs#by_date', :as => :clothing_logs_by_date
   match 'clothing/tag/:id' => 'clothing#tag', :as => :clothing_by_tag
   match 'clothing/status/:status' => 'clothing#by_status', :as => :clothing_by_status
-  match 'clothing/analyze/:start/:end' => 'clothing#analyze', :as => :clothing_analyze
+  match 'clothing/analyze(/:start(/:end))' => 'clothing#analyze', :as => :clothing_analyze
   match 'library/update' => 'library#update', :as => :library_refresh
   match 'summary' => 'home#summary', :as => :summary
   # The priority is based upon order of creation:

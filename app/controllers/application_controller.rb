@@ -42,6 +42,16 @@ class ApplicationController < ActionController::Base
   end  
 
   def after_sign_in_path_for(resource)
-    stored_location_for(resource) || root_url(resource, :subdomain => resource.username)
+    logger.info "LOG IN #{resource.inspect} #{resource.username}"
+    stored_location_for(resource) || root_url(:subdomain => resource.username)
+  end
+
+  def filter_sortable_column_order(list)
+    sortable_column_order do |column, direction|
+      if list.include? column
+        result = "#{column} #{direction}"
+      end
+    end
+    result ||= list.first
   end
 end
