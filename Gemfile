@@ -57,7 +57,7 @@ gem 'subdomain-fu', :git => "git://github.com/nhowell/subdomain-fu.git"
 group :development, :test do
   gem 'cucumber'
   gem 'hpricot'
-  gem 'webrat'
+  gem 'capybara'
   gem 'cucumber-rails'
   gem 'rspec'
   gem 'rcov'
