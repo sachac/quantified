@@ -3001,7 +3001,7 @@ label.label {
   font-size: 13px;
   line-height: 18px;
   float: left;
-  width: 130px;
+  width: 20%;
   text-align: right;
   color: #404040;
   background: white;
@@ -3015,45 +3015,61 @@ label.label {
   margin-bottom: 3px;
 }
 /* line 40, ../../app/stylesheets/application.sass */
-.formtastic li input {
+.formtastic li input, .formtastic li textarea {
   margin-left: 10px;
 }
 
 /* line 42, ../../app/stylesheets/application.sass */
-.formtastic .actions {
-  padding-left: 320px;
+form .input {
+  margin-left: 10px;
 }
 
 /* line 44, ../../app/stylesheets/application.sass */
+.formtastic .actions {
+  padding-left: 230px;
+}
+
+/* line 47, ../../app/stylesheets/application.sass */
+input, textarea, select, .uneditable-input {
+  width: 50%;
+}
+
+/* line 49, ../../app/stylesheets/application.sass */
 form .clear-fix {
   margin-bottom: 10px;
   zoom: 1;
 }
 
-/* line 47, ../../app/stylesheets/application.sass */
+/* line 52, ../../app/stylesheets/application.sass */
 .actions .btn {
   margin-right: 10px;
 }
 
-/* line 51, ../../app/stylesheets/application.sass */
+/* line 56, ../../app/stylesheets/application.sass */
 .category_label {
   text-align: right;
   display: block;
   float: left;
 }
 
-/* line 56, ../../app/stylesheets/application.sass */
+/* line 61, ../../app/stylesheets/application.sass */
 .category_detail {
   padding-top: 13px;
   margin-left: 170px;
 }
 
-/* line 60, ../../app/stylesheets/application.sass */
+/* line 65, ../../app/stylesheets/application.sass */
 .contexts .category_detail {
   padding-top: 0;
 }
 
-/* line 62, ../../app/stylesheets/application.sass */
+/* line 67, ../../app/stylesheets/application.sass */
 .category_detail .pills {
   margin-bottom: 0px;
+}
+
+/* line 69, ../../app/stylesheets/application.sass */
+a[data-method] {
+  color: green;
+  font-weight: bold;
 }

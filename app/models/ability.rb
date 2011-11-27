@@ -11,13 +11,17 @@ class Ability
         can :create, item
       end
       can :manage_account, User, :user_id => user.id
+      can :view_library_items, User
       can :view_contexts, User
+      can :view_time, User
     else # Not logged in
-      can :read, LibraryItem, :public => true
+      can :view, LibraryItem, :public => true
       can :view_contexts, User
     end
     can :view_dashboard, User
     can :view_clothing, User
+    can :view_time, User
+    can :view_library_items, User
     can :view, Clothing
   end
 end
