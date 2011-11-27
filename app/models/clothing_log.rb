@@ -12,6 +12,7 @@ class ClothingLog < ActiveRecord::Base
   after_destroy :delete_matches
 
   def update_matches
+    logger.info "Updating matches..."
     # Delete old matches
     ClothingMatch.recreate(self)
     Clothing.reset_counters self.clothing_id, :clothing_logs

@@ -6,11 +6,21 @@ en:
     user:
       login: track your life
       login_submit: Log in
+    clothing:
+      actions:
+        activate: Activate
+        store: Store
+        donate: Donate
     layout:
       full: Full
       mobile: Mobile
     error:
       nonexistent_account: Account does not exist.
+    general:
+      save: Save
+      delete: Delete
+      cancel: Cancel
+      are_you_sure: Are you sure?
   activerecord:
     attributes:
       user:
