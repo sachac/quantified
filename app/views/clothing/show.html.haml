@@ -1,5 +1,3 @@
-%p#notice= notice
-
 %nav
   %p
     - if @previous
@@ -10,9 +8,9 @@
 %h1
   = @clothing.name
   - if user_signed_in?
-    = link_to '(yesterday)', clothing_logs_path + "?clothing_id=" + @clothing.id.to_s + "&date=" + Date.yesterday.to_s, :method => :post
-    = link_to '(today)', clothing_logs_path + "?clothing_id=" + @clothing.id.to_s + "&date=" + Date.today.to_s, :method => :post
-    = link_to '(tomorrow)', clothing_logs_path + "?clothing_id=" + @clothing.id.to_s + "&date=" + Date.tomorrow.to_s, :method => :post
+    = link_to '(yesterday)', clothing_logs_path + "?clothing_id=" + @clothing.id.to_s + "&date=" + Date.yesterday.to_s, :method => :post, :class => 'btn'
+    = link_to '(today)', clothing_logs_path + "?clothing_id=" + @clothing.id.to_s + "&date=" + Date.today.to_s, :method => :post, :class => 'btn'
+    = link_to '(tomorrow)', clothing_logs_path + "?clothing_id=" + @clothing.id.to_s + "&date=" + Date.tomorrow.to_s, :method => :post, :class => 'btn'
 
 %p
   = @clothing.status
@@ -30,7 +28,7 @@
     = link_to t.name, clothing_by_tag_path(t.name)
 - unless @clothing.colour.nil?
   - colours = @clothing.colour.split(",")
-  %table  
+  %table.auto
     %tr
       %td
         = pluralize(colours.size, "Colour")
@@ -59,9 +57,9 @@
           .color-box{:style => "background: #{tr2.html}"}= tr2.html
 
 - if @previous_matches.size > 0
-  %p= render :partial => 'clothing_thumbnails', :locals => { :list => @previous_matches }
+  .previous_matches= render :partial => 'clothing_thumbnails', :locals => { :list => @previous_matches }
 - if @matches.size > 0
-  %p= render :partial => 'clothing_thumbnails', :locals => { :list => @matches }
+  .matches= render :partial => 'clothing_thumbnails', :locals => { :list => @matches }
 
 %p= @clothing.notes
 
