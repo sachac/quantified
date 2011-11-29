@@ -1,4 +1,8 @@
-%h1= current_user ? "All library items" : "Public library items"
+.clear_both
+%ul.pills
+  = link_to 'All', library_items_path
+  = link_to 'Current items', current_library_items_path
+  = link_to 'Library cards', toronto_libraries_path
 
 = link_to 'all', library_items_path
 \-
@@ -37,4 +41,3 @@
 
 %br
 
-= link_to 'New Library item', new_library_item_path

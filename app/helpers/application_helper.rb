@@ -12,7 +12,7 @@ module ApplicationHelper
         else	
 	  base = "small-#{clothing.id}.jpg"
       end
-      if File.exist?("#{RAILS_ROOT}/public/images/clothing/#{base}") then
+      if File.exist?("#{Rails.root}/public/images/clothing/#{base}") then
         image = "clothing/#{base}"
       else
         image = "clothing/clothing_unknown.jpg"
@@ -27,9 +27,9 @@ module ApplicationHelper
     end
     if clothing then
       if options[:size] == :tiny
-        link_to image_tag(clothing_image(clothing, options), :width => 27), options[:path] ? options[:path] : clothing_path(clothing), { :title => title }
+        link_to image_tag(clothing_image(clothing, options), :width => 27), options[:path] ? options[:path] : clothing_path(clothing), { :title => title, :class => "clothing_#{clothing.id}"}
       else
-        link_to image_tag(clothing_image(clothing, options)), options[:path] ? options[:path] : clothing_path(clothing), { :title => title }
+        link_to image_tag(clothing_image(clothing, options)), options[:path] ? options[:path] : clothing_path(clothing), { :title => title, :class => "clothing_#{clothing.id}"}
       end
     else
       "Unknown"
@@ -83,5 +83,47 @@ module ApplicationHelper
  
   def devise_mapping
     @devise_mapping ||= Devise.mappings[:user]
+  end
+
+  def title(title)
+    "<h2>" + title + "</h2>"
+  end
+
+  def move_stuff_link(stuff, location, destination = nil)
+    location_name = location.is_a?(String) ? location : location.name
+    link_to location_name, log_stuff_path(:stuff_name => stuff.name, :location_name => location_name, :destination => destination), :method => :post
+  end
+
+  def conditional_html( lang = "en", &block )
+    haml_concat Haml::Util::html_safe <<-"HTML".gsub( /^\s+/, '' )
+    <!--[if lt IE 7 ]>              <html lang="#{lang}" class="no-js ie6"> <![endif]-->
+    <!--[if IE 7 ]>                 <html lang="#{lang}" class="no-js ie7"> <![endif]-->
+    <!--[if IE 8 ]>                 <html lang="#{lang}" class="no-js ie8"> <![endif]-->
+    <!--[if IE 9 ]>                 <html lang="#{lang}" class="no-js ie9"> <![endif]-->
+    <!--[if (gte IE 9)|!(IE)]><!--> <html lang="#{lang}" class="no-js"> <!--<![endif]-->      
+  HTML
+    haml_concat capture( &block ) << Haml::Util::html_safe( "\n</html>" ) if block_given?
+  end
+
+  def actions(o)
+    actions = Array.new
+    if o.is_a? Memory
+      if can? :update, o
+        actions << link_to(I18n.t('app.general.edit'), edit_memory_path(o))
+        actions << link_to(I18n.t('app.general.delete'), o, :confirm => I18n.t('app.general.are_you_sure'), :method => :delete)
+      end
+    end
+  end
+
+  def tags(o)
+    o.tag_list.join(', ')
+  end
+
+  def action_list(o)
+    actions(o).join(' | ').html_safe
+  end
+  def access_collection
+    [[I18n.t('app.general.public'), 'public'],
+     [I18n.t('app.general.private'), 'private']]
   end
 end

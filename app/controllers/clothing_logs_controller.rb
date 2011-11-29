@@ -3,6 +3,7 @@ class ClothingLogsController < ApplicationController
   # GET /clothing_logs.xml
   before_filter :authenticate_user!, :except => [:index, :show, :by_date]
   def index
+    authorize! :view_clothing_logs, current_account
     @clothing_logs = current_account.clothing_logs.find(:all, :order => "date DESC, outfit_id DESC, clothing.clothing_type", :include => [:clothing])
     @by_date = Hash.new
     @clothing_logs.each do |l|
@@ -20,6 +21,7 @@ class ClothingLogsController < ApplicationController
   # GET /clothing_logs/1.xml
   def show
     @clothing_log = ClothingLog.find(params[:id])
+    authorize! :view, @clothing
 
     respond_to do |format|
       format.html # show.html.erb
@@ -31,6 +33,7 @@ class ClothingLogsController < ApplicationController
   # GET /clothing_logs/new.xml
   def new
     @clothing_log = ClothingLog.new
+    authorize! :create, ClothingLog
     @clothing_log.date = Time.now
     respond_to do |format|
       format.html # new.html.erb
@@ -41,11 +44,13 @@ class ClothingLogsController < ApplicationController
   # GET /clothing_logs/1/edit
   def edit
     @clothing_log = ClothingLog.find(params[:id])
+    authorize! :update, @clothing_log
   end
 
   # POST /clothing_logs
   # POST /clothing_logs.xml
   def create
+    authorize! :create, ClothingLog
     if (params[:clothing] && params[:clothing_id].blank?) then
       if params[:clothing].is_numeric? then
         @clothing = Clothing.where(:id => params[:clothing]).first
@@ -79,6 +84,7 @@ class ClothingLogsController < ApplicationController
   # PUT /clothing_logs/1.xml
   def update
     @clothing_log = ClothingLog.find(params[:id])
+    authorize! :update, @clothing_log
 
     respond_to do |format|
       if @clothing_log.update_attributes(params[:clothing_log])
@@ -95,6 +101,7 @@ class ClothingLogsController < ApplicationController
   # DELETE /clothing_logs/1.xml
   def destroy
     @clothing_log = ClothingLog.find(params[:id])
+    authorize! :destroy, @clothing_log
     @clothing_log.destroy
 
     respond_to do |format|

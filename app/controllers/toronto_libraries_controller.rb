@@ -2,7 +2,8 @@ class TorontoLibrariesController < ApplicationController
   # GET /toronto_libraries
   # GET /toronto_libraries.xml
   def index
-    @toronto_libraries = TorontoLibrary.all
+    @toronto_libraries = current_account.toronto_libraries
+    authorize! :manage_account, current_account
 
     respond_to do |format|
       format.html # index.html.erb
@@ -14,6 +15,7 @@ class TorontoLibrariesController < ApplicationController
   # GET /toronto_libraries/1.xml
   def show
     @toronto_library = TorontoLibrary.find(params[:id])
+    authorize! :manage_account, current_account
 
     respond_to do |format|
       format.html # show.html.erb
@@ -25,6 +27,7 @@ class TorontoLibrariesController < ApplicationController
   # GET /toronto_libraries/new.xml
   def new
     @toronto_library = TorontoLibrary.new
+    authorize! :manage_account, current_account
 
     respond_to do |format|
       format.html # new.html.erb
@@ -35,16 +38,18 @@ class TorontoLibrariesController < ApplicationController
   # GET /toronto_libraries/1/edit
   def edit
     @toronto_library = TorontoLibrary.find(params[:id])
+    authorize! :manage_account, current_account
   end
 
   # POST /toronto_libraries
   # POST /toronto_libraries.xml
   def create
     @toronto_library = TorontoLibrary.new(params[:toronto_library])
+    authorize! :manage_account, current_account
     @toronto_library.user = current_account
     respond_to do |format|
       if @toronto_library.save
-        format.html { redirect_to(@toronto_library, :notice => 'Toronto library was successfully created.') }
+        format.html { redirect_to(toronto_libraries_path, :notice => 'Library card was successfully created.') }
         format.xml  { render :xml => @toronto_library, :status => :created, :location => @toronto_library }
       else
         format.html { render :action => "new" }
@@ -57,10 +62,11 @@ class TorontoLibrariesController < ApplicationController
   # PUT /toronto_libraries/1.xml
   def update
     @toronto_library = TorontoLibrary.find(params[:id])
+    authorize! :manage_account, current_account
 
     respond_to do |format|
       if @toronto_library.update_attributes(params[:toronto_library])
-        format.html { redirect_to(@toronto_library, :notice => 'Toronto library was successfully updated.') }
+        format.html { redirect_to(@toronto_library, :notice => 'Library card was successfully updated.') }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }
@@ -73,6 +79,7 @@ class TorontoLibrariesController < ApplicationController
   # DELETE /toronto_libraries/1.xml
   def destroy
     @toronto_library = TorontoLibrary.find(params[:id])
+    authorize! :manage_account, current_account
     @toronto_library.destroy
 
     respond_to do |format|
