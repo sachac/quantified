@@ -6,6 +6,7 @@ en:
     user:
       login: track your life
       login_submit: Log in
+      logout: log out
     clothing:
       actions:
         activate: Activate
@@ -19,8 +20,15 @@ en:
     general:
       save: Save
       delete: Delete
+      edit: Edit
       cancel: Cancel
       are_you_sure: Are you sure?
+      public: Public
+      private: Private 
+    memory:
+      my_version: Share your version of events
+      link: Link this memory...
+      new_with_link: This makes me think of... 	   
   activerecord:
     attributes:
       user:
