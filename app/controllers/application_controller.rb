@@ -1,49 +1,57 @@
+require 'lib/exceptions'
 class ApplicationController < ActionController::Base
-  before_filter :authenticate_user!
-  before_filter :notice_layout!
+  include Exceptions
+  check_authorization :unless => :devise_controller?
+  protect_from_forgery
+  before_filter :before_awesome
+  helper_method :current_account  
+  
+  rescue_from NonexistentAccount do |e|
+    logger.info "NONEXISTENT #{current_subdomain}"
+    flash[:error] = I18n.t('app.error.nonexistent_account')
+    redirect_to root_url(:subdomain => false)
+  end
 
+  rescue_from CanCan::AccessDenied do |exception|
+    flash[:notice] = exception.message
+    redirect_to new_user_session_path
+  end
+
+  def before_awesome
+    notice_layout!
+    @account = current_account
+    true
+  end
   def notice_layout!
     if ['mobile', 'full'].include? params[:layout]
       session[:layout] = params[:layout]
     end
-  end
-  protect_from_forgery
-  MOBILE_BROWSERS = ["android", "ipod", "opera mini", "blackberry", "palm","hiptop","avantgo","plucker", "xiino","blazer","elaine", "windows ce; ppc;", "windows ce; smartphone;","windows ce; iemobile", "up.browser","up.link","mmp","symbian","smartphone", "midp","wap","vodafone","o2","pocket","kindle", "mobile","pda","psp","treo"]
-
-#  layout :select_layout
-  def select_layout
-    session.inspect # force session load
-    if session.has_key? "layout"
-      return (session["layout"] == "mobile") ? "mobile_application" : "application"
-    end
-    return mobile ? "mobile_application" : "application"
+    true
   end
 
-  protected
-  # http://stackoverflow.com/questions/1284169/mobile-version-of-views-for-ruby-on-rails
-  def mobile
-    agent = request.headers["HTTP_USER_AGENT"].downcase
-    MOBILE_BROWSERS.each do |m|
-      return m if agent.match(m)
-    end
-    false
-  end
-  
   def current_account
     if (current_subdomain.nil?)
-      @account = User.find_by_email('sacha@sachachua.com')
+      current_user || User.first
     else
-      @account ||= User.find_by_username(current_subdomain)  
+      u = User.find_by_username(current_subdomain)  
+      if u.nil? # nonexistent
+        raise NonexistentAccount
+      end
+      u
     end
   end  
-  # Make this method visible to views as well  
-  helper_method :current_account  
-    
-  # This is a before_filter we'll use in other controllers  
-  def account_required  
-    unless current_account  
-      flash[:error] = "Could not find the account '#{current_subdomain}'"  
-      redirect_to :controller => "home", :action => "index", :subdomain => false  
+
+  def after_sign_in_path_for(resource)
+    logger.info "LOG IN #{resource.inspect} #{resource.username}"
+    stored_location_for(resource) || root_url(:subdomain => resource.username)
+  end
+
+  def filter_sortable_column_order(list)
+    sortable_column_order do |column, direction|
+      if list.include? column
+        result = "#{column} #{direction}"
+      end
     end
-  end  
+    result ||= list.first
+  end
 end

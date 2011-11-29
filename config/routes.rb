@@ -1,4 +1,13 @@
 Home::Application.routes.draw do
+  resources :memories
+
+  resources :contexts do
+    member do
+      get :start
+      put :complete
+    end
+  end
+
   resources :measurement_logs
 
   resources :measurements
@@ -10,7 +19,11 @@ Home::Application.routes.draw do
   resources :days
 
   match 'csa_foods/bulk_update', :as => :bulk_update_csa_foods, :via => :post
-  resources :csa_foods 
+  resources :csa_foods do
+    collection do
+      post :quick_entry 
+    end
+  end
 
   resources :foods
 
@@ -20,6 +33,7 @@ Home::Application.routes.draw do
   resources :decision_logs
 
   resources :decisions
+  resources :toronto_libraries
   resources :library_items do
     get :tag, :on => :collection
     get :current, :on => :collection
@@ -34,15 +48,17 @@ Home::Application.routes.draw do
   match 'time/refresh' => 'time#refresh_from_csv', :as => :refresh_from_csv, :via => :post
   match 'time/refresh' => 'time#refresh', :as => :refresh_time
   resources :clothing do
-    get :autocomplete_clothing_name, :on => :collection
-    get :analyze, :on => :collection, :as => :clothing_analysis
-    get :graph, :on => :collection, :as => :clothing_graph
+    collection do
+      get :autocomplete_clothing_name
+      get :analyze
+      get :graph
+    end
   end
   resources :clothing_logs
   match 'clothing_logs/by_date/:date' => 'clothing_logs#by_date', :as => :clothing_logs_by_date
   match 'clothing/tag/:id' => 'clothing#tag', :as => :clothing_by_tag
   match 'clothing/status/:status' => 'clothing#by_status', :as => :clothing_by_status
-  match 'clothing/analyze/:start/:end' => 'clothing#analyze', :as => :clothing_analyze
+  match 'clothing/analyze(/:start(/:end))' => 'clothing#analyze', :as => :clothing_analyze
   match 'library/update' => 'library#update', :as => :library_refresh
   match 'summary' => 'home#summary', :as => :summary
   # The priority is based upon order of creation:

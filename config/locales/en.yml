@@ -2,6 +2,33 @@
 # See http://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
 
 en:
+  app:
+    user:
+      login: track your life
+      login_submit: Log in
+      logout: log out
+    clothing:
+      actions:
+        activate: Activate
+        store: Store
+        donate: Donate
+    layout:
+      full: Full
+      mobile: Mobile
+    error:
+      nonexistent_account: Account does not exist.
+    general:
+      save: Save
+      delete: Delete
+      edit: Edit
+      cancel: Cancel
+      are_you_sure: Are you sure?
+      public: Public
+      private: Private 
+    memory:
+      my_version: Share your version of events
+      link: Link this memory...
+      new_with_link: This makes me think of... 	   
   activerecord:
     attributes:
       user:

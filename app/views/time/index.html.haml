@@ -1,5 +1,8 @@
 - all_keys = (@summary["this_week"].keys | @summary["last_week"].keys | @summary["other_week"].keys).sort
-
+= link_to 'Graph', time_graph_path
+= link_to 'Clock', time_clock_path
+- if current_user == current_account
+  = link_to 'Upload data', refresh_time_path
 #block-text.block
   .content
     .inner
