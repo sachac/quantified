@@ -1,0 +1,17 @@
+%h1 Contexts
+
+%table
+  %tr
+    %th Name
+    %th Rules
+    %th
+    %th
+    %th
+
+  - @contexts.each do |context|
+    %tr
+      %td= link_to context.name, context
+      %td= context.rules
+
+- if can? :create, Context
+  = link_to 'New Context', new_context_path

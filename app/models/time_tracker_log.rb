@@ -1,11 +1,13 @@
 class TimeTrackerLog
   attr_accessor :calendar
+
   def initialize(account)
     @account = account
   end
-  def login
+
+  def login(username, password)
     @client = GData::Client::Calendar.new
-    @client.clientlogin('sacha@sachachua.com', 'Sbj9ork12!!')
+    @client.clientlogin(username, password)
     # Retrieve the list of calendars
     list = @client.get("https://www.google.com/calendar/feeds/default/owncalendars/full")
     # Find the calendar
@@ -16,6 +18,7 @@ class TimeTrackerLog
       end
     end
   end
+
   def clear(start_time, end_time)
     # Get rid of all records between start time and end time; This is
     # a little coarse, but I'll rely on the fact that I've trimmed the
@@ -136,7 +139,7 @@ class TimeTrackerLog
     end
     # Go back and fill in sleep
     days.each do |date,list|
-      days[date]['A - Sleep'] = 86400 - days_total[date].to_i
+      days[date]['A - Sleep'] = 86400 - days_total[date]
     end
     days
   end

@@ -2,13 +2,10 @@
 # I have to manually create my time graphs
 class TimeController < ApplicationController
   before_filter :authenticate_user!, :except => [:graph, :clock]
-  def refresh
-    # Challenge: Time Recording does not update old Google Calendar entries when you rename tasks
-    # Approach: Upload work unit CSV and replace entries covering that span of time
-  end
 
   # POST
   def refresh_from_csv
+    authorize! :manage_account, current_account
     @log = TimeTrackerLog.new(current_account)
     @log.login
     @log.refresh_from_csv(params[:file].tempfile)
@@ -16,16 +13,12 @@ class TimeController < ApplicationController
   end 
 
   def index
+    authorize! :view_time, current_account
     @log = TimeTrackerLog.new(current_account)
     base = Chronic.parse("last Saturday").midnight
     @limits = {"this_week" => [base, base + 1.week],
       "last_week" => [base - 1.week, base],
       "other_week" => [base - 2.weeks, base - 1.week]}
-    if params[:refresh] && @limits[params[:refresh]]
-      @log.login
-      @log.refresh(@limits[params[:refresh]][0], @limits[params[:refresh]][1])
-      redirect_to "/time" and return
-    end
     @summary = Hash.new
     # Current week
     @limits.each do |k,l|
@@ -39,6 +32,7 @@ class TimeController < ApplicationController
   end
 
   def graph
+    authorize! :view_time, current_account
     @day_height = 15;
     @width = 900
     @time_bottom = @height
@@ -165,6 +159,7 @@ class TimeController < ApplicationController
   end
 
   def clock
+    authorize! :view_time, current_account
     # Calculate the data
     params[:start] ||= (Date.today - 14.days).strftime('%Y-%m-%d')
     params[:end] ||= (Date.today - 8.day).strftime('%Y-%m-%d')
