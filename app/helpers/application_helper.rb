@@ -105,4 +105,25 @@ module ApplicationHelper
     haml_concat capture( &block ) << Haml::Util::html_safe( "\n</html>" ) if block_given?
   end
 
+  def actions(o)
+    actions = Array.new
+    if o.is_a? Memory
+      if can? :update, o
+        actions << link_to(I18n.t('app.general.edit'), edit_memory_path(o))
+        actions << link_to(I18n.t('app.general.delete'), o, :confirm => I18n.t('app.general.are_you_sure'), :method => :delete)
+      end
+    end
+  end
+
+  def tags(o)
+    o.tag_list.join(', ')
+  end
+
+  def action_list(o)
+    actions(o).join(' | ').html_safe
+  end
+  def access_collection
+    [[I18n.t('app.general.public'), 'public'],
+     [I18n.t('app.general.private'), 'private']]
+  end
 end

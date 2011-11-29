@@ -1,0 +1,9 @@
+%h2= @memory.name
+- if can? :update, Memory
+  = link_to 'Edit', edit_memory_path(@memory)
+= link_to 'Back', memories_path
+
+= simple_format @memory.body
+
+
+
