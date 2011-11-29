@@ -10,9 +10,9 @@ class ClothingMatch < ActiveRecord::Base
     if (object.is_a? ClothingLog) then
       ClothingLog.where('clothing_id != ? AND outfit_id = ? AND date = ?', object.clothing_id, object.outfit_id, object.date).each do |l|
         ClothingMatch.new(:clothing_a_id => object.clothing_id, :clothing_b_id => l.clothing_id, 
-          :clothing_log_a_id => object.id, :clothing_log_b_id => l.id).save
+          :clothing_log_a_id => object.id, :clothing_log_b_id => l.id, :user_id => object.user_id).save
         ClothingMatch.new(:clothing_b_id => object.clothing_id, :clothing_a_id => l.clothing_id, 
-          :clothing_log_b_id => object.id, :clothing_log_a_id => l.id).save
+          :clothing_log_b_id => object.id, :clothing_log_a_id => l.id, :user_id => object.user_id).save
       end
     else
       object.clothing_logs.each do |l|

@@ -15,6 +15,8 @@ class User < ActiveRecord::Base
   has_many :stuff
   has_many :time_records
   has_many :toronto_libraries
+  has_many :contexts
+  has_many :memories
   has_one :time_tracker_log
 
   validates :username, :exclusion => { :in => %w(admin superuser root www) }
