@@ -41,7 +41,7 @@ end
 
 Given /^I am logged in$/ do
   @user ||= Factory(:user)
-  visit root_path
+  visit root_path(:subdomain => @user.username)
   click_link I18n.t('app.user.login')
   fill_in 'Login', :with => @user.email
   fill_in 'Password', :with => @user.password
@@ -200,4 +200,97 @@ When /^I log in with my username$/ do
   fill_in "user[login]", :with => @user.username
   fill_in "user[password]", :with => @user.password
   click_button I18n.t('app.user.login_submit')
+end
+
+Given /^another user has the following memories:$/ do |table|
+  @other ||= Factory(:user)
+  table.hashes.each do |x|
+    Factory(:memory, :name => x['Title'], :body => x['Text'], :tag_list => x['Tags'],
+            :access => (x['Public'] || 'Yes').downcase == 'no' ? 'private' : 'public', :user => @other)
+  end
+end
+
+When /^I view a list of memories$/ do
+  visit memories_path
+end
+
+Then /^I should see "([^"]*)"$/ do |arg1|
+  page.should have_content arg1
+end
+
+When /^I log out$/ do
+  click_link I18n.t('app.user.logout')
+end
+
+Then /^I should not see "([^"]*)"$/ do |arg1|
+  page.should_not have_content arg1
+end
+
+When /^I create a memory with the following information:$/ do |table|
+  visit new_memory_path
+  table.hashes.each do |x|
+    fill_in 'memory[name]', :with => x['Title']
+    fill_in 'memory[body]', :with => x['Text']
+    fill_in 'memory[tag_list]', :with => x['Tags']
+    if (x['Public'] || 'Yes').downcase == 'no'
+      choose I18n.t('app.general.private'), :from => 'memory[access]'
+    end
+    click_button I18n.t('app.general.save')
+  end
+end
+
+When /^I view the "([^"]*)" memory$/ do |arg1|
+  m = Memory.find_by_name(arg1)
+  host! "#{m.user.username}.example.com"
+  Capybara.app_host = "http://#{m.user.username}.example.com"
+  visit memory_path(m)
+end
+
+When /^I create a linked memory with the following attributes:$/ do |table|
+  click_link I18n.t('app.memory.new_with_link')
+  table.hashes.each do |x|
+    fill_in 'memory[name]', :with => x['Title']
+    fill_in 'memory[body]', :with => x['Text']
+    fill_in 'memory[tag_list]', :with => x['Tags']
+    if (x['Public'] || 'Yes').downcase == 'no'
+      choose I18n.t('app.general.private'), :from => 'memory[access]'
+    end
+    click_button I18n.t('app.general.save')
+  end
+end
+
+Then /^I should see "([^"]*)" is a linked memory$/ do |arg1|
+  within ".memory_links" do
+    page.should have_content arg1
+  end
+end
+
+When /^I link it with "([^"]*)"$/ do |arg1|
+  click_link I18n.t('app.memory.link')
+  click_link arg1
+end
+
+Given /^I have the following memories:$/ do |table|
+  table.hashes.each do |x|
+    Factory(:memory, :name => x['Title'], :body => x['Text'], :tag_list => x['Tags'],
+            :access => (x['Public'] || 'Yes').downcase == 'no' ? 'private' : 'public', :user => @user)
+  end
+end
+
+When /^I say it happened differently with the following information:$/ do |table|
+  click_link I18n.t('app.memory.my_version')
+  table.hashes.each do |x|
+    fill_in 'memory[name]', :with => x['Name']
+    fill_in 'memory[body]', :with => x['Text']
+    fill_in 'memory[tag_list]', :with => x['Tags']
+    if (x['Public'] || 'Yes').downcase == 'no'
+      choose I18n.t('app.general.private'), :from => 'memory[access]'
+    end
+    click_button I18n.t('app.general.save')
+  end
+end
+
+When /^I am on my own subdomain$/ do
+  host! "#{@user.username}.example.com"
+  Capybara.app_host = "http://#{@user.username}.example.com"
 end
