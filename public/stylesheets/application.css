@@ -3015,7 +3015,7 @@ label.label {
   margin-bottom: 3px;
 }
 /* line 40, ../../app/stylesheets/application.sass */
-.formtastic li input, .formtastic li textarea {
+.formtastic li input, .formtastic li textarea, .formtastic li select {
   margin-left: 10px;
 }
 
@@ -3072,4 +3072,9 @@ form .clear-fix {
 a[data-method] {
   color: green;
   font-weight: bold;
+}
+
+/* line 72, ../../app/stylesheets/application.sass */
+.radio legend.label {
+  float: left;
 }

@@ -22,18 +22,11 @@ describe HomeController do
   before :each do
     @user = Factory(:user)
     as_user(@user)
-    @ability.can :manage, :all
   end
   describe "GET index" do
     it "lets me view the default user" do
       get :index
       assigns(:account).should == @user
-    end
-    it "lets me view a different user" do
-      @user2 = Factory(:user, :username => 'testnew')
-      controller.request.host = "testnew.example.com"
-      get :index
-      assigns(:account).should == @user2
     end
   end
 end
