@@ -3,7 +3,7 @@
   %head
     %title Quantified Awesome
     = stylesheet_link_tag "http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.8/themes/ui-lightness/jquery-ui.css"
-    = stylesheet_link_tag "web-app-theme/base", "web-app-theme/themes/warehouse/style", "formtastic", "web-app-theme/override", "application", :cache => true
+    = stylesheet_link_tag "web-app-theme/base", "web-app-theme/themes/warehouse/style", "formtastic", "web-app-theme/override", "application"
     = javascript_include_tag :defaults, :cache => true
     = csrf_meta_tag
     = javascript_include_tag "autocomplete-rails.js"
@@ -12,6 +12,11 @@
     :javascript
       $(function() { $('.sparkline-bar').sparkline('html', {type: 'bar', barColor: '#85acaa', chartRangeMin: 0}); });
   %body.full
+    - unless Rails.env.production?
+      .dev
+        This is the development site. Check out
+        = link_to 'the main site', 'http://quantifiedawesome.com'
+        for current data!
     #container{:class => @skip_sidebar ? 'no-sidebar' : 'has-sidebar'}
       #header
         %h1
