@@ -2,10 +2,8 @@
 - stuff_name ||= ''
 %p
   = form_tag log_stuff_path do
-    = link_to 'Stuff home', stuff_index_path
-    = label_tag :stuff_name, 'Stuff'
-    = text_field_tag :stuff_name, stuff_name, :autofocus => stuff_name.blank?
-    = label_tag :location, 'Location'
-    = text_field_tag :location_name, location_name, :autofocus => !stuff_name.blank?
+    Quick entry:
+    = text_field_tag :stuff_name, stuff_name, :autofocus => stuff_name.blank?, :placeholder => 'Stuff name'
+    = text_field_tag :location_name, location_name, :autofocus => !stuff_name.blank?, :placeholder => 'Stuff location'
     = submit_tag 'Update'
     

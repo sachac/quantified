@@ -5,8 +5,10 @@ class AddUserIdsToEverything < ActiveRecord::Migration
     [:clothing, :clothing_logs, :clothing_matches, :csa_foods, :days, :decision_logs, :decisions, :foods, :location_histories, :library_items, :locations, :measurement_logs, :measurements, :stuff, :time_records, :toronto_libraries].each do |sym|
       add_column sym, :user_id, :integer
       add_index sym, :user_id
-      # Assume all the data is mine in the beginning
-      sym.to_s.classify.constantize.update_all(['user_id=?', me.id])
+      if me
+        # Assume all the data is mine in the beginning
+        sym.to_s.classify.constantize.update_all(['user_id=?', me.id])
+      end
     end
   end
 

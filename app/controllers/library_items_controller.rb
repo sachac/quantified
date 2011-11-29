@@ -1,16 +1,16 @@
 class LibraryItemsController < ApplicationController
   handles_sortable_columns
   before_filter :authenticate_user!, :except => [:index, :show, :tag, :current]
-
   # GET /library_items
   # GET /library_items.xml
   def index
-    if can? :view_all, LibraryItem
-      @tags = LibraryItem.tag_counts_on(:tags).sort_by(&:name)
-      @library_items = LibraryItem.order('due DESC')
+    authorize! :view_library_items, current_account
+    if current_user == current_account
+      @tags = current_account.library_items.tag_counts_on(:tags).sort_by(&:name)
+      @library_items = current_account.library_items.order('due DESC')
     else
-      @tags = LibraryItem.where('public=1').tag_counts_on(:tags).sort_by(&:name)
-      @library_items = LibraryItem.where('public=1').order('due DESC')
+      @tags = current_account.library_items.where('public=1').tag_counts_on(:tags).sort_by(&:name)
+      @library_items = current_account.library_items.where('public=1').order('due DESC')
     end
     respond_to do |format|
       format.html # index.html.erb
@@ -22,7 +22,7 @@ class LibraryItemsController < ApplicationController
   # GET /library_items/1.xml
   def show
     @library_item = LibraryItem.find(params[:id])
-    authorize! :read, @library_item
+    authorize! :view, @library_item
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @library_item }
@@ -33,7 +33,8 @@ class LibraryItemsController < ApplicationController
   # GET /library_items/new.xml
   def new
     @library_item = LibraryItem.new
-    
+    authorize! :create, LibraryItem
+
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @library_item }
@@ -43,6 +44,7 @@ class LibraryItemsController < ApplicationController
   # GET /library_items/1/edit
   def edit
     @library_item = LibraryItem.find(params[:id])
+    authorize! :update, @library_item
     [:read_date, :status].each do |v|
       @library_item.send(v.to_s + '=', params[v]) if params[v]
     end
@@ -51,6 +53,7 @@ class LibraryItemsController < ApplicationController
   # POST /library_items
   # POST /library_items.xml
   def create
+    authorize! :create, LibraryItem
     @library_item = LibraryItem.new(params[:library_item])
     @library_item.user_id = current_account.id
     respond_to do |format|
@@ -68,6 +71,7 @@ class LibraryItemsController < ApplicationController
   # PUT /library_items/1.xml
   def update
     @library_item = LibraryItem.find(params[:id])
+    authorize! :update, @library_item
 
     respond_to do |format|
       if @library_item.update_attributes(params[:library_item])
@@ -84,6 +88,7 @@ class LibraryItemsController < ApplicationController
   # DELETE /library_items/1.xml
   def destroy
     @library_item = LibraryItem.find(params[:id])
+    authorize! :delete, @library_item
     @library_item.destroy
 
     respond_to do |format|
@@ -93,9 +98,10 @@ class LibraryItemsController < ApplicationController
   end
 
   def tag
+    authorize! :view_library_items, current_account
     # Show by tags
-    order = sortable_column_order
-    order ||= "due DESC"
+    params[:sort] ||= '-due'
+    order = filter_sortable_column_order %{due name status}
     if can? :view_all, LibraryItem
       @tags = LibraryItem.tag_counts_on(:tags).sort_by(&:name)
       @library_items = LibraryItem.tagged_with(params[:id]).order(order)
@@ -107,6 +113,7 @@ class LibraryItemsController < ApplicationController
   end
 
   def bulk
+    authorize :manage_account, current_account
     if params[:bulk] and params[:op] then
       params[:bulk].compact.each do |i|
         item = LibraryItem.find(i)
@@ -126,7 +133,12 @@ class LibraryItemsController < ApplicationController
   end
 
   def current
-    public_only = cannot? :view_all, LibraryItem
-    @library_items = LibraryItem.current_items(public_only)
+    authorize! :view_library_items, current_account
+    @library_items = current_account.library_items.where("(status = 'due' OR status IS NULL OR status = 'read')")
+    if current_account != current_user
+      @library_items = @library_items.where('public=1')
+    end
+    @tags = @library_items.tag_counts_on(:tags).sort_by(&:name)
+    @library_items = @library_items.order(:due, :status)
   end
 end
