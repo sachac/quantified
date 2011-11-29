@@ -97,3 +97,7 @@ ul, ol, dl {
 
 body #sidebar ul.navigation li a:link, body #sidebar ul.navigation li a:visited {
   padding-left: 0px; }
+
+.dev {
+  background: #ffc0c0;
+  padding: 5px; }
