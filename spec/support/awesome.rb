@@ -10,24 +10,23 @@ def login(user = nil, options = {})
   click_button I18n.t('app.user.login_submit')
 end
 def setup_ability
+  @user ||= Factory(:user)
   @ability = Object.new
   @ability.extend(CanCan::Ability)
   if defined? view
     view.stub(:current_ability) { @ability }
+    view.stub(:current_user) { @user }
+    view.stub(:current_account) { @user }
   end
   if defined? controller
     controller.stub(:current_ability) { @ability }
+    controller.stub(:current_user) { @user }
+    controller.stub(:current_account) { @user }
   end
 end
 def as_user(user = nil)
   user ||= Factory(:user)
   @user = user
-  if defined? controller
-    controller.stub(:current_user) { @user }
-  end
-  if defined? view
-    view.stub(:current_user) { @user }
-  end
   unless @ability
     setup_ability
   end

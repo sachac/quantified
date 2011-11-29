@@ -12,6 +12,6 @@ Feature: Clothing logs
       | 2011-11-01 | red shirt    |
       | 2011-11-01 | black pants  |
       | 2011-11-02 | blue shirt   |
-      | 2011-11-02 | khakhi pants |
+      | 2011-11-02 | khaki pants  |
       | 2011-11-03 | red shirt    |
       | 2011-11-03 | khaki pants |
