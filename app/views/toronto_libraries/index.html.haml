@@ -1,17 +1,19 @@
-%h1 Listing toronto_libraries
+%h1 Library cards
 
+= link_to 'New card', new_toronto_library_path
 %table
   %tr
+    %th Name
+    %th Card number
     %th
-    %th
-    %th
-
-  - @toronto_libraries.each do |toronto_library|
+  - @toronto_libraries.each do |card|
     %tr
-      %td= link_to 'Show', toronto_library
-      %td= link_to 'Edit', edit_toronto_library_path(toronto_library)
-      %td= link_to 'Destroy', toronto_library, :confirm => 'Are you sure?', :method => :delete
+      %td= link_to card.name, card
+      %td= card.card
+      %td
+        = link_to 'Edit', edit_toronto_library_path(card)
+        |
+        = link_to 'Delete', card, :confirm => 'Are you sure?', :method => :delete
 
-%br
 
-= link_to 'New Toronto library', new_toronto_library_path
+

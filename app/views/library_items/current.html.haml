@@ -1,3 +1,8 @@
+%ul.pills
+  = link_to 'All', library_items_path
+  = link_to 'Current items', current_library_items_path
+  = link_to 'Library cards', toronto_libraries_path
+
 - read = @library_items.where('status="read"').count
 - total = @library_items.count
 
