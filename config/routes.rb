@@ -1,4 +1,6 @@
 Home::Application.routes.draw do
+  resources :memories
+
   resources :contexts do
     member do
       get :start

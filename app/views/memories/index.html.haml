@@ -1,0 +1,21 @@
+%h1 Memories
+- if can? :create, Memory
+  = link_to 'New memory', new_memory_path
+
+%table
+  %tr
+    %th Name
+    %th Tags
+    - if can? :manage_account, current_account
+      %th
+
+  - @memories.each do |memory|
+    - if can? :view, memory
+      %tr
+        %td= link_to memory.name, memory
+        %td= tags memory
+        %td= action_list memory
+
+%br
+- if can? :create, Memory
+  = link_to 'New memory', new_memory_path
