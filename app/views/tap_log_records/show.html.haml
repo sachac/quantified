@@ -1,0 +1,25 @@
+%h1= l @tap_log_record.timestamp
+- if can? :update, @tap_log_record
+  = link_to 'Edit', edit_tap_log_record_path(@tap_log_record)
+  \|
+= link_to 'Back', tap_log_records_path
+
+%table
+  %tr
+    %td= t('formtastic.labels.tap_log_record.catOne')
+    %td= @tap_log_record.catOne
+  %tr
+    %td= t('formtastic.labels.tap_log_record.catTwo')
+    %td= @tap_log_record.catTwo
+  %tr
+    %td= t('formtastic.labels.tap_log_record.catThree')
+    %td= @tap_log_record.catThree
+  %tr
+    %td= t('formtastic.labels.tap_log_record.number')
+    %td= @tap_log_record.number
+  %tr
+    %td= t('formtastic.labels.tap_log_record.rating')
+    %td= @tap_log_record.rating
+  %tr
+    %td= t('formtastic.labels.tap_log_record.note')
+    %td= @tap_log_record.note
