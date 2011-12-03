@@ -5,6 +5,7 @@ class CsaFoodsController < ApplicationController
   # GET /csa_foods.xml
   def index
     @csa_foods = current_account.csa_foods.includes(:food).order('date_received DESC, disposition ASC')
+    authorize! :view_food, @csa_foods
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @csa_foods }
@@ -12,6 +13,7 @@ class CsaFoodsController < ApplicationController
   end
 
   def bulk_update
+    authorize! :manage_account, current_account
     if params[:bulk]
       params[:bulk].each do |key, val|
         current_account.csa_foods.find(key).update_attributes(:disposition => val)
@@ -24,6 +26,7 @@ class CsaFoodsController < ApplicationController
   def show
     @csa_food = CsaFood.find(params[:id])
 
+    authorize! :view, @csa_food
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @csa_food }
@@ -33,6 +36,7 @@ class CsaFoodsController < ApplicationController
   # GET /csa_foods/new
   # GET /csa_foods/new.xml
   def new
+    authorize! :manage_account, current_account
     @csa_food = CsaFood.new
     @csa_food.date_received = Date.today
     @csa_food.unit = 'g'
@@ -44,12 +48,14 @@ class CsaFoodsController < ApplicationController
 
   # GET /csa_foods/1/edit
   def edit
+    authorize! :manage_account, current_account
     @csa_food = CsaFood.find(params[:id])
   end
 
   # POST /csa_foods
   # POST /csa_foods.xml
   def create
+    authorize! :manage_account, current_account
     food = Food.find_by_name(params[:csa_food][:food_id])
     food = Food.find_by_name(params[:csa_food][:food_id].pluralize) unless food
     unless food
@@ -73,6 +79,7 @@ class CsaFoodsController < ApplicationController
   # PUT /csa_foods/1
   # PUT /csa_foods/1.xml
   def update
+    authorize! :manage_account, current_account
     @csa_food = CsaFood.find(params[:id])
 
     respond_to do |format|
@@ -89,6 +96,7 @@ class CsaFoodsController < ApplicationController
   # DELETE /csa_foods/1
   # DELETE /csa_foods/1.xml
   def destroy
+    authorize! :manage_account, current_account
     @csa_food = CsaFood.find(params[:id])
     @csa_food.destroy
 

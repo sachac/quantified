@@ -57,7 +57,7 @@ class TorontoLibrary < ActiveRecord::Base
         rec.due = item[:due]
         rec.updated_at = stamp
       else
-        rec = LibraryItem.create(item.merge(:user => current_account))
+        rec = LibraryItem.create(item.merge(:user => self.user))
         rec.checkout_date ||= Date.today
       end
       rec.status ||= item[:status]
