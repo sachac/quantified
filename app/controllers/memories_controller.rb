@@ -49,7 +49,7 @@ class MemoriesController < ApplicationController
 
     respond_to do |format|
       if @memory.save
-        format.html { redirect_to(memories_path, :notice => 'Memory was successfully created.') }
+        format.html { redirect_to(params[:destination].blank? ? memories_path : params[:destination], :notice => 'Memory was successfully created.') }
         format.xml  { render :xml => @memory, :status => :created, :location => @memory }
       else
         format.html { render :action => "new" }
