@@ -1,10 +1,5 @@
-<h2>Time versus probability of activity</h2>
-<%= form_tag do %>
-  Start: <%= text_field_tag :start, @start.strftime("%Y-%m-%d"), :class => 'datepicker' %>
-  End: <%= text_field_tag :end, @end.strftime("%Y-%m-%d"), :class => 'datepicker' %>
-  <%= submit_tag "Go" %>
-<% end %>
-<%= link_to 'View as bars', time_graph_path(:start => @start.strftime("%Y-%m-%d"), :end => @end.strftime("%Y-%m-%d")) %>
+<%= setup_page('clock', 'Time versus probability of activity') %>
+<%= render :partial => 'start_end_form' %>
 <%
    radius = 200
    margin_top = 20

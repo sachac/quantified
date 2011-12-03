@@ -1,0 +1,8 @@
+%ul.tabs
+  %li{:class => active_class(active, 'index')}= link_to 'Index', time_path
+  %li{:class => active_class(active, 'graph')}= link_to 'Graph', time_graph_path(:start => @start ? @start.strftime("%Y-%m-%d") : nil, :end => @end ? @end.strftime("%Y-%m-%d") : nil)
+  %li{:class => active_class(active, 'clock')}= link_to 'Clock', time_clock_path(:start => @start ? @start.strftime("%Y-%m-%d") : nil, :end => @end ? @end.strftime("%Y-%m-%d") : nil)
+  - if current_user == current_account
+    %li{:class => active_class(active, 'refresh')}= link_to 'Upload data', refresh_time_path
+  %li{:class => active_class(active, 'tap_logs')}= link_to 'Tap logs', tap_log_records_path
+      
