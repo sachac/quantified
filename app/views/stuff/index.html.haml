@@ -4,6 +4,14 @@
   %li.active= link_to 'Index', stuff_index_path
   - @contexts.each do |c|
     %li= link_to c.name, c
+%p
+  Status:
+  = link_to 'all', stuff_index_path(:status => 'all')
+  - statuses = current_account.stuff.select('DISTINCT(status)')
+  - statuses.each do |s|
+    - if s and !s.status.blank?
+      = link_to s.status, stuff_index_path(:status => s.status)
+
     
 = render :partial => 'quicklog'
 %table.lined
