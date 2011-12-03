@@ -1,0 +1,26 @@
+= setup_page 'tap_logs', 'Tap Log records', 'time/nav'
+
+.filters
+  = form_tag tap_log_records_path, :method => :get do
+    - ['catOne', 'catTwo', 'catThree'].each do |cat|
+      .clearfix
+        %label= I18n.t("formtastic.labels.tap_log_record.#{cat}")
+        .input
+          = select_tag cat, options_for_select([['', '']] + TapLogRecord.select("DISTINCT #{cat}").order(cat).collect { |x| [ x.send(cat), x.send(cat) ] }, params[cat.to_sym])
+    .actions   
+      = submit_tag t('app.general.filter'), :class => 'btn primary'
+
+  - @tap_log_records.each do |tap_log_record|
+    .tap_log_record
+      .metadata
+        .timestamp= if tap_log_record.timestamp then link_to l(tap_log_record.timestamp), tap_log_record end
+        .categories= tap_log_record.category_string
+        - if tap_log_record.number
+          .number= t('app.tap_log_record.number', :number => tap_log_record.number)
+        - if tap_log_record.rating
+          .rating= t('app.tap_log_record.rating', :rating => tap_log_record.rating)
+      - unless tap_log_record.note.blank?
+        .note= simple_format tap_log_record.note
+      
+    
+%br
