@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111129024218) do
+ActiveRecord::Schema.define(:version => 20111203171307) do
 
   create_table "clothing", :force => true do |t|
     t.string   "name"
@@ -276,6 +276,21 @@ ActiveRecord::Schema.define(:version => 20111129024218) do
 
   create_table "tags", :force => true do |t|
     t.string "name"
+  end
+
+  create_table "tap_log_records", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "tap_log_id"
+    t.datetime "timestamp"
+    t.string   "catOne"
+    t.string   "catTwo"
+    t.string   "catThree"
+    t.decimal  "number",     :precision => 10, :scale => 2
+    t.integer  "rating"
+    t.text     "note"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "status"
   end
 
   create_table "time_records", :force => true do |t|

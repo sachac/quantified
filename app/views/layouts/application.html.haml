@@ -1,7 +1,11 @@
 !!!
 %html
   %head
-    %title quantified awesome
+    %title
+      - if content_for? :title
+        = yield :title
+        \-
+      quantified awesome
     = stylesheet_link_tag "http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.8/themes/ui-lightness/jquery-ui.css"
     = stylesheet_link_tag "formtastic"
     = stylesheet_link_tag 'application', :media => 'screen, projection'              
@@ -24,15 +28,13 @@
           - else
             = link_to "quantified awesome", root_path, :class => 'brand'
           %ul.nav
-            %li= link_to 'dashboard', root_path
-            %li= link_to 'stuff', stuff_index_path
-            %li= link_to 'contexts', contexts_path
-            %li= link_to 'clothing', clothing_index_path
-            %li= link_to 'library', library_items_path
-            %li= link_to 'food', csa_foods_path
-            %li= link_to 'memories', memories_path
-            -#%li= link_to 'memories', memories_path
-            %li= link_to 'time', time_path
+            %li{:class => active_menu('/home/index')}= link_to 'dashboard', root_path
+            %li{:class => active_menu('/stuff')}= link_to 'stuff', stuff_index_path
+            %li{:class => active_menu('/clothing')}= link_to 'clothing', clothing_index_path
+            %li{:class => active_menu(['/library', '/toronto_library'])}= link_to 'library', library_items_path
+            %li{:class => active_menu(['/food', '/csa_food'])}= link_to 'food', csa_foods_path
+            %li{:class => active_menu('/memories')}= link_to 'memories', memories_path
+            %li{:class => active_menu(['/time', '/tap_log_records'])}= link_to 'time', time_path
             - if user_signed_in?
               %li= link_to t("web-app-theme.logout", :default => "log out"), destroy_user_session_path, :method => "delete"
             - else
@@ -45,6 +47,9 @@
           - flash.each do |type, message|
             %div{:class => "alert-message #{type}"}
               %p= message
+        - if content_for? :title
+          %h2
+            = yield :title
         = yield
       %footer
         .block
