@@ -1,6 +1,5 @@
 class TimeTrackerLog
   attr_accessor :calendar
-
   def initialize(account)
     @account = account
   end
@@ -114,6 +113,49 @@ class TimeTrackerLog
         create_record(e[:start], e[:end], e[:text])
       end
       # TODO Update Google Calendar also
+    end
+  end
+
+  def refresh_from_tap_log(file)
+    start = nil
+    entries = Array.new
+    unrecognized = Array.new
+    entry = Hash.new
+    min = nil
+    max = nil
+    FasterCSV.foreach(file, :headers => true) do |row|
+      x = TapLogRecord.where('user_id=? AND tap_log_id=?', @account.id, row['_id']).first
+      time = Time.zone.parse row['timestamp']
+      attributes = {:user => @account, :timestamp => time, :catOne => row['catOne'], :catTwo => row['catTwo'], :catThree => row['catThree'], :number => row['number'], :rating => row['rating'], :note => row['note'], :tap_log_id => row['_id']}
+      if time
+        if x
+          x.update_attributes(attributes)
+        else
+          x = TapLogRecord.create(attributes)
+        end
+        min ||= time
+        min = [min, time].min
+        max ||= time
+        max = [max, time].max
+      end
+    end
+    
+    last_time_record = nil
+    TapLogRecord.where('user_id=? AND timestamp >= ? AND timestamp <= ?', @account.id, min - 1.day, max).order('timestamp').each do |x|
+      puts x.to_s
+      if x.time_category
+        if last_time_record
+          entries << {:start => last_time_record.timestamp, :end => x.timestamp, :text => last_time_record.time_category}
+        end
+        last_time_record = x
+      end
+    end
+
+    if (!min.nil?) then
+      self.clear(min, max)
+      entries.each do |e|
+        create_record(e[:start], e[:end], e[:text])
+      end
     end
   end
 

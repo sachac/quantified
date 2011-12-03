@@ -85,10 +85,6 @@ module ApplicationHelper
     @devise_mapping ||= Devise.mappings[:user]
   end
 
-  def title(title)
-    "<h2>" + title + "</h2>"
-  end
-
   def move_stuff_link(stuff, location, destination = nil)
     location_name = location.is_a?(String) ? location : location.name
     link_to location_name, log_stuff_path(:stuff_name => stuff.name, :location_name => location_name, :destination => destination), :method => :post
@@ -126,4 +122,33 @@ module ApplicationHelper
     [[I18n.t('app.general.public'), 'public'],
      [I18n.t('app.general.private'), 'private']]
   end
+
+  def title(s)
+    content_for(:title) { s }
+  end
+  def setup_page(active, title, nav_file = 'nav')
+    title(title)
+    render :partial => nav_file, :locals => { :active => active }
+  end
+
+  def active_class(variable, value)
+    variable == value ? 'active' : 'inactive'
+  end
+
+  def active_menu(crumb)
+    active = nil
+    if crumb.is_a? Array
+      crumb.each do |a|
+        if request.fullpath.start_with? a
+          active = true
+        end
+      end
+    elsif crumb.is_a? Regexp and crumb.match request.fullpath
+      active = true
+    elsif request.fullpath.start_with? crumb
+      active = true
+    end
+    active ? 'active' : 'inactive'
+  end
+
 end
