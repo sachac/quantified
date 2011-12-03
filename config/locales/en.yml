@@ -3,6 +3,9 @@
 
 en:
   app:
+    tap_log_record:
+      number: "Number: %{number}"
+      rating: "Rating: %{rating}"
     user:
       login: track your life
       login_submit: Log in
@@ -20,6 +23,8 @@ en:
     general:
       save: Save
       delete: Delete
+      filter: Filter
+      submit: Submit 
       edit: Edit
       cancel: Cancel
       are_you_sure: Are you sure?
@@ -33,3 +38,9 @@ en:
     attributes:
       user:
         username: "Username or email"
+  formtastic:
+    labels:
+      tap_log_record:
+        catOne: Category 1
+        catTwo: Category 2
+        catThree: Category 3
