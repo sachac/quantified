@@ -47,7 +47,7 @@ Home::Application.routes.draw do
   match 'clothing/bulk', :as => :clothing_bulk, :via => :post
   match 'library_items/bulk', :as => :library_item_bulk, :via => :post
 
-  match 'time' => 'time#index'
+  match 'time' => 'time#graph'
   match 'time/graph(/:start(/:end))' => 'time#graph', :as => :time_graph
   match 'time/clock(/:start(/:end))' => 'time#clock', :as => :time_clock
   match 'time/refresh' => 'time#refresh_from_csv', :as => :refresh_from_csv, :via => :post
