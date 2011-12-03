@@ -18,25 +18,30 @@
     .actions   
       = submit_tag t('app.general.filter'), :class => 'btn primary'
 
-  - @tap_log_records.each do |tap_log_record|
-    .tap_log_record
-      .metadata
-        .timestamp= if tap_log_record.timestamp then link_to l(tap_log_record.timestamp), tap_log_record end
-        .categories
-          = tap_log_record.category_string
-          - if tap_log_record.status
-            .status= tap_log_record.status
-          - if tap_log_record.private?
-            .private= t('app.general.private')
-        - if tap_log_record.number
-          .number= t('app.tap_log_record.number', :number => tap_log_record.number)
-        - if tap_log_record.rating
-          .rating= t('app.tap_log_record.rating', :rating => tap_log_record.rating)
-      - unless tap_log_record.note.blank? or !can? :view_note, tap_log_record
-        .note= simple_format tap_log_record.note
-        - if can? :manage_account, @account
-          - note = tap_log_record.note
-          - if note =~ /!memory/i
-            = link_to t('app.tap_log_record.copy_memory'), copy_to_memory_tap_log_record_path(tap_log_record, :destination => request.fullpath), :method => :post
-    
-%br
+  %table.condensed-table.zebra-striped
+    %thead
+      %tr
+        %th Timestamp
+        %th Categories
+        %th Data
+    %tbody
+      - @tap_log_records.each do |tap_log_record|
+        %tr.tap_log_record
+          %td.timestamp= if tap_log_record.timestamp then link_to l(tap_log_record.timestamp), tap_log_record end
+          %td.categories
+            = tap_log_record.category_string
+          %td    
+            - if tap_log_record.status
+              .status= tap_log_record.status
+            - if tap_log_record.private?
+              .private= t('app.general.private')
+            - if tap_log_record.number
+              .number= t('app.tap_log_record.number', :number => tap_log_record.number)
+            - if tap_log_record.rating
+              .rating= t('app.tap_log_record.rating', :rating => tap_log_record.rating)
+            - unless tap_log_record.note.blank? or !can? :view_note, tap_log_record
+              .note= simple_format tap_log_record.note
+              - if can? :manage_account, @account
+                - note = tap_log_record.note
+                - if note =~ /!memory/i
+                  = link_to t('app.tap_log_record.copy_memory'), copy_to_memory_tap_log_record_path(tap_log_record, :destination => request.fullpath), :method => :post
