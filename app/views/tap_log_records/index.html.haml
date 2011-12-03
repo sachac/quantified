@@ -30,11 +30,8 @@
           %td.timestamp= if tap_log_record.timestamp then link_to l(tap_log_record.timestamp), tap_log_record end
           %td.categories
             = tap_log_record.category_string
-          %td    
-            - if tap_log_record.status
-              .status= tap_log_record.status
-            - if tap_log_record.private?
-              .private= t('app.general.private')
+          %td
+            = object_labels(tap_log_record)
             - if tap_log_record.number
               .number= t('app.tap_log_record.number', :number => tap_log_record.number)
             - if tap_log_record.rating
