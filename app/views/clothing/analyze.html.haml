@@ -52,7 +52,7 @@
         %th= clothing_thumbnail(clothing)
       - else
         %th &nbsp;
-  - @matches.each do |id, top_list|
+  - @sorted_matches.each do |id, top_list|
     %tr 
       %th= id == 0 ? "By itself" : clothing_thumbnail(@clothes[id])
       - @tops.each do |top_id, t|

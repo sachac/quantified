@@ -7,10 +7,17 @@ class TimeController < ApplicationController
   def refresh_from_csv
     authorize! :manage_account, current_account
     @log = TimeTrackerLog.new(current_account)
-    @log.login
-    @log.refresh_from_csv(params[:file].tempfile)
+    if params[:file]
+      @log.refresh_from_csv(params[:file].tempfile)
+    elsif params[:tap_file]
+      @log.refresh_from_tap_log(params[:tap_file].tempfile.path)
+    end
     redirect_to :action => "graph"
   end 
+
+  def refresh
+    authorize! :manage_account, current_account
+  end
 
   def index
     authorize! :view_time, current_account
@@ -36,9 +43,9 @@ class TimeController < ApplicationController
     @day_height = 15;
     @width = 900
     @time_bottom = @height
-    @start = (!params[:start].blank? ? Time.parse(params[:start]) : Date.new(Date.today.year, Date.today.month, 1)).midnight
-    @end = (!params[:end].blank? ? Time.parse(params[:end]) : Time.zone.now).midnight
-    @height = (@day_height * (@end - @start) / 86400.0).to_i
+    @start = (!params[:start].blank? ? Time.zone.parse(params[:start]) : (current_account.time_records.maximum('end_time') || Date.today) - 1.week).in_time_zone.midnight
+    @end = (!params[:end].blank? ? Time.zone.parse(params[:end]) : (current_account.time_records.maximum('end_time') || Date.today)).in_time_zone.midnight
+    @height = (@day_height * (1 + (@end - @start) / 1.day)).to_i
     entries = current_account.time_records.find(:all, :conditions => ["start_time >= ? AND start_time < ?", @start, @end], :order => "start_time")
     total_time = (@end - @start).to_f
     @time_records = Array.new
