@@ -6,6 +6,7 @@ en:
     tap_log_record:
       number: "Number: %{number}"
       rating: "Rating: %{rating}"
+      copy_memory: Copy into memory       
     user:
       login: track your life
       login_submit: Log in

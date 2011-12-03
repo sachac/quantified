@@ -25,4 +25,7 @@ class TapLogRecord < ActiveRecord::Base
   def category_string
     [self.catOne, self.catTwo, self.catThree].compact.join ' > '
   end
+  def private?
+    (self.note || '').downcase =~ /private/
+  end
 end
