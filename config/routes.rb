@@ -8,7 +8,11 @@ Home::Application.routes.draw do
     end
   end
 
-  resources :tap_log_records
+  resources :tap_log_records do
+    member do
+      post :copy_to_memory
+    end
+  end
   resources :measurement_logs
 
   resources :measurements
