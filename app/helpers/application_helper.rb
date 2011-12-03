@@ -101,12 +101,24 @@ module ApplicationHelper
     haml_concat capture( &block ) << Haml::Util::html_safe( "\n</html>" ) if block_given?
   end
 
+  def object_labels(o)
+    labels = Array.new
+    if o.respond_to? :status and o.status
+      labels << '<span class="status">' + o.status + '</span>'
+    end
+    if o.respond_to? :private? and o.private?
+      labels << '<span class="private">' + I18n.t('app.general.private') + '</span>'
+    end
+    labels.join('').html_safe
+  end
   def actions(o)
     actions = Array.new
     if o.is_a? Memory
       if can? :update, o
         actions << link_to(I18n.t('app.general.edit'), edit_memory_path(o))
         actions << link_to(I18n.t('app.general.delete'), o, :confirm => I18n.t('app.general.are_you_sure'), :method => :delete)
+      else
+        actions << link_to(I18n.t('app.general.view'), memory_path(o))
       end
     end
   end

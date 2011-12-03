@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "memories/edit.html.haml" do
   before(:each) do
-    @memory = assign(:memory, stub_model(Memory))
+    @memory = assign(:memory, Factory(:memory))
   end
 
   it "renders the edit memory form" do
