@@ -1,0 +1,7 @@
+date:
+  formats:
+    default: "%a %Y-%m-%d"
+time:
+  formats:
+    default: "%a %Y-%m-%d %-I:%M%p"
+    

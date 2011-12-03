@@ -1,5 +1,5 @@
 = link_to 'Contexts', contexts_path
-= title(@context.name).html_safe
+= title @context.name
 
 - if @out_of_place.length > 0
   %h3 Stuff out of place

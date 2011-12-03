@@ -54,6 +54,7 @@ gem 'mechanize'
 gem 'rails-settings-cached', :require => 'rails-settings'
 gem 'color'
 gem 'subdomain-fu', :git => "git://github.com/nhowell/subdomain-fu.git"
+gem 'fastercsv'
 group :development, :test do
   gem 'cucumber'
   gem 'hpricot'

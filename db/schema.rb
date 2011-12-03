@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111129024218) do
+ActiveRecord::Schema.define(:version => 20111203171307) do
 
   create_table "clothing", :force => true do |t|
     t.string   "name"
@@ -144,7 +144,7 @@ ActiveRecord::Schema.define(:version => 20111129024218) do
     t.string   "isbn"
     t.boolean  "public"
     t.text     "notes"
-    t.decimal  "price"
+    t.decimal  "price",              :precision => 10, :scale => 0
     t.integer  "pages"
     t.integer  "user_id"
   end
@@ -193,7 +193,7 @@ ActiveRecord::Schema.define(:version => 20111129024218) do
     t.integer  "measurement_id"
     t.datetime "datetime"
     t.text     "notes"
-    t.decimal  "value"
+    t.decimal  "value",          :precision => 10, :scale => 0
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "user_id"
@@ -205,12 +205,12 @@ ActiveRecord::Schema.define(:version => 20111129024218) do
     t.string   "name"
     t.text     "notes"
     t.string   "unit"
-    t.decimal  "average"
-    t.decimal  "max"
-    t.decimal  "min"
+    t.decimal  "average",    :precision => 10, :scale => 0
+    t.decimal  "max",        :precision => 10, :scale => 0
+    t.decimal  "min",        :precision => 10, :scale => 0
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.decimal  "sum"
+    t.decimal  "sum",        :precision => 10, :scale => 0
     t.integer  "user_id"
   end
 
@@ -242,7 +242,7 @@ ActiveRecord::Schema.define(:version => 20111129024218) do
   create_table "stuff", :force => true do |t|
     t.string   "name"
     t.string   "status"
-    t.decimal  "price"
+    t.decimal  "price",              :precision => 10, :scale => 0
     t.date     "purchase_date"
     t.text     "notes"
     t.string   "long_name"
@@ -276,6 +276,21 @@ ActiveRecord::Schema.define(:version => 20111129024218) do
 
   create_table "tags", :force => true do |t|
     t.string "name"
+  end
+
+  create_table "tap_log_records", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "tap_log_id"
+    t.datetime "timestamp"
+    t.string   "catOne"
+    t.string   "catTwo"
+    t.string   "catThree"
+    t.decimal  "number",     :precision => 10, :scale => 2
+    t.integer  "rating"
+    t.text     "note"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "status"
   end
 
   create_table "time_records", :force => true do |t|
