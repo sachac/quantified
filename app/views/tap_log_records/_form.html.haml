@@ -1,0 +1,10 @@
+= form_for @tap_log_record do |f|
+  -if @tap_log_record.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@tap_log_record.errors.count, "error")} prohibited this tap_log_record from being saved:"
+      %ul
+        - @tap_log_record.errors.full_messages.each do |msg|
+          %li= msg
+
+  .actions
+    = f.submit 'Save'
