@@ -1,9 +1,6 @@
 %h1
   = l @tap_log_record.timestamp
-  - if @tap_log_record.status
-    .status= @tap_log_record.status
-  - if @tap_log_record.private?
-    .private= t('app.general.private')
+  = object_labels @tap_log_record
 - if can? :update, @tap_log_record
   = link_to 'Edit', edit_tap_log_record_path(@tap_log_record)
   \|

@@ -21,20 +21,19 @@ require 'spec_helper'
 describe MemoriesController do
   before :each do
     as_user
-    @ability.can :manage, Memory
-    @ability.can :view_memories, User
+    @ability.can :manage, :all
   end
 
   # This should return the minimal set of attributes required to create a valid
   # Memory. As you add validations to Memory, be sure to
   # update the return value of this method accordingly.
   def valid_attributes
-    Factory.attributes_for(:memory)
+    Factory.attributes_for(:memory, :user => @user)
   end
 
   describe "GET index" do
     it "assigns all memories as @memories" do
-      memory = Factory(:memory, :user => @user)
+      memory = Memory.create! valid_attributes
       get :index
       assigns(:memories).should eq([memory])
     end
