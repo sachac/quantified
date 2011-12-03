@@ -3,9 +3,11 @@ class LibraryController < ApplicationController
 
   def index
     @items = LibraryItem.all
+    authorize! :manage_account, current_account
   end
 
   def update
+    authorize! :manage_account, current_account
     TorontoLibrary.all.each do |l|
       l.refresh_items
     end
