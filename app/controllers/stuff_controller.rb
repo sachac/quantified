@@ -15,7 +15,13 @@ class StuffController < ApplicationController
         "name DESC"
       end
     end
-    @stuff = current_account.stuff.where('status=?', 'active').order(order).includes(:location)
+    @stuff = current_account.stuff.order(order).includes(:location)
+    if params[:status] and params[:status] != 'all'
+      @stuff = @stuff.where('status=?', 'stuff')
+    else
+      @stuff = @stuff.where('status=? OR status IS NULL', 'active')
+    end
+
     @contexts = current_account.contexts.order('name')
     respond_to do |format|
       format.html # index.html.erb
@@ -26,7 +32,7 @@ class StuffController < ApplicationController
   def log
     @stuff = Stuff.find(:first, :conditions => [ 'lower(name) = ?', params[:stuff_name].strip.downcase ])
     unless @stuff
-      @stuff = Stuff.new(:name => params[:stuff_name].strip)
+      @stuff = Stuff.new(:name => params[:stuff_name].strip, :status => 'active')
       @stuff.user = current_account
     end
     @location = current_account.get_location(params[:location_name])
