@@ -25,7 +25,8 @@ en:
       save: Save
       delete: Delete
       filter: Filter
-      submit: Submit 
+      submit: Submit
+      view: View
       edit: Edit
       cancel: Cancel
       are_you_sure: Are you sure?
