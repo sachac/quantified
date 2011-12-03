@@ -3,7 +3,15 @@ class MemoriesController < ApplicationController
   # GET /memories.xml
   def index
     authorize! :view_memories, current_account
-    @memories = current_account.memories
+    if can? :manage_account, current_account
+      @memories = current_account.memories
+    else
+      @memories = current_account.memories.where('access=?', 'public')
+    end
+    @tags = @memories.tag_counts_on(:tags).sort_by(&:name)
+    if params[:tag] 
+      @memories = @memories.tagged_with(params[:tag])
+    end
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @memories }
