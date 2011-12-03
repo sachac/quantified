@@ -4,9 +4,17 @@
   = form_tag tap_log_records_path, :method => :get do
     - ['catOne', 'catTwo', 'catThree'].each do |cat|
       .clearfix
-        %label= I18n.t("formtastic.labels.tap_log_record.#{cat}")
+        = label_tag cat.to_sym, I18n.t("formtastic.labels.tap_log_record.#{cat}")
         .input
-          = select_tag cat, options_for_select([['', '']] + TapLogRecord.select("DISTINCT #{cat}").order(cat).collect { |x| [ x.send(cat), x.send(cat) ] }, params[cat.to_sym])
+          = select_tag cat.to_sym, options_for_select([['', '']] + TapLogRecord.select("DISTINCT #{cat}").order(cat).collect { |x| [ x.send(cat), x.send(cat) ] }, params[cat.to_sym])
+    .clearfix
+      = label_tag :status, "Status"
+      .input
+        = select_tag :status, options_for_select([['', '']] + TapLogRecord.select("DISTINCT status").order('status').collect { |x| [ x.send('status'), x.send('status') ] }, params[:status])
+    .clearfix
+      = label_tag :filter, "Filter"
+      .input
+        = text_field_tag :filter_string, params[:filter_string]
     .actions   
       = submit_tag t('app.general.filter'), :class => 'btn primary'
 
@@ -14,13 +22,21 @@
     .tap_log_record
       .metadata
         .timestamp= if tap_log_record.timestamp then link_to l(tap_log_record.timestamp), tap_log_record end
-        .categories= tap_log_record.category_string
+        .categories
+          = tap_log_record.category_string
+          - if tap_log_record.status
+            .status= tap_log_record.status
+          - if tap_log_record.private?
+            .private= t('app.general.private')
         - if tap_log_record.number
           .number= t('app.tap_log_record.number', :number => tap_log_record.number)
         - if tap_log_record.rating
           .rating= t('app.tap_log_record.rating', :rating => tap_log_record.rating)
-      - unless tap_log_record.note.blank?
+      - unless tap_log_record.note.blank? or !can? :view_note, tap_log_record
         .note= simple_format tap_log_record.note
-      
+        - if can? :manage_account, @account
+          - note = tap_log_record.note
+          - if note =~ /!memory/i
+            = link_to t('app.tap_log_record.copy_memory'), copy_to_memory_tap_log_record_path(tap_log_record, :destination => request.fullpath), :method => :post
     
 %br
