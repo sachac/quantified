@@ -1,4 +1,11 @@
-%h1 Memories
+= title params[:tag] ? "Memories: #{params[:tag]}" : "Memories"
+
+- if @tags
+  Tags:
+  = link_to 'all', memories_path
+  - tag_cloud(@tags, %w(css1 css2 css3 css4)) do |tag, css_class| 
+    = link_to tag.name, { :action => :index, :tag => tag.name }, :class => css_class
+
 - if can? :create, Memory
   = link_to 'New memory', new_memory_path
 
@@ -6,13 +13,14 @@
   %tr
     %th Name
     %th Tags
-    - if can? :manage_account, current_account
-      %th
+    %th
 
   - @memories.each do |memory|
     - if can? :view, memory
       %tr
-        %td= link_to memory.name, memory
+        %td
+          = link_to memory.name, memory
+          = object_labels(memory)
         %td= tags memory
         %td= action_list memory
 
