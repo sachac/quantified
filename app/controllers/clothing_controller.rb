@@ -205,7 +205,7 @@ class ClothingController < ApplicationController
         end
       end
     end
-    @matches = @matches.sort
+    @sorted_matches = @matches.sort
     @tops = @tops.sort
   end
 

@@ -3020,61 +3020,73 @@ label.label {
 }
 
 /* line 42, ../../app/stylesheets/application.sass */
-form .input {
-  margin-left: 10px;
-}
-
-/* line 44, ../../app/stylesheets/application.sass */
 .formtastic .actions {
   padding-left: 230px;
 }
 
-/* line 47, ../../app/stylesheets/application.sass */
+/* line 45, ../../app/stylesheets/application.sass */
 input, textarea, select, .uneditable-input {
   width: 50%;
 }
 
-/* line 49, ../../app/stylesheets/application.sass */
+/* line 47, ../../app/stylesheets/application.sass */
 form .clear-fix {
   margin-bottom: 10px;
   zoom: 1;
 }
 
-/* line 52, ../../app/stylesheets/application.sass */
+/* line 50, ../../app/stylesheets/application.sass */
 .actions .btn {
   margin-right: 10px;
 }
 
-/* line 56, ../../app/stylesheets/application.sass */
+/* line 54, ../../app/stylesheets/application.sass */
 .category_label {
   text-align: right;
   display: block;
   float: left;
 }
 
-/* line 61, ../../app/stylesheets/application.sass */
+/* line 59, ../../app/stylesheets/application.sass */
 .category_detail {
   padding-top: 13px;
   margin-left: 170px;
 }
 
-/* line 65, ../../app/stylesheets/application.sass */
+/* line 63, ../../app/stylesheets/application.sass */
 .contexts .category_detail {
   padding-top: 0;
 }
 
-/* line 67, ../../app/stylesheets/application.sass */
+/* line 65, ../../app/stylesheets/application.sass */
 .category_detail .pills {
   margin-bottom: 0px;
 }
 
-/* line 69, ../../app/stylesheets/application.sass */
+/* line 67, ../../app/stylesheets/application.sass */
 a[data-method] {
   color: green;
   font-weight: bold;
 }
 
-/* line 72, ../../app/stylesheets/application.sass */
+/* line 70, ../../app/stylesheets/application.sass */
 .radio legend.label {
   float: left;
+}
+
+/* line 72, ../../app/stylesheets/application.sass */
+.tap_log_record {
+  padding-left: 200px;
+  border-bottom: 1px solid #cccccc;
+}
+/* line 75, ../../app/stylesheets/application.sass */
+.tap_log_record .timestamp {
+  width: 180px;
+  float: left;
+  text-align: right;
+  margin-left: -200px;
+}
+/* line 80, ../../app/stylesheets/application.sass */
+.tap_log_record .categories {
+  font-weight: bold;
 }
