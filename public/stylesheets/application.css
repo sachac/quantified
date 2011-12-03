@@ -3079,30 +3079,23 @@ a[data-method] {
   float: left;
 }
 
-/* line 74, ../../app/stylesheets/application.sass */
-.tap_log_record {
-  padding-left: 200px;
-  border-bottom: 1px solid #cccccc;
-}
-/* line 77, ../../app/stylesheets/application.sass */
+/* line 75, ../../app/stylesheets/application.sass */
 .tap_log_record .timestamp {
-  width: 180px;
-  float: left;
+  width: 150px;
   text-align: right;
-  margin-left: -200px;
 }
-/* line 82, ../../app/stylesheets/application.sass */
+/* line 78, ../../app/stylesheets/application.sass */
 .tap_log_record .categories {
-  font-weight: bold;
+  width: 200px;
 }
 
-/* line 85, ../../app/stylesheets/application.sass */
+/* line 81, ../../app/stylesheets/application.sass */
 .status {
   font-weight: normal;
   display: inline;
 }
 
-/* line 89, ../../app/stylesheets/application.sass */
+/* line 85, ../../app/stylesheets/application.sass */
 .private {
   font-weight: normal;
   display: inline;
