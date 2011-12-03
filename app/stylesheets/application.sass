@@ -23,6 +23,8 @@ a
   width: auto
 .formtastic fieldset.inputs ol
   list-style: none
+li.input
+  margin-left: 0px
 label.label
   padding-top: 6px
   font-size: 13px
@@ -70,13 +72,17 @@ a[data-method]
 .radio legend.label
   float: left
 .tap_log_record
-  padding-left: 200px
-  border-bottom: 1px solid #ccc
   .timestamp
-    width: 180px
-    float: left
+    width: 150px
     text-align: right
-    margin-left: -200px
   .categories
-    font-weight: bold
+    width: 200px	
   .note
+.status
+  font-weight: normal
+  display: inline
+  @extend .label
+.private
+  font-weight: normal
+  display: inline
+  @extend .label

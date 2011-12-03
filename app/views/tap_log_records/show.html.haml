@@ -1,4 +1,9 @@
-%h1= l @tap_log_record.timestamp
+%h1
+  = l @tap_log_record.timestamp
+  - if @tap_log_record.status
+    .status= @tap_log_record.status
+  - if @tap_log_record.private?
+    .private= t('app.general.private')
 - if can? :update, @tap_log_record
   = link_to 'Edit', edit_tap_log_record_path(@tap_log_record)
   \|
@@ -20,6 +25,7 @@
   %tr
     %td= t('formtastic.labels.tap_log_record.rating')
     %td= @tap_log_record.rating
-  %tr
-    %td= t('formtastic.labels.tap_log_record.note')
-    %td= @tap_log_record.note
+  - if can? :view_note, @tap_log_record  
+    %tr
+      %td= t('formtastic.labels.tap_log_record.note')
+      %td= @tap_log_record.note
