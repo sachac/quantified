@@ -30,11 +30,11 @@ describe ClothingController do
         tops.should_not include [x.id, x]
       end
       matches = assigns(:matches)
-      matches[@b1.id][1][@t1.id].should include Date.today
-      matches[@b2.id][1][@t2.id].should include Date.yesterday
-      matches[@b2.id][1][@t1.id].should include Date.today - 2.days
-      matches[@b1.id][1][@t2.id].should be_nil
-      matches[0][1][@d1.id].should include Date.today - 3.days
+      matches[@b1.id][@t1.id].should include Date.today
+      matches[@b2.id][@t2.id].should include Date.yesterday
+      matches[@b2.id][@t1.id].should include Date.today - 2.days
+      matches[@b1.id][@t2.id].should be_nil
+      matches[0][@d1.id].should include Date.today - 3.days
     end
     it "graphs clothing" do
       Factory(:clothing_log, :date => Date.today - 5.days, :clothing => @b2, :user => @user)

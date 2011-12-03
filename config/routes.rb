@@ -8,6 +8,7 @@ Home::Application.routes.draw do
     end
   end
 
+  resources :tap_log_records
   resources :measurement_logs
 
   resources :measurements
