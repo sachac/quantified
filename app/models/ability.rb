@@ -26,5 +26,8 @@ class Ability
     can :view_library_items, User
     can :view_memories, User
     can :view, Clothing
+    can :view, TapLogRecord
+    can :view_note, TapLogRecord, :private? => nil
+    can :view_tap_log_records, User
   end
 end
