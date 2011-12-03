@@ -17,7 +17,7 @@ class Ability
       can :view_time, User
     else # Not logged in
       can :view, LibraryItem, :public => true
-      can :view, Memory, :public => true
+      can :view, Memory, :access => 'public'
       can :view_contexts, User
     end
     can :view_dashboard, User
