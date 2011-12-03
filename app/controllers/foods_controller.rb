@@ -2,6 +2,7 @@ class FoodsController < ApplicationController
   # GET /foods
   # GET /foods.xml
   def index
+    authorize! :view_food, current_accoun
     @info = Hash.new
     CsaFood.all.each do |log|
       @info[log.food_id] ||= Hash.new
@@ -24,7 +25,7 @@ class FoodsController < ApplicationController
   # GET /foods/1.xml
   def show
     @food = Food.find(params[:id])
-
+    authorize! :view, @food
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @food }
@@ -34,6 +35,7 @@ class FoodsController < ApplicationController
   # GET /foods/new
   # GET /foods/new.xml
   def new
+    authorize! :manage_account, current_account
     @food = Food.new
 
     respond_to do |format|
@@ -44,12 +46,14 @@ class FoodsController < ApplicationController
 
   # GET /foods/1/edit
   def edit
+    authorize! :manage_account, current_account
     @food = Food.find(params[:id])
   end
 
   # POST /foods
   # POST /foods.xml
   def create
+    authorize! :manage_account, current_account
     @food = Food.new(params[:food])
     @food.user_id = current_account.id
     respond_to do |format|
@@ -66,6 +70,7 @@ class FoodsController < ApplicationController
   # PUT /foods/1
   # PUT /foods/1.xml
   def update
+    authorize! :manage_account, current_account
     @food = Food.find(params[:id])
 
     respond_to do |format|
@@ -82,6 +87,7 @@ class FoodsController < ApplicationController
   # DELETE /foods/1
   # DELETE /foods/1.xml
   def destroy
+    authorize! :manage_account, current_account
     @food = Food.find(params[:id])
     @food.destroy
 
