@@ -4,9 +4,16 @@ class TapLogRecordsController < ApplicationController
   def index
     authorize! :view_tap_log_records, current_account
     @tap_log_records = current_account.tap_log_records.order('timestamp desc')
-    [:catOne, :catTwo, :catThree].each do |sym|
+    [:catOne, :catTwo, :catThree, :status].each do |sym|
       unless params[sym].blank? 
         @tap_log_records = @tap_log_records.where("#{sym}=?", params[sym])
+      end
+    end
+    unless params[:filter_string].blank?
+      if can? :manage_account, current_account
+        @tap_log_records = @tap_log_records.where("lower(note) LIKE ?", '%' + params[:filter_string].downcase + '%')
+      else
+        @tap_log_records = @tap_log_records.where("lower(note) LIKE ? AND lower(note) NOT LIKE '!private'", '%' + params[:filter_string].downcase + '%')
       end
     end
     respond_to do |format|
@@ -60,6 +67,15 @@ class TapLogRecordsController < ApplicationController
         format.xml  { render :xml => @tap_log_record.errors, :status => :unprocessable_entity }
       end
     end
+  end
+
+  def copy_to_memory
+    @tap_log_record = current_account.tap_log_records.find(params[:id])
+    @tap_log_record.update_attributes(:status => 'done')
+
+    authorize! :manage_account, current_account
+    @memory = current_account.memories.new(:body => @tap_log_record.note.gsub(/ *!memory */i, ''), :access => @tap_log_record.note =~ /!private/i ? 'private' : 'public')
+    render :template => 'memories/new' and return
   end
 
   # PUT /tap_log_records/1
