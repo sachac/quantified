@@ -6,13 +6,14 @@ class Ability
     if user.role == 'admin'
       can :manage, :all
     elsif !user.id.blank?
-      [Clothing, ClothingLog, ClothingMatch, CsaFood, Day, DecisionLog, Decision, Food, LibraryItem, LocationHistory, Location, MeasurementLog, Measurement, Stuff, TimeRecord, TorontoLibrary, Context, Memory].each do |item|
+      [Clothing, ClothingLog, ClothingMatch, CsaFood, Day, DecisionLog, Decision, Food, LibraryItem, LocationHistory, Location, MeasurementLog, Measurement, Stuff, TimeRecord, TorontoLibrary, Context, Memory, TapLogRecord].each do |item|
         can :manage, item, :user_id => user.id
         can :create, item
       end
       can :manage_account, User, :id => user.id
       can :view_library_items, User
       can :view_contexts, User
+      can :view_tap_log_records, User, :id => user.id
       can :view_time, User
     else # Not logged in
       can :view, LibraryItem, :public => true

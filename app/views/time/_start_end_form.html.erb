@@ -1,0 +1,15 @@
+<% form_tag do %>
+  <div class="clearfix">
+    <%= label_tag :start, 'Start' %>
+    <div class="input">
+      <%= text_field_tag :start, @start.strftime("%Y-%m-%d"), :class => 'datepicker' %>
+    </div>
+  </div>
+  <div class="clearfix">
+    <%= label_tag :end, 'End' %> 
+    <div class="input"><%= text_field_tag :end, @end.strftime("%Y-%m-%d"), :class => 'datepicker' %></div>
+  </div>
+  <div class="actions">
+    <%= submit_tag t('app.general.filter'), :class => 'btn primary' %>
+  </div>
+<% end %>
