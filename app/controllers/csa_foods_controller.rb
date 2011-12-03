@@ -110,7 +110,7 @@ class CsaFoodsController < ApplicationController
     if @log
       redirect_to csa_foods_path, :notice => 'Food successfully logged.' and return
     else
-      flash[:error] = 'Could not log food.'
+#      flash[:error] = 'Could not log food.'
       redirect_to csa_foods_path(:date => params[:date]) and return
     end
   end
