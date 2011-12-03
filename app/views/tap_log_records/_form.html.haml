@@ -1,10 +1,12 @@
-= form_for @tap_log_record do |f|
-  -if @tap_log_record.errors.any?
-    #error_explanation
-      %h2= "#{pluralize(@tap_log_record.errors.count, "error")} prohibited this tap_log_record from being saved:"
-      %ul
-        - @tap_log_record.errors.full_messages.each do |msg|
-          %li= msg
-
+= semantic_form_for @tap_log_record do |f|
+  = f.inputs do
+    = f.input :status
+    = f.input :catOne
+    = f.input :catTwo
+    = f.input :catThree
+    = f.input :number
+    = f.input :rating
+    = f.input :note
+    = f.input :timestamp
   .actions
-    = f.submit 'Save'
+    = submit_tag I18n.t('app.general.submit'), :class => 'btn primary'
