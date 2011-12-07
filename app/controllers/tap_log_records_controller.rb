@@ -5,7 +5,7 @@ class TapLogRecordsController < ApplicationController
     authorize! :view_tap_log_records, current_account
     @tap_log_records = current_account.tap_log_records.order('timestamp desc')
     @start = (!params[:start].blank? ? Time.zone.parse(params[:start]) : (current_account.time_records.maximum('end_time') || Date.today) - 1.week).in_time_zone.midnight
-    @end = (!params[:end].blank? ? Time.zone.parse(params[:end]) : (current_account.time_records.maximum('end_time') || Date.today)).in_time_zone.midnight
+    @end = (!params[:end].blank? ? Time.zone.parse(params[:end]) : (current_account.time_records.maximum('end_time') || Date.tomorrow)).in_time_zone.midnight
     [:catOne, :catTwo, :catThree, :status].each do |sym|
       unless params[sym].blank? 
         @tap_log_records = @tap_log_records.where("#{sym}=?", params[sym])
