@@ -47,9 +47,10 @@
           - flash.each do |type, message|
             %div{:class => "alert-message #{type}"}
               %p= message
+        - if content_for? :nav
+          = yield :nav
         - if content_for? :title
-          %h2
-            = yield :title
+          %h2= yield :title
         = yield
       %footer
         .block
