@@ -52,6 +52,7 @@ Home::Application.routes.draw do
   match 'time/clock(/:start(/:end))' => 'time#clock', :as => :time_clock
   match 'time/refresh' => 'time#refresh_from_csv', :as => :refresh_from_csv, :via => :post
   match 'time/refresh' => 'time#refresh', :as => :refresh_time
+  match 'time/summary' => 'time#index'
   resources :clothing do
     collection do
       get :autocomplete_clothing_name

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111203171307) do
+ActiveRecord::Schema.define(:version => 20111207003824) do
 
   create_table "clothing", :force => true do |t|
     t.string   "name"
@@ -285,13 +285,19 @@ ActiveRecord::Schema.define(:version => 20111203171307) do
     t.string   "catOne"
     t.string   "catTwo"
     t.string   "catThree"
-    t.decimal  "number",     :precision => 10, :scale => 2
+    t.decimal  "number",        :precision => 10, :scale => 2
     t.integer  "rating"
     t.text     "note"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "status"
+    t.datetime "end_timestamp"
+    t.string   "entry_type"
   end
+
+  add_index "tap_log_records", ["catOne", "catTwo", "catThree"], :name => "index_tap_log_records_on_catOne_and_catTwo_and_catThree"
+  add_index "tap_log_records", ["end_timestamp"], :name => "index_tap_log_records_on_end_timestamp"
+  add_index "tap_log_records", ["timestamp"], :name => "index_tap_log_records_on_timestamp"
 
   create_table "time_records", :force => true do |t|
     t.string   "name"
@@ -300,6 +306,8 @@ ActiveRecord::Schema.define(:version => 20111203171307) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "user_id"
+    t.datetime "end_timestamp"
+    t.string   "entry_type"
   end
 
   add_index "time_records", ["user_id"], :name => "index_time_records_on_user_id"

@@ -1,15 +1,17 @@
 source 'http://rubygems.org'
 
 gem 'rails', '3.0.10'
-
 # Bundle edge Rails instead:
-# gem 'rails', :git => 'git://github.com/rails/rails.git'
+#gem 'rails', :git => 'git://github.com/rails/rails.git'
+#gem 'arel', :git => 'git://github.com/rails/arel.git'
+#gem 'journey', :git => 'git://github.com/rails/journey.git'
+
 gem 'jquery-rails'
 gem 'sqlite3'
 gem 'isbndb'
 gem 'haml'
 gem 'mysql'
-
+gem 'will_paginate'
 gem 'haml-rails'
 gem 'color'
 gem 'narray'
