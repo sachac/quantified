@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111207003824) do
+ActiveRecord::Schema.define(:version => 20111207015304) do
 
   create_table "clothing", :force => true do |t|
     t.string   "name"
@@ -293,6 +293,7 @@ ActiveRecord::Schema.define(:version => 20111207003824) do
     t.string   "status"
     t.datetime "end_timestamp"
     t.string   "entry_type"
+    t.integer  "duration"
   end
 
   add_index "tap_log_records", ["catOne", "catTwo", "catThree"], :name => "index_tap_log_records_on_catOne_and_catTwo_and_catThree"
