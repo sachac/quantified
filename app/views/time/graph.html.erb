@@ -1,6 +1,6 @@
-<%= setup_page('graph', 'Time use') %>
-<%= render :partial => 'start_end_form' %>
-<%= render :partial => "by_day_summary" %>
+<%= setup_page 'graph' %>
+<%= render 'start_end_form' %>
+<%= render 'by_day_summary' %>
 <div class="day">
 <div id="canvas" style="width: <%= @width %>px; height: <%= @height %>px"></div>
 <script type="text/javascript">
@@ -36,4 +36,4 @@
     function() { sets[$(this).attr("class")].attr({'stroke': 'none'}); });
 </script>
 </div>
-<%= render :partial => "partials/time_sparklines", :locals => { :cat => @cat, :time_graphs => @time_graphs } %>
+<%= render 'partials/time_sparklines', :cat => @cat, :time_graphs => @time_graphs %>
