@@ -26,6 +26,11 @@ class TapLogRecordsController < ApplicationController
     end
 
     @tap_log_records = @tap_log_records.paginate :per_page => 20, :page => params[:page]
+    @total_duration = @tap_log_records.sum('duration')
+    min = @tap_log_records.minimum('timestamp').in_time_zone.midnight
+    max = @tap_log_records.maximum('timestamp').in_time_zone.midnight
+    days = (max - min) / 1.day + 1
+    @average_per_day = (@total_duration || 0) / days
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @tap_log_records }
