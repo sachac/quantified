@@ -146,6 +146,7 @@ class TimeTrackerLog
       if x.time_category
         if last_time_record
           entries << {:start => last_time_record.timestamp, :end => x.timestamp, :text => last_time_record.time_category}
+          last_time_record.update_attributes(:end_timestamp => x.timestamp, :entry_type => 'activity')
         end
         last_time_record = x
       end
