@@ -1,44 +1,30 @@
-= setup_page 'tap_logs', 'Tap Log records', 'time/nav'
+= setup_page 'tap_logs', nil, 'time/nav'
 
-.filters
-  = form_tag tap_log_records_path, :method => :get do
-    - ['catOne', 'catTwo', 'catThree'].each do |cat|
+.filters.collapsible.collapsed.fieldset
+  %legend Filters [+]
+  .details
+    = form_tag tap_log_records_path, :method => :get do
       .clearfix
-        = label_tag cat.to_sym, I18n.t("formtastic.labels.tap_log_record.#{cat}")
+        = label_tag :start, 'Start' 
+        .input= text_field_tag :start, @start.strftime("%Y-%m-%d"), :class => 'datepicker' 
+      .clearfix
+        = label_tag :end, 'End' 
+        .input= text_field_tag :end, @end.strftime("%Y-%m-%d"), :class => 'datepicker' 
+      - ['catOne', 'catTwo', 'catThree'].each do |cat|
+        .clearfix
+          = label_tag cat.to_sym, I18n.t("formtastic.labels.tap_log_record.#{cat}")
+          .input
+            = select_tag cat.to_sym, options_for_select([['', '']] + TapLogRecord.select("DISTINCT #{cat}").order(cat).collect { |x| [ x.send(cat), x.send(cat) ] }, params[cat.to_sym])
+      .clearfix
+        = label_tag :status, "Status"
         .input
-          = select_tag cat.to_sym, options_for_select([['', '']] + TapLogRecord.select("DISTINCT #{cat}").order(cat).collect { |x| [ x.send(cat), x.send(cat) ] }, params[cat.to_sym])
-    .clearfix
-      = label_tag :status, "Status"
-      .input
-        = select_tag :status, options_for_select([['', '']] + TapLogRecord.select("DISTINCT status").order('status').collect { |x| [ x.send('status'), x.send('status') ] }, params[:status])
-    .clearfix
-      = label_tag :filter, "Filter"
-      .input
-        = text_field_tag :filter_string, params[:filter_string]
-    .actions   
-      = submit_tag t('app.general.filter'), :class => 'btn primary'
+          = select_tag :status, options_for_select([['', '']] + TapLogRecord.select("DISTINCT status").order('status').collect { |x| [ x.send('status'), x.send('status') ] }, params[:status])
+      .clearfix
+        = label_tag :filter, "Filter"
+        .input
+          = text_field_tag :filter_string, params[:filter_string]
+      .actions   
+        = submit_tag t('app.general.filter'), :class => 'btn primary'
 
-  %table.condensed-table.zebra-striped
-    %thead
-      %tr
-        %th Timestamp
-        %th Categories
-        %th Data
-    %tbody
-      - @tap_log_records.each do |tap_log_record|
-        %tr.tap_log_record
-          %td.timestamp= if tap_log_record.timestamp then link_to l(tap_log_record.timestamp), tap_log_record end
-          %td.categories
-            = tap_log_record.category_string
-          %td
-            = object_labels(tap_log_record)
-            - if tap_log_record.number
-              .number= t('app.tap_log_record.number', :number => tap_log_record.number)
-            - if tap_log_record.rating
-              .rating= t('app.tap_log_record.rating', :rating => tap_log_record.rating)
-            - unless tap_log_record.note.blank? or !can? :view_note, tap_log_record
-              .note= simple_format tap_log_record.note
-              - if can? :manage_account, @account
-                - note = tap_log_record.note
-                - if note =~ /!memory/i
-                  = link_to t('app.tap_log_record.copy_memory'), copy_to_memory_tap_log_record_path(tap_log_record, :destination => request.fullpath), :method => :post
+= render 'summary', :list => @tap_log_records, :show_duration => true
+= will_paginate @tap_log_records, :renderer => PaginationListLinkRenderer
