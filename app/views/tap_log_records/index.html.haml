@@ -27,6 +27,7 @@
         = submit_tag t('app.general.filter'), :class => 'btn primary'
 - if @total_duration and @total_duration > 0
   = "#{I18n.t('app.tap_log_record.duration')}: #{duration @total_duration},"
+  = "#{I18n.t('app.general.average')}: #{duration @average},"
   = "#{I18n.t('app.general.average_per_day')}: #{duration @average_per_day}"
         
 
