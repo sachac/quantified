@@ -28,6 +28,6 @@
                 = link_to t('app.tap_log_record.copy_memory'), copy_to_memory_tap_log_record_path(tap_log_record, :destination => request.fullpath), :method => :post
         - if show_duration         
           %td
-            - if tap_log_record.end_timestamp
-              = duration tap_log_record.end_timestamp - tap_log_record.timestamp
+            - if tap_log_record.duration
+              = duration tap_log_record.duration
 
