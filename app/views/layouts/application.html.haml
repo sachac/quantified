@@ -7,7 +7,6 @@
         \-
       quantified awesome
     = stylesheet_link_tag "http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.8/themes/ui-lightness/jquery-ui.css"
-    = stylesheet_link_tag "formtastic"
     = stylesheet_link_tag 'application', :media => 'screen, projection'              
     - conditional_html
     - if session['layout'] == 'mobile'
@@ -61,3 +60,4 @@
                 = link_to I18n.t('app.layout.full'), params.merge(:layout => 'full')
               - else 
                 = link_to I18n.t('app.layout.mobile'), params.merge(:layout => 'mobile')
+- flash.discard

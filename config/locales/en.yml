@@ -43,6 +43,7 @@ en:
       private: Private
       total: Total
       average_per_day: Avg/day
+      average: Avg
     memory:
       my_version: Share your version of events
       link: Link this memory...
