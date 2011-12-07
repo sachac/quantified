@@ -13,7 +13,9 @@ en:
       next_activity: Next activity
       previous_activity: Previous activity
       next_entry: Next entry
-      previous_entry: Previous entry  
+      previous_entry: Previous entry
+      duration: Duration
+    
     user:
       login: track your life
       login_submit: Log in
@@ -38,7 +40,9 @@ en:
       cancel: Cancel
       are_you_sure: Are you sure?
       public: Public
-      private: Private 
+      private: Private
+      total: Total
+      average_per_day: Avg/day
     memory:
       my_version: Share your version of events
       link: Link this memory...
