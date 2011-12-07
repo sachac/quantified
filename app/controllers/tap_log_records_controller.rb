@@ -15,7 +15,7 @@ class TapLogRecordsController < ApplicationController
       if can? :manage_account, current_account
         @tap_log_records = @tap_log_records.where("lower(note) LIKE ?", '%' + params[:filter_string].downcase + '%')
       else
-        @tap_log_records = @tap_log_records.where("lower(note) LIKE ? AND lower(note) NOT LIKE '!private'", '%' + params[:filter_string].downcase + '%')
+        @tap_log_records = @tap_log_records.where("lower(note) LIKE ? AND NOT lower(note) LIKE '%!private%'", '%' + params[:filter_string].downcase + '%')
       end
     end
     unless @start.blank?
