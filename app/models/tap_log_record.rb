@@ -28,4 +28,27 @@ class TapLogRecord < ActiveRecord::Base
   def private?
     (self.note || '').downcase =~ /private/
   end
+
+  # Return the Tap Log Record representing an activity during which this record occurred
+  def current_activity
+    if self.entry_type == 'activity'
+      self
+    else
+      self.user.tap_log_records.where('timestamp < ?', self.timestamp).order('timestamp desc').limit(1).first
+    end
+  end
+
+  def during_this
+    self.user.tap_log_records.where('timestamp >= ? and timestamp <= ? and id != ?', self.timestamp, self.end_timestamp, self.id).order('timestamp')
+  end
+
+  scope :activity, where('entry_type=?', 'activity')
+
+  def previous
+    self.user.tap_log_records.where('timestamp <= ? and id < ?', self.timestamp, self.id).order('timestamp desc, id desc').limit(1) 
+  end
+
+  def next
+    self.user.tap_log_records.where('timestamp >= ? and id > ?', self.timestamp, self.id).order('timestamp asc, id asc').limit(1) 
+  end
 end

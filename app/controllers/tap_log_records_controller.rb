@@ -4,6 +4,8 @@ class TapLogRecordsController < ApplicationController
   def index
     authorize! :view_tap_log_records, current_account
     @tap_log_records = current_account.tap_log_records.order('timestamp desc')
+    @start = (!params[:start].blank? ? Time.zone.parse(params[:start]) : (current_account.time_records.maximum('end_time') || Date.today) - 1.week).in_time_zone.midnight
+    @end = (!params[:end].blank? ? Time.zone.parse(params[:end]) : (current_account.time_records.maximum('end_time') || Date.today)).in_time_zone.midnight
     [:catOne, :catTwo, :catThree, :status].each do |sym|
       unless params[sym].blank? 
         @tap_log_records = @tap_log_records.where("#{sym}=?", params[sym])
@@ -16,6 +18,14 @@ class TapLogRecordsController < ApplicationController
         @tap_log_records = @tap_log_records.where("lower(note) LIKE ? AND lower(note) NOT LIKE '!private'", '%' + params[:filter_string].downcase + '%')
       end
     end
+    unless @start.blank?
+      @tap_log_records = @tap_log_records.where('timestamp >= ?', @start)
+    end
+    unless @end.blank?
+      @tap_log_records = @tap_log_records.where('timestamp <= ?', @end)
+    end
+
+    @tap_log_records = @tap_log_records.paginate :per_page => 20, :page => params[:page]
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @tap_log_records }
@@ -27,6 +37,12 @@ class TapLogRecordsController < ApplicationController
   def show
     @tap_log_record = current_account.tap_log_records.find(params[:id])
     authorize! :view, @tap_log_record
+    @current_activity = @tap_log_record.current_activity
+    @during_this = @tap_log_record.during_this
+    @previous_activity = @tap_log_record.previous.activity.first
+    @previous_entry = @tap_log_record.previous.first
+    @next_activity = @tap_log_record.next.activity.first
+    @next_entry = @tap_log_record.next.first
 
     respond_to do |format|
       format.html # show.html.erb
