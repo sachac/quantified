@@ -164,7 +164,7 @@ module ApplicationHelper
   end
 
   def duration(seconds)
-    "%02d" % (seconds / 1.hour) + (":%02d" % ((seconds % 1.hour) / 1.minute))
+    "%d" % (seconds / 1.hour) + (":%02d" % ((seconds % 1.hour) / 1.minute))
   end
 
 end
