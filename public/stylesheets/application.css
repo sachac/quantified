@@ -3100,3 +3100,15 @@ a[data-method] {
   font-weight: normal;
   display: inline;
 }
+
+/* line 89, ../../app/stylesheets/application.sass */
+.collapsible > legend {
+  font-weight: bold;
+  padding-left: 10px;
+  margin-bottom: 10px;
+}
+
+/* line 93, ../../app/stylesheets/application.sass */
+td.h {
+  font-weight: bold;
+}

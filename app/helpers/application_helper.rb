@@ -138,9 +138,9 @@ module ApplicationHelper
   def title(s)
     content_for(:title) { s }
   end
-  def setup_page(active, title, nav_file = 'nav')
-    title(title)
-    render :partial => nav_file, :locals => { :active => active }
+  def setup_page(active, title = nil, nav_file = 'nav')
+    title(title) if title
+    content_for(:nav) { render nav_file, :active => active }
   end
 
   def active_class(variable, value)
@@ -161,6 +161,10 @@ module ApplicationHelper
       active = true
     end
     active ? 'active' : 'inactive'
+  end
+
+  def duration(seconds)
+    "%02d" % (seconds / 1.hour) + (":%02d" % ((seconds % 1.hour) / 1.minute))
   end
 
 end
