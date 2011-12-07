@@ -39,7 +39,7 @@ class TapLogRecord < ActiveRecord::Base
   end
 
   def during_this
-    self.user.tap_log_records.where('timestamp >= ? and timestamp <= ? and id != ?', self.timestamp, self.end_timestamp, self.id).order('timestamp')
+    self.user.tap_log_records.where('timestamp >= ? and timestamp < ? and id != ?', self.timestamp, self.end_timestamp, self.id).order('timestamp')
   end
 
   scope :activity, where('entry_type=?', 'activity')
