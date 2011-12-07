@@ -1,17 +1,17 @@
-%h1
+= setup_page 'tap_logs', nil, 'time/nav'
+%h2
   = @tap_log_record.category_string
   \-
   = l @tap_log_record.timestamp
   = object_labels @tap_log_record
+- if can? :update, @tap_log_record
+  = link_to 'Edit', edit_tap_log_record_path(@tap_log_record)
 %p
   &laquo;
   = link_to t('app.tap_log_record.previous_activity'), @previous_activity if @previous_activity
   \-
   = link_to t('app.tap_log_record.previous_entry'), @previous_entry if @previous_entry
   |
-  - if can? :update, @tap_log_record
-    = link_to 'Edit', edit_tap_log_record_path(@tap_log_record)
-    \|
   = link_to t('app.tap_log_record.next_entry'), @next_entry if @next_entry
   \-
   = link_to t('app.tap_log_record.next_activity'), @next_activity if @next_activity
