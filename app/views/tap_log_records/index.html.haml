@@ -6,10 +6,10 @@
     = form_tag tap_log_records_path, :method => :get do
       .clearfix
         = label_tag :start, 'Start' 
-        .input= text_field_tag :start, @start.strftime("%Y-%m-%d"), :class => 'datepicker' 
+        .input= text_field_tag :start, @start ? @start.strftime("%Y-%m-%d") : nil, :class => 'datepicker' 
       .clearfix
         = label_tag :end, 'End' 
-        .input= text_field_tag :end, @end.strftime("%Y-%m-%d"), :class => 'datepicker' 
+        .input= text_field_tag :end, @end ? @end.strftime("%Y-%m-%d") : nil, :class => 'datepicker' 
       - ['catOne', 'catTwo', 'catThree'].each do |cat|
         .clearfix
           = label_tag cat.to_sym, I18n.t("formtastic.labels.tap_log_record.#{cat}")
