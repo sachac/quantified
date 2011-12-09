@@ -11,4 +11,9 @@ class WpBlogPost < ActiveRecord::Base
     find(:first, 
          :conditions => ["YEAR(post_date) = ? AND MONTH(post_date) = ? AND DAYOFMONTH(post_date) = ? AND post_name = ?", year.to_i, month.to_i, day.to_i, title])
   end
+
+  scope :posts, where("post_type='post'")
+  scope :published, where("post_status='publish'")
+  scope :year, lambda { |year| where("year(post_date)=?", year) }
+
 end 
