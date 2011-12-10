@@ -4,8 +4,8 @@ class TapLogRecordsController < ApplicationController
   def index
     authorize! :view_tap_log_records, current_account
     @tap_log_records = current_account.tap_log_records.order('timestamp desc')
-    @start = (!params[:start].blank? ? Time.zone.parse(params[:start]) : (current_account.time_records.maximum('end_time') || (Time.now - 1.week))).in_time_zone.midnight
-    @end = (!params[:end].blank? ? Time.zone.parse(params[:end]) : (current_account.time_records.maximum('end_time') || (Time.now + 1.day))).in_time_zone.midnight
+    @start = (!params[:start].blank? ? Time.zone.parse(params[:start]) : ((current_account.tap_log_records.minimum('timestamp') || (Time.now - 1.week)))).in_time_zone.midnight
+    @end = (!params[:end].blank? ? Time.zone.parse(params[:end]) : ((current_account.tap_log_records.maximum('timestamp') || Time.now) + 1.day)).in_time_zone.midnight
     [:catOne, :catTwo, :catThree, :status].each do |sym|
       unless params[sym].blank? 
         @tap_log_records = @tap_log_records.where("#{sym}=?", params[sym])
@@ -26,12 +26,15 @@ class TapLogRecordsController < ApplicationController
     end
 
     @total_duration = @tap_log_records.sum('duration')
-    min = @tap_log_records.minimum('timestamp').in_time_zone.midnight
-    max = @tap_log_records.maximum('timestamp').in_time_zone.midnight
-    days = (max - min) / 1.day + 1
-    @average_per_day = (@total_duration || 0) / days
-    @average = @tap_log_records.where('duration > 0').average('duration')
+    if @tap_log_records.count > 0
+      min = @tap_log_records.minimum('timestamp').in_time_zone.midnight
+      max = @tap_log_records.maximum('timestamp').in_time_zone.midnight
+      days = (max - min) / 1.day + 1
+      @average_per_day = (@total_duration || 0) / days
+      @average = @tap_log_records.where('duration > 0').average('duration')
+    end
     @tap_log_records = @tap_log_records.paginate :per_page => 50, :page => params[:page]
+
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @tap_log_records }
