@@ -5,12 +5,14 @@ class LibraryItemsController < ApplicationController
   # GET /library_items.xml
   def index
     authorize! :view_library_items, current_account
-    if current_user == current_account
+    params[:sort] ||= '-due'
+    order = sortable_column_order
+    if can? :manage_account, current_account
       @tags = current_account.library_items.tag_counts_on(:tags).sort_by(&:name)
-      @library_items = current_account.library_items.order('due DESC')
+      @library_items = current_account.library_items.order(order)
     else
       @tags = current_account.library_items.where('public=1').tag_counts_on(:tags).sort_by(&:name)
-      @library_items = current_account.library_items.where('public=1').order('due DESC')
+      @library_items = current_account.library_items.where('public=1').order(order)
     end
     respond_to do |format|
       format.html # index.html.erb
