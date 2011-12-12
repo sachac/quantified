@@ -308,8 +308,6 @@ ActiveRecord::Schema.define(:version => 20111212005705) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "user_id"
-    t.datetime "end_timestamp"
-    t.string   "entry_type"
   end
 
   add_index "time_records", ["user_id"], :name => "index_time_records_on_user_id"
