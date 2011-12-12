@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111207015304) do
+ActiveRecord::Schema.define(:version => 20111212005705) do
 
   create_table "clothing", :force => true do |t|
     t.string   "name"
@@ -294,6 +294,7 @@ ActiveRecord::Schema.define(:version => 20111207015304) do
     t.datetime "end_timestamp"
     t.string   "entry_type"
     t.integer  "duration"
+    t.string   "source"
   end
 
   add_index "tap_log_records", ["catOne", "catTwo", "catThree"], :name => "index_tap_log_records_on_catOne_and_catTwo_and_catThree"
@@ -307,6 +308,8 @@ ActiveRecord::Schema.define(:version => 20111207015304) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "user_id"
+    t.datetime "end_timestamp"
+    t.string   "entry_type"
   end
 
   add_index "time_records", ["user_id"], :name => "index_time_records_on_user_id"
@@ -344,6 +347,7 @@ ActiveRecord::Schema.define(:version => 20111207015304) do
     t.date     "projected_end"
     t.string   "role"
     t.string   "username"
+    t.string   "authentication_token"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
