@@ -19,6 +19,9 @@ gem 'formtastic'
 gem 'handles_sortable_columns'
 gem 'gdata'
 gem 'cancan'
+gem 'n_gram'
+gem 'statsample'
+
 # Use unicorn as the web server
 # gem 'unicorn'
 

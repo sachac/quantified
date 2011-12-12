@@ -124,9 +124,9 @@ class TimeTrackerLog
     min = nil
     max = nil
     FasterCSV.foreach(file, :headers => true) do |row|
-      x = TapLogRecord.where('user_id=? AND tap_log_id=?', @account.id, row['_id']).first
+      x = TapLogRecord.where('user_id=? AND tap_log_id=? AND source=?', @account.id, row['_id'], 'tap_log').first
       time = Time.zone.parse row['timestamp']
-      attributes = {:user => @account, :timestamp => time, :catOne => row['catOne'], :catTwo => row['catTwo'], :catThree => row['catThree'], :number => row['number'], :rating => row['rating'], :note => row['note'], :tap_log_id => row['_id']}
+      attributes = {:user => @account, :timestamp => time, :catOne => row['catOne'], :catTwo => row['catTwo'], :catThree => row['catThree'], :number => row['number'], :rating => row['rating'], :note => row['note'], :tap_log_id => row['_id'], :source => 'tap_log'}
       if time
         if x
           x.update_attributes(attributes)
