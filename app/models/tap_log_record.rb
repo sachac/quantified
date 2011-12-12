@@ -2,8 +2,9 @@ class TapLogRecord < ActiveRecord::Base
   belongs_to :user
   validates :timestamp, :presence => true
   validates :catOne, :presence => true
-  before_save :set_duration
-  def set_duration
+  before_save :set_defaults
+  def set_defaults
+    self.timestamp ||= Time.now
     self.duration = self.end_timestamp - self.timestamp if self.end_timestamp
     true
   end
