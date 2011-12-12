@@ -32,7 +32,7 @@ Home::Application.routes.draw do
 
   resources :foods
 
-  devise_for :users, :path_prefix => 'd'
+  devise_for :users, :path_prefix => 'd', :controllers => { :sessions => 'sessions' }
   resources :users
 
   resources :decision_logs
@@ -123,4 +123,11 @@ Home::Application.routes.draw do
   # This is a legacy wild controller route that's not recommended for RESTful applications.
   # Note: This route will make all actions in every controller accessible via GET requests.
   # match ':controller(/:action(/:id(.:format)))'
+  namespace :api do
+    namespace :v1 do
+      resources :tokens, :only => [:create, :destroy]
+      resources :records
+    end
+  end
+
 end
