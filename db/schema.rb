@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111212005705) do
+ActiveRecord::Schema.define(:version => 20111214041042) do
 
   create_table "clothing", :force => true do |t|
     t.string   "name"
@@ -223,6 +223,8 @@ ActiveRecord::Schema.define(:version => 20111212005705) do
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "timestamp"
+    t.integer  "rating"
   end
 
   add_index "memories", ["name"], :name => "index_memories_on_name"
@@ -238,6 +240,12 @@ ActiveRecord::Schema.define(:version => 20111212005705) do
   end
 
   add_index "settings", ["thing_type", "thing_id", "var"], :name => "index_settings_on_thing_type_and_thing_id_and_var", :unique => true
+
+  create_table "signups", :force => true do |t|
+    t.string   "email"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "stuff", :force => true do |t|
     t.string   "name"
