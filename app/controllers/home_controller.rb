@@ -1,4 +1,5 @@
 class HomeController < ApplicationController
+  skip_authorization_check :only => [:sign_up]
   def index
     logger.info "CURRENT ACCOUNT: #{current_account.inspect}"
     authorize! :view_dashboard, current_account
@@ -64,5 +65,20 @@ class HomeController < ApplicationController
   end
 
   def menu
+    authorize! :view_dashboard, current_account
+  end
+
+  def sign_up
+    if !params[:email].blank?
+      @new_user = Signup.create(:email => params[:email])
+      if @new_user.save!
+        logger.info "NEW USER #{@new_user.inspect}"
+        flash[:notice] = "Thank you for your interest!"
+        redirect_to root_path and return
+      else
+        flash[:error] = "Could not save information. Sorry! Could you please get in touch with me at sacha@sachachua.com instead?"
+      end
+    end
+    redirect_to new_user_session_path and return
   end
 end
