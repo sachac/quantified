@@ -103,7 +103,7 @@ class LibraryItemsController < ApplicationController
     authorize! :view_library_items, current_account
     # Show by tags
     params[:sort] ||= '-due'
-    order = filter_sortable_column_order %{due name status}
+    order = filter_sortable_column_order %{due title status}
     if can? :view_all, LibraryItem
       @tags = LibraryItem.tag_counts_on(:tags).sort_by(&:name)
       @library_items = LibraryItem.tagged_with(params[:id]).order(order)
