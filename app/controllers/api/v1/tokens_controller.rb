@@ -3,8 +3,9 @@ class Api::V1::TokensController  < ApplicationController
   skip_authorization_check :only => [:create, :destroy]
   respond_to :json, :xml
   def create          
-    login = params[:login]          
-    password = params[:password]               
+    logger.info request.env.inspect
+    login = params[:login] || (params[:user] and params[:user][:login])
+    password = params[:password] || (params[:user] and params[:user][:password])
     if login.nil? or password.nil?
       status = 400
       message = {:message => "The request must contain the user login and password."}

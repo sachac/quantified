@@ -111,6 +111,7 @@ class ClothingLogsController < ApplicationController
   end
 
   def by_date
+    authorize! :view_clothing_logs, current_account
     @date = Date.parse(params[:date])
     @clothing_logs = ClothingLog.where('date = ?', @date).includes(:clothing).order('outfit_id, clothing.clothing_type')
     @previous_date = @date - 1.day
