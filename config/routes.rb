@@ -34,6 +34,7 @@ Home::Application.routes.draw do
 
   devise_for :users, :path_prefix => 'd', :controllers => { :sessions => 'sessions' }
   resources :users
+  match 'sign_up' => 'home#sign_up', :via => :post
 
   resources :decision_logs
 
