@@ -3111,3 +3111,8 @@ a[data-method] {
 td.h {
   font-weight: bold;
 }
+
+/* line 95, ../../app/stylesheets/application.sass */
+.login .inner, .sign_up .inner {
+  height: 200px;
+}
