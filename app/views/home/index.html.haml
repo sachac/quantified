@@ -52,5 +52,18 @@
         = link_to "#{'%0.1f' % remaining}kg of CSA food to go,", csa_foods_path
         = "#{pluralize days, "day"} until next delivery = "
         = "#{'%0.1f' % (remaining * 1.0 / days)}kg per day"
+    .time.category
+      .category_label
+        %h2 Time
+      .category_detail
+        %ul.pills  
+          %li= link_to 'Graph', time_graph_path
+          %li= link_to 'Clock', time_clock_path
+          %li= link_to 'Logs', tap_log_records_path
+        - if can? :manage_account, current_account 
+          = form_tag(refresh_from_csv_path, { :multipart => true }) do
+            = label_tag(:tap_file, "Tap Log CSV")
+            = file_field_tag :tap_file
+            = submit_tag "Submit", :class => 'btn primary'
 - else
   No accounts yet.
