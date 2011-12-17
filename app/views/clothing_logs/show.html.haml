@@ -11,8 +11,8 @@
         %ul
           %li= @clothing_log.date
           - if current_user
-            %li= link_to 'Wear today', new_clothing_log_path + "?clothing_id=" + @clothing_log.clothing_id.to_s + "&date=" + Date.today.to_s, :method => :post
-            %li= link_to 'Plan for tomorrow', new_clothing_log_path + "?clothing_id=" + @clothing_log.clothing_id.to_s + "&date=" + Date.tomorrow.to_s, :method => :post
+            %li= link_to 'Wear today', clothing_logs_path + "?clothing_id=" + @clothing_log.clothing_id.to_s + "&date=" + Date.today.to_s, :method => :post
+            %li= link_to 'Plan for tomorrow', clothing_logs_path + "?clothing_id=" + @clothing_log.clothing_id.to_s + "&date=" + Date.tomorrow.to_s, :method => :post
         %br.clear
 
 - if current_user
