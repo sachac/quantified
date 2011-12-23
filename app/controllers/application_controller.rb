@@ -47,13 +47,12 @@ class ApplicationController < ActionController::Base
   end
 
   def filter_sortable_column_order(list)
-    result = nil
+    result = list.first
     sortable_column_order do |column, direction|
       if list.map(&:to_s).include? column.to_s
         result = "#{column} #{direction}"
       end
     end
-    result || list.first
 #     sortable_column_order
   end
 end
