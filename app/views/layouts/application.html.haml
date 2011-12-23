@@ -19,7 +19,8 @@
     = javascript_include_tag "jquery.sparkline.min.js"
     :javascript
       var _gaq = _gaq || [];
-      _gaq.push(['_setAccount', 'UA-596973-1']);
+      _gaq.push(['_setAccount', 'UA-27780597-1']);
+      _gaq.push(['_setDomainName', 'quantifiedawesome.com']);
       _gaq.push(['_trackPageview']);
       (function() {
         var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
@@ -69,4 +70,5 @@
                 = link_to I18n.t('app.layout.full'), params.merge(:layout => 'full')
               - else 
                 = link_to I18n.t('app.layout.mobile'), params.merge(:layout => 'mobile')
+            = mail_to "sacha@sachachua.com", "Tell me what you think!", :subject => "Quantified Awesome"
 - flash.discard
