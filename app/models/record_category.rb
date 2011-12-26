@@ -77,7 +77,7 @@ class RecordCategory < ActiveRecord::Base
     else
       records = self.tree_records
     end
-    RecordCategory.summarize(self.user, :records => records, :tree => self.list? ? :next_level : nil, :parent => self)
+    RecordCategory.summarize(self.user, :records => records, :parent => self)
   end
   
   def activity?
