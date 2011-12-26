@@ -1,0 +1,10 @@
+%table
+  %thead
+    %th Email
+    %th Date
+  %tbody  
+    - @list.each do |s|
+      %tr
+        %td= mail_to s.email, s.email
+        %td= l s.created_at
+        

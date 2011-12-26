@@ -20,6 +20,7 @@ class User < ActiveRecord::Base
   has_many :tap_log_records
   has_many :record_categories
   has_many :records
+  has_many :services, :dependent => :destroy
   has_one :time_tracker_log
 
   validates :username, :exclusion => { :in => %w(admin superuser root www) }
