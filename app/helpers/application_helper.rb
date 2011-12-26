@@ -120,7 +120,26 @@ module ApplicationHelper
       else
         actions << link_to(I18n.t('app.general.view'), memory_path(o))
       end
+    elsif o.is_a? RecordCategory
+      if can? :manage_account, current_account
+        case o.category_type
+        when 'list'
+          actions << link_to(t('app.general.view'), o)
+        when 'activity'
+          actions << link_to(t('record_categories.show.start_activity'), o, :method => :post)
+        when 'record'
+          actions << link_to(t('record_categories.show.record'), o, :method => :post)
+        end
+        actions << link_to(t('app.general.edit'), edit_record_category_path(o))
+      end
+    elsif o.is_a? Record
+      if can? :manage_account, current_account
+        actions << link_to('Edit', edit_record_path(o))
+        actions << link_to('Clone', clone_record_path(o), :method => :post)
+        actions << link_to('Destroy', o, :confirm => 'Are you sure?', :method => :delete)
+      end
     end
+    actions
   end
 
   def tags(o)
@@ -137,6 +156,9 @@ module ApplicationHelper
 
   def title(s)
     content_for(:title) { s }
+  end
+  def after_title(s)
+    content_for(:after_title) { s }
   end
   def setup_page(active, title = nil, nav_file = 'nav')
     title(title) if title
@@ -164,7 +186,52 @@ module ApplicationHelper
   end
 
   def duration(seconds)
-    "%d" % (seconds / 1.hour) + (":%02d" % ((seconds % 1.hour) / 1.minute))
+    "%d" % (seconds / 1.hour) + (":%02d" % ((seconds % 1.hour) / 1.minute)) if seconds and seconds > 0
   end
 
+  def record_category_breadcrumbs(category)
+    ([link_to t('app.general.home'), record_categories_path] + category.ancestors.reverse.map{ |c| link_to c.name, c }).join(' &raquo; ').html_safe
+  end
+
+  def record_category_full(category)
+    category.self_and_ancestors.reverse.map{ |c| link_to c.name, c }.join(' &raquo; ').html_safe
+  end
+
+  def record_data(data)
+    return '' unless data
+    if data.length == 1
+      content_tag(:strong, data.keys.first.to_s.humanize) + ": " + data.values.first
+    elsif data.length > 0
+      content_tag(:ul, data.map { |k, v| content_tag(:li, (content_tag(:strong, k.to_s.humanize).html_safe + ": " + v.html_safe).html_safe) }.join.html_safe).html_safe
+    else
+      ''
+    end
+  end
+
+  def graph_time_entry(day_offset, row)
+    # Turn this into the Javascript call
+    # Javascript needs start time, end time, title, color, and duration
+    logger.info(row.inspect)
+    start_offset = row[0] - row[0].midnight.in_time_zone
+    end_offset = row[1] - row[0].midnight.in_time_zone
+    "graphTimeEntry(#{day_offset}, #{start_offset}, #{end_offset}, " +
+      "'#{escape_javascript row[0].strftime('%Y-%m-%d %-H:%M')} - #{escape_javascript row[1].strftime('%-H:%M')}: " +
+      "#{escape_javascript row[2].full_name} (#{escape_javascript(duration(row[1] - row[0]))})', " +
+      "'#{escape_javascript row[2].color}', '#{row[2].record_category.full_name.parameterize.underscore}');"
+  end
+
+  def record_data_input(record, key, info)
+    content_tag(:div, :class => 'clearfix optional stringish') do
+      s = label_tag("data[#{key}]", info[:label])
+      s += content_tag(:div, :class => 'input') do
+        case info[:type]
+        when 'text'
+          text_area_tag("record[data][#{key}]", record.data ? record.data[key] : nil)
+        else
+          text_field_tag("record[data][#{key}]", record.data ? record.data[key] : nil)
+        end
+      end
+      s
+    end
+  end
 end

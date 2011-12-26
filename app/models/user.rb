@@ -18,10 +18,12 @@ class User < ActiveRecord::Base
   has_many :contexts
   has_many :memories
   has_many :tap_log_records
+  has_many :record_categories
+  has_many :records
   has_one :time_tracker_log
 
   validates :username, :exclusion => { :in => %w(admin superuser root www) }
-  validates :username, :presence => true
+  # validates :username, :presence => true
   validates_length_of :username, :maximum => 20
   validates :username, :uniqueness => { :case_sensitive => false }
   validates :email, :presence => true, :email => true
@@ -39,6 +41,18 @@ class User < ActiveRecord::Base
 
   acts_as_tagger
   has_settings
+  
+  def adjust_beginning_of_week(date)
+    date.beginning_of_week.advance(:days => 5)
+  end
+
+  def beginning_of_week
+    self.adjust_beginning_of_week(Date.today)
+  end
+
+  def this_week
+    self.beginning_of_week..Time.now
+  end
 
   def update_memento_mori
     if birthdate_changed? or life_expectancy_in_years_changed? then

@@ -1,4 +1,19 @@
 Home::Application.routes.draw do
+  resources :records do
+    member do
+      post :clone
+    end
+  end
+
+  resources :record_categories do
+    member do
+      post :track
+    end
+    collection do
+      post :bulk_update
+    end
+  end
+
   resources :memories
 
   resources :contexts do
@@ -48,12 +63,13 @@ Home::Application.routes.draw do
   match 'clothing/bulk', :as => :clothing_bulk, :via => :post
   match 'library_items/bulk', :as => :library_item_bulk, :via => :post
 
-  match 'time' => 'time#graph'
+  match 'time' => 'time#dashboard'
   match 'time/graph(/:start(/:end))' => 'time#graph', :as => :time_graph
-  match 'time/clock(/:start(/:end))' => 'time#clock', :as => :time_clock
+  match 'time/dashboard' => 'time#dashboard', :as => :time_dashboard
   match 'time/refresh' => 'time#refresh_from_csv', :as => :refresh_from_csv, :via => :post
   match 'time/refresh' => 'time#refresh', :as => :refresh_time
-  match 'time/summary' => 'time#index'
+  match 'time/review' => 'time#review', :as => :time_review
+  match 'time/track' => 'time#track', :as => :track_time, :via => :post
   resources :clothing do
     collection do
       get :autocomplete_clothing_name

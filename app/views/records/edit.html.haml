@@ -1,0 +1,8 @@
+- title @record.record_category.name
+= record_category_breadcrumbs @record.record_category
+
+= render 'form'
+
+= link_to 'Show', @record
+\|
+= link_to 'Back', records_path

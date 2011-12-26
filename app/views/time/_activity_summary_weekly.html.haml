@@ -1,0 +1,44 @@
+%p
+  - summary_end -= 1.day
+  %table.condensed-table
+    %thead
+      %tr
+        %th Activity
+        - date = current_account.adjust_beginning_of_week(summary_start) + 6.days
+        - while date <= summary_end
+          %th{:title => "Week ending #{l date, :format => :long}"}= l(date, :format => :short)
+          - date += 1.week
+        %th.right Total  
+    %tbody
+      - summary[:rows].sort_by { |k,v| k.name }.each do |row|
+        - category = row[0]
+        - values = row[1]
+        %tr
+          %td
+            = link_to category.name, time_review_path(params.merge(:parent_id => category.id))
+            = " > " if category.list?
+          - date = current_account.adjust_beginning_of_week(summary_start) + 6.days
+          - total = 0
+          - count = 0
+          - while date <= summary_end
+            %td.right{:title => category.name + " - " + l(date)}
+              = duration values[date]
+            - if values[date]
+              - total += values[date]
+              - count += 1 if values[date] > 0
+            - date += 1.week
+          %td.right
+            %strong{:title => ("Average: " + duration(total / count) if count > 0)}= duration total  
+      %tr
+        %td Total
+        - date = current_account.adjust_beginning_of_week(summary_start) + 6.days
+        - values = summary[:total][:total]
+        - total = 0
+        - count = 0
+        - while date <= summary_end
+          %td.right{:title => l(date)}= duration values[date]
+          - total += values[date]
+          - date += 1.week
+          - count += 1 if values[date] > 0
+        %td.right
+          %strong{:title => ("Average: " + duration(total / count) if count > 0)}= duration total  

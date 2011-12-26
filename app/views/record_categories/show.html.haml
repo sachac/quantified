@@ -1,0 +1,28 @@
+= setup_page 'categories', @record_category.name, 'time/nav'
+
+- if @record_category.activity? and can? :manage_account, current_account
+  = after_title link_to("Start activity", track_record_category_path(:id => @record_category.id), :class => 'btn', :style => 'margin-left: 5px', :method => :post)
+  
+
+%p
+  = record_category_breadcrumbs(@record_category)
+  - if can? :manage_account, current_account
+    \|
+    = link_to t('app.general.edit'), edit_record_category_path(@record_category)
+    \|
+    - if @record_category.list?
+      = link_to t('.add_child'), new_record_category_path(:parent_id => @record_category.id)
+      \|
+  - unless @record_category.record?
+    = link_to t('.review'), time_review_path(:parent_id => @record_category.id)
+    \|
+  = link_to t('app.general.back'), record_categories_path
+
+
+- if @record_category.activity? or @record_category.record?
+  = render 'records/summary', :records => @records
+  = will_paginate @records, :renderer => PaginationListLinkRenderer
+  
+- if @record_category.category_type == 'list'
+  - if @record_category.children.length > 0
+    = render 'list', :list => @record_category.children

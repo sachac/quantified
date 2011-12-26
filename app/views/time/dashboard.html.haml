@@ -1,0 +1,16 @@
+= setup_page 'dashboard'
+
+%h3
+  Current activity:
+  = record_category_full(@current_activity.record_category)
+- if can? :manage_account, current_account
+  = form_tag track_time_path do
+    .clearfix
+      = label_tag :category, "Category"
+      .input
+        = text_field_tag :category
+        = submit_tag t('.track'), :class => 'btn'
+  
+%h3= "Week beginning #{l @week_beginning}"
+
+= render "activity_summary_daily", :summary => @summary, :summary_start => @week_beginning, :summary_end => @week_beginning + 1.week, :show_averages => true, :show_full_path => true
