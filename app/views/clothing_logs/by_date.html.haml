@@ -4,7 +4,7 @@
 = link_to 'Next', clothing_logs_by_date_path(@next_date)
 
 - if can? :create, ClothingLog
-  = render "partials/clothing_log_entry", :locals => { :default_date => @date }
+  = render "clothing_log_entry", :locals => { :default_date => @date }
   = set_focus_to_id("#clothing")
 - last_date = nil
 

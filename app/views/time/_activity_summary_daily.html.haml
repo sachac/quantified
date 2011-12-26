@@ -31,7 +31,7 @@
         %tr
           %td
             = link_to((show_full_path ? record_category_full(category) : category.name), time_review_path(:parent_id => category.id))
-            = " &raquo; " if category.list?
+            = " &raquo; ".html_safe if category.list?
           - date = summary_start
           - while date < summary_end
             - total = 0
