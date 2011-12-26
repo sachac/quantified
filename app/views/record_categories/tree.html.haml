@@ -1,0 +1,22 @@
+= setup_page 'categories', "Category tree", 'time/nav'
+= form_tag bulk_update_record_categories_path(:destination => request.fullpath) do
+  %table
+    %thead
+      - if managing?
+        %th Actions
+      %th Name
+      - if !mobile? and managing?
+        %th Type
+    %tbody  
+      - @list.each do |c|
+        %tr
+          - if managing?
+            %td= action_list(c)
+          %td= link_to c.full_name, c
+          - if !mobile? and managing?
+            %td
+              - %w{list activity record}.each do |type|
+                = radio_button_tag "category_type[#{c.id}]", type, c.category_type == type
+                = label_tag "category_type[#{c.id}][#{type}]", type.humanize, :class => 'inline'
+
+
