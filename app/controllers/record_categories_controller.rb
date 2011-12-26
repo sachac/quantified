@@ -1,14 +1,13 @@
 class RecordCategoriesController < ApplicationController
   autocomplete :record_category, :full_name, :full => true
+  respond_to :json
+  
   # GET /record_categories
   # GET /record_categories.xml
   def index
     authorize! :manage_account, current_account
     @record_categories = current_account.record_categories.where('parent_id IS NULL').order('name')
-    respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @record_categories }
-    end
+    respond_with @record_categories
   end
 
   # GET /record_categories/1
@@ -16,16 +15,14 @@ class RecordCategoriesController < ApplicationController
   def show
     authorize! :manage_account, current_account
     @record_category = RecordCategory.find(params[:id])
-    if @record_category.list?
-      @records = @record_category.tree_records.order('timestamp DESC').paginate :page => params[:page], :per_page => 10
-    else
-      @records = @record_category.records.order('timestamp DESC').paginate :page => params[:page], :per_page => 10
+    if html?
+      if @record_category.list?
+        @records = @record_category.tree_records.order('timestamp DESC').paginate :page => params[:page], :per_page => 10
+      else
+        @records = @record_category.records.order('timestamp DESC').paginate :page => params[:page], :per_page => 10
+      end
     end
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @record_category }
-    end
+    respond_with @record_category
   end
 
   # GET /record_categories/new
@@ -119,5 +116,11 @@ class RecordCategoriesController < ApplicationController
       add_flash :notice, t('records.index.recalculated_durations')
     end
     go_to record_categories_path and return
+  end
+
+  def tree
+    authorize! :manage_account, current_account
+    @list = current_account.record_categories.order(:dotted_ids)
+    respond_with @list
   end
 end
