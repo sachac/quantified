@@ -12,12 +12,20 @@ en:
     show:
       add_child: Add sub-category
       review: Review
-      start_activity: Start activity
+      start_activity: Start
       record: Record
   records:
     index:
       recalculate_durations: Recalculate durations
       recalculated_durations: Durations have been recalculated for this time span.
+    show:
+      current: Current activity
+      previous:
+        activity: Previous activity
+        entry: Previous entry
+      next:
+        activity: Next activity
+        entry: Next entry
   app:
     tap_log_record:
       number: "Number: %{number}"
@@ -70,8 +78,5 @@ en:
         username: "Username or email"
   formtastic:
     labels:
-      tap_log_record:
-        catOne: Category 1
-        catTwo: Category 2
-        catThree: Category 3
+      record:
         end_timestamp: End time
