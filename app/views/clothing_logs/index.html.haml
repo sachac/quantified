@@ -1,7 +1,7 @@
 %h1 Clothing log
 
 - if can? :create, ClothingLog
-  = render "partials/clothing_log_entry"
+  = render "clothing_log_entry"
   = set_focus_to_id("#clothing")
 - last_date = nil
 
@@ -37,7 +37,7 @@
       - if can? :update, clothing_log
         %td= link_to 'Edit', edit_clothing_log_path(clothing_log)
         %td= link_to 'Delete', clothing_log, :confirm => 'Are you sure?', :method => :delete
-      %td= render :partial => "partials/colours", :locals => { :colours => clothing_log.clothing.colour }
+      %td= render :partial => "colours", :locals => { :colours => clothing_log.clothing.colour }
 %br
 
 - if can? :create, ClothingLog
