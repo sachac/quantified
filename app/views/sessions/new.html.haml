@@ -19,10 +19,15 @@
                       %label
                         = f.check_box :remember_me, :class => "checkbox"
                         Remember me
+              .clear-fix
+                .input
+                  .box#services
+                    = link_to image_tag('google_32.png', :size => "32x32", :alt => "Google"), '/auth/google', :class => 'service'
+                    = link_to image_tag('facebook_32.png', :size => "32x32", :alt => "Facebook"), '/auth/facebook', :class => 'service'
             .actions
               %button.btn.primary{ :type => "submit" }
                 = I18n.t('app.user.login_submit')
-              = render :partial => "devise/shared/links"
+              = render "devise/shared/links"
       .sign_up.span8
         = form_tag sign_up_path do
           %fieldset
