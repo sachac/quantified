@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111225133526) do
+ActiveRecord::Schema.define(:version => 20111226164500) do
 
   create_table "clothing", :force => true do |t|
     t.string   "name"
@@ -263,6 +263,16 @@ ActiveRecord::Schema.define(:version => 20111225133526) do
   add_index "records", ["record_category_id"], :name => "index_records_on_record_category_id"
   add_index "records", ["timestamp"], :name => "index_records_on_timestamp"
 
+  create_table "services", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "provider"
+    t.string   "uid"
+    t.string   "uname"
+    t.string   "uemail"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "settings", :force => true do |t|
     t.string   "var",                      :null => false
     t.text     "value"
@@ -349,6 +359,8 @@ ActiveRecord::Schema.define(:version => 20111225133526) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "user_id"
+    t.datetime "end_timestamp"
+    t.string   "entry_type"
   end
 
   add_index "time_records", ["user_id"], :name => "index_time_records_on_user_id"
