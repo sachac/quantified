@@ -55,4 +55,35 @@ class ApplicationController < ActionController::Base
     end
 #     sortable_column_order
   end
+
+  def go_to(url)
+    if params[:destination].blank?
+      redirect_to url
+    else
+      redirect_to params[:destination]
+    end
+  end
+
+  def add_flash(symbol, value)
+    if flash[symbol].blank?
+      flash[symbol] = value
+    else
+      if flash[symbol].is_a? String
+        flash[symbol] = [flash[symbol]]
+      end
+      flash[symbol] << value
+    end
+  end
+
+  def prepare_filters(symbols)
+    @filters = Hash.new
+    symbols.each do |s|
+      case s
+      when :date_range
+        @filters[:date_range] = t
+        params[:start] ||= current_account.beginning_of_week.strftime('%Y-%m-%d')
+        params[:end] ||= Time.zone.now.strftime('%Y-%m-%d')
+      end
+    end
+  end
 end

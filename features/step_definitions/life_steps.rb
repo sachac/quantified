@@ -1,9 +1,9 @@
 # TIME
 
 When /^I look at my time use for the past (\d+) days?$/ do |arg1|
-  @start_time = Date.today - arg1.to_i.days
-  @end_time = Date.today - 1.day
-  @log = TimeTrackerLog.new
+  @start_time = (Date.today - arg1.to_i.days).midnight.in_time_zone
+  @end_time = Date.today.midnight.in_time_zone
+  @log = TimeTrackerLog.new(User.first)
   @entries = @log.entries(@start_time, @end_time)
   @summary = @log.summarize(@start_time, @end_time)
 end
@@ -19,7 +19,7 @@ Then /^I should have worked between (\d+) and (\d+) hours$/ do |min, max|
 end
 
 Then /^I should have slept between (\d+) and (\d+) hours a day$/ do |min, max|
-  average = @summary['A - Sleep'] * 1.0 / (1.hour * (@end_time - @start_time))
+  average = @summary['A - Sleep'] * 1.0 / (1.hour * ((@end_time - @start_time) / 1.day))
   assert_operator average, :>=, min.to_f
   assert_operator average, :<=, max.to_f
 end

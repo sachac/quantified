@@ -1,11 +1,11 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.0.10'
+gem 'rails', '3.1'
 # Bundle edge Rails instead:
 #gem 'rails', :git => 'git://github.com/rails/rails.git'
 #gem 'arel', :git => 'git://github.com/rails/arel.git'
 #gem 'journey', :git => 'git://github.com/rails/journey.git'
-
+gem 'rails-dev-tweaks'
 gem 'jquery-rails'
 gem 'sqlite3'
 gem 'isbndb'
@@ -16,6 +16,8 @@ gem 'haml-rails'
 gem 'color'
 gem 'narray'
 gem 'formtastic'
+gem 'rails3-jquery-autocomplete'
+gem 'formtastic-bootstrap'
 gem 'handles_sortable_columns'
 gem 'gdata'
 gem 'cancan'
@@ -47,13 +49,23 @@ gem 'statsample'
 gem 'rails3-jquery-autocomplete'
 gem 'acts-as-taggable-on', :git => 'git://github.com/mbleigh/acts-as-taggable-on.git'
 gem 'chronic'
+gem 'acts-as-tree-with-dotted-ids'
+gem 'nifty-generators'
 #gem 'sparklines'
 #gem 'sparklines_generator'
 gem 'workflow'
 gem 'devise'
 gem 'web-app-theme'
 gem 'ruby_parser'
-gem 'sass'
+group :assets do
+  gem 'therubyracer'
+  gem 'sass-rails', "~> 3.1.0.rc"
+  gem 'coffee-rails', "~> 3.1.0.rc"
+  gem 'uglifier'
+  gem 'compass'
+  gem 'compass-bootstrap'
+end
+	
 gem 'barometer'
 gem 'mechanize'
 gem 'rails-settings-cached', :require => 'rails-settings'
@@ -72,8 +84,6 @@ group :development, :test do
   gem 'forgery'
   gem 'database_cleaner'
   gem 'cucumber_factory', :git => 'https://github.com/makandra/cucumber_factory.git'
-  gem 'compass'
-  gem 'compass-bootstrap'
 end
 gem 'yaml_db'
 gem 'email_validator'

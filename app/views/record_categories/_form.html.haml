@@ -1,0 +1,14 @@
+- rec ||= @record_category
+- show_parent = true if show_parent.nil?
+= semantic_form_for rec do |f|
+  = f.inputs do
+    - if show_parent
+      = f.input :parent
+    - else
+      = f.input :parent_id, :as => :hidden
+    = f.input :name
+    = f.input :color
+    = f.input :data_description, :as => :text
+    = f.input :category_type, :as => :radio, :collection => ['list', 'activity', 'record']
+  .actions
+    = f.submit t('app.general.save')

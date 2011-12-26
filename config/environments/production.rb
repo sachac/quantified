@@ -27,10 +27,6 @@ Home::Application.configure do
   # Use a different cache store in production
   # config.cache_store = :mem_cache_store
 
-  # Disable Rails's static asset server
-  # In production, Apache or nginx will already do this
-  config.serve_static_assets = false
-
   # Enable serving of images, stylesheets, and javascripts from an asset server
   # config.action_controller.asset_host = "http://assets.example.com"
 
@@ -46,4 +42,14 @@ Home::Application.configure do
 
   # Send deprecation notices to registered listeners
   config.active_support.deprecation = :notify
+
+ config.assets.precompile += %w( search.js )
+
+  # Specifies the header that your server uses for sending files
+   # Disable Rails's static asset server (Apache or nginx will already do this)
+   config.serve_static_assets = false
+
+   config.assets.compress = true
+   config.assets.compile = false
+   config.assets.digest = true
 end

@@ -1,0 +1,37 @@
+= setup_page 'records', @record.record_category.name + " - " + l(@record.timestamp), 'time/nav'
+= record_category_breadcrumbs(@record.record_category)
+- if can? :manage_account, current_account
+  - if @record.record_category.category_type == 'activity'
+    = after_title link_to("Start activity", track_record_category_path(:id => @record.record_category.id), :class => 'btn', :style => 'margin-left: 5px', :method => :post)
+  \|
+  = link_to t('app.general.edit'), edit_record_path(@record)
+\|
+= link_to "View category", record_category_path(@record.record_category)
+%table
+  %tbody
+    - if @record.activity? and @record.timestamp?
+      - if @record.end_timestamp?
+        %tr
+          %td.h= t('formtastic.labels.record.end_timestamp')
+          %td= "#{l(@record.end_timestamp)} (#{duration @record.duration})"
+      - else
+        %tr
+          %td.h= t('formtastic.labels.record.end_timestamp')
+          %td
+            Ongoing
+            = "(#{duration Time.now - @record.timestamp})"
+    - if @record.data?
+      - data = @record.record_category.data
+      - @record.data.each do |k,v|
+        - if can?(:manage_account, current_account) or !v.downcase.include?('!private')
+          %tr
+            %td.h
+              - if data and data[k]
+                = data[k][:label]
+              - else
+                = k.to_s.humanize
+            %td= v
+    - if @current_activity and @current_activity != @record
+      %tr
+        %td.h= t('app.record.current_activity')
+        %td= link_to @current_activity.full_name, @current_activity
