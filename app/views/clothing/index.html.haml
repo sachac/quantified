@@ -19,7 +19,7 @@ Tags:
       = link_to s.status, clothing_by_status_path(s.status)
 
 - today = Date.today.strftime('%Y-%m-%d')
-= render "partials/clothing_log_entry"
+= render "clothing_log_entry"
 = set_focus_to_id("#clothing")
 
 - Clothing.tag_counts do |tag, css_class|
