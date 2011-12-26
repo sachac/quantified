@@ -28,7 +28,7 @@ class TimeController < ApplicationController
     @category = params[:parent_id] ? current_account.record_categories.find(params[:parent_id]) : nil
     range = @summary_start..@summary_end
     @zoom = Record.choose_zoom_level(range)
-    @summary = RecordCategory.summarize(:user => current_account, :range => range, :zoom => @zoom, :parent => @category, :summarize_children => true)
+    @summary = RecordCategory.summarize(:user => current_account, :range => range, :zoom => @zoom, :parent => @category, :tree => :next_level)
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @record_categories }
