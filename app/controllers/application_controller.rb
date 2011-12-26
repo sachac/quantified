@@ -5,7 +5,9 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
   before_filter :before_awesome
   helper_method :current_account  
-  
+  helper_method :mobile?
+  helper_method :managing?
+
   rescue_from NonexistentAccount do |e|
     logger.info "NONEXISTENT #{current_subdomain}"
     flash[:error] = I18n.t('app.error.nonexistent_account')
@@ -85,5 +87,27 @@ class ApplicationController < ActionController::Base
         params[:end] ||= Time.zone.now.strftime('%Y-%m-%d')
       end
     end
+  end
+
+
+  def mobile?
+    session[:layout] == 'mobile'
+  end
+
+  def managing?
+    can? :manage_account, current_account
+  end
+
+  def html?
+    params[:format].blank? or params[:format] == 'html'
+  end
+
+  def json_paginate(entries)
+    {
+      :current_page => entries.current_page,
+      :per_page => entries.per_page,
+      :total_entries => entries.total_entries,
+      :entries => entries
+    }
   end
 end
