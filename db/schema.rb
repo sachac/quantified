@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111214041042) do
+ActiveRecord::Schema.define(:version => 20111225133526) do
 
   create_table "clothing", :force => true do |t|
     t.string   "name"
@@ -230,6 +230,39 @@ ActiveRecord::Schema.define(:version => 20111214041042) do
   add_index "memories", ["name"], :name => "index_memories_on_name"
   add_index "memories", ["user_id"], :name => "index_memories_on_user_id"
 
+  create_table "record_categories", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "name"
+    t.integer  "parent_id"
+    t.string   "dotted_ids"
+    t.string   "category_type"
+    t.text     "data"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "full_name"
+    t.string   "color"
+  end
+
+  add_index "record_categories", ["dotted_ids"], :name => "index_record_categories_on_dotted_ids"
+  add_index "record_categories", ["name"], :name => "index_record_categories_on_name"
+
+  create_table "records", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "source"
+    t.integer  "source_id"
+    t.datetime "timestamp"
+    t.integer  "record_category_id"
+    t.text     "data"
+    t.datetime "end_timestamp"
+    t.integer  "duration"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.date     "date"
+  end
+
+  add_index "records", ["record_category_id"], :name => "index_records_on_record_category_id"
+  add_index "records", ["timestamp"], :name => "index_records_on_timestamp"
+
   create_table "settings", :force => true do |t|
     t.string   "var",                      :null => false
     t.text     "value"
@@ -316,6 +349,8 @@ ActiveRecord::Schema.define(:version => 20111214041042) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "user_id"
+    t.datetime "end_timestamp"
+    t.string   "entry_type"
   end
 
   add_index "time_records", ["user_id"], :name => "index_time_records_on_user_id"

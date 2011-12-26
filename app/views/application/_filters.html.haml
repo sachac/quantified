@@ -1,0 +1,13 @@
+.filters.collapsible.collapsed
+  %legend Filters [+]
+  .details
+    = form_tag request.fullpath, :method => :get do
+      - if @filters[:date_range]
+        .clearfix
+          = label_tag :start, 'Start' 
+          .input= text_field_tag :start, Date.parse(params[:start]).strftime("%Y-%m-%d"), :class => 'datepicker' 
+        .clearfix
+          = label_tag :end, 'End' 
+          .input= text_field_tag :end, Date.parse(params[:end]).strftime("%Y-%m-%d"), :class => 'datepicker' 
+      .actions   
+        = submit_tag t('app.general.filter'), :class => 'btn primary'

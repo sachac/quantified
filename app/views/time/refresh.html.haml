@@ -4,16 +4,11 @@
     %h2.title Home
     .inner
       %p.first
-        - form_tag(refresh_from_csv_path, { :multipart => true }) do
+        = form_tag(refresh_from_csv_path, { :multipart => true }) do
           .clearfix
             = label_tag(:tap_file, "Tap Log CSV")
             .input
               = file_field_tag :tap_file
               = link_to "Tap Log", "http://loggerlife.blogspot.com/"
-          .clearfix
-            = label_tag(:file, "Time Recording work unit overview CSV")
-            .input
-              = file_field_tag :file
-              = link_to "Time Recording for Android", "https://market.android.com/details?id=com.dynamicg.timerecording&hl=en"
           .actions    
             = submit_tag "Submit", :class => 'btn primary'

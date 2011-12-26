@@ -1,39 +1,36 @@
 <%= setup_page 'graph' %>
-<%= render 'start_end_form' %>
-<%= render 'by_day_summary' %>
-<div class="day">
-<div id="canvas" style="width: <%= @width %>px; height: <%= @height %>px"></div>
+<%= render 'filters' %>
+<div id="canvas" style="width: 900px; height: 500px"></div>
+
 <script type="text/javascript">
-  var sets = new Array();
-  window.onload = function() {
-    var p = Raphael("canvas");
-    <% [0, 3, 6, 9, 12, 15, 18, 21, 24].each do |hour|
-       x = hour * 3600 * @second_width %>
-       <%= "var l = p.path('M#{x.to_i} 0L#{x.to_i} #{@height}').attr({stroke: 'gray', 'stroke-width': 0.5, 'stroke-opacity': 0.5});" %>
-       <%= "var l = p.path('M#{x.to_i + @distribution_offset} 0L#{x.to_i + @distribution_offset} #{@height}').attr({stroke: 'gray', 'stroke-width': 0.5, 'stroke-opacity': 0.5});" %>
-    <% end %>
-    <% @time_records.each do |d| %>
-      if (!sets['<%= d[:class] %>']) { sets['<%= d[:class] %>'] = p.set(); }
-      <%= "var r = p.rect(#{d[:x]}, #{d[:y]}, #{d[:width]}, #{@day_height}).attr({fill: '#{d[:color]}', stroke: 'none', title: '#{d[:title]}'});".html_safe %>
-      r.hover(function(event) { sets['<%= d[:class] %>'].attr({'stroke': '#000'}); },
-        function(event) { sets['<%= d[:class] %>'].attr({'stroke': 'none'}); });
-      sets['<%= d[:class] %>'].push(r);
-    <% end %>
-    <% @days.each do |d| %>
-      if (!sets['<%= d[:class] %>']) { sets['<%= d[:class] %>'] = p.set(); }
-      <%= "var r = p.rect(#{d[:x]}, #{d[:y]}, #{d[:width]}, #{@day_height}).attr({fill: '#{d[:color]}', stroke: 'none', title: '#{d[:title]}'});".html_safe %>
-      r.hover(function(event) { sets['<%= d[:class] %>'].attr({'stroke': '#000'}); },
-        function(event) { sets['<%= d[:class] %>'].attr({'stroke': 'none'}); });
-      sets['<%= d[:class] %>'].push(r);
-    <% end %>
-    
+  var canvasID = "canvas"
+  var dayWidth;
+  var dayHeight;
+  var canvas;
+  function setupCanvas(id, numDays) {
+    canvasID = id;
+    canvasWidth = $("#" + id).width();
+    canvasHeight = $("#" + id).height();
+    dayWidth = canvasWidth;
+    dayHeight = canvasHeight / numDays;
+    canvas = Raphael(canvasID);
   }
+  
+  function graphTimeEntry(dayOffset, startOffset, endOffset, title, color, entryClass) {
+    x = (startOffset * dayWidth / 86400.0);
+    y = (dayOffset * dayHeight);
+    width = (endOffset - startOffset) * dayWidth / 86400;
+    r = canvas.rect(x, y, width, dayHeight).attr({fill: color, stroke: 'none', title: title});
+  }
+  
+  $(document).ready(function() {
+    setupCanvas('canvas', <%= @records.size %>);
+    <% @records.each do |day_offset, row| %>
+      <% row.each do |entry| %>
+        <%= graph_time_entry(day_offset, entry) %>
+      <% end %>
+    <% end %>
+  });
 </script>
-<div class="selector"><%= @labels.join(" | ").html_safe %></div>
-<script type="text/javascript">
-  $(".selector a").hover(
-    function() { sets[$(this).attr("class")].attr({'stroke': '#000'}); },
-    function() { sets[$(this).attr("class")].attr({'stroke': 'none'}); });
-</script>
-</div>
-<%= render 'partials/time_sparklines', :cat => @cat, :time_graphs => @time_graphs %>
+
+ 

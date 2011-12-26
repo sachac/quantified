@@ -294,3 +294,30 @@ When /^I am on my own subdomain$/ do
   host! "#{@user.username}.example.com"
   Capybara.app_host = "http://#{@user.username}.example.com"
 end
+
+When /^I create a record category named "([^"]*)" which is a "([^"]*)"$/ do |arg1, arg2|
+  visit new_record_category_path
+  fill_in 'record_category[name]', :with => arg1
+  select arg2, :from => 'record_category[category_type]'
+  click_button I18n.t('app.general.save')
+end
+
+When /^I create a record category named "([^"]*)" which is an "([^"]*)" under "([^"]*)"$/ do |arg1, arg2, arg3|
+  visit new_record_category_path
+  fill_in 'record_category[name]', :with => arg1
+  choose arg2, :from => 'record_category[category_type]'
+  fill_in 'record_category[parent]', :with => arg3
+  click_button I18n.t('app.general.save')
+end
+
+When /^I go to my time log$/ do
+  visit track_time_path
+end
+
+When /^I click on "([^"]*)"$/ do |arg1|
+  click_link arg1
+end
+
+Then /^I should see that my time has been logged$/ do
+  page.body should include I18n.t('time_log.logged')
+end

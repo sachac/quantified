@@ -1,0 +1,65 @@
+- show_averages = false unless defined? show_averages
+- show_full_path = false unless defined? show_full_path
+  
+%p
+  - summary_end -= 1.day
+  -# Display the last two weeks
+  %table.condensed-table
+    %thead
+      %tr
+        %th{:rowspan => 2} Activity
+        - date = summary_start + 6.days
+        - while date <= summary_end
+          %th{:colspan => 8}
+            Week ending
+            = l(date, :format => :short)
+            - date += 1.week
+        - if show_averages
+          %th{:rowspan => 2} Average
+      %tr
+        - date = summary_start
+        - while date < summary_end
+          - 1.upto(7) do |count|
+            %th.right{:title => l(date, :format => :long), :style => 'border-left: 1px solid #DDD;'}= date.strftime '%a'
+            - date += 1.day
+          %th.right Total
+    %tbody
+      - summary[:rows].sort_by { |k,v| k.full_name }.each do |row|
+        - category = row[0]
+        - values = row[1]
+        - next if category == :total 
+        %tr
+          %td
+            = link_to((show_full_path ? record_category_full(category) : category.name), time_review_path(:parent_id => category.id))
+            = " &raquo; " if category.list?
+          - date = summary_start
+          - while date < summary_end
+            - total = 0
+            - count_days = 0
+            - 1.upto(7) do |count|
+              %td.right{:title => category.name + " - " + l(date)}= duration values[date]
+              - total += values[date]
+              - count_days += 1 if values[date] > 0
+              - date += 1.day
+            %td.right
+              %strong{:title => ("Average: " + duration(total / count_days) if count_days > 0)}= duration total
+            - if show_averages
+              %td.right
+                = duration(total / count_days) if count_days > 0
+      %tr
+        %td Total
+        - date = summary_start
+        - while date < summary_end
+          - total = 0
+          - count_days = 0
+          - 1.upto(7) do |count|
+            %td.right{:title => l(date)}= duration summary[:total][:total][date]
+            - total += summary[:total][:total][date]
+            - count_days +=1 if summary[:total][:total][date] > 0
+            - date += 1.day
+          %td.right
+            %strong{:title => ("Average: " + duration(total / count_days) if count_days > 0)}= duration total  
+          - if show_averages
+            %td.right
+              = duration(total / count_days) if count_days > 0
+            
