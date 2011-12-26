@@ -1,0 +1,25 @@
+- show_duration = false unless defined? show_duration
+%table.condensed-table.zebra-striped
+  %thead
+    %tr
+      %th Timestamp
+      %th Category
+      %th Data
+      - if show_duration
+        %th Duration
+      - if can? :manage_account, current_account  
+        %th
+  %tbody      
+    - records.each do |record|
+      %tr
+        %td= link_to l(record.timestamp, :format => :short), record, :title => l(record.timestamp, :format => :long)
+        %td= link_to record_category_full(record.record_category), record.record_category
+        %td
+          - if can? :manage_account, current_account or !record.private?
+            = record_data(record.data).html_safe
+          = object_labels(record)  
+        - if show_duration
+          %td= duration record.duration
+        - if can? :manage_account, current_account  
+          %td= action_list(record)
+            

@@ -1,0 +1,54 @@
+%p
+  - summary_end -= 1.day
+  -# Display the last two weeks
+  %table.condensed-table
+    %thead
+      %tr
+        %th{:rowspan => 2} Activity
+        - date = summary_start + 6.days
+        - while date <= summary_end
+          %th{:colspan => 8}
+            Week ending
+            = l(date, :format => :short)
+            - date += 1.week
+      %tr
+        - date = summary_start
+        - while date < summary_end
+          - 1.upto(7) do |count|
+            %th.right{:title => l(date, :format => :long), :style => 'border-left: 1px solid #DDD;'}= date.strftime '%a'
+            - date += 1.day
+          %th.right Total  
+    %tbody
+      - summary.sort_by { |k,v| (k == :total) ? "ZZZ" : k.name }.each do |row|
+        - category = row[0]
+        - values = row[1]
+        - next if category == :total 
+        %tr
+          %td
+            = link_to category.name, time_review_path(:parent_id => category.id)
+            = " > " if category.list?
+          - date = summary_start
+          - while date < summary_end
+            - total = 0
+            - count_days = 0
+            - 1.upto(7) do |count|
+              %td.right{:title => category.name + " - " + l(date)}= duration values[date]
+              - total += values[date]
+              - date += 1.day
+              - count_days += 1 if values[date] > 0
+            %td.right
+              %strong{:title => ("Average: " + duration(total / count_days) if count_days > 0)}= duration total  
+      %tr
+        %td Total
+        - date = summary_start
+        - while date < summary_end
+          - total = 0
+          - count_days = 0
+          - 1.upto(7) do |count|
+            %td.right{:title => l(date)}= duration summary[:total][date]
+            - total += summary[:total][date]
+            - count_days +=1 if summary[:total][date] > 0
+            - date += 1.day
+          %td.right
+            %strong{:title => ("Average: " + duration(total / count_days) if count_days > 0)}= duration total  
+          

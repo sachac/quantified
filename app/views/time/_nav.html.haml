@@ -1,8 +1,9 @@
 %ul.tabs
+  %li{:class => active_class(active, 'dashboard')}= link_to 'Dashboard', time_dashboard_path
   %li{:class => active_class(active, 'graph')}= link_to 'Graph', time_graph_path(:start => @start ? @start.strftime("%Y-%m-%d") : nil, :end => @end ? @end.strftime("%Y-%m-%d") : nil)
-  %li{:class => active_class(active, 'clock')}= link_to 'Clock', time_clock_path(:start => @start ? @start.strftime("%Y-%m-%d") : nil, :end => @end ? @end.strftime("%Y-%m-%d") : nil)
-  %li{:class => active_class(active, 'index')}= link_to 'Summary', time_summary_path
+  %li{:class => active_class(active, 'review')}= link_to 'Summary', time_review_path
   - if can? :manage_account, @account
     %li{:class => active_class(active, 'refresh')}= link_to 'Upload data', refresh_time_path
-  %li{:class => active_class(active, 'tap_logs')}= link_to 'Logs', tap_log_records_path
+  %li{:class => active_class(active, 'categories')}= link_to 'Categories', record_categories_path
+  %li{:class => active_class(active, 'records')}= link_to 'Logs', records_path
       

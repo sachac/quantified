@@ -7,26 +7,13 @@
         \-
       quantified awesome
     = stylesheet_link_tag "http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.8/themes/ui-lightness/jquery-ui.css"
-    = stylesheet_link_tag 'application', :media => 'screen, projection'              
+    = stylesheet_link_tag 'application', :media => 'screen, projection'
     - conditional_html
     - if session['layout'] == 'mobile'
       %meta{:name => "HandheldFriendly", :content=>"true"}
       %meta{:name => "viewport", :content => "width=device-width, height=device-height, user-scalable=yes"}
       = stylesheet_link_tag 'mobile'  
-    = javascript_include_tag :defaults
-    = javascript_include_tag "autocomplete-rails.js"
-    = javascript_include_tag "raphael-min.js"
-    = javascript_include_tag "jquery.sparkline.min.js"
-    :javascript
-      var _gaq = _gaq || [];
-      _gaq.push(['_setAccount', 'UA-27780597-1']);
-      _gaq.push(['_setDomainName', 'quantifiedawesome.com']);
-      _gaq.push(['_trackPageview']);
-      (function() {
-        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-      })();
+    = javascript_include_tag "application"
     = csrf_meta_tag
   %body
     .topbar
@@ -55,11 +42,19 @@
         .flash
           - flash.each do |type, message|
             %div{:class => "alert-message #{type}"}
-              %p= message
+              - if message.is_a? Array
+                %ul
+                  - message.each do |m|
+                    %li= m
+              - else
+                %p= message
         - if content_for? :nav
           = yield :nav
         - if content_for? :title
-          %h2= yield :title
+          %h2
+            = yield :title
+            - if content_for? :after_title
+              = yield :after_title
         = yield
       %footer
         .block

@@ -1,0 +1,15 @@
+- if @category
+  = setup_page 'review', "#{@category.name}"
+  - if @category.activity?
+    = after_title link_to("Start activity", track_record_category_path(:id => @category.id), :class => 'btn', :style => 'margin-left: 5px', :method => :post)
+  = link_to 'Home', time_review_path
+  - @category.ancestors.each do |c|
+    &raquo;
+    = link_to c.name, time_review_path(:parent_id => c.id)
+  \|
+  = link_to 'View category', record_category_path(@category)
+- else
+  = setup_page 'review'
+= render 'filters'
+
+= render "activity_summary_#{@zoom}", :summary => @summary, :summary_start => @summary_start, :summary_end => @summary_end

@@ -2,6 +2,22 @@
 # See http://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
 
 en:
+  time_log:
+    logged: Activity has been logged.
+  time:
+    refreshed: Time entries have been refreshed.
+    dashboard:
+      track: Track
+  record_categories:
+    show:
+      add_child: Add sub-category
+      review: Review
+      start_activity: Start activity
+      record: Record
+  records:
+    index:
+      recalculate_durations: Recalculate durations
+      recalculated_durations: Durations have been recalculated for this time span.
   app:
     tap_log_record:
       number: "Number: %{number}"

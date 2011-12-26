@@ -1,0 +1,21 @@
+= setup_page 'records', nil, 'time/nav'
+
+.filters.collapsible.collapsed
+  %legend Filters [+]
+  .details
+    = form_tag records_path, :method => :get do
+      .clearfix
+        = label_tag :start, 'Start' 
+        .input= text_field_tag :start, @start ? @start.strftime("%Y-%m-%d") : nil, :class => 'datepicker' 
+      .clearfix
+        = label_tag :end, 'End' 
+        .input= text_field_tag :end, @end ? @end.strftime("%Y-%m-%d") : nil, :class => 'datepicker' 
+      .clearfix
+        = label_tag :filter, t('app.general.filter')
+        .input
+          = text_field_tag :filter_string, params[:filter_string]
+      .actions   
+        = submit_tag t('app.general.filter'), :class => 'btn primary'
+        = submit_tag t('.recalculate_durations'), :class => 'btn'
+= render 'summary', :records => @records, :show_duration => true
+= will_paginate @records, :renderer => PaginationListLinkRenderer
