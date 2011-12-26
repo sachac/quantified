@@ -8,6 +8,17 @@
         %li= link_to 'Graph', time_graph_path
         %li= link_to 'Categories', record_categories_path
         %li= link_to 'Logs', records_path
+      - if @current_activity  
+        %strong  
+          Current activity:
+          = link_to record_category_full(@current_activity.record_category), @current_activity
+      - if can? :manage_account, current_account
+        = form_tag track_time_path do
+          .clearfix
+            = label_tag :category, "Category"
+            .input
+              = text_field_tag :category
+              = submit_tag t('time.dashboard.track'), :class => 'btn'
       - if can? :manage_account, current_account 
         = form_tag(refresh_from_csv_path, { :multipart => true }) do
           = label_tag(:tap_file, "Tap Log CSV")
