@@ -31,7 +31,24 @@
               - else
                 = k.to_s.humanize
             %td= v
-    - if @current_activity and @current_activity != @record
+    - if @context[:current] and @context[:current] != @record
       %tr
-        %td.h= t('app.record.current_activity')
-        %td= link_to @current_activity.full_name, @current_activity
+        %td.h= t('.current')
+        %td= link_to @context[:current].full_name, @context[:current]
+    - if @context[:previous][:activity] != @context[:current]
+      %tr
+        %td.h= t('.previous.activity')
+        %td= link_to @context[:previous][:activity].full_name, @context[:previous][:activity]
+    - if @context[:previous][:entry] != @context[:previous][:activity]
+      %tr
+        %td.h= t('.previous.entry')
+        %td= link_to @context[:previous][:entry].full_name, @context[:previous][:entry]
+    - if @context[:next][:activity]
+      %tr
+        %td.h= t('.next.activity')
+        %td= link_to @context[:next][:activity].full_name, @context[:next][:activity]
+    - if @context[:next][:entry] != @context[:next][:activity]
+      %tr
+        %td.h= t('.next.entry')
+        %td= link_to @context[:next][:entry].full_name, @context[:next][:entry]
+          
