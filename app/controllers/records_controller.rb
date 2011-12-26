@@ -1,4 +1,5 @@
 class RecordsController < ApplicationController
+  respond_to :json
   # GET /records
   # GET /records.xml
   def index
@@ -25,8 +26,8 @@ class RecordsController < ApplicationController
     end
     @records = @records.paginate :page => params[:page]
     respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @records }
+      format.html
+      format.json { render :json => json_paginate(@records) }
     end
   end
 
@@ -35,16 +36,15 @@ class RecordsController < ApplicationController
   def show
     authorize! :manage_account, current_account
     @record = current_account.records.find(params[:id])
-    @current_activity = @record.current_activity
-    @during_this = @record.during_this
-    @previous_activity = @record.previous.activities.first
-    @previous_entry = @record.previous.first
-    @next_activity = @record.next.activities.first
-    @next_entry = @record.next.first
+    @context = @record.context
+    if html?
+      @during_this = @record.during_this
+    end
 
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @record }
+      format.json { render :json => { :record => @record, :context => @context } }
     end
   end
 
