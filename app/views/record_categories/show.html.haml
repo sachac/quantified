@@ -1,7 +1,10 @@
 = setup_page 'categories', @record_category.name, 'time/nav'
 
-- if @record_category.activity? and can? :manage_account, current_account
-  = after_title link_to("Start activity", track_record_category_path(:id => @record_category.id), :class => 'btn', :style => 'margin-left: 5px', :method => :post)
+- if managing?
+  - if @record_category.activity?
+    = after_title link_to(t('.start_activity'), track_record_category_path(:id => @record_category.id), :class => 'btn', :style => 'margin-left: 5px', :method => :post)
+  - if @record_category.record?
+    = after_title link_to(t('.record'), track_record_category_path(:id => @record_category.id), :class => 'btn', :style => 'margin-left: 5px', :method => :post)
   
 
 %p

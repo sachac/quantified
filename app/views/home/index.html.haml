@@ -19,11 +19,6 @@
             .input
               = text_field_tag :category
               = submit_tag t('time.dashboard.track'), :class => 'btn'
-      - if can? :manage_account, current_account 
-        = form_tag(refresh_from_csv_path, { :multipart => true }) do
-          = label_tag(:tap_file, "Tap Log CSV")
-          = file_field_tag :tap_file
-          = submit_tag "Submit", :class => 'btn primary'
   - if @contexts
     .contexts.category
       .category_label
