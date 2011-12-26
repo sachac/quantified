@@ -1,4 +1,7 @@
 Home::Application.routes.draw do
+  match '/auth/:service/callback' => 'services#create'
+  resources :services, :only => [:index, :create, :destroy]
+  match 'signups' => 'signups#index'
   resources :records do
     member do
       post :clone
