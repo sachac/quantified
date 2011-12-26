@@ -13,6 +13,7 @@ class HomeController < ApplicationController
       @by_date = current_account.clothing_logs.by_date(@clothing_logs)
       @dates = 7.downto(0).collect { |i| Date.today - i.days }
       @contexts = current_account.contexts
+      @current_activity = current_account.records.activities.order('timestamp DESC').first
     end
   end
   def summary
