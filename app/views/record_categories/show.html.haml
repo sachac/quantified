@@ -12,8 +12,8 @@
   - if managing?
     \|
     = link_to t('app.general.edit'), edit_record_category_path(@record_category)
-    \|
     - if @record_category.list?
+      \|
       = link_to t('.add_child'), new_record_category_path(:parent_id => @record_category.id)
   - unless @record_category.record?
     \|
