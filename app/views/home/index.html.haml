@@ -6,19 +6,11 @@
       %ul.pills  
         %li= link_to 'Dashboard', time_dashboard_path
         %li= link_to 'Graph', time_graph_path
+        %li= link_to 'Review', time_review_path
         %li= link_to 'Categories', record_categories_path
         %li= link_to 'Logs', records_path
-      - if @current_activity  
-        %strong  
-          Current activity:
-          = link_to record_category_full(@current_activity.record_category), @current_activity
-      - if can? :manage_account, current_account
-        = form_tag track_time_path do
-          .clearfix
-            = label_tag :category, "Category"
-            .input
-              = text_field_tag :category
-              = submit_tag t('time.dashboard.track'), :class => 'btn'
+      = render 'current_activity'  
+      = render 'quick_record'    
   - if @contexts
     .contexts.category
       .category_label

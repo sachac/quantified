@@ -24,17 +24,6 @@ a
   list-style: none
 li.input
   margin-left: 0px
-label.label
-  padding-top: 6px
-  font-size: 13px
-  line-height: 18px
-  float: left
-  width: 20%
-  text-align: right
-  color: #404040
-  background: #fff
-  font-weight: normal
-  text-transform: none
 .formtastic li
   margin-top: 3px
   margin-bottom: 3px
@@ -43,8 +32,6 @@ label.label
 .formtastic .actions
   padding-left: 230px
   
-input, textarea, select, .uneditable-input
-  width: 50%
 form .clear-fix 
   margin-bottom: 10px
   zoom: 1
@@ -104,3 +91,17 @@ td.h
   background: white
   font-weight: normal
   text-transform: none
+label.inline
+  padding-top: 0px
+  width: auto
+  text-align: left
+  margin-right: 10px
+  float: none
+.condensed-table
+  font-size: smaller
+.right
+  text-align: right
+.clearfix
+  clear: both
+.full .login, .full .sign_up
+  @extend .span8

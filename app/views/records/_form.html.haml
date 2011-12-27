@@ -1,6 +1,7 @@
 = semantic_form_for @record do |f|
   = f.inputs do
     = f.input :timestamp, :as => :string, :input_html => { :value => l(f.object.timestamp, :format => :long) }
+    = f.input :record_category, :collection => current_account.record_categories.order('full_name')
   - data = @record.record_category.data
   - if data
     - data.each do |k,v|
