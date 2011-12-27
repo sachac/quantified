@@ -32,7 +32,7 @@
         - next if category == :total 
         %tr
           %td
-            = link_to((show_full_path ? record_category_full(category) : category.name), time_review_path(params.merge({:parent_id => category.id})), :title => category.full_name)
+            = link_to((show_full_path ? record_category_full(category) : category.name), time_review_path(params.merge({:action => 'review', :controller => 'time', :parent_id => category.id})), :title => category.full_name)
             = " &raquo; ".html_safe if category.list?
           - date = summary_start
           - total = 0
