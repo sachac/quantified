@@ -1,0 +1,6 @@
+.topbar
+  .fill
+    - if user_signed_in?
+      = link_to 'quantified awesome', root_path
+    - else
+      = link_to 'quantified awesome: log in', new_user_session_path
