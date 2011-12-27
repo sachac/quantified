@@ -63,20 +63,18 @@ class TimeController < ApplicationController
     now = params[:timestamp] ? Time.zone.parse(params[:timestamp]) : Time.now
     if params[:category_id]
       cat = current_account.record_categories.find_by_id(params[:category_id])
+      rec = Record.create(:user => current_account, :record_category => cat, :timestamp => params[:timestamp] ? Time.zone.parse(params[:timestamp]) : Time.now)
+      rec.update_previous
     elsif params[:category]
-      cat = RecordCategory.search(current_account, params[:category])
-      if cat.length > 1
-        redirect_to disambiguate_record_categories_path(:timestamp => now, :category => params[:category]) and return 
-      end
+      rec = Record.create_from_query(current_account, params[:category], :timestamp => params[:timestamp])
+      rec.update_previous
     end
-    unless cat
-      add_flash :error, 'Could not find matching category.'
-      go_to time_dashboard_path and return
+    if rec.nil?
+      go_to time_dashboard_path, :error => 'Could not find matching category' and return
+    elsif rec.is_a? Record
+      redirect_to edit_record_path(rec, :destination => params[:destination]) and return
+    else
+      redirect_to disambiguate_record_categories_path(:timestamp => now, :category => params[:category]), :method => :post and return 
     end
-    if cat.activity?
-      Record.update_last(current_account, now)
-    end
-    rec = current_account.records.create(:timestamp => now, :source => 'web', :record_category => cat)
-    redirect_to edit_record_path(rec, :destination => params[:destination]) and return
   end
 end
