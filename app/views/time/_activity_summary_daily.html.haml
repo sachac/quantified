@@ -8,11 +8,11 @@
     %thead
       %tr
         %th{:rowspan => 2} Activity
-        - date = summary_start + 6.days
+        - date = summary_start
         - while date <= summary_end
           %th{:colspan => 8}
             Week ending
-            = l(date, :format => :short)
+            = l(date + 6.days, :format => :short)
             - date += 1.week
         - if show_averages
           %th{:rowspan => 2} Average
@@ -20,7 +20,8 @@
         - date = summary_start
         - while date < summary_end
           - 1.upto(7) do |count|
-            %th.right{:title => l(date, :format => :long), :style => 'border-left: 1px solid #DDD;'}= date.strftime '%a'
+            %th.right{:title => l(date, :format => :long), :style => 'border-left: 1px solid #DDD;'}
+              = link_to date.strftime('%a %m-%d'), records_path(:start => date, :end => date + 1.day)
             - date += 1.day
           %th.right Total
     %tbody

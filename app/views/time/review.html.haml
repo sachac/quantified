@@ -1,11 +1,11 @@
 - if @category
   = setup_page 'review', "#{@category.name}"
-  - if @category.activity?
-    = after_title link_to("Start activity", track_record_category_path(:id => @category.id), :class => 'btn', :style => 'margin-left: 5px', :method => :post)
+  - if @category.activity? and managing?
+    = after_title link_to("Start", track_record_category_path(:id => @category.id), :class => 'btn', :style => 'margin-left: 5px', :method => :post)
   = link_to 'Home', time_review_path
   - @category.ancestors.each do |c|
     &raquo;
-    = link_to c.name, time_review_path(:parent_id => c.id)
+    = link_to c.name, time_review_path(params.merge({ :parent_id => c.id }))
   \|
   = link_to 'View category', record_category_path(@category)
 - else
