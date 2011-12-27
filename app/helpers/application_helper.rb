@@ -123,12 +123,10 @@ module ApplicationHelper
     elsif o.is_a? RecordCategory
       if can? :manage_account, current_account
         case o.category_type
-        when 'list'
-          actions << link_to(t('app.general.view'), o)
         when 'activity'
-          actions << link_to(t('record_categories.show.start_activity'), o, :method => :post)
+          actions << link_to(t('record_categories.show.start_activity'), track_time_path(:category_id => o.id), :method => :post)
         when 'record'
-          actions << link_to(t('record_categories.show.record'), o, :method => :post)
+          actions << link_to(t('record_categories.show.record'), track_time_path(:category_id => o.id), :method => :post)
         end
         actions << link_to(t('app.general.edit'), edit_record_category_path(o))
       end

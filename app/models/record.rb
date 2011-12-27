@@ -150,10 +150,42 @@ class Record < ActiveRecord::Base
     list
   end
 
+  def update_previous
+    Record.update_last(self.user, self.timestamp)
+  end
+
   def self.update_last(account, timestamp)
-    last = account.records.activities.order('timestamp DESC').first
+    last = account.records.activities.where('timestamp < ?', timestamp).order('timestamp DESC').first
     if last
       last.update_attributes(:end_timestamp => timestamp, :duration => timestamp - last.timestamp)
+    end
+  end
+
+  # If unambiguous, create an entry based on string
+  # String can be of the form hh:mm category words
+  def self.create_from_query(account, string, options = {})
+    matches = string.match /([0-9]+:[0-9]+) */
+    if options[:timestamp] and options[:timestamp].is_a? String
+      time = Time.zone.parse(options[:timestamp])
+    elsif options[:timestamp]
+      time = options[:timestamp]
+    else
+      time = Time.now
+    end
+    if matches
+      time = Time.zone.parse(matches[1])
+      string.gsub! /([0-9]+:[0-9]+) */, ''
+    end
+    cat = RecordCategory.search(account, string)
+    if cat and cat.is_a? RecordCategory
+      record = account.records.create(:timestamp => time, :record_category => cat, :user => account)
+      if cat.activity?
+        Record.update_last(account, record.timestamp)
+      end
+      return record
+    else
+      # Return results so the controller can figure out what to do
+      return cat
     end
   end
 
