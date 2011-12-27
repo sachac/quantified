@@ -17,9 +17,12 @@ class RecordsController < ApplicationController
     unless params[:filter_string].blank?
       query = "%" + params[:filter_string].downcase + "%"
       @records = @records.joins(:record_category).where('LOWER(records.data) LIKE ? OR LOWER(record_categories.full_name) LIKE ?', query, query)
-      if cannot? :manage_account, current_account
+      unless managing?
         @records = @records.public
       end
+    end
+    unless html? or managing?
+      @records = @records.public
     end
     @records = @records.paginate :page => params[:page]
     respond_to do |format|
@@ -36,6 +39,8 @@ class RecordsController < ApplicationController
     @context = @record.context
     if html?
       @during_this = @record.during_this
+    elsif @record.private?
+      authorize! :manage_account, current_account
     end
 
     respond_to do |format|
