@@ -339,7 +339,7 @@ a:hover {
 }
 
 /* line 99, ../../app/assets/stylesheets/_scaffolding.sass */
-.span8 {
+.span8, .full .login, .full .sign_up {
   width: 460px;
 }
 
@@ -1088,9 +1088,17 @@ select.span7 {
   margin-left: 0;
 }
 /* line 247, ../../app/assets/stylesheets/_forms.sass */
-input.span8,
+input.span8, .full input.login, .full input.sign_up,
 textarea.span8,
-select.span8 {
+.full textarea.login, .full
+textarea.login,
+.full textarea.sign_up, .full
+textarea.sign_up,
+select.span8,
+.full select.login, .full
+select.login,
+.full select.sign_up, .full
+select.sign_up {
   display: inline-block;
   float: none;
   width: 450px;
@@ -3001,123 +3009,109 @@ li.input {
 }
 
 /* line 27, ../../app/assets/stylesheets/application.sass */
-label.label, label.status, label.private {
-  padding-top: 6px;
-  font-size: 13px;
-  line-height: 18px;
-  float: left;
-  width: 20%;
-  text-align: right;
-  color: #404040;
-  background: white;
-  font-weight: normal;
-  text-transform: none;
-}
-
-/* line 38, ../../app/assets/stylesheets/application.sass */
 .formtastic li {
   margin-top: 3px;
   margin-bottom: 3px;
 }
-/* line 41, ../../app/assets/stylesheets/application.sass */
+/* line 30, ../../app/assets/stylesheets/application.sass */
 .formtastic li input, .formtastic li textarea, .formtastic li select {
   margin-left: 10px;
 }
 
-/* line 43, ../../app/assets/stylesheets/application.sass */
+/* line 32, ../../app/assets/stylesheets/application.sass */
 .formtastic .actions {
   padding-left: 230px;
 }
 
-/* line 46, ../../app/assets/stylesheets/application.sass */
+/* line 35, ../../app/assets/stylesheets/application.sass */
 input, textarea, select, .uneditable-input {
   width: 50%;
 }
 
-/* line 48, ../../app/assets/stylesheets/application.sass */
+/* line 37, ../../app/assets/stylesheets/application.sass */
 form .clear-fix {
   margin-bottom: 10px;
   zoom: 1;
 }
 
-/* line 51, ../../app/assets/stylesheets/application.sass */
+/* line 40, ../../app/assets/stylesheets/application.sass */
 .actions .btn {
   margin-right: 10px;
 }
 
-/* line 55, ../../app/assets/stylesheets/application.sass */
+/* line 44, ../../app/assets/stylesheets/application.sass */
 .category_label {
   text-align: right;
   display: block;
   float: left;
 }
 
-/* line 60, ../../app/assets/stylesheets/application.sass */
+/* line 49, ../../app/assets/stylesheets/application.sass */
 .category_detail {
   padding-top: 13px;
   margin-left: 170px;
 }
 
-/* line 64, ../../app/assets/stylesheets/application.sass */
+/* line 53, ../../app/assets/stylesheets/application.sass */
 .contexts .category_detail, .time .category_detail {
   padding-top: 0;
 }
 
-/* line 66, ../../app/assets/stylesheets/application.sass */
+/* line 55, ../../app/assets/stylesheets/application.sass */
 .category_detail .pills {
   margin-bottom: 0px;
 }
 
-/* line 68, ../../app/assets/stylesheets/application.sass */
+/* line 57, ../../app/assets/stylesheets/application.sass */
 a[data-method] {
   color: green;
   font-weight: bold;
 }
 
-/* line 71, ../../app/assets/stylesheets/application.sass */
+/* line 60, ../../app/assets/stylesheets/application.sass */
 .radio legend.label, .radio legend.status, .radio legend.private {
   float: left;
 }
 
-/* line 74, ../../app/assets/stylesheets/application.sass */
+/* line 63, ../../app/assets/stylesheets/application.sass */
 .tap_log_record .timestamp {
   width: 150px;
   text-align: right;
 }
-/* line 77, ../../app/assets/stylesheets/application.sass */
+/* line 66, ../../app/assets/stylesheets/application.sass */
 .tap_log_record .categories {
   width: 200px;
 }
 
-/* line 80, ../../app/assets/stylesheets/application.sass */
+/* line 69, ../../app/assets/stylesheets/application.sass */
 .status {
   font-weight: normal;
   display: inline;
 }
 
-/* line 84, ../../app/assets/stylesheets/application.sass */
+/* line 73, ../../app/assets/stylesheets/application.sass */
 .private {
   font-weight: normal;
   display: inline;
 }
 
-/* line 88, ../../app/assets/stylesheets/application.sass */
+/* line 77, ../../app/assets/stylesheets/application.sass */
 .collapsible > legend {
   font-weight: bold;
   margin-bottom: 10px;
 }
 
-/* line 91, ../../app/assets/stylesheets/application.sass */
+/* line 80, ../../app/assets/stylesheets/application.sass */
 td.h {
   font-weight: bold;
 }
 
-/* line 94, ../../app/assets/stylesheets/application.sass */
+/* line 83, ../../app/assets/stylesheets/application.sass */
 .login .inner, .sign_up .inner {
   height: 200px;
 }
 
-/* line 96, ../../app/assets/stylesheets/application.sass */
+/* line 85, ../../app/assets/stylesheets/application.sass */
 .radio legend.label, .radio legend.status, .radio legend.private {
   padding-top: 6px;
   font-size: 13px;
@@ -3131,7 +3125,7 @@ td.h {
   text-transform: none;
 }
 
-/* line 107, ../../app/assets/stylesheets/application.sass */
+/* line 96, ../../app/assets/stylesheets/application.sass */
 label.inline {
   padding-top: 0px;
   width: auto;
@@ -3140,17 +3134,17 @@ label.inline {
   float: none;
 }
 
-/* line 113, ../../app/assets/stylesheets/application.sass */
+/* line 102, ../../app/assets/stylesheets/application.sass */
 .condensed-table {
   font-size: smaller;
 }
 
-/* line 115, ../../app/assets/stylesheets/application.sass */
+/* line 104, ../../app/assets/stylesheets/application.sass */
 .right {
   text-align: right;
 }
 
-/* line 117, ../../app/assets/stylesheets/application.sass */
+/* line 106, ../../app/assets/stylesheets/application.sass */
 .clearfix {
   clear: both;
 }

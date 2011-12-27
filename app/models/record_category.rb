@@ -119,13 +119,17 @@ class RecordCategory < ActiveRecord::Base
   end
 
   def self.search(account, string)
-    list = account.record_categories.where('LOWER(full_name) LIKE LOWER(?)', "%#{string.downcase}%").order('dotted_ids')
+    split = string.downcase.split
+    list = account.record_categories
+    split.each do |l|
+      list = list.where('LOWER(full_name) LIKE LOWER(?)', "%#{l.strip}%")
+    end
     return list.first if list.length == 1
     return nil if list.length == 0
     # Ambiguous match; search again with >
     new_list = account.record_categories.where('LOWER(full_name) LIKE LOWER(?)', "> %#{string.downcase}%")
     return new_list.first if new_list.length == 1
-    return list.first  # Fall-through
+    return list # More than one - fallthrough
   end
 
   def data_description

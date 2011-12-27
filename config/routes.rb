@@ -16,6 +16,7 @@ Home::Application.routes.draw do
     collection do
       post :bulk_update
       get :tree
+      get :disambiguate
     end
   end
 

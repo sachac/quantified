@@ -46,7 +46,7 @@ class ApplicationController < ActionController::Base
 
   def after_sign_in_path_for(resource)
     logger.info "LOG IN #{resource.inspect} #{resource.username}"
-    stored_location_for(resource) || root_url(:subdomain => resource.username)
+    stored_location_for(resource) || root_path
   end
 
   def filter_sortable_column_order(list)
@@ -59,7 +59,9 @@ class ApplicationController < ActionController::Base
 #     sortable_column_order
   end
 
-  def go_to(url)
+  def go_to(url, options = {})
+    add_flash :notice, options[:notice] if options[:notice]
+    add_flash :error, options[:error] if options[:error]
     if params[:destination].blank?
       redirect_to url
     else

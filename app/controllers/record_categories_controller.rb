@@ -123,4 +123,17 @@ class RecordCategoriesController < ApplicationController
     @list = current_account.record_categories.order(:dotted_ids)
     respond_with @list
   end
+
+  def disambiguate
+    authorize! :manage_account, current_account
+    @list = RecordCategory.search(current_account, params[:category])
+    if @list.nil?
+      # No match
+      go_to root_path, :error => "Could not find category matching: " + params[:category] and return
+    elsif @list.is_a? RecordCategory
+      # Just one, so track it directly
+      redirect_to track_time_path(:timestamp => params[:timestamp], :source => params[:source], :destination => params[:destination]) and return
+    end
+    # Display the list
+  end
 end
