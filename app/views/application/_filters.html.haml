@@ -8,6 +8,19 @@
           .input= text_field_tag :start, Date.parse(params[:start]).strftime("%Y-%m-%d"), :class => 'datepicker' 
         .clearfix
           = label_tag :end, 'End' 
-          .input= text_field_tag :end, Date.parse(params[:end]).strftime("%Y-%m-%d"), :class => 'datepicker' 
+          .input= text_field_tag :end, Date.parse(params[:end]).strftime("%Y-%m-%d"), :class => 'datepicker'
+      - if @filters[:parent_id]
+        .clearfix
+          = label_tag :parent_id, 'Parent'
+          .input= select_tag :parent_id, options_from_collection_for_select(@categories, 'id', 'full_name')
+      - if @filters[:category_tree]
+        .clearfix
+          = label_tag :category_tree, 'Detail level'
+          .input
+            = radio_button_tag :category_tree, 'full', params[:category_tree] == 'full'
+            = label_tag :category_tree_full, 'Full tree', :class => 'inline'
+            = radio_button_tag :category_tree, 'next_level', params[:category_tree] == 'next_level'
+            = label_tag :category_tree_next_level, 'Next level', :class => 'inline'
+        
       .actions   
         = submit_tag t('app.general.filter'), :class => 'btn primary'

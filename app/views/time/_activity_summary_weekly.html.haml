@@ -15,13 +15,13 @@
         - values = row[1]
         %tr
           %td
-            = link_to category.name, time_review_path(params.merge(:parent_id => category.id))
+            = link_to category.name, time_review_path(params.merge(:parent_id => category.id)), :title => category.full_name
             = " > " if category.list?
           - date = current_account.adjust_beginning_of_week(summary_start)
           - total = 0
           - count = 0
           - while date < summary_end
-            %td.right{:title => category.name + " - " + l(date + 6.days)}
+            %td.right{:title => category.full_name + " - " + l(date + 6.days)}
               = duration values[date + 6.days]
             - if values[date + 6.days]
               - total += values[date + 6.days]

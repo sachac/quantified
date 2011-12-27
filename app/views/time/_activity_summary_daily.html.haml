@@ -31,14 +31,14 @@
         - next if category == :total 
         %tr
           %td
-            = link_to((show_full_path ? record_category_full(category) : category.name), time_review_path(:parent_id => category.id))
+            = link_to((show_full_path ? record_category_full(category) : category.name), time_review_path(params.merge({:parent_id => category.id})), :title => category.full_name)
             = " &raquo; ".html_safe if category.list?
           - date = summary_start
           - while date < summary_end
             - total = 0
             - count_days = 0
             - 1.upto(7) do |count|
-              %td.right{:title => category.name + " - " + l(date)}= duration values[date]
+              %td.right{:title => category.full_name + " - " + l(date)}= duration values[date]
               - total += values[date]
               - count_days += 1 if values[date] > 0
               - date += 1.day
