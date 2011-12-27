@@ -15,6 +15,7 @@ Home::Application.routes.draw do
     end
     collection do
       post :bulk_update
+      get :tree
     end
   end
 
