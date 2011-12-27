@@ -1,2 +1,11 @@
 = render 'quick_record'
 = render 'current_activity'
+%nav
+  %ul
+    %li= link_to 'Time', time_path
+    %li= link_to 'Stuff', stuff_index_path
+    %li= link_to 'Clothing', clothing_index_path
+    %li= link_to 'Library items', library_items_path
+    %li= link_to 'Log out', destroy_user_session_path, :method => 'delete'
+    
+    

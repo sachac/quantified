@@ -1,26 +1,41 @@
 - if managing?
-  = form_tag bulk_update_record_categories_path(:destination => request.fullpath) do
-    = submit_tag I18n.t('app.general.save'), :class => 'btn'
-    %table
-      %thead
-        %tr
-          %th{:width => 50} Actions
-          %th Name
-          - unless mobile?
-            %th Type
-      %tbody    
+  - if mobile?
+    .clearfix
+      %table
         - list.each do |c|
           %tr
-            %td= action_list(c)
+            %td{:width => 50}
+              - if c.activity? or c.record?
+                = link_to("Track", track_time_path(:category_id => c.id), :class => 'btn', :method => :post)
             %td
               = link_to c.name, c
               - if c.list?
                 &raquo;
+    
+  - else  
+    = form_tag bulk_update_record_categories_path(:destination => request.fullpath) do
+      = submit_tag I18n.t('app.general.save'), :class => 'btn'
+      %table
+        %thead
+          %tr
+            %th{:width => 50} Actions
+            %th Name
             - unless mobile?
+              %th Type
+        %tbody    
+          - list.each do |c|
+            %tr
               %td
-                - %w{list activity record}.each do |type|
-                  = radio_button_tag "category_type[#{c.id}]", type, c.category_type == type
-                  = label_tag "category_type[#{c.id}][#{type}]", type.humanize, :class => 'inline'
+                = action_list(c)
+              %td
+                = link_to c.name, c
+                - if c.list?
+                  &raquo;
+              - unless mobile?
+                %td
+                  - %w{list activity record}.each do |type|
+                    = radio_button_tag "category_type[#{c.id}]", type, c.category_type == type
+                    = label_tag "category_type[#{c.id}][#{type}]", type.humanize, :class => 'inline'
 - else
   .clearfix
     %ul
