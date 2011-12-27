@@ -12,4 +12,4 @@
   = setup_page 'review'
 = render 'filters'
 
-= render "activity_summary_#{@zoom}", :summary => @summary, :summary_start => @summary_start, :summary_end => @summary_end
+= render "activity_summary_#{@zoom}", :summary => @summary, :summary_start => @summary_start, :summary_end => @summary_end, :show_full_path => (params[:tree] != 'next_level'), :show_averages => true
