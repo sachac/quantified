@@ -44,7 +44,11 @@ class User < ActiveRecord::Base
   has_settings
   
   def adjust_beginning_of_week(date)
-    date.beginning_of_week.advance(:days => 5)
+    if date.wday == 6
+      date
+    else
+      date - date.wday.days - 1.day
+    end
   end
 
   def beginning_of_week
