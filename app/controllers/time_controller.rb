@@ -19,14 +19,15 @@ class TimeController < ApplicationController
     authorize! :view_time, current_account
     params[:start] ||= current_account.beginning_of_week.advance(:weeks => -1).strftime('%Y-%m-%d')
     params[:end] ||= Time.zone.now.strftime('%Y-%m-%d')
-    prepare_filters [:date_range]
+    prepare_filters [:date_range, :category_tree, :parent_id]
+    @categories = current_account.record_categories
     @summary_start = Date.parse(params[:start])
     @summary_end = Date.parse(params[:end])
     # Pick the appropriate level of review
     @category = params[:parent_id] ? current_account.record_categories.find(params[:parent_id]) : nil
     range = @summary_start..@summary_end
     @zoom = Record.choose_zoom_level(range)
-    @summary = RecordCategory.summarize(:user => current_account, :range => range, :zoom => @zoom, :parent => @category, :tree => :next_level)
+    @summary = RecordCategory.summarize(:user => current_account, :range => range, :zoom => @zoom, :parent => @category, :tree => params[:category_tree] ? params[:category_tree].to_sym : nil)
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @record_categories }
