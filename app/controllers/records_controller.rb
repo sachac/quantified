@@ -1,9 +1,9 @@
 class RecordsController < ApplicationController
-  respond_to :json
+  respond_to :html, :json
   # GET /records
   # GET /records.xml
   def index
-    authorize! :manage_account, current_account
+    authorize! :view_time, current_account
     @start = (!params[:start].blank? ? Time.zone.parse(params[:start]) : ((current_account.records.minimum('timestamp') || (Time.now - 1.week)))).in_time_zone.midnight
     @end = (!params[:end].blank? ? Time.zone.parse(params[:end]) : ((current_account.records.maximum('timestamp') || Time.now) + 1.day)).in_time_zone.midnight
     
@@ -14,9 +14,6 @@ class RecordsController < ApplicationController
 
     @records = current_account.records.order('timestamp DESC')
     @records = @records.where(:timestamp => @start..@end)
-    if cannot? :manage_account, current_account
-      @records = @records.public
-    end
     unless params[:filter_string].blank?
       query = "%" + params[:filter_string].downcase + "%"
       @records = @records.joins(:record_category).where('LOWER(records.data) LIKE ? OR LOWER(record_categories.full_name) LIKE ?', query, query)
@@ -34,7 +31,7 @@ class RecordsController < ApplicationController
   # GET /records/1
   # GET /records/1.xml
   def show
-    authorize! :manage_account, current_account
+    authorize! :view_time, current_account
     @record = current_account.records.find(params[:id])
     @context = @record.context
     if html?

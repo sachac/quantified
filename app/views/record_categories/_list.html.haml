@@ -1,24 +1,31 @@
-= form_tag bulk_update_record_categories_path(:destination => request.fullpath) do
-  - if managing?
+- if managing?
+  = form_tag bulk_update_record_categories_path(:destination => request.fullpath) do
     = submit_tag I18n.t('app.general.save'), :class => 'btn'
-  %table
-    %thead
-      %tr
-        - if managing?
-          %th{:width => 50} Actions
-        %th Name
-        - unless mobile?
-          %th Type
-    %tbody    
-      - list.each do |c|
+    %table
+      %thead
         %tr
-          %td= action_list(c)
-          %td
-            = link_to c.name, c
-            - if c.list?
-              &raquo;
-          - if !mobile? and managing?
+          %th{:width => 50} Actions
+          %th Name
+          - unless mobile?
+            %th Type
+      %tbody    
+        - list.each do |c|
+          %tr
+            %td= action_list(c)
             %td
-              - %w{list activity record}.each do |type|
-                = radio_button_tag "category_type[#{c.id}]", type, c.category_type == type
-                = label_tag "category_type[#{c.id}][#{type}]", type.humanize, :class => 'inline'
+              = link_to c.name, c
+              - if c.list?
+                &raquo;
+            - unless mobile?
+              %td
+                - %w{list activity record}.each do |type|
+                  = radio_button_tag "category_type[#{c.id}]", type, c.category_type == type
+                  = label_tag "category_type[#{c.id}][#{type}]", type.humanize, :class => 'inline'
+- else
+  .clearfix
+    %ul
+      - list.each do |c|
+        %li
+          = link_to c.name, c
+          - if c.list?
+            &raquo;

@@ -9,16 +9,16 @@
 
 %p
   = record_category_breadcrumbs(@record_category)
-  - if can? :manage_account, current_account
+  - if managing?
     \|
     = link_to t('app.general.edit'), edit_record_category_path(@record_category)
     \|
     - if @record_category.list?
       = link_to t('.add_child'), new_record_category_path(:parent_id => @record_category.id)
-      \|
   - unless @record_category.record?
-    = link_to t('.review'), time_review_path(:parent_id => @record_category.id)
     \|
+    = link_to t('.review'), time_review_path(:parent_id => @record_category.id)
+  \|
   = link_to t('app.general.back'), record_categories_path
 
 
