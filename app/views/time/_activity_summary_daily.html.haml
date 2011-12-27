@@ -14,6 +14,7 @@
             Week ending
             = l(date + 6.days, :format => :short)
             - date += 1.week
+        %th{:rowspan => 2} Total
         - if show_averages
           %th{:rowspan => 2} Average
       %tr
@@ -34,19 +35,23 @@
             = link_to((show_full_path ? record_category_full(category) : category.name), time_review_path(params.merge({:parent_id => category.id})), :title => category.full_name)
             = " &raquo; ".html_safe if category.list?
           - date = summary_start
+          - total = 0
+          - count_days = 0
           - while date < summary_end
-            - total = 0
-            - count_days = 0
+            - total_week = 0
             - 1.upto(7) do |count|
               %td.right{:title => category.full_name + " - " + l(date)}= duration values[date]
               - total += values[date]
+              - total_week += values[date]
               - count_days += 1 if values[date] > 0
               - date += 1.day
-            %td.right
-              %strong{:title => ("Average: " + duration(total / count_days) if count_days > 0)}= duration total
-            - if show_averages
-              %td.right
-                = duration(total / count_days) if count_days > 0
+            %td.right{:title => category.full_name + " for week ending #{l date - 1.day }"}
+              %strong= duration total_week
+          %td.right{:title => category.full_name + " total"}
+            %strong= duration(total) if count_days > 0
+          - if show_averages
+            %td.right{:title => category.full_name + " average (#{pluralize count_days, "day"})"}
+              = duration(total / count_days) if count_days > 0
       %tr
         %td Total
         - date = summary_start
