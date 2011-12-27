@@ -3,7 +3,7 @@ class Record < ActiveRecord::Base
   belongs_to :user
   serialize :data
   scope :activities, joins(:record_category).where(:record_categories => {:category_type => 'activity'}).readonly(false)
-  scope :public, where("LOWER(data) NOT LIKE '%!private%'")
+  scope :public, where("LOWER(records.data) NOT LIKE '%!private%'")
   before_save :add_data
   def add_data
     self.date = self.timestamp.in_time_zone.to_date
@@ -46,6 +46,19 @@ class Record < ActiveRecord::Base
     self.user.records.where('timestamp >= ? and records.id > ?', self.timestamp, self.id).order('timestamp asc, id asc')
   end
 
+  def context
+    {
+      :current => self.current_activity,
+      :previous => {
+        :entry => self.previous.first,
+        :activity => self.previous.activities.first,
+      },
+      :next => {
+        :entry => self.next.first,
+        :activity => self.next.activities.first,
+      },
+    }
+  end
   def self.choose_zoom_level(range)
     diff = range.end.to_date - range.begin.to_date
     if diff <= 14
