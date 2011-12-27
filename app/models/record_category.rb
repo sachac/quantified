@@ -25,16 +25,18 @@ class RecordCategory < ActiveRecord::Base
       when :full
         categories = rec.record_category.self_and_ancestors
       when :next_level
-        categories = [rec.record_category.as_child(options[:parent])]
+        categories = [rec.record_category.as_child(options[:parent])].compact
       else
         categories = [rec.record_category]
       end
-      split.each do |split_record|
-        key = Record.get_zoom_key(options[:user], zoom, split_record[0])
-        categories.each do |cat|
-          summary[:rows][cat][key] += split_record[1] - split_record[0]
+      if categories.length > 0
+        split.each do |split_record|
+          key = Record.get_zoom_key(options[:user], zoom, split_record[0])
+          categories.each do |cat|
+            summary[:rows][cat][key] += split_record[1] - split_record[0]
+          end
+          summary[:total][:total][key] += split_record[1] - split_record[0]
         end
-        summary[:total][:total][key] += split_record[1] - split_record[0]
       end
     end
     summary
@@ -66,7 +68,7 @@ class RecordCategory < ActiveRecord::Base
   def self.summarize(options = {})
     options[:records] ||= options[:user].records
     options[:range] ||= records.min('timestamp')..records.max('timestamp')
-    options[:zoom] = Record.choose_zoom_level(options[:range])
+    options[:zoom] ||= Record.choose_zoom_level(options[:range])
     self.roll_up_records(options)
   end
 
@@ -99,10 +101,13 @@ class RecordCategory < ActiveRecord::Base
   # Returns this category as a child of parent
   def as_child(parent)
     x = self
+    return x if x == parent 
     while x.parent and x.parent != parent
       x = x.parent
     end
-    x
+    if x.parent == parent
+      x
+    end
   end
 
   def get_color
