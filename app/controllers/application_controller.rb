@@ -85,9 +85,12 @@ class ApplicationController < ActionController::Base
     symbols.each do |s|
       case s
       when :date_range
-        @filters[:date_range] = t
+        @filters[:date_range] = true
         params[:start] ||= current_account.beginning_of_week.strftime('%Y-%m-%d')
         params[:end] ||= Time.zone.now.strftime('%Y-%m-%d')
+      when :category_tree
+        @filters[:category_tree] = true
+        params[:category_tree] ||= 'tree'
       end
     end
   end
