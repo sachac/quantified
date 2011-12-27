@@ -22,8 +22,8 @@
               .clear-fix
                 .input
                   .box#services
-                    = link_to image_tag('google_32.png', :size => "32x32", :alt => "Google"), '/auth/google', :class => 'service'
-                    = link_to image_tag('facebook_32.png', :size => "32x32", :alt => "Facebook"), '/auth/facebook', :class => 'service'
+                    = link_to image_tag('google_32.png', :size => "32x32", :alt => "Google"), oauth_url(:google, :subdomain => false), :class => 'service'
+                    = link_to image_tag('facebook_32.png', :size => "32x32", :alt => "Facebook"), oauth_url(:facebook, :subdomain => false), :class => 'service'
             .actions
               %button.btn.primary{ :type => "submit" }
                 = I18n.t('app.user.login_submit')

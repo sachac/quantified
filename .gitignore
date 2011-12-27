@@ -8,3 +8,4 @@ tmp/
 *~
 vendor/cache
 webrat.log
+config/initializers/local.rb

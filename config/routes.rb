@@ -1,5 +1,6 @@
 Home::Application.routes.draw do
-  match '/auth/:service/callback' => 'services#create'
+  match 'auth/:service/callback' => 'services#create'
+  match 'auth/:service' => 'sessions#setup', :as => :oauth
   resources :services, :only => [:index, :create, :destroy]
   match 'signups' => 'signups#index'
   resources :records do
