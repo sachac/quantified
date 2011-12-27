@@ -6,7 +6,7 @@
         - date = current_account.adjust_beginning_of_week(summary_start)
         - while date <= summary_end
           %th{:title => "Week ending #{l date + 6.days, :format => :long}"}
-            = link_to l(date + 6.days, :format => :short), time_review_path(params.merge({:start => date, :end => date + 1.week}))
+            = link_to l(date + 6.days, :format => :short), time_review_path(params.merge({:action => 'review', :controller => 'time', :start => date, :end => date + 1.week}))
           - date += 1.week
         %th.right Total  
     %tbody
@@ -15,7 +15,7 @@
         - values = row[1]
         %tr
           %td
-            = link_to category.name, time_review_path(params.merge(:parent_id => category.id)), :title => category.full_name
+            = link_to category.name, time_review_path(params.merge(:action => 'review', :controller => 'time', :parent_id => category.id)), :title => category.full_name
             = " > " if category.list?
           - date = current_account.adjust_beginning_of_week(summary_start)
           - total = 0
