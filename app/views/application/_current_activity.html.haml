@@ -1,0 +1,5 @@
+- if @current_activity  
+  %strong  
+    Current activity:
+    = link_to @current_activity.full_name, @current_activity
+    = "(#{duration Time.now - @current_activity.timestamp})"

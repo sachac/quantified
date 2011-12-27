@@ -15,6 +15,9 @@ class HomeController < ApplicationController
       @contexts = current_account.contexts
       @current_activity = current_account.records.activities.order('timestamp DESC').first
     end
+    if mobile?
+      render 'mobile_index'
+    end
   end
   def summary
     @start = (!params[:start].blank? ? Time.parse(params[:start]) : Date.new(Date.today.year, Date.today.month, 1)).midnight

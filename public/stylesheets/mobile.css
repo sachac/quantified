@@ -1,4 +1,38 @@
 /* line 1, ../../app/assets/stylesheets/mobile.sass */
 .container {
   width: auto;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+/* line 6, ../../app/assets/stylesheets/mobile.sass */
+.topbar a {
+  font-size: large;
+  padding: 5px;
+  padding-top: 10px;
+  display: block;
+}
+
+/* line 11, ../../app/assets/stylesheets/mobile.sass */
+form .input {
+  margin-left: 0px;
+}
+
+/* line 14, ../../app/assets/stylesheets/mobile.sass */
+.mobile .login .inner, .mobile .sign_up .inner {
+  height: auto;
+}
+/* line 16, ../../app/assets/stylesheets/mobile.sass */
+.mobile input, .mobile textarea, .mobile select, .mobile .uneditable-input {
+  width: auto;
+}
+
+/* line 18, ../../app/assets/stylesheets/mobile.sass */
+.form-stacked {
+  padding-left: 0px;
+}
+
+/* line 20, ../../app/assets/stylesheets/mobile.sass */
+.row, .category {
+  margin-left: 0px;
 }

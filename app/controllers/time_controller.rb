@@ -55,22 +55,28 @@ class TimeController < ApplicationController
 
   def track
     authorize! :manage_account, current_account
-
-    unless params[:category]
+    unless params[:category] or params[:category_id]
       add_flash :error, 'Please specify a category.'
       go_to time_dashboard_path and return
     end
     # Look for the category
-    cat = RecordCategory.search(current_account, params[:category])
+    now = params[:timestamp] ? Time.zone.parse(params[:timestamp]) : Time.now
+    if params[:category_id]
+      cat = current_account.record_categories.find_by_id(params[:category_id])
+    elsif params[:category]
+      cat = RecordCategory.search(current_account, params[:category])
+      if cat.length > 1
+        redirect_to disambiguate_record_categories_path(:timestamp => now, :category => params[:category]) and return 
+      end
+    end
     unless cat
       add_flash :error, 'Could not find matching category.'
       go_to time_dashboard_path and return
     end
-    now = Time.now
     if cat.activity?
       Record.update_last(current_account, now)
     end
-    rec = current_account.records.create(:timestamp => now, :source => 'dashboard', :record_category => cat)
+    rec = current_account.records.create(:timestamp => now, :source => 'web', :record_category => cat)
     redirect_to edit_record_path(rec, :destination => params[:destination]) and return
   end
 end

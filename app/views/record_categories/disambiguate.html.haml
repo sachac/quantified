@@ -1,0 +1,5 @@
+Did you mean...
+
+%ul
+  - @list.each do |l|
+    %li= link_to l.full_name, track_time_path(:timestamp => params[:timestamp], :category_id => l.id), :method => :post
