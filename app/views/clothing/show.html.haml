@@ -14,9 +14,10 @@
 
 %p
   = @clothing.status
-  - {'store' => 'stored', 'activate' => 'active', 'donate' => 'donated'}.each do |action,status|
-    - unless @clothing.status == status
-      = link_to action, clothing_path(@clothing.id) + '?clothing[status]=' + status, :method => :put
+  - if managing?
+    - {'store' => 'stored', 'activate' => 'active', 'donate' => 'donated'}.each do |action,status|
+      - unless @clothing.status == status
+        = link_to action, clothing_path(@clothing.id) + '?clothing[status]=' + status, :method => :put
 
 
 .image

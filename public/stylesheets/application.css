@@ -3149,3 +3149,8 @@ label.inline {
 .right {
   text-align: right;
 }
+
+/* line 117, ../../app/assets/stylesheets/application.sass */
+.clearfix {
+  clear: both;
+}

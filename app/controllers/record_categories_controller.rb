@@ -1,11 +1,11 @@
 class RecordCategoriesController < ApplicationController
   autocomplete :record_category, :full_name, :full => true
-  respond_to :json
+  respond_to :html, :json
   
   # GET /record_categories
   # GET /record_categories.xml
   def index
-    authorize! :manage_account, current_account
+    authorize! :view_time, current_account
     @record_categories = current_account.record_categories.where('parent_id IS NULL').order('name')
     respond_with @record_categories
   end
@@ -13,7 +13,7 @@ class RecordCategoriesController < ApplicationController
   # GET /record_categories/1
   # GET /record_categories/1.xml
   def show
-    authorize! :manage_account, current_account
+    authorize! :view_time, current_account
     @record_category = RecordCategory.find(params[:id])
     if html?
       if @record_category.list?
