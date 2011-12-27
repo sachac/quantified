@@ -7,6 +7,7 @@ class ApplicationController < ActionController::Base
   helper_method :current_account  
   helper_method :mobile?
   helper_method :managing?
+  skip_filter :authenticate_user!
 
   rescue_from NonexistentAccount do |e|
     logger.info "NONEXISTENT #{current_subdomain}"

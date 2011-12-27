@@ -1,8 +1,6 @@
 # Challenges: 
 # I have to manually create my time graphs
 class TimeController < ApplicationController
-  before_filter :authenticate_user!, :except => [:graph, :clock]
-
   # POST
   def refresh_from_csv
     authorize! :manage_account, current_account

@@ -1,4 +1,5 @@
 = setup_page 'records', @record.record_category.name + " - " + l(@record.timestamp), 'time/nav'
+= after_title object_labels(@record)
 = record_category_breadcrumbs(@record.record_category)
 - if can? :manage_account, current_account
   - if @record.record_category.category_type == 'activity'
@@ -23,14 +24,17 @@
     - if @record.data?
       - data = @record.record_category.data
       - @record.data.each do |k,v|
-        - if can?(:manage_account, current_account) or !v.downcase.include?('!private')
-          %tr
-            %td.h
-              - if data and data[k]
-                = data[k][:label]
-              - else
-                = k.to_s.humanize
-            %td= v
+        %tr
+          %td.h
+            - if data and data[k]
+              = data[k][:label]
+            - else
+              = k.to_s.humanize
+          %td
+            - if can?(:manage_account, current_account) or !v.downcase.include?('!private')
+              = v
+            - else
+              %span{:class => 'private'}= t('app.general.private')
     - if @context[:current] and @context[:current] != @record
       %tr
         %td.h= t('.current')
