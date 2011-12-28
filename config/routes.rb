@@ -3,6 +3,22 @@ Home::Application.routes.draw do
   match 'auth/:service' => 'sessions#setup', :as => :oauth
   resources :services, :only => [:index, :create, :destroy]
   match 'signups' => 'signups#index'
+
+  offline = Rack::Offline.configure do
+    cache ["api/offline/v1/track"]
+    public_path = Rails.root.join("public")
+    Dir[public_path.join("*.html"),
+        public_path.join("assets/*.*"),
+        public_path.join("assets/*/*.*"),
+       ].each do |file|
+      p = Pathname.new(file)
+      cache p.relative_path_from(public_path)
+    end
+    network "/"
+  end
+  match '/application.manifest' => offline
+
+
   resources :records do
     member do
       post :clone
@@ -149,8 +165,11 @@ Home::Application.routes.draw do
     namespace :offline do
       namespace :v1 do
         match 'track' => 'offline#track'
+        match 'bulk_track' => 'offline#bulk_track', :via => :post
+        match 'bulk_track' => 'offline#bulk_track', :via => :get
       end
     end
   end
+  
 
 end

@@ -43,5 +43,6 @@ module Home
     config.to_prepare do
       Devise::SessionsController.layout "sign"
     end
+    ENV["RAILS_ASSET_ID"] = "" # disable timestamps at end of asset files for offline browsing
   end
 end
