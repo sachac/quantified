@@ -2,6 +2,8 @@
 %html{:manifest=>"/application.manifest"}
   %head
     %title Quantified Awesome: Tracking
+    %meta{:name => "HandheldFriendly", :content=>"true"}
+    %meta{:name => "viewport", :content => "width=device-width, height=device-height, user-scalable=yes"}
     = javascript_include_tag :application
     = javascript_include_tag :offline
     = stylesheet_link_tag 'application'
