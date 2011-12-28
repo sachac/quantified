@@ -1,7 +1,11 @@
 !!!
-%html
+%html{:manifest=>"/application.manifest"}
   %head
     %title Quantified Awesome: Tracking
+    = javascript_include_tag :application
     = javascript_include_tag :offline
+    = stylesheet_link_tag 'application'
+    = stylesheet_link_tag 'offline'
+    = csrf_meta_tag
   %body
     = yield
