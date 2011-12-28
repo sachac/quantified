@@ -164,7 +164,7 @@ Home::Application.routes.draw do
     end
     namespace :offline do
       namespace :v1 do
-        match 'track' => 'offline#track'
+        match 'track' => 'offline#track', :as => :track_offline
         match 'bulk_track' => 'offline#bulk_track', :via => :post
         match 'bulk_track' => 'offline#bulk_track', :via => :get
       end
