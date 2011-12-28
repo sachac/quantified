@@ -141,15 +141,15 @@ Home::Application.routes.draw do
   # just remember to delete public/index.html.
   root :to => "home#index"
 
-  # See how all your routes lay out with "rake routes"
-
-  # This is a legacy wild controller route that's not recommended for RESTful applications.
-  # Note: This route will make all actions in every controller accessible via GET requests.
-  # match ':controller(/:action(/:id(.:format)))'
   namespace :api do
     namespace :v1 do
       resources :tokens, :only => [:create, :destroy]
       resources :records
+    end
+    namespace :offline do
+      namespace :v1 do
+        match 'track' => 'offline#track'
+      end
     end
   end
 

@@ -6,4 +6,4 @@
 //= require autocomplete-rails
 //= require raphael-min
 //= require jquery.sparkline.min
-//= require_tree .
+//= require quantified
