@@ -2,18 +2,19 @@ $(document).ajaxSend(function(e, xhr, options) {
 		var token = $("meta[name='csrf-token']").attr("content");
 		xhr.setRequestHeader("X-CSRF-Token", token);
 	});
-$(function() {
+
+$(document).ready(function() {
 		if (!localStorage["pendingItems"]) {
 			localStorage["pendingItems"] = JSON.stringify([]);
 		}
-		$('a.category').click(function() {
+		$('a.category').click(function(event) {
 				var pendingItems = $.parseJSON(localStorage["pendingItems"]);
 				var data = {date: new Date(), record_category_id: $(this).attr('data-id')};
 				pendingItems.push(data);
 				localStorage["pendingItems"] = JSON.stringify(pendingItems);
 				updateMessage(pendingItems);
 				synchronize();
-				return false;
+				event.preventDefault();
 		});
     synchronize();
 	});
