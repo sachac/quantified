@@ -29,7 +29,7 @@
                 = I18n.t('app.user.login_submit')
               = render "devise/shared/links"
       .sign_up
-        = form_tag sign_up_path, :class => 'form-stacked' do
+        = form_tag sign_up_path, :class => mobile? ? 'form-stacked' : 'form' do
           %fieldset
             %legend Sign up
             .inner

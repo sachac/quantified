@@ -3138,3 +3138,8 @@ label.inline {
 .clearfix {
   clear: both;
 }
+
+/* line 104, ../../app/assets/stylesheets/style.sass */
+.full .login, .full .sign_up {
+  display: table-cell;
+}
