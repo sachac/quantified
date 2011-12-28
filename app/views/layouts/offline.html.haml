@@ -7,7 +7,12 @@
     = javascript_include_tag :application
     = javascript_include_tag :offline
     = stylesheet_link_tag 'application'
+    = stylesheet_link_tag 'mobile'
     = stylesheet_link_tag 'offline'
     = csrf_meta_tag
   %body
-    = yield
+    = render 'mobile_nav'
+    .container
+      = yield
+    .clearfix  
+      = link_to "Home", root_path
