@@ -7,6 +7,11 @@
     %li= link_to 'Clothing', clothing_index_path
     %li= link_to 'Library items', library_items_path
     %li= link_to 'Track offline', api_offline_v1_track_offline_path
-    %li= link_to 'Log out', destroy_user_session_path, :method => 'delete'
-    
+    - if user_signed_in?
+      %li= link_to 'Log out', destroy_user_session_path, :method => 'delete'
+    - else
+      %li
+        %strong{:style => 'text-decoration: underline'}
+          = link_to t('app.user.login'), new_user_session_path
+
     
