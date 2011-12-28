@@ -68,11 +68,11 @@ class TimeController < ApplicationController
       rec.update_previous
     elsif params[:category]
       rec = Record.create_from_query(current_account, params[:category], :timestamp => params[:timestamp])
-      rec.update_previous
     end
     if rec.nil?
       go_to time_dashboard_path, :error => 'Could not find matching category' and return
     elsif rec.is_a? Record
+      rec.update_previous
       redirect_to edit_record_path(rec, :destination => params[:destination]) and return
     else
       redirect_to disambiguate_record_categories_path(:timestamp => now, :category => params[:category]), :method => :post and return 
