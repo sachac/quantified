@@ -1,5 +1,13 @@
 var updating = false;
 var status;
+// %li= link_to c.full_name, c, :class => :category, :'data-id' => c.id
+function loadCategories() {
+	$.retrieveJSON("/record_categories/tree.json", function(data) {
+			// Fill in the categories list
+			$('#categories').html($('#category_template').tmpl(data));
+			$('#categories a').click(trackCategory);
+		});
+}
 
 function pad(n){ return n < 10 ? '0' + n : n }
 // https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Objects/Date#Example.3a_ISO_8601_formatted_dates
@@ -37,8 +45,8 @@ function updateMessage() {
 	var pendingItems = $.parseJSON(localStorage["pendingItems"]);
 	var lastEntry = $.parseJSON(localStorage["lastEntry"]);
 	var message = '';
-	var date = new Date(lastEntry.date);
 	if (lastEntry) {
+		var date = new Date(lastEntry.date);
 		message = "Last entry: <strong>" + lastEntry.name + "</strong> ("
 			+ date.getHours() + ":" + pad(date.getMinutes()) + ', <time class="timeago" datetime="' + ISODateString(date) + '">' + ISODateString(date) + '</time>). ';
 	}
@@ -62,22 +70,31 @@ $(document).ajaxSend(function(e, xhr, options) {
 		xhr.setRequestHeader("X-CSRF-Token", token);
 	});
 
+function trackCategory(event) {
+	var pendingItems = $.parseJSON(localStorage["pendingItems"]);
+	var data = {date: new Date(), record_category_id: $(this).attr('data-id'), name: $(this).html()};
+	pendingItems.push(data);
+	localStorage["lastEntry"] = JSON.stringify(data);
+	localStorage["pendingItems"] = JSON.stringify(pendingItems);
+	// Display the form
+	if ($(this).attr('data-form')) {
+		var form = $.parseJSON(unescape($(this).attr('data-form')));
+		var new_form = $('#form_template').tmpl({data: form});
+		$('#form').html(new_form);
+		scroll(0, 0);
+	}
+	synchronize();
+	event.preventDefault();
+}
+
 $(document).ready(function() {
 		if (!localStorage["pendingItems"]) {
 			localStorage["pendingItems"] = JSON.stringify([]);
 		}
-		$('a.category').click(function(event) {
-				var pendingItems = $.parseJSON(localStorage["pendingItems"]);
-				var data = {date: new Date(), record_category_id: $(this).attr('data-id'), name: $(this).html()};
-				pendingItems.push(data);
-				localStorage["lastEntry"] = JSON.stringify(data);
-				localStorage["pendingItems"] = JSON.stringify(pendingItems);
-				synchronize();
-				event.preventDefault();
-		});
 		$('#sync').click(synchronize);
 		$('#clear').click(function() { localStorage["lastEntry"] = ''; localStorage['pendingItems'] = ''; updateMessage(); });
 		updateMessage();
+		loadCategories();
 		$(window).bind('online', synchronize);
     synchronize();
 	});
