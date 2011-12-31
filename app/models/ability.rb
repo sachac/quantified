@@ -29,5 +29,6 @@ class Ability
     can :view, TapLogRecord
     can :view_note, TapLogRecord, :private? => nil
     can :view_tap_log_records, User
+    can :view_site, User
   end
 end

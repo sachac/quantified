@@ -46,7 +46,7 @@ class ApplicationController < ActionController::Base
 
   def after_sign_in_path_for(resource)
     logger.info "LOG IN #{resource.inspect} #{resource.username}"
-    stored_location_for(resource) || root_path
+    params[:destination] || stored_location_for(resource) || root_path
   end
 
   def filter_sortable_column_order(list)

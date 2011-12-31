@@ -3,6 +3,7 @@
     .row
       .login
         = form_for(resource, :as => resource_name, :url => session_path(resource_name), :html => { :class => mobile? ? "form-stacked" : "form" }) do |f|
+          = hidden_field_tag :destination, params[:destination]
           %fieldset
             %legend Sign in
             .inner
