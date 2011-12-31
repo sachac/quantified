@@ -1,19 +1,15 @@
-/* line 2, ../../app/assets/stylesheets/offline.sass */
-#categories .category {
-  margin-left: 0px;
-}
-/* line 4, ../../app/assets/stylesheets/offline.sass */
-#categories ul {
+/* line 1, ../../app/assets/stylesheets/offline.sass */
+#categories {
   list-style: none;
   margin-left: 0px;
 }
-/* line 7, ../../app/assets/stylesheets/offline.sass */
-#categories ul li {
+/* line 4, ../../app/assets/stylesheets/offline.sass */
+#categories li {
   display: block;
   border: 1px solid #cccccc;
 }
-/* line 10, ../../app/assets/stylesheets/offline.sass */
-#categories ul a {
+/* line 7, ../../app/assets/stylesheets/offline.sass */
+#categories a {
   padding: 20px;
   font-size: large;
   display: block;
