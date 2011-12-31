@@ -3,8 +3,8 @@
 %table.lined
   %tr
     %th Activity
-    - days.each do |x|
-      %th= x[0]
+    - @beginning_of_week..(@beginning_of_week + 6.days) do |d|
+      %th= d.strftime('%a')
     %th Total
     %th Average
     %th Weekday average
