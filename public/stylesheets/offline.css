@@ -1,0 +1,23 @@
+/* line 2, ../../app/assets/stylesheets/offline.sass */
+#categories .category {
+  margin-left: 0px;
+}
+/* line 4, ../../app/assets/stylesheets/offline.sass */
+#categories ul {
+  list-style: none;
+  margin-left: 0px;
+}
+/* line 7, ../../app/assets/stylesheets/offline.sass */
+#categories ul li {
+  display: block;
+  border: 1px solid #cccccc;
+}
+/* line 10, ../../app/assets/stylesheets/offline.sass */
+#categories ul a {
+  padding: 20px;
+  font-size: large;
+  display: block;
+  vertical-align: center;
+  height: 100%;
+  width: 100%;
+}

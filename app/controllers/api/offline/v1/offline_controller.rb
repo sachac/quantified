@@ -7,6 +7,13 @@ class Api::Offline::V1::OfflineController < ApplicationController
   end
 
   def bulk_track
+    logger.info params[:format]
+    if !current_user
+      respond_to do |format|
+        format.html { authorize! :manage_account, current_account and return }
+        format.json { authorize! :view_site, User; head :forbidden and return}
+      end
+    end
     authorize! :manage_account, current_account
     if params[:record_category_id] and params[:date] and current_account
       cat = current_account.record_categories.find_by_id(params[:record_category_id])

@@ -2,4 +2,7 @@
   %strong  
     Current activity:
     = link_to @current_activity.full_name, @current_activity
-    = "(#{duration Time.now - @current_activity.timestamp})"
+    = "(#{@current_activity.timestamp.strftime('%H:%M')}, "
+    = succeed ")" do
+      %time.timeago{:datetime => @current_activity.timestamp.iso8601}= time_ago_in_words @current_activity.timestamp
+    
