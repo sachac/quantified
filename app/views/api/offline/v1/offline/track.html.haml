@@ -2,8 +2,21 @@
   = button_tag 'Sync', :class => 'btn', :name => 'sync', :id => 'sync'
   = button_tag 'Clear', :class => 'btn', :name => 'clear', :id => 'clear'
 .alert-message.message{:id => 'message'}
-%div{:id => 'categories'}
-  %ul
-    - @categories.each do |c|
-      %li= link_to c.full_name, c, :class => :category, :'data-id' => c.id
-%div{:id => 'pending_updates'}
+%script{:type => 'text/html', :id => 'category_template'}
+  %li
+    %a{:href => '#', :'data-id' => "${id}", :'data-form' => "${escape(JSON.stringify(data))}"} ${full_name}
+%script{:type => 'text/html', :id => 'form_template'}
+  {{each(index, value) data}}
+  %label{:for => "data[${index}]"} ${value.label}
+  {{if (value.type == "text")}}
+  %textarea{:name => "data[${index}]"}
+  {{else}}
+  %input{:name => "data[${index}]"}
+  {{/if}}
+  {{/each}}
+  = button_tag "Update", :class => 'btn primary'
+%form#form.form-stacked
+%ul#categories
+  %li
+    %em Loading categories...
+%div#pending_updates
