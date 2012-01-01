@@ -47,6 +47,7 @@ function updateMessage() {
 	var message = '';
 	if (lastEntry) {
 		var date = new Date(lastEntry.date);
+		console.log(date.getMinutes());
 		message = "Last entry: <strong>" + lastEntry.name + "</strong> ("
 			+ date.getHours() + ":" + pad(date.getMinutes()) + ', <time class="timeago" datetime="' + ISODateString(date) + '">' + ISODateString(date) + '</time>). ';
 	}
@@ -72,7 +73,7 @@ $(document).ajaxSend(function(e, xhr, options) {
 
 function trackCategory(event) {
 	var pendingItems = $.parseJSON(localStorage["pendingItems"]);
-	var data = {date: new Date(), record_category_id: $(this).attr('data-id'), name: $(this).html()};
+	var data = {date: new Date().getTime(), record_category_id: $(this).attr('data-id'), name: $(this).html()};
 	pendingItems.push(data);
 	localStorage["lastEntry"] = JSON.stringify(data);
 	localStorage["pendingItems"] = JSON.stringify(pendingItems);
