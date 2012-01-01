@@ -1,5 +1,7 @@
 var updating = false;
 var status;
+var lastID = null;
+
 // %li= link_to c.full_name, c, :class => :category, :'data-id' => c.id
 function loadCategories() {
 	$.retrieveJSON("/record_categories/tree.json", function(data) {
@@ -20,9 +22,15 @@ function ISODateString(d) {
 		+ pad(d.getUTCSeconds())+'Z'
  }
 
+// We need to make sure that we don't submit this multiple times.
+// This function gets called when you click on the link, when you go online, and after you update.
+// It also calls itself after a timeout.
+// We want to:
+//   Retrieve the first item.
+//   Attempt to post it.
+//   If it succeeds, 
 function synchronize() {
-	if (updating) return false;
-	updating = true;
+	if (!navigator.onLine) return false;
 	var pendingItems = $.parseJSON(localStorage["pendingItems"]);
 	updateMessage();
 	if (pendingItems.length > 0) {
@@ -30,15 +38,17 @@ function synchronize() {
 		$.post("/api/offline/v1/bulk_track.json", item, function(data) {
 				var pendingItems = $.parseJSON(localStorage["pendingItems"]);
 				pendingItems.shift();
-				localStorage["pendingItems"] = JSON.stringify(pendingItems)
-					setTimeout(synchronize, 100);
+				localStorage["pendingItems"] = JSON.stringify(pendingItems);
 				status = 200;
+				if (lastID == null) {
+					lastID = data;
+				}
+				setTimeout(synchronize, 100);
 			}).error(function(xhr, ajaxOptions, thrownError) {
 					status = xhr.status;
 					updateMessage();
 				});
 	}
-	updating = false;
 }
 
 function updateMessage() {
@@ -71,15 +81,38 @@ $(document).ajaxSend(function(e, xhr, options) {
 		xhr.setRequestHeader("X-CSRF-Token", token);
 	});
 
+function updateRecord(event) {
+	var pendingItems = $.parseJSON(localStorage["pendingItems"]);
+	// Queue an update if we have already synchronized
+	if (lastID != null) {
+		// The latest entry has already been synchronized, so attempt to update it
+		pendingItems.push({type: 'edit', id: lastID.id, data: $('#form').serializeArray()});
+		localStorage["pendingItems"] = JSON.stringify(pendingItems);
+	} else {
+		// Update the latest record if it has not yet been sent
+		// Pop the last entry off the list
+		var item = pendingItems[0];
+		item.data = $('#form').serializeArray();
+		pendingItems[0] = item;
+		localStorage["pendingItems"] = JSON.stringify(pendingItems);
+	}
+	synchronize();
+	$('#form').html('');
+	event.preventDefault();
+}
+
 function trackCategory(event) {
 	var pendingItems = $.parseJSON(localStorage["pendingItems"]);
 	var data = {date: new Date().getTime(), record_category_id: $(this).attr('data-id'), name: $(this).html()};
 	pendingItems.push(data);
 	localStorage["lastEntry"] = JSON.stringify(data);
 	localStorage["pendingItems"] = JSON.stringify(pendingItems);
+	lastID = null;
 	// Display the form
-	if ($(this).attr('data-form')) {
-		var form = $.parseJSON(unescape($(this).attr('data-form')));
+	var form_data = unescape($(this).attr('data-form'));
+	$('#form').html();
+	if (form_data != '{}' && form_data != 'null') {
+		var form = $.parseJSON(form_data);
 		var new_form = $('#form_template').tmpl({data: form});
 		$('#form').html(new_form);
 		scroll(0, 0);
@@ -98,5 +131,6 @@ $(document).ready(function() {
 		loadCategories();
 		$(window).bind('online', synchronize);
     synchronize();
+		$('#form').submit(updateRecord);
 	});
 
