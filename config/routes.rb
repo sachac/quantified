@@ -5,18 +5,15 @@ Home::Application.routes.draw do
   match 'signups' => 'signups#index'
 
   offline = Rack::Offline.configure do
-    cache ["api/offline/v1/track"]
-    public_path = Rails.root.join("public")
-    Dir[public_path.join("*.html"),
-        public_path.join("assets/*.*"),
-        public_path.join("assets/*/*.*"),
-       ].each do |file|
-      p = Pathname.new(file)
-      cache p.relative_path_from(public_path)
-    end
+    cache "api/offline/v1/track"
+    cache "assets/application.js"
+    cache "assets/offline.js"
+    cache "assets/application.css"
+    cache "assets/mobile.css"
+    cache "assets/offline.css"
     network "/"
   end
-  match '/application.manifest' => offline
+  match '/offline.manifest' => offline
 
 
   resources :records do
