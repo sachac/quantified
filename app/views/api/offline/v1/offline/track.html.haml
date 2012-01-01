@@ -4,7 +4,7 @@
 .alert-message.message{:id => 'message'}
 %script{:type => 'text/html', :id => 'category_template'}
   %li
-    %a{:href => '#', :'data-id' => "${id}", :'data-form' => "${escape(JSON.stringify(data))}"} ${full_name}
+    %a{:href => '#', :'data-id' => "${id}", :'data-form' => "{{if data}}${escape(JSON.stringify(data))}{{else}}null{{/if}}"} ${full_name}
 %script{:type => 'text/html', :id => 'form_template'}
   {{each(index, value) data}}
   %label{:for => "${index}"} ${value.label}
@@ -14,7 +14,7 @@
   %input{:name => "${index}"}
   {{/if}}
   {{/each}}
-  .actions= button_tag "Update", :class => 'btn primary', :id => 'update', :type => 'button'
+  .actions= submit_tag "Update", :class => 'btn primary', :id => 'update'
 %form#form.form-stacked
 %ul#categories
   %li
