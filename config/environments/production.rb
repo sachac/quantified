@@ -43,13 +43,13 @@ Home::Application.configure do
   # Send deprecation notices to registered listeners
   config.active_support.deprecation = :notify
 
- config.assets.precompile += %w( search.js )
+ config.assets.precompile += %w( search.js offline.js mobile.css offline.css )
 
   # Specifies the header that your server uses for sending files
    # Disable Rails's static asset server (Apache or nginx will already do this)
    config.serve_static_assets = false
 
    config.assets.compress = true
-   config.assets.compile = false
+   config.assets.compile = true
    config.assets.digest = true
 end
