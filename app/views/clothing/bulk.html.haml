@@ -52,8 +52,8 @@
         - else   
           = (time_ago_in_words(clothing.last_worn) + " ago") if clothing.last_worn
       %td
-        - if clothing.colour then
-          - clothing.colour.split(",").each do |x|
+        - if clothing.color then
+          - clothing.color.split(",").each do |x|
             .color-box{:style => "background: ##{x}"}
               &nbsp;
       %td
