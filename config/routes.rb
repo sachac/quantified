@@ -89,6 +89,9 @@ Home::Application.routes.draw do
   match 'time/review' => 'time#review', :as => :time_review
   match 'time/track' => 'time#track', :as => :track_time, :via => :post
   match 'time' => 'time#dashboard'
+  match 'clothing/missing_info' => 'clothing#update_missing_info', :as => :update_missing_clothing_information, :via => :post
+  match 'clothing/missing_info' => 'clothing#missing_info', :as => :missing_clothing_information
+  match 'clothing/:id/save_color' => 'clothing#save_color', :as => :save_clothing_color, :via => :post
   resources :clothing do
     collection do
       get :autocomplete_clothing_name
@@ -96,6 +99,7 @@ Home::Application.routes.draw do
       get :graph
     end
   end
+
   resources :clothing_logs
   match 'clothing_logs/by_date/:date' => 'clothing_logs#by_date', :as => :clothing_logs_by_date
   match 'clothing/tag/:id' => 'clothing#tag', :as => :clothing_by_tag

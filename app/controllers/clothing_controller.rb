@@ -237,4 +237,36 @@ class ClothingController < ApplicationController
     end
     redirect_to params[:destination] || clothing_index_path
   end
+
+  def missing_info
+    authorize! :manage_account, current_account
+    @clothing = current_account.clothing.active.where('image_file_name IS NULL')
+  end
+
+  def update_missing_info
+    authorize! :manage_account, current_account
+    if params[:image]
+      params[:image].each do |k, v|
+        c = current_account.clothing.find_by_id(c)
+        if c
+          c.image = v
+          c.save
+        end
+      end
+    end
+    @clothing = current_account.clothing.active.where("image_file_name IS NULL")
+    render 'missing_info'
+  end
+
+  def save_color
+    authorize! :manage_account, current_account
+    @clothing = current_account.clothing.find_by_id(params[:id])
+    if @clothing and params[:x] and params[:y]
+      @clothing.color = Clothing.guess_color(@clothing.image, params[:x], params[:y])
+      @clothing.save!
+    end
+    redirect_to @clothing
+
+  end
+
 end

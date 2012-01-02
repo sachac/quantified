@@ -1,0 +1,17 @@
+= setup_page('missing', 'Missing information')
+
+= form_tag update_missing_clothing_information_path do
+  %table
+    %tr
+      %th Description
+      %th Clothing type
+      %th Image
+      %th Status
+    - @clothing.each do |c|
+      %tr
+        %td= link_to c.name, c
+        %td= c.clothing_type
+        %td= file_field_tag "image[#{c.id}]"
+        %td= missing_clothing_info c
+  .actions
+    = submit_tag 'Submit', :class => 'btn primary'

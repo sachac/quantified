@@ -1,0 +1,11 @@
+= setup_page('missing', 'Missing information')
+
+= form_tag update_missing_clothing_information_path do
+  %table
+    %tr
+      %th Description
+      %th Image
+    - @clothing.each do |c|
+      %tr
+        %td= link_to c.name, c
+        %td
