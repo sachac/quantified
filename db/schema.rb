@@ -10,11 +10,11 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111226164500) do
+ActiveRecord::Schema.define(:version => 20120102211431) do
 
   create_table "clothing", :force => true do |t|
     t.string   "name"
-    t.string   "colour"
+    t.string   "color"
     t.string   "clothing_type"
     t.string   "notes"
     t.boolean  "labeled",              :default => true
@@ -29,6 +29,10 @@ ActiveRecord::Schema.define(:version => 20111226164500) do
     t.integer  "clothing_logs_count",  :default => 0
     t.integer  "last_clothing_log_id"
     t.integer  "user_id"
+    t.string   "image_file_name"
+    t.integer  "image_file_size"
+    t.string   "image_content_type"
+    t.datetime "image_updated_at"
   end
 
   add_index "clothing", ["user_id"], :name => "index_clothing_on_user_id"
@@ -397,6 +401,7 @@ ActiveRecord::Schema.define(:version => 20111226164500) do
     t.string   "role"
     t.string   "username"
     t.string   "authentication_token"
+    t.text     "data"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

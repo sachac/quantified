@@ -1,10 +1,4 @@
-%h1 In the closet
-%ul.pills
-  %li= link_to 'index', clothing_index_path
-  %li= link_to 'clothing logs', clothing_logs_path
-  %li= link_to 'analysis', clothing_analyze_path
-  - if can? :create, Clothing
-    %li= link_to 'new', new_clothing_path
+= setup_page 'clothing'
 
 Tags:
 = link_to 'all', clothing_index_path

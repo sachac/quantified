@@ -26,10 +26,11 @@ module ApplicationHelper
       title += " - #{clothing.clothing_logs_count} - #{date_ago_future clothing.last_worn}"
     end
     if clothing then
+      options[:size] ||= :medium
       if options[:size] == :tiny
-        link_to tag(:img, :src => clothing_image(clothing, options), :width => 27), options[:path] ? options[:path] : clothing_path(clothing), :title => title, :class => "clothing_#{clothing.id}"
+        link_to tag(:img, :src => clothing.image.url(:small)), options[:path] ? options[:path] : clothing_path(clothing), :title => title, :class => "clothing_#{clothing.id}"
       else
-        link_to tag(:img, :src => clothing_image(clothing, options)), options[:path] ? options[:path] : clothing_path(clothing), :title => title, :class => "clothing_#{clothing.id}"
+        link_to tag(:img, :src => clothing.image.url(options[:size])), options[:path] ? options[:path] : clothing_path(clothing), :title => title, :class => "clothing_#{clothing.id}"
       end
     else
       "Unknown"
@@ -155,8 +156,12 @@ module ApplicationHelper
   def title(s)
     content_for(:title) { s }
   end
-  def after_title(s)
-    content_for(:after_title) { s }
+  def after_title(s = nil)
+    if s
+      content_for(:after_title) { s }
+    else
+      content_for(:after_title) { yield }
+    end
   end
   def setup_page(active, title = nil, nav_file = 'nav')
     title(title) if title
