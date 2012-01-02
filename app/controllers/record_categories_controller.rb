@@ -120,7 +120,7 @@ class RecordCategoriesController < ApplicationController
 
   def tree
     authorize! :manage_account, current_account
-    @list = current_account.record_categories.order(:dotted_ids)
+    @list = current_account.record_categories.order(:full_name)
     respond_with @list
   end
 
