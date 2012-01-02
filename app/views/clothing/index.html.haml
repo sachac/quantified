@@ -57,8 +57,8 @@ Tags:
           %td= clothing.clothing_logs_count
           %td= date_ago_future(clothing.last_worn)
           %td
-            - if clothing.colour then
-              - clothing.colour.split(",").each do |x|
+            - if clothing.color then
+              - clothing.color.split(",").each do |x|
                 .color-box{:style => "background: ##{x}"}
                   &nbsp;
           %td
