@@ -1,4 +1,4 @@
-= semantic_form_for @clothing do |f|
+= semantic_form_for @clothing, :class => (mobile? ? 'form-stacked' : '')  do |f|
   -if @clothing.errors.any?
     #error_explanation
       %h2= "#{pluralize(@clothing.errors.count, "error")} prohibited this clothing from being saved:"
