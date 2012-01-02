@@ -14,6 +14,7 @@
         %li{:class => active_menu('/memories')}= link_to 'memories', memories_path
         %li{:class => active_menu(['/time', '/tap_log_records'])}= link_to 'time', time_path
         - if user_signed_in?
+          %li{:class => active_menu('/user')}= link_to 'account', edit_user_path(current_account.id)
           %li= link_to t("web-app-theme.logout", :default => "log out"), destroy_user_session_path, :method => "delete"
         - else
           %li

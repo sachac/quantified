@@ -1,53 +1,57 @@
-%nav
-  %p
-    - if @previous
-      = link_to '<< Previous', clothing_path(@previous)
-    - if @next
-      = link_to 'Next >>', clothing_path(@next)
+= setup_page 'clothing', @clothing.name
 
-%h1
-  = @clothing.name
-  - if user_signed_in?
-    = link_to '(yesterday)', clothing_logs_path + "?clothing_id=" + @clothing.id.to_s + "&date=" + Date.yesterday.to_s, :method => :post, :class => 'btn'
-    = link_to '(today)', clothing_logs_path + "?clothing_id=" + @clothing.id.to_s + "&date=" + Date.today.to_s, :method => :post, :class => 'btn'
-    = link_to '(tomorrow)', clothing_logs_path + "?clothing_id=" + @clothing.id.to_s + "&date=" + Date.tomorrow.to_s, :method => :post, :class => 'btn'
+- if user_signed_in?      
+  = link_to 'Edit', edit_clothing_path(@clothing)
+  \|
+= link_to 'Back', clothing_index_path
+
+- if managing?
+  = form_tag clothing_logs_path do
+    = hidden_field_tag :clothing_id, @clothing.id
+    .inline
+      = label_tag :date, 'Date'
+      .input= text_field_tag :date, Date.today, :class => 'datepicker'
+      = submit_tag 'Log', :class => 'btn primary'
 
 %p
   = @clothing.status
+  \|
   - if managing?
     - {'store' => 'stored', 'activate' => 'active', 'donate' => 'donated'}.each do |action,status|
       - unless @clothing.status == status
         = link_to action, clothing_path(@clothing.id) + '?clothing[status]=' + status, :method => :put
 
 
-.image
-  = clothing_thumbnail(@clothing, :size => :large)
-
+- if @clothing.image.file?
+  .image
+    .instructions Click on a point in the image to save a color from the image.
+    = form_tag save_clothing_color_path(@clothing) do
+      = image_submit_tag @clothing.image.url(:large), :class => 'imagebtn'
+  
 %tags
   Tags:
   - @clothing.tags.each do |t|
     = link_to t.name, clothing_by_tag_path(t.name)
-- unless @clothing.colour.nil?
-  - colours = @clothing.colour.split(",")
+- unless @clothing.color.nil?
+  - colors = @clothing.color.split(",")
   %table.auto
     %tr
-      %td
-        = pluralize(colours.size, "Colour")
-      - colours.each do |x|
+      %td Color
+      - colors.each do |x|
         %td
           .color-box{:style => "background: ##{x}"}
             = x
     %tr
       %td
         Complementary
-      - colours.each do |x|
+      - colors.each do |x|
         - comp = Color::HSL.from_html(x).complementary.html
         %td
           .color-box{:style => "background: #{comp}"}
             = comp
     %tr
       %td Triadic:
-      - colours.each do |x|
+      - colors.each do |x|
         - col = Color::HSL.from_html(x)
         %td
           - tr1 = col.clone
@@ -71,11 +75,6 @@
       .date= current_user ? (link_to c.date, clothing_log_path(c)) : c.date
       .clothes
         - ClothingLog.find(:all, :select => 'clothing_logs.id, clothing_id, clothing.name', :order => 'clothing.name', :joins => 'INNER JOIN clothing ON clothing_logs.clothing_id=clothing.id', :conditions => ["date >= ? and date < ? and outfit_id=?", c.date, c.date + 1.day, c.outfit_id]).each do |x| 
-          .item= clothing_thumbnail x.clothing, { :path => current_user ? clothing_log_path(x) : clothing_path(x.clothing)}
-.clear-both
-- if user_signed_in?      
-  = link_to 'Edit', edit_clothing_path(@clothing)
-  \|
-= link_to 'Back', clothing_index_path
+          .item= clothing_thumbnail x.clothing, {:size => :medium, :path => current_user ? clothing_log_path(x) : clothing_path(x.clothing)}
 
 .clear-both

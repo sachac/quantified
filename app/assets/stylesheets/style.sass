@@ -89,12 +89,15 @@ td.h
   background: white
   font-weight: normal
   text-transform: none
-label.inline
+label.inline, .inline label
   padding-top: 0px
   width: auto
   text-align: left
   margin-right: 10px
   float: none
+.inline .input
+  display: inline-block
+  margin-left: 0
 .condensed-table
   font-size: smaller
 .right
@@ -104,4 +107,6 @@ label.inline
 .full .login, .full .sign_up
   @extend .span8
   display: table-cell
-
+input.imagebtn
+  height: auto
+  width: auto

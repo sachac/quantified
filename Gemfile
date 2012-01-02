@@ -12,6 +12,7 @@ gem 'sqlite3'
 gem 'isbndb'
 gem 'haml'
 gem 'mysql'
+gem "paperclip", "~> 2.0"
 gem 'will_paginate'
 gem 'haml-rails'
 gem 'color'
