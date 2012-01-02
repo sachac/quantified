@@ -3,8 +3,9 @@ class Clothing < ActiveRecord::Base
   acts_as_taggable_on :tags
   has_many :clothing_logs
   has_many :clothing_matches, :foreign_key => :clothing_a_id
- 
+  has_attached_file :image, :styles => { :large => "400x400", :medium => "x90", :small => "x40" }, :default_url => '/images/clothing/:style/missing.jpg'
   before_save :update_hsl
+
   def autocomplete_view
     "#{self.id} - #{self.name}"
   end
@@ -19,7 +20,11 @@ class Clothing < ActiveRecord::Base
   end
 
   def get_color
-    base = self.colour.split(',')[0] unless self.colour.blank? 
+    if self.color.blank? and self.image.file?
+      self.color = Clothing.guess_color(self.image)
+    end
+    return unless self.color
+    base = self.color.to_s.split(',')[0]
     unless base.nil? then
       Color::RGB.from_html(base)
     end
@@ -42,4 +47,20 @@ class Clothing < ActiveRecord::Base
   def next_by_id
     self.class.first(:conditions => ['id > ?', self.id], :order => 'id asc')
   end
+
+  def Clothing.guess_color(file, x = nil, y = nil)
+    # http://www.jamievandyke.com/red-and-yellow-and
+    if x =~ /^[0-9]+$/ and y =~ /^[0-9]+$/
+      command = "convert #{file.to_file.path} -crop 1x1+#{x}+#{y} -format '%[pixel:u]' info:-"
+    else
+      command = "convert #{file.to_file.path} -scale 1x1\! -format '%[pixel:u]' info:-"
+    end
+    color = %x[#{command}]
+    if color && $?.exitstatus != 0
+      raise StandardError, "There was an error determining the color!"
+    end
+    @red, @green, @blue = color[/rgb\((.*)\)/, 1].split(",").collect(&:to_i)
+    "%2x%2x%2x" % [ @red, @green, @blue ]
+  end
+  scope :active, where("(status IS NULL or status = 'active')")
 end

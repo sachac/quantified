@@ -3116,7 +3116,7 @@ td.h {
 }
 
 /* line 92, ../../app/assets/stylesheets/style.sass */
-label.inline {
+label.inline, .inline label {
   padding-top: 0px;
   width: auto;
   text-align: left;
@@ -3125,21 +3125,33 @@ label.inline {
 }
 
 /* line 98, ../../app/assets/stylesheets/style.sass */
+.inline .input {
+  display: inline-block;
+  margin-left: 0;
+}
+
+/* line 101, ../../app/assets/stylesheets/style.sass */
 .condensed-table {
   font-size: smaller;
 }
 
-/* line 100, ../../app/assets/stylesheets/style.sass */
+/* line 103, ../../app/assets/stylesheets/style.sass */
 .right {
   text-align: right;
 }
 
-/* line 102, ../../app/assets/stylesheets/style.sass */
+/* line 105, ../../app/assets/stylesheets/style.sass */
 .clearfix {
   clear: both;
 }
 
-/* line 104, ../../app/assets/stylesheets/style.sass */
+/* line 107, ../../app/assets/stylesheets/style.sass */
 .full .login, .full .sign_up {
   display: table-cell;
+}
+
+/* line 110, ../../app/assets/stylesheets/style.sass */
+input.imagebtn {
+  height: auto;
+  width: auto;
 }

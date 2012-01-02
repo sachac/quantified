@@ -1,0 +1,6 @@
+%ul.tabs
+  %li{:class => active_class(active, 'clothing')}= link_to 'Clothing', clothing_index_path
+  %li{:class => active_class(active, 'logs')}= link_to 'Logs', clothing_logs_path
+  %li{:class => active_class(active, 'analysis')}= link_to 'Analysis', clothing_analyze_path
+  - if managing?
+    %li{:class => active_class(active, 'missing')}= link_to 'Missing information', update_missing_clothing_information_path
