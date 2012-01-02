@@ -24,10 +24,13 @@
 
 - if @clothing.image.file?
   .image
-    .instructions Click on a point in the image to save a color from the image.
-    = form_tag save_clothing_color_path(@clothing) do
-      = image_submit_tag @clothing.image.url(:large), :class => 'imagebtn'
-  
+    - if managing?
+      .instructions Click on a point in the image to save a color from the image.
+      = form_tag save_clothing_color_path(@clothing) do
+        = image_submit_tag @clothing.image.url(:large), :class => 'imagebtn'
+    - else
+      = clothing_thumbnail @clothing, :size => :large
+      
 %tags
   Tags:
   - @clothing.tags.each do |t|
