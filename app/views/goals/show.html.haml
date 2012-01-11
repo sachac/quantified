@@ -1,0 +1,15 @@
+%p#notice= notice
+
+%p
+  %b Label:
+  = @goal.label
+%p
+  %b Expression:
+  = @goal.expression
+%p
+  %b Period:
+  = @goal.period
+
+= link_to 'Edit', edit_goal_path(@goal)
+\|
+= link_to 'Back', goals_path
