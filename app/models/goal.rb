@@ -51,7 +51,7 @@ class Goal < ActiveRecord::Base
       self.user.week
     when 'monthly'
       date = Date.yesterday
-      start = new Date(date.year, date.month, 1)
+      start = Date.new(date.year, date.month, 1)
       start.midnight.in_time_zone..Time.now
     when 'daily'
       (Time.now - 1.day)..Time.now
