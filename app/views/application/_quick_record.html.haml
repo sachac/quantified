@@ -1,7 +1,6 @@
 - if managing?
   = form_tag track_time_path, :class => mobile? ? 'form-stacked' : '' do
-    .clearfix
-      = label_tag :category, "Category"
+    .inline
       .input
-        = text_field_tag :category, nil, :autofocus => true
+        = text_field_tag :category, nil, :autofocus => true, :placeholder => 'Category'
         = submit_tag t('time.dashboard.track'), :class => 'btn'

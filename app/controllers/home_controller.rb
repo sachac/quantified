@@ -14,6 +14,7 @@ class HomeController < ApplicationController
       @dates = 7.downto(0).collect { |i| Date.today - i.days }
       @contexts = current_account.contexts
       @current_activity = current_account.records.activities.order('timestamp DESC').first
+      check_goals
     end
     if mobile?
       render 'mobile_index'
@@ -84,5 +85,25 @@ class HomeController < ApplicationController
       end
     end
     redirect_to new_user_session_path and return
+  end
+
+
+  protected
+  def check_goals
+    list = current_account.goals
+    logger.info list.inspect
+    @goals = Hash.new
+    list.each do |g|
+      hash = g.parse_expression
+      logger.info hash.inspect
+      if hash[:success] 
+        hash[:class] = 'good'
+        hash[:performance_color] = '#0c0'
+      else
+        hash[:class] = 'attention'
+        hash[:performance_color] = '#c00'
+      end
+      @goals[g.label] = hash
+    end
   end
 end

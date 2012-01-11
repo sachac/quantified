@@ -147,4 +147,31 @@ class RecordCategory < ActiveRecord::Base
       self.data[match[1].to_sym] = {:type => match[2], :label => match[3]} 
     end
   end
+
+  def child_records
+    self.user.records.joins(:record_category).where('(record_categories.dotted_ids = ? OR record_categories.dotted_ids LIKE ?)', self.dotted_ids, self.dotted_ids + ".%")
+  end
+
+  def cumulative_time(range)
+    records = self.child_records.activities
+    filtered = records.where(:timestamp => range)
+    duration = filtered.sum(:duration)
+
+    # Add the duration of any open entries
+    last = filtered.order('timestamp DESC').first
+    if last and last.end_timestamp.nil?
+      duration += range.end - last.timestamp
+    elsif last and last.end_timestamp > range.end
+      # Split the last entry
+      duration -= (last.end_timestamp - range.end)
+    end
+   
+    # Split the previous entry if needed
+    previous = records.where('timestamp < ?', range.begin).order('timestamp DESC').first
+    if previous and previous.end_timestamp > range.begin
+      duration += previous.end_timestamp - range.begin
+    end
+
+    duration
+  end
 end
