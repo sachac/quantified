@@ -1,6 +1,7 @@
 class User < ActiveRecord::Base
   has_many :clothing_logs
   has_many :clothing_matches
+  has_many :goals
   has_many :clothing
   has_many :csa_foods
   has_many :days
@@ -88,7 +89,11 @@ class User < ActiveRecord::Base
     end
   end
 
-  
+  # Return a week range
+  def week
+    self.beginning_of_week.midnight.in_time_zone..Time.now
+  end
+
   protected
 
   # Attempt to find a user by email. If a record is found, send new
@@ -136,6 +141,5 @@ class User < ActiveRecord::Base
     login = conditions.delete(:login)
     where(conditions).where(["lower(username) = :value OR lower(email) = :value", { :value => login.downcase }]).first
   end
-
 
 end

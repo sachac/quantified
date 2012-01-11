@@ -1,16 +1,30 @@
 - if current_account
-  .time.category
-    .category_label
-      %h2 Time
-    .category_detail
-      %ul.pills  
-        %li= link_to 'Dashboard', time_dashboard_path
-        %li= link_to 'Graph', time_graph_path
-        %li= link_to 'Review', time_review_path
-        %li= link_to 'Categories', record_categories_path
-        %li= link_to 'Logs', records_path
-      = render 'current_activity'  
-      = render 'quick_record'    
+  - if @goals.size > 0 
+    .goals.category
+      .category_label
+        %h2 Goals
+      .category_detail
+        %table
+          - @goals.each do |k, g|
+            %tr
+              %td.h= g[:label]
+              %td
+                .sparkline{'sparkType' => 'bullet', :class => g[:class], :sparkPerformanceColor => g[:performance_color]}
+                  = ([g[:target] || 0, g[:performance] || 0] + (g[:range] || [])).join(',')
+              %td= g[:text]
+  - if current_account.records.length > 0            
+    .time.category
+      .category_label
+        %h2 Time
+      .category_detail
+        = render 'quick_record'    
+        = render 'current_activity'  
+        %ul.pills  
+          %li= link_to 'Dashboard', time_dashboard_path
+          %li= link_to 'Graph', time_graph_path
+          %li= link_to 'Review', time_review_path
+          %li= link_to 'Categories', record_categories_path
+          %li= link_to 'Logs', records_path
   - if @contexts
     .contexts.category
       .category_label
@@ -19,30 +33,32 @@
         %ul.pills  
           - @contexts.each do |c|
             %li= link_to c.name, c
-  .stuff.category
-    .category_label
-      %h2 Stuff
-    .category_detail
-      - if current_account.stuff.out_of_place.count > 0
-        %span.label.important= "#{pluralize current_account.stuff.out_of_place.count, "item"}"
-        = link_to "out of place", stuff_index_path
-        .list
-          = current_account.stuff.out_of_place.map{ |stuff| return_stuff_info stuff }.join(', ').html_safe
-      - else
-        .green= link_to "A place for everything, and everything in its place", stuff_index_path
-        %span.label.notice Yay!
+  - if current_account.stuff.length > 0          
+    .stuff.category
+      .category_label
+        %h2 Stuff
+      .category_detail
+        - if current_account.stuff.out_of_place.count > 0
+          %span.label.important= "#{pluralize current_account.stuff.out_of_place.count, "item"}"
+          = link_to "out of place", stuff_index_path
+          .list
+            = current_account.stuff.out_of_place.map{ |stuff| return_stuff_info stuff }.join(', ').html_safe
+        - else
+          .green= link_to "A place for everything, and everything in its place", stuff_index_path
+          %span.label.notice Yay!
   .weather.category
     .category_label
       %h2 Toronto weather
     .category_detail  
       %a{:href => "http://www.wunderground.com/cgi-bin/findweather/getForecast?query=zmw:00000.1.71265&bannertypeclick=wu_clean2day"}
         %img{:src => "http://weathersticker.wunderground.com/weathersticker/cgi-bin/banner/ban/wxBanner?bannertype=wu_clean2day_metric_cond&airportcode=CYTZ&ForcedCity=Toronto&ForcedState=ON&wmo=71265&language=EN", :alt => "Click for Toronto, Ontario Forecast", :height => "100", :width => "300"}
-  - if current_account      
+  - if current_account.clothing.length > 0
     .clothing.category
       .category_label
         %h2 Clothing
       .category_detail  
         = render :partial => 'clothing_logs/by_date', :locals => { :dates => @dates, :by_date => @by_date, :size => :tiny }
+  - if managing? and current_account.library_items.length > 0
     .library.category
       .category_label
         %h2 Library
@@ -55,6 +71,7 @@
             = due.strftime('%a %b %e')
         - if can? :refresh_library, current_account  
           = link_to "refresh", library_refresh_path, :class => 'btn', :style => 'margin-left: 5px'
+  - if managing? and current_account.csa_foods.length > 0      
     .food.category
       .category_label
         %h2 Food

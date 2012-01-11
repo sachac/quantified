@@ -1,4 +1,6 @@
 Home::Application.routes.draw do
+  resources :goals
+
   match 'auth/:service/callback' => 'services#create'
   match 'auth/:service' => 'sessions#setup', :as => :oauth
   resources :services, :only => [:index, :create, :destroy]
