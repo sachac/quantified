@@ -3155,3 +3155,8 @@ input.imagebtn {
   height: auto;
   width: auto;
 }
+
+/* line 113, ../../app/assets/stylesheets/style.sass */
+.time .category_detail {
+  padding-top: 7px;
+}
