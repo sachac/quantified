@@ -192,8 +192,10 @@ class ClothingController < ApplicationController
     bottoms.each do |date, outfit|
       outfit.each do |id, clothing_id|
         @matches[clothing_id] ||= Hash.new
-        @matches[clothing_id][tops[date][id] || 0] ||= Array.new
-        @matches[clothing_id][tops[date][id] || 0] <<= date
+	if tops[date]
+           @matches[clothing_id][tops[date][id] || 0] ||= Array.new
+           @matches[clothing_id][tops[date][id] || 0] <<= date
+        end
       end
     end
     tops.each do |date, outfit|
