@@ -22,7 +22,7 @@ class ClothingLog < ActiveRecord::Base
     # Update the counts, too
     self.clothing.update_stats!.save
     if self.clothing_id_changed? and self.clothing_id_was
-      Clothing.find(self.clothing_id_was).update_stats!.save
+      self.user.clothing.find(self.clothing_id_was).update_stats!.save
     end
   end
 

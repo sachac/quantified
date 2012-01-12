@@ -1,11 +1,10 @@
 class LocationsController < ApplicationController
-  load_and_authorize_resource
   handles_sortable_columns
   # GET /locations
   # GET /locations.xml
   def index
-    @locations = Location.all
-
+    authorize! :view_locations, current_account
+    @locations = current_account.locations.all
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @locations }
@@ -15,7 +14,8 @@ class LocationsController < ApplicationController
   # GET /locations/1
   # GET /locations/1.xml
   def show
-    @location = Location.find(params[:id])
+    authorize! :view_locations, current_account
+    @location = current_account.locations.find(params[:id])
     @stuff = @location.stuff
     respond_to do |format|
       format.html # show.html.erb
@@ -26,7 +26,8 @@ class LocationsController < ApplicationController
   # GET /locations/new
   # GET /locations/new.xml
   def new
-    @location = Location.new
+    authorize! :manage_account, current_account
+    @location = current_account.locations.new
 
     respond_to do |format|
       format.html # new.html.erb
@@ -36,13 +37,15 @@ class LocationsController < ApplicationController
 
   # GET /locations/1/edit
   def edit
-    @location = Location.find(params[:id])
+    authorize! :manage_account, current_account
+    @location = current_account.locations.find(params[:id])
   end
 
   # POST /locations
   # POST /locations.xml
   def create
-    @location = Location.new(params[:location])
+    authorize! :manage_account, current_account
+    @location = current_account.locations.new(params[:location])
     @location.user = current_account
     respond_to do |format|
       if @location.save
@@ -58,7 +61,8 @@ class LocationsController < ApplicationController
   # PUT /locations/1
   # PUT /locations/1.xml
   def update
-    @location = Location.find(params[:id])
+    authorize! :manage_account, current_account
+    @location = current_account.locations.find(params[:id])
 
     respond_to do |format|
       if @location.update_attributes(params[:location])
@@ -74,7 +78,8 @@ class LocationsController < ApplicationController
   # DELETE /locations/1
   # DELETE /locations/1.xml
   def destroy
-    @location = Location.find(params[:id])
+    authorize! :manage_account, current_account
+    @location = current_account.locations.find(params[:id])
     @location.destroy
 
     respond_to do |format|

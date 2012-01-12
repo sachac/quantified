@@ -1,0 +1,23 @@
+= form_tag feedback_path do
+  .clearfix
+    = label_tag :email, "E-mail"
+    .input
+      - if current_account
+        .uneditable-input= current_account.email
+      - else
+        = text_field_tag :email
+  .clearfix      
+    = label_tag :message, "Message"
+    .input
+      = text_area_tag :message, nil, :rows => 10, :cols => 40, :required => true
+  - if params[:destination]    
+    .clearfix
+      = label_tag :context, "From page:"
+      .input
+        .uneditable-input= params[:destination]
+  = hidden_field_tag :old_params, params[:old_params]
+  = hidden_field_tag :destination, params[:destination]
+  
+  .actions
+    = submit_tag "Send feedback", :class => 'btn primary' 
+  
