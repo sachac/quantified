@@ -1,0 +1,15 @@
+= form_tag admin_invite_user_path do
+  %h2 Invite user
+  = label :email, "Email"
+  .input= text_field_tag :email
+  .actions
+    = submit_tag "Invite", :class => 'btn primary'
+  
+
+%h2= "Signups: #{@signups.length}"
+%table
+  - @signups.each do |s|
+    %tr
+      %td= mail_to s.email, s.email
+      %td= l s.created_at
+  

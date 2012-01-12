@@ -1,5 +1,5 @@
 class HomeController < ApplicationController
-  skip_authorization_check :only => [:sign_up]
+  skip_authorization_check :only => [:sign_up, :feedback, :send_feedback]
   def index
     logger.info "CURRENT ACCOUNT: #{current_account.inspect}"
     authorize! :view_dashboard, current_account
@@ -14,7 +14,7 @@ class HomeController < ApplicationController
       @dates = 7.downto(0).collect { |i| Date.today - i.days }
       @contexts = current_account.contexts
       @current_activity = current_account.records.activities.order('timestamp DESC').first
-      check_goals
+      @goals = Goal.check_goals(current_account)
     end
     if mobile?
       render 'mobile_index'
@@ -87,23 +87,24 @@ class HomeController < ApplicationController
     redirect_to new_user_session_path and return
   end
 
+  def feedback
+    authorize! :send_feedback, current_account
+  end
 
-  protected
-  def check_goals
-    list = current_account.goals
-    logger.info list.inspect
-    @goals = Hash.new
-    list.each do |g|
-      hash = g.parse_expression
-      logger.info hash.inspect
-      if hash[:success] 
-        hash[:class] = 'good'
-        hash[:performance_color] = '#0c0'
-      else
-        hash[:class] = 'attention'
-        hash[:performance_color] = '#c00'
+  def send_feedback
+    authorize! :send_feedback, current_account
+    info = params
+    puts params.inspect
+    if !params[:message].blank?
+      if current_account
+        info[:user_id] = current_account.id
+        info[:email] = current_account.email
       end
-      @goals[g.label] = hash
+      ApplicationMailer.feedback(info).deliver
+      go_to root_path, :notice => "Your feedback has been sent. Thank you!"
+    else
+      add_flash :error, "Please fill in your feedback message."
+      render 'feedback'
     end
   end
 end

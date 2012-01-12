@@ -57,4 +57,21 @@ class Goal < ActiveRecord::Base
       (Time.now - 1.day)..Time.now
     end
   end
+
+  def self.check_goals(user)
+    list = user.goals
+    goals = Hash.new
+    list.each do |g|
+      hash = g.parse_expression
+      logger.info hash.inspect
+      if hash[:success] 
+        hash[:class] = 'good'
+        hash[:performance_color] = '#0c0'
+      else
+        hash[:class] = 'attention'
+        hash[:performance_color] = '#c00'
+      end
+    end
+    goals
+  end
 end

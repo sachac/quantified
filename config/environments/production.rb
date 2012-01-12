@@ -52,4 +52,5 @@ Home::Application.configure do
    config.assets.compress = true
    config.assets.compile = true
    config.assets.digest = true
+  config.action_mailer.default_url_options = { :host => "quantifiedawesome.com" }
 end
