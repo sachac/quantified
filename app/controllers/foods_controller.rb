@@ -4,7 +4,7 @@ class FoodsController < ApplicationController
   def index
     authorize! :view_food, current_accoun
     @info = Hash.new
-    CsaFood.all.each do |log|
+    current_account.csa_foods.all.each do |log|
       @info[log.food_id] ||= Hash.new
       @info[log.food_id][:unit] = log.unit
       @info[log.food_id][:total] ||= 0
@@ -14,7 +14,7 @@ class FoodsController < ApplicationController
         @info[log.food_id][:remaining] += log.quantity
       end
     end
-    @foods = Food.all
+    @foods = current_account.foods.all
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @foods }
@@ -24,7 +24,7 @@ class FoodsController < ApplicationController
   # GET /foods/1
   # GET /foods/1.xml
   def show
-    @food = Food.find(params[:id])
+    @food = current_account.foods.find(params[:id])
     authorize! :view, @food
     respond_to do |format|
       format.html # show.html.erb
@@ -36,7 +36,7 @@ class FoodsController < ApplicationController
   # GET /foods/new.xml
   def new
     authorize! :manage_account, current_account
-    @food = Food.new
+    @food = current_account.foods.new
 
     respond_to do |format|
       format.html # new.html.erb
@@ -47,14 +47,14 @@ class FoodsController < ApplicationController
   # GET /foods/1/edit
   def edit
     authorize! :manage_account, current_account
-    @food = Food.find(params[:id])
+    @food = current_account.foods.find(params[:id])
   end
 
   # POST /foods
   # POST /foods.xml
   def create
     authorize! :manage_account, current_account
-    @food = Food.new(params[:food])
+    @food = current_account.foods.new(params[:food])
     @food.user_id = current_account.id
     respond_to do |format|
       if @food.save
@@ -71,7 +71,7 @@ class FoodsController < ApplicationController
   # PUT /foods/1.xml
   def update
     authorize! :manage_account, current_account
-    @food = Food.find(params[:id])
+    @food = current_account.foods.find(params[:id])
 
     respond_to do |format|
       if @food.update_attributes(params[:food])
@@ -88,7 +88,7 @@ class FoodsController < ApplicationController
   # DELETE /foods/1.xml
   def destroy
     authorize! :manage_account, current_account
-    @food = Food.find(params[:id])
+    @food = current_account.foods.find(params[:id])
     @food.destroy
 
     respond_to do |format|

@@ -1,5 +1,5 @@
 class RecordsController < ApplicationController
-  respond_to :html, :json
+  respond_to :html, :json, :csv
   # GET /records
   # GET /records.xml
   def index
@@ -24,10 +24,28 @@ class RecordsController < ApplicationController
     unless html? or managing?
       @records = @records.public
     end
-    @records = @records.paginate :page => params[:page]
     respond_to do |format|
-      format.html
+      format.html { @records = @records.paginate :page => params[:page] }
       format.json { render :json => json_paginate(@records) }
+      format.csv { 
+        csv_string = FasterCSV.generate do |csv|
+          csv << ['start_time', 'end_time', 'record_category_name', 'record_category_id', 'duration', 'source', 'source_id', 'data']
+          @records.each do |e|
+            row = [e.timestamp ? l(e.timestamp, :format => :long) : '',
+                   e.end_timestamp ? l(e.end_timestamp, :format => :long) : '',
+                   e.record_category.full_name,
+                   e.record_category_id,
+                   e.duration,
+                   e.source,
+                   e.source_id]
+            if e.data
+              row += e.data.map { |k, v| [k, v]}.flatten
+            end
+            csv << row
+          end
+        end
+        send_data csv_string, :type => "text/plain", :filename=>"records.csv", :disposition => 'attachment'
+      }
     end
   end
 
@@ -121,4 +139,5 @@ class RecordsController < ApplicationController
     @record = @record.dup
     render 'edit'
   end
+
 end

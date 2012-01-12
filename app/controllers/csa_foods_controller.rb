@@ -24,7 +24,7 @@ class CsaFoodsController < ApplicationController
   # GET /csa_foods/1
   # GET /csa_foods/1.xml
   def show
-    @csa_food = CsaFood.find(params[:id])
+    @csa_food = current_account.csa_foods.find(params[:id])
 
     authorize! :view, @csa_food
     respond_to do |format|
@@ -37,7 +37,7 @@ class CsaFoodsController < ApplicationController
   # GET /csa_foods/new.xml
   def new
     authorize! :manage_account, current_account
-    @csa_food = CsaFood.new
+    @csa_food = current_account.csa_foods.new
     @csa_food.date_received = Date.today
     @csa_food.unit = 'g'
     respond_to do |format|
@@ -49,7 +49,7 @@ class CsaFoodsController < ApplicationController
   # GET /csa_foods/1/edit
   def edit
     authorize! :manage_account, current_account
-    @csa_food = CsaFood.find(params[:id])
+    @csa_food = current_account.csa_foods.find(params[:id])
   end
 
   # POST /csa_foods
@@ -63,7 +63,7 @@ class CsaFoodsController < ApplicationController
       food.save
     end
     params[:csa_food][:food_id] = food.id
-    @csa_food = CsaFood.new(params[:csa_food])
+    @csa_food = current_account.csa_foods.new(params[:csa_food])
     @csa_food.user_id = current_account.id
     respond_to do |format|
       if @csa_food.save
@@ -80,7 +80,7 @@ class CsaFoodsController < ApplicationController
   # PUT /csa_foods/1.xml
   def update
     authorize! :manage_account, current_account
-    @csa_food = CsaFood.find(params[:id])
+    @csa_food = current_account.csa_foods.find(params[:id])
 
     respond_to do |format|
       if @csa_food.update_attributes(params[:csa_food])
@@ -97,7 +97,7 @@ class CsaFoodsController < ApplicationController
   # DELETE /csa_foods/1.xml
   def destroy
     authorize! :manage_account, current_account
-    @csa_food = CsaFood.find(params[:id])
+    @csa_food = current_account.csa_foods.find(params[:id])
     @csa_food.destroy
 
     respond_to do |format|
@@ -114,7 +114,7 @@ class CsaFoodsController < ApplicationController
     unless @food
       @food = Food.create(:user => current_account, :name => params[:food])
     end
-    @log = CsaFood.create(:user => current_account, :food => @food, :quantity => params[:quantity].to_f, :unit => params[:unit], :date_received => Date.parse(params[:date]))
+    @log = current_account.csa_foods.create(:user => current_account, :food => @food, :quantity => params[:quantity].to_f, :unit => params[:unit], :date_received => Date.parse(params[:date]))
     if @log
       redirect_to csa_foods_path, :notice => 'Food successfully logged.' and return
     else
