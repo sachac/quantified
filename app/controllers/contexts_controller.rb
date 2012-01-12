@@ -73,7 +73,7 @@ class ContextsController < ApplicationController
   # DELETE /contexts/1
   # DELETE /contexts/1.xml
   def destroy
-    @context = Context.find(params[:id])
+    @context = current_account.contexts.find(params[:id])
     authorize! :delete, @context
     @context.destroy
 
@@ -85,7 +85,7 @@ class ContextsController < ApplicationController
 
   def start
     # Parse the list of items in this context
-    @context = Context.find(params[:id])
+    @context = current_account.contexts.find(params[:id])
     authorize! :start, @context
     @stuff = @context.stuff_rules
     @in_place = Array.new
@@ -100,7 +100,7 @@ class ContextsController < ApplicationController
   end
 
   def complete
-    @context = Context.find(params[:id])
+    @context = current_account.contexts.find(params[:id])
     authorize! :start, @context
     @stuff = @context.stuff_rules
     @stuff.each do |key, stuff|

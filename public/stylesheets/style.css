@@ -3160,3 +3160,8 @@ input.imagebtn {
 .time .category_detail {
   padding-top: 7px;
 }
+
+/* line 115, ../../app/assets/stylesheets/style.sass */
+.spreadsheet {
+  float: right;
+}
