@@ -17,6 +17,8 @@
     = csrf_meta_tag
   %body{:class => mobile? ? "mobile" : "full"}
     = render mobile? ? 'mobile_nav' : 'main_nav'
+    - if Rails.env.development?
+      .alert-message.warning This is the development site.
     .container
       .content
         .flash

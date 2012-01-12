@@ -20,7 +20,7 @@ class ClothingLogsController < ApplicationController
   # GET /clothing_logs/1
   # GET /clothing_logs/1.xml
   def show
-    @clothing_log = ClothingLog.find(params[:id])
+    @clothing_log = current_account.clothing_logs.find(params[:id])
     authorize! :view, @clothing
 
     respond_to do |format|
@@ -32,7 +32,7 @@ class ClothingLogsController < ApplicationController
   # GET /clothing_logs/new
   # GET /clothing_logs/new.xml
   def new
-    @clothing_log = ClothingLog.new
+    @clothing_log = current_account.clothing_logs.new
     authorize! :create, ClothingLog
     @clothing_log.date = Time.now
     respond_to do |format|
@@ -43,7 +43,7 @@ class ClothingLogsController < ApplicationController
 
   # GET /clothing_logs/1/edit
   def edit
-    @clothing_log = ClothingLog.find(params[:id])
+    @clothing_log = current_account.clothing_logs.find(params[:id])
     authorize! :update, @clothing_log
   end
 
@@ -64,9 +64,9 @@ class ClothingLogsController < ApplicationController
       end
     end
     if (params[:date] && params[:clothing_id]) then
-      @clothing_log = ClothingLog.new(:date => params[:date], :clothing_id => params[:clothing_id])
+      @clothing_log = current_account.clothing_logs.new(:date => params[:date], :clothing_id => params[:clothing_id])
     else
-      @clothing_log = ClothingLog.new(params[:clothing_log])
+      @clothing_log = current_account.clothing_logs.new(params[:clothing_log])
     end
     @clothing_log.user_id = current_account.id
     respond_to do |format|
@@ -83,7 +83,7 @@ class ClothingLogsController < ApplicationController
   # PUT /clothing_logs/1
   # PUT /clothing_logs/1.xml
   def update
-    @clothing_log = ClothingLog.find(params[:id])
+    @clothing_log = current_account.clothing_logs.find(params[:id])
     authorize! :update, @clothing_log
 
     respond_to do |format|
@@ -100,7 +100,7 @@ class ClothingLogsController < ApplicationController
   # DELETE /clothing_logs/1
   # DELETE /clothing_logs/1.xml
   def destroy
-    @clothing_log = ClothingLog.find(params[:id])
+    @clothing_log = current_account.clothing_logs.find(params[:id])
     authorize! :destroy, @clothing_log
     @clothing_log.destroy
 
@@ -113,7 +113,7 @@ class ClothingLogsController < ApplicationController
   def by_date
     authorize! :view_clothing_logs, current_account
     @date = Date.parse(params[:date])
-    @clothing_logs = ClothingLog.where('date = ?', @date).includes(:clothing).order('outfit_id, clothing.clothing_type')
+    @clothing_logs = current_account.clothing_logs.where('date = ?', @date).includes(:clothing).order('outfit_id, clothing.clothing_type')
     @previous_date = @date - 1.day
     @next_date = @date + 1.day
   end

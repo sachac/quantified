@@ -1,0 +1,9 @@
+User: <%= @info[:user_id] %>
+E-mail: <%= @info[:email] %>
+Message:
+<%= @info[:message].html_safe %>
+
+----
+Page: <%= @info[:destination].html_safe %>
+Parameters:
+<%= @info[:old_params].html_safe %>

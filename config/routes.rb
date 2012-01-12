@@ -5,7 +5,10 @@ Home::Application.routes.draw do
   match 'auth/:service' => 'sessions#setup', :as => :oauth
   resources :services, :only => [:index, :create, :destroy]
   match 'signups' => 'signups#index'
-
+  match 'admin' => 'admin#index'
+  match 'admin/invite_user' => 'admin#invite_user', :via => :post
+  match 'feedback' => 'home#send_feedback', :via => :post
+  match 'feedback' => 'home#feedback', :as => :feedback
   offline = Rack::Offline.configure do
     cache "api/offline/v1/track"
     cache "assets/application.js"
