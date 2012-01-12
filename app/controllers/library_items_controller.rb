@@ -23,7 +23,7 @@ class LibraryItemsController < ApplicationController
   # GET /library_items/1
   # GET /library_items/1.xml
   def show
-    @library_item = LibraryItem.find(params[:id])
+    @library_item = current_account.library_items.find(params[:id])
     authorize! :view, @library_item
     respond_to do |format|
       format.html # show.html.erb
@@ -34,7 +34,7 @@ class LibraryItemsController < ApplicationController
   # GET /library_items/new
   # GET /library_items/new.xml
   def new
-    @library_item = LibraryItem.new
+    @library_item = current_account.library_items.new
     authorize! :create, LibraryItem
 
     respond_to do |format|
@@ -45,7 +45,7 @@ class LibraryItemsController < ApplicationController
 
   # GET /library_items/1/edit
   def edit
-    @library_item = LibraryItem.find(params[:id])
+    @library_item = current_account.library_items.find(params[:id])
     authorize! :update, @library_item
     [:read_date, :status].each do |v|
       @library_item.send(v.to_s + '=', params[v]) if params[v]
@@ -56,7 +56,7 @@ class LibraryItemsController < ApplicationController
   # POST /library_items.xml
   def create
     authorize! :create, LibraryItem
-    @library_item = LibraryItem.new(params[:library_item])
+    @library_item = current_account.library_items.new(params[:library_item])
     @library_item.user_id = current_account.id
     respond_to do |format|
       if @library_item.save
@@ -72,7 +72,7 @@ class LibraryItemsController < ApplicationController
   # PUT /library_items/1
   # PUT /library_items/1.xml
   def update
-    @library_item = LibraryItem.find(params[:id])
+    @library_item = current_account.library_items.find(params[:id])
     authorize! :update, @library_item
 
     respond_to do |format|
@@ -89,7 +89,7 @@ class LibraryItemsController < ApplicationController
   # DELETE /library_items/1
   # DELETE /library_items/1.xml
   def destroy
-    @library_item = LibraryItem.find(params[:id])
+    @library_item = current_account.library_items.find(params[:id])
     authorize! :delete, @library_item
     @library_item.destroy
 
@@ -105,11 +105,11 @@ class LibraryItemsController < ApplicationController
     params[:sort] ||= '-due'
     order = filter_sortable_column_order %w{due title status}
     if can? :view_all, LibraryItem
-      @tags = LibraryItem.tag_counts_on(:tags).sort_by(&:name)
-      @library_items = LibraryItem.tagged_with(params[:id]).order(order)
+      @tags = current_account.library_items.tag_counts_on(:tags).sort_by(&:name)
+      @library_items = current_account.library_items.tagged_with(params[:id]).order(order)
     else
-      @tags = LibraryItem.where('public=1').tag_counts_on(:tags).sort_by(&:name)
-      @library_items = LibraryItem.where('public=1').tagged_with(params[:id]).order(order)
+      @tags = current_account.library_items.where('public=1').tag_counts_on(:tags).sort_by(&:name)
+      @library_items = current_account.library_items.where('public=1').tagged_with(params[:id]).order(order)
     end
     render :index
   end
@@ -118,7 +118,7 @@ class LibraryItemsController < ApplicationController
     authorize :manage_account, current_account
     if params[:bulk] and params[:op] then
       params[:bulk].compact.each do |i|
-        item = LibraryItem.find(i)
+        item = current_account.library_items.find(i)
         case params[:op]
           when 'Make public'
             item.public = true

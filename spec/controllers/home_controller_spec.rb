@@ -29,4 +29,13 @@ describe HomeController do
       assigns(:account).should == @user
     end
   end
+  describe "#send_feedback" do
+    it "sends feedback" do
+      post :send_feedback, :email => 'test@example.com', :message => 'Hello, world'
+      puts response.body
+      email = ActionMailer::Base.deliveries.last
+      email.should_not be_nil
+      puts email.inspect
+    end
+  end
 end

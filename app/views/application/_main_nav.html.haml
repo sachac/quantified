@@ -20,3 +20,6 @@
           %li
             %strong{:style => 'text-decoration: underline'}
               = link_to t('app.user.login'), new_user_session_path
+        %li{:class => active_menu('/feedback')}
+          %strong= link_to 'send feedback', feedback_path(:old_params => params.inspect, :destination => request.fullpath)
+       

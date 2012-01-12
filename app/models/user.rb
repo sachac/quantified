@@ -33,7 +33,7 @@ class User < ActiveRecord::Base
   validates_format_of :username, :with => /^[A-Za-z\d]+$/
   # Include default devise modules. Others available are:
   # :token_authenticatable, :encryptable, :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable, 
+  devise :invitable, :database_authenticatable, 
          :recoverable, :rememberable, :trackable, :validatable, :token_authenticatable
   attr_accessor :login
 
