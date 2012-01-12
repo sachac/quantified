@@ -2,6 +2,8 @@
 # See http://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
 
 en:
+  general:
+    download_as_spreadsheet: Download as spreadsheet
   time_log:
     logged: Activity has been logged.
   time:

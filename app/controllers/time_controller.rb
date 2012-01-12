@@ -78,4 +78,5 @@ class TimeController < ApplicationController
       redirect_to disambiguate_record_categories_path(:timestamp => now, :category => params[:category]), :method => :post and return 
     end
   end
+
 end
