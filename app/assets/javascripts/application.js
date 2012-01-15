@@ -10,4 +10,5 @@
 //= require autocomplete-rails
 //= require raphael-min
 //= require jquery.sparkline.min
+//= require jquery.qtip.min
 //= require quantified

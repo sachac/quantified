@@ -223,22 +223,34 @@ module ApplicationHelper
       "'#{escape_javascript row[2].color}', '#{row[2].record_category.full_name.parameterize.underscore}');"
   end
 
-  def record_data_input(record, key, info)
+  def record_data_input(record, info, index = nil)
     content_tag(:div, :class => 'clearfix optional stringish') do
-      s = label_tag("data[#{key}]", info[:label])
-      s += content_tag(:div, :class => 'input') do
-        case info[:type]
-        when 'text'
-          text_area_tag("record[data][#{key}]", record.data ? record.data[key] : nil)
-        else
-          text_field_tag("record[data][#{key}]", record.data ? record.data[key] : nil)
+      key = info[:key] || info["key"]
+      label = info[:label] || info["label"] || key
+      if key
+        s = label_tag("data[#{key}]", label)
+        s += content_tag(:div, :class => 'input') do
+          case info[:type]
+          when 'text'
+            text_area_tag("record[data][#{key}]", record.data ? record.data[key] : nil, :autofocus => (index == 0))
+          else
+            text_field_tag("record[data][#{key}]", record.data ? record.data[key] : nil, :autofocus => (index == 0))
+          end
         end
+        s
       end
-      s
     end
   end
 
   def download_as_spreadsheet
     content_tag(:div, link_to(t('general.download_as_spreadsheet'), params.merge(:format => :xls)), :class => 'spreadsheet')
+  end
+
+  def feedback_link(text = 'send feedback')
+    link_to text, feedback_path(:old_params => params.inspect, :destination => request.fullpath)
+  end
+
+  def help(url)
+    # link_to 'Help', url
   end
 end

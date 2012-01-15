@@ -29,7 +29,7 @@ class Ability
     can :view, Clothing
     can :view, TapLogRecord
     can :view_note, TapLogRecord do |u|
-      !u.private? || u.user_id = user.id
+      (u.user_id == 1 && !u.private?) || u.user_id = user.id
     end
     can :view_site, User
     can :send_feedback, User

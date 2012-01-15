@@ -6,8 +6,9 @@
         - @user.errors.full_messages.each do |msg|
           %li= msg
   = f.inputs do
+    = f.input :username
     = f.input :email
-    = f.input :password
+    = f.input :password, :required => false
     = f.input :password_confirmation
   .actions
-    = f.submit 'Save'
+    = f.submit 'Save', :class => 'btn primary'

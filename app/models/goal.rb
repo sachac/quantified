@@ -71,6 +71,7 @@ class Goal < ActiveRecord::Base
         hash[:class] = 'attention'
         hash[:performance_color] = '#c00'
       end
+      goals[hash[:label]] = hash
     end
     goals
   end

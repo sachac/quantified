@@ -8,6 +8,13 @@
             %legend Sign in
             .inner
               .clear-fix
+                %label Sign in with
+                .input
+                  .box#services
+                    = link_to image_tag('google_32.png', :size => "32x32", :alt => "Google"), oauth_url(:google, :subdomain => false), :class => 'service'
+                    = link_to image_tag('facebook_32.png', :size => "32x32", :alt => "Facebook"), oauth_url(:facebook, :subdomain => false), :class => 'service'
+                    or fill in the form below
+              .clear-fix
                 = label_tag :login, "Login"
                 .input= f.text_field :login, :class => "text_field"
               .clear-fix  
@@ -21,24 +28,9 @@
                         = f.check_box :remember_me, :class => "checkbox"
                         Remember me
               .clear-fix
-                .input
-                  .box#services
-                    = link_to image_tag('google_32.png', :size => "32x32", :alt => "Google"), oauth_url(:google, :subdomain => false), :class => 'service'
-                    = link_to image_tag('facebook_32.png', :size => "32x32", :alt => "Facebook"), oauth_url(:facebook, :subdomain => false), :class => 'service'
+                .input= render "devise/shared/links"
             .actions
               %button.btn.primary{ :type => "submit" }
                 = I18n.t('app.user.login_submit')
-              = render "devise/shared/links"
       .sign_up
-        = form_tag sign_up_path, :class => mobile? ? 'form-stacked' : 'form' do
-          %fieldset
-            %legend Sign up
-            .inner
-              .clearfix
-                %p As you can probably tell, this system is waaay in beta. Interested? Fill in your e-mail address, and I'll get in touch when the system is ready for you. I promise to never sell your e-mail address or send you spam.
-              .clearfix
-                = label_tag :email
-                .input= text_field_tag :email, params[:email]
-            .actions
-              %button.btn.primary{ :type => "submit" }
-                = I18n.t('app.general.submit')
+        = render 'registrations/form'

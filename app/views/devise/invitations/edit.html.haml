@@ -1,0 +1,11 @@
+%h2 Set your password
+
+= semantic_form_for resource, :as => resource_name, :url => invitation_path(resource_name), :html => { :method => :put } do |f| 
+  = devise_error_messages! 
+  = f.inputs do 
+    = f.hidden_field :invitation_token
+    = f.input :username, :label => t('user.username')
+    = f.input :password
+    = f.input :password_confirmation
+  .actions  
+    = f.submit "Create my account", :class => 'btn primary'

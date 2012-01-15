@@ -22,13 +22,15 @@ Home::Application.configure do
 
   # Only use best-standards-support built into browsers
   config.action_dispatch.best_standards_support = :builtin
+  
+  # Do not compress assets
+  config.assets.compress = false
+  
+  # Expands the lines which load the assets
+  config.assets.debug = true
+  config.assets.digest = false
+  config.log_level = :debug
 
-   # Do not compress assets
-   config.assets.compress = false
-
-   # Expands the lines which load the assets
-   config.assets.debug = true
-   config.log_level = :debug
   config.action_mailer.default_url_options = { :host => "dev.quantifiedawesome.com" }
 end
 

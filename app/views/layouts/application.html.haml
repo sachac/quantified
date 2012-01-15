@@ -17,10 +17,12 @@
     = csrf_meta_tag
   %body{:class => mobile? ? "mobile" : "full"}
     = render mobile? ? 'mobile_nav' : 'main_nav'
-    - if Rails.env.development?
-      .alert-message.warning This is the development site.
     .container
       .content
+        - if current_user.nil? and !(controller_name == 'sessions' || controller_name == 'registrations' || controller_name == 'passwords')
+          .alert-message.block-message.success
+            Sacha Chua here. You can see how I've been using Quantified Awesome to track my life. I'm working on making it easier for other people to track their lives too. Interested?
+            = link_to "Sign up!", new_user_session_path
         .flash
           - flash.each do |type, message|
             %div{:class => "alert-message #{type}"}
@@ -41,11 +43,14 @@
       %footer
         .block
           %p
-            Copyright &copy; #{Time.now.year} Sacha Chua
+            Copyright &copy; #{Time.now.year} Sacha Chua - 
             - if session
               - if mobile?
                 = link_to I18n.t('app.layout.full'), params.merge(:layout => 'full')
               - else
                 = link_to I18n.t('app.layout.mobile'), params.merge(:layout => 'mobile')
-            = mail_to "sacha@sachachua.com", "Tell me what you think!", :subject => "Quantified Awesome"
+            \-     
+            = feedback_link "Send feedback"
+    - if Rails.env.development?
+      .alert-message.warning This is the development site.
 - flash.discard

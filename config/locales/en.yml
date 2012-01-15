@@ -4,8 +4,13 @@
 en:
   user:
     invited: %{email} invited.
+    username: Username
+    sign_up: Sign up 
   general:
     download_as_spreadsheet: Download as spreadsheet
+    save: Save
+    delete: Delete  
+    are_you_sure: Are you sure?
   time_log:
     logged: Activity has been logged.
   time:
@@ -18,6 +23,10 @@ en:
       review: Review
       start_activity: Start
       record: Record
+    type:
+      list: "List: Contains other categories and cannot be selected on its own."
+      activity: "Activity: Has a start and an end time. Only one category can be active at a time"
+      record: "Record: Data associated with a moment in time. Ex: thoughts, feelings, ratings"
   records:
     index:
       recalculate_durations: Recalculate durations
@@ -66,7 +75,6 @@ en:
       view: View
       edit: Edit
       cancel: Cancel
-      are_you_sure: Are you sure?
       public: Public
       private: Private
       total: Total
@@ -76,11 +84,15 @@ en:
       my_version: Share your version of events
       link: Link this memory...
       new_with_link: This makes me think of... 	   
-  activerecord:
-    attributes:
-      user:
-        username: "Username or email"
   formtastic:
     labels:
       record:
         end_timestamp: End time
+      user:  
+        login: "Username or e-mail"
+    hints:
+      user:
+        username: "You can log in with this instead of your e-mail address. Allowed characters: A-Z, a-z, and 0-9."
+      record_category:
+        name: "A short, descriptive name for the category. Example: Sleep"
+        color: "Used for displaying in the timeline. Specify an HTML/CSS color name or value."
