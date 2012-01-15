@@ -4,6 +4,7 @@ class GoalsController < ApplicationController
   def index
     authorize! :manage_account, current_account
     @goals = current_account.goals
+    @goal_summary = Goal.check_goals(current_account)
     respond_to do |format|
       format.html # index.html.erb
       format.json { render :json => @goals }

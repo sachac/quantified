@@ -2,7 +2,7 @@ def login(user = nil, options = {})
   user ||= Factory(:user)
   @user = user
   options[:with] ||= :email
-  get root_url #(:subdomain => user.username)
+  get root_path(:subdomain => false)
   puts page.body
   click_link I18n.t('app.user.login')
   fill_in 'user[login]', :with => (options[:with] == :username? ? user.username : user.email)
@@ -26,6 +26,14 @@ def setup_ability
 end
 def as_user(user = nil)
   user ||= Factory(:user)
+  @user = user
+  unless @ability
+    setup_ability
+  end
+  sign_in @user
+end
+def as_admin(user = nil)
+  user ||= Factory(:user, :role => 'admin')
   @user = user
   unless @ability
     setup_ability

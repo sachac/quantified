@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120112174036) do
+ActiveRecord::Schema.define(:version => 20120113184311) do
 
   create_table "clothing", :force => true do |t|
     t.string   "name"
@@ -391,7 +391,7 @@ ActiveRecord::Schema.define(:version => 20120112174036) do
   add_index "toronto_libraries", ["user_id"], :name => "index_toronto_libraries_on_user_id"
 
   create_table "users", :force => true do |t|
-    t.string   "email",                                   :default => "", :null => false
+    t.string   "email",                                   :default => "",    :null => false
     t.string   "encrypted_password",       :limit => 128, :default => ""
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
@@ -417,8 +417,14 @@ ActiveRecord::Schema.define(:version => 20120112174036) do
     t.integer  "invitation_limit"
     t.integer  "invited_by_id"
     t.string   "invited_by_type"
+    t.string   "confirmation_token"
+    t.datetime "confirmed_at"
+    t.datetime "confirmation_sent_at"
+    t.boolean  "approved",                                :default => false, :null => false
+    t.string   "unconfirmed_email"
   end
 
+  add_index "users", ["confirmation_token"], :name => "index_users_on_confirmation_token", :unique => true
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
   add_index "users", ["invitation_token"], :name => "index_users_on_invitation_token"
   add_index "users", ["invited_by_id"], :name => "index_users_on_invited_by_id"

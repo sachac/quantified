@@ -45,7 +45,6 @@ class ApplicationController < ActionController::Base
   end  
 
   def after_sign_in_path_for(resource)
-    logger.info "LOG IN #{resource.inspect} #{resource.username}"
     params[:destination] || stored_location_for(resource) || root_path
   end
 

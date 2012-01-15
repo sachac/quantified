@@ -2,13 +2,28 @@
 - show_parent = true if show_parent.nil?
 = semantic_form_for rec do |f|
   = f.inputs do
-    - if show_parent
-      = f.input :parent
+    = f.input :name, :input_html => { :autofocus => true }
+    - if show_parent and current_account.record_categories.where('id IS NOT NULL AND category_type = ?', 'list').length > 0
+      = f.input :parent, :collection => current_account.record_categories.where('category_type = ?', 'list').order('full_name').map { |x| [x.full_name, x.id] }
     - else
       = f.input :parent_id, :as => :hidden
-    = f.input :name
+    = f.input :category_type, :as => :radio, :collection => [[t('record_categories.type.activity'), 'activity'], [t('record_categories.type.record'), 'record'], [t('record_categories.type.list'), 'list']]
+    .clear-fix
+      %label Data
+      .input
+        %table.compact
+          %tr
+            %th Key
+            %th Label
+            %th Type
+          - if rec.data
+            - rec.data.each do |datum|
+              %tr
+                %td= text_field_tag "record_category[data][][key]", datum["key"]
+                %td= text_field_tag "record_category[data][][label]", datum["label"]
+                %td= select_tag "record_category[data][][type]", options_for_select([["Text field", "string"], ["Text area", "text"]], datum["type"])
     = f.input :color
-    = f.input :data_description, :as => :text
-    = f.input :category_type, :as => :radio, :collection => ['list', 'activity', 'record']
   .actions
-    = f.submit t('app.general.save')
+    = f.submit t('general.save'), :class => 'btn primary'
+    = link_to t('general.delete'), @record_category, :class => 'btn', :method => :delete, :confirm => t('general.are_you_sure')
+    

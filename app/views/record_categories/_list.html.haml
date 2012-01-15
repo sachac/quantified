@@ -4,7 +4,7 @@
       %table
         - list.each do |c|
           %tr
-            %td{:width => 50}
+            %td{:width => 100}
               - if c.activity? or c.record?
                 = link_to("Track", track_time_path(:category_id => c.id), :class => 'btn', :method => :post)
             %td
@@ -13,15 +13,12 @@
                 &raquo;
     
   - else  
-    = form_tag bulk_update_record_categories_path(:destination => request.fullpath) do
-      = submit_tag I18n.t('app.general.save'), :class => 'btn'
+    - if list.length > 0
       %table
         %thead
           %tr
-            %th{:width => 50} Actions
+            %th{:width => 100} Actions
             %th Name
-            - unless mobile?
-              %th Type
         %tbody    
           - list.each do |c|
             %tr
@@ -31,11 +28,6 @@
                 = link_to c.name, c
                 - if c.list?
                   &raquo;
-              - unless mobile?
-                %td
-                  - %w{list activity record}.each do |type|
-                    = radio_button_tag "category_type[#{c.id}]", type, c.category_type == type
-                    = label_tag "category_type[#{c.id}][#{type}]", type.humanize, :class => 'inline'
 - else
   .clearfix
     %ul

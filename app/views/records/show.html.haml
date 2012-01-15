@@ -21,15 +21,12 @@
           %td
             Ongoing
             = "(#{duration Time.now - @record.timestamp})"
-    - if @record.data?
-      - data = @record.record_category.data
-      - @record.data.each do |k,v|
+    - data = @record.record_category.data
+    - if data and @record.data?
+      - data.each do |entry|
+        - v = @record.data[entry['key'] || entry[:key]]
         %tr
-          %td.h
-            - if data and data[k]
-              = data[k][:label]
-            - else
-              = k.to_s.humanize
+          %td.h= entry[:label] || entry['label'] || (entry[:key] || entry['key']).humanize
           %td
             - if can?(:manage_account, current_account) or !v.downcase.include?('!private')
               = v

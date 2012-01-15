@@ -9,6 +9,7 @@ Home::Application.routes.draw do
   match 'admin/invite_user' => 'admin#invite_user', :via => :post
   match 'feedback' => 'home#send_feedback', :via => :post
   match 'feedback' => 'home#feedback', :as => :feedback
+  match 'help/record_categories' => 'help#record_categories'
   offline = Rack::Offline.configure do
     cache "api/offline/v1/track"
     cache "assets/application.js"
@@ -27,6 +28,7 @@ Home::Application.routes.draw do
     end
   end
 
+  match 'record_categories/autocomplete_record_category_full_name', :as => :autocomplete_record_category
   resources :record_categories do
     member do
       post :track
@@ -71,7 +73,7 @@ Home::Application.routes.draw do
 
   resources :foods
 
-  devise_for :users, :path_prefix => 'd', :controllers => { :sessions => 'sessions' }
+  devise_for :users, :path_prefix => 'd', :controllers => { :sessions => 'sessions', :registrations => 'registrations' }
   resources :users
   match 'sign_up' => 'home#sign_up', :via => :post
 
