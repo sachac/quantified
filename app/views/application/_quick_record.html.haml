@@ -2,5 +2,5 @@
   = form_tag track_time_path, :class => mobile? ? 'form-stacked' : '' do
     .inline
       .input
-        = text_field_tag :category, nil, :autofocus => true, :placeholder => 'Category'
+        = autocomplete_field_tag :category, nil, autocomplete_record_category_path, :autofocus => true, :placeholder => 'Category'
         = submit_tag t('time.dashboard.track'), :class => 'btn'

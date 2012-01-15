@@ -6,7 +6,6 @@
       - else
         = link_to "quantified awesome",root_path, :class => 'brand'
       %ul.nav
-        %li{:class => active_menu('/home/index')}= link_to 'dashboard', root_path
         %li{:class => active_menu('/stuff')}= link_to 'stuff', stuff_index_path
         %li{:class => active_menu('/clothing')}= link_to 'clothing', clothing_index_path
         %li{:class => active_menu(['/library', '/toronto_library'])}= link_to 'library', library_items_path
@@ -17,9 +16,6 @@
           %li{:class => active_menu('/user')}= link_to 'account', edit_user_path(current_account.id)
           %li= link_to t("web-app-theme.logout", :default => "log out"), destroy_user_session_path, :method => "delete"
         - else
-          %li
-            %strong{:style => 'text-decoration: underline'}
-              = link_to t('app.user.login'), new_user_session_path
-        %li{:class => active_menu('/feedback')}
-          %strong= link_to 'send feedback', feedback_path(:old_params => params.inspect, :destination => request.fullpath)
+          %li.track= link_to t('app.user.login'), new_user_session_path
+        %li.feedback{:class => active_menu('/feedback')}= feedback_link
        

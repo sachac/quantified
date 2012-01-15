@@ -4,6 +4,8 @@ class RecordCategory < ActiveRecord::Base
   belongs_to :user
   before_save :add_data
   serialize :data
+  validates_presence_of :name
+  validates_presence_of :category_type
   def add_data
     self.full_name = self_and_ancestors.reverse.map{ |c| c.name }.join(' - ').html_safe
   end

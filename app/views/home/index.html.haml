@@ -1,22 +1,15 @@
 - if current_account
-  - if @goals.size > 0 
+  - if @goal_summary.size > 0 
     .goals.category
       .category_label
         %h2 Goals
       .category_detail
-        %table
-          - @goals.each do |k, g|
-            %tr
-              %td.h= g[:label]
-              %td
-                .sparkline{'sparkType' => 'bullet', :class => g[:class], :sparkPerformanceColor => g[:performance_color]}
-                  = ([g[:target] || 0, g[:performance] || 0] + (g[:range] || [])).join(',')
-              %td= g[:text]
-  - if current_account.records.length > 0            
-    .time.category
-      .category_label
-        %h2 Time
-      .category_detail
+        = render 'goals/summary', :goal_summary => @goal_summary
+  .time.category
+    .category_label
+      %h2 Time
+    .category_detail
+      - if current_account.record_categories.length > 0
         = render 'quick_record'    
         = render 'current_activity'  
         %ul.pills  
@@ -25,7 +18,9 @@
           %li= link_to 'Review', time_review_path
           %li= link_to 'Categories', record_categories_path
           %li= link_to 'Logs', records_path
-  - if @contexts
+      - else
+        .start= link_to "Start tracking your time by creating categories", new_record_category_path
+  - if @contexts.length > 0
     .contexts.category
       .category_label
         %h2 Contexts
@@ -33,11 +28,11 @@
         %ul.pills  
           - @contexts.each do |c|
             %li= link_to c.name, c
-  - if current_account.stuff.length > 0          
-    .stuff.category
-      .category_label
-        %h2 Stuff
-      .category_detail
+  .stuff.category
+    .category_label
+      %h2 Stuff
+    .category_detail
+      - if current_account.stuff.length > 0          
         - if current_account.stuff.out_of_place.count > 0
           %span.label.important= "#{pluralize current_account.stuff.out_of_place.count, "item"}"
           = link_to "out of place", stuff_index_path
@@ -46,18 +41,22 @@
         - else
           .green= link_to "A place for everything, and everything in its place", stuff_index_path
           %span.label.notice Yay!
-  .weather.category
+      - else
+        .start= link_to "Start tracking your stuff by creating items", stuff_index_path
+  -# .weather.category
+  -#   .category_label
+  -#     %h2 Toronto weather
+  -#   .category_detail  
+  -#     %a{:href => "http://www.wunderground.com/cgi-bin/findweather/getForecast?query=zmw:00000.1.71265&bannertypeclick=wu_clean2day"}
+  -#       %img{:src => "http://weathersticker.wunderground.com/weathersticker/cgi-bin/banner/ban/wxBanner?bannertype=wu_clean2day_metric_cond&airportcode=CYTZ&ForcedCity=Toronto&ForcedState=ON&wmo=71265&language=EN", :alt => "Click for Toronto, Ontario Forecast", :height => "100", :width => "300"}
+  .clothing.category
     .category_label
-      %h2 Toronto weather
-    .category_detail  
-      %a{:href => "http://www.wunderground.com/cgi-bin/findweather/getForecast?query=zmw:00000.1.71265&bannertypeclick=wu_clean2day"}
-        %img{:src => "http://weathersticker.wunderground.com/weathersticker/cgi-bin/banner/ban/wxBanner?bannertype=wu_clean2day_metric_cond&airportcode=CYTZ&ForcedCity=Toronto&ForcedState=ON&wmo=71265&language=EN", :alt => "Click for Toronto, Ontario Forecast", :height => "100", :width => "300"}
-  - if current_account.clothing.length > 0
-    .clothing.category
-      .category_label
-        %h2 Clothing
-      .category_detail  
+      %h2 Clothes
+    .category_detail
+      - if current_account.clothing.length > 0
         = render :partial => 'clothing_logs/by_date', :locals => { :dates => @dates, :by_date => @by_date, :size => :tiny }
+      - else
+        .start= link_to "Start tracking your clothes by creating items", clothing_index_path
   - if managing? and current_account.library_items.length > 0
     .library.category
       .category_label

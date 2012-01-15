@@ -1,7 +1,6 @@
 class HomeController < ApplicationController
   skip_authorization_check :only => [:sign_up, :feedback, :send_feedback]
   def index
-    logger.info "CURRENT ACCOUNT: #{current_account.inspect}"
     authorize! :view_dashboard, current_account
     flash.keep
     @clothing_today = ClothingLog.where('date = ?', Date.today)
@@ -14,7 +13,7 @@ class HomeController < ApplicationController
       @dates = 7.downto(0).collect { |i| Date.today - i.days }
       @contexts = current_account.contexts
       @current_activity = current_account.records.activities.order('timestamp DESC').first
-      @goals = Goal.check_goals(current_account)
+      @goal_summary = Goal.check_goals(current_account)
     end
     if mobile?
       render 'mobile_index'
