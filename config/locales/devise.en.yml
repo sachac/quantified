@@ -21,12 +21,13 @@ en:
       invalid_token: 'Invalid authentication token.'
       timeout: 'Your session expired, please sign in again to continue.'
       inactive: 'Your account was not activated yet.'
+      not_approved: "You will be able to log in after I review and approve your account. (This is so that we don't get overwhelmed!) If you want to chat before then, please get in touch with me at sacha@quantifiedawesome.com . Thanks for your interest!"
     sessions:
       signed_in: 'Signed in successfully.'
       signed_out: 'Signed out successfully.'
     passwords:
-      send_instructions: 'You will receive an email with instructions about how to reset your password in a few minutes.'
-      updated: 'Your password was changed successfully. You are now signed in.'
+      send_instructions: 'Great! You should get an email with instructions about how to reset your password in a few minutes.'
+      updated: 'Thanks for changing your password! You are now signed in.'
       send_paranoid_instructions: "If your e-mail exists on our database, you will receive a password recovery link on your e-mail"
     confirmations:
       send_instructions: 'You will receive an email with instructions about how to confirm your account in a few minutes.'
@@ -50,8 +51,8 @@ en:
       failure: 'Could not authorize you from %{kind} because "%{reason}".'
     mailer:
       confirmation_instructions:
-        subject: 'Confirmation instructions'
+        subject: 'Quantified Awesome: Confirm your account'
       reset_password_instructions:
-        subject: 'Reset password instructions'
+        subject: 'Quantified Awesome: Reset your password'
       unlock_instructions:
-        subject: 'Unlock Instructions'
+        subject: 'Quantified Awesome: Unlock your account'

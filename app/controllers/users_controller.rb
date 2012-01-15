@@ -36,7 +36,7 @@ class UsersController < ApplicationController
   # GET /users/1/edit
   def edit
     @user = User.find(params[:id])
-    authorize! :update, @user
+    authorize! :manage_account, @user
   end
 
   # POST /users
@@ -60,9 +60,11 @@ class UsersController < ApplicationController
   # PUT /users/1.xml
   def update
     @user = User.find(params[:id])
-    authorize! :update, @user
-    params.delete(:password) if params[:password].blank?
-    params.delete(:password_confirmatino) if params[:password_confirmation].blank?
+    authorize! :manage_account, @user
+    if !params[:user].blank? and params[:user][:password].blank?
+      params[:user].delete(:password)
+      params[:user].delete(:password_confirmation)
+    end
     respond_to do |format|
       if @user.update_attributes(params[:user])
         format.html { redirect_to(@user, :notice => 'User was successfully updated.') }
@@ -86,4 +88,5 @@ class UsersController < ApplicationController
       format.xml  { head :ok }
     end
   end
+
 end

@@ -1,4 +1,5 @@
 class RecordCategoriesController < ApplicationController
+  skip_authorization_check :only => [:autocomplete_record_category_full_name]
   autocomplete :record_category, :full_name, :full => true
   respond_to :html, :json
   
@@ -29,9 +30,10 @@ class RecordCategoriesController < ApplicationController
   # GET /record_categories/new.xml
   def new
     authorize! :manage_account, current_account
-    @record_category = current_account.record_categories.new
+    @record_category = RecordCategory.new
     @record_category.parent_id = params[:parent_id]
-    
+    @record_category.category_type = 'activity'
+    @record_category.data = [{"key" => nil, "label" => nil, "type" => nil}]
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @record_category }
@@ -42,6 +44,13 @@ class RecordCategoriesController < ApplicationController
   def edit
     authorize! :manage_account, current_account
     @record_category = current_account.record_categories.find(params[:id])
+    if @record_category.category_type != 'list'
+      @record_category.data ||= Array.new
+      @record_category.data.reject! { |x| x['key'].blank? }
+
+      @record_category.data << {'key' => nil, 'label' => nil, 'type' => nil}
+    end
+      
   end
 
   # POST /record_categories
@@ -49,10 +58,10 @@ class RecordCategoriesController < ApplicationController
   def create
     authorize! :manage_account, current_account
     @record_category = current_account.record_categories.new(params[:record_category])
-
+    @record_category.data = Array.new
     respond_to do |format|
       if @record_category.save
-        format.html { redirect_to(@record_category, :notice => 'Record category was successfully created.') }
+        format.html { redirect_to(record_categories_path, :notice => 'Record category was successfully created.') }
         format.xml  { render :xml => @record_category, :status => :created, :location => @record_category }
       else
         format.html { render :action => "new" }
@@ -66,10 +75,12 @@ class RecordCategoriesController < ApplicationController
   def update
     authorize! :manage_account, current_account
     @record_category = current_account.record_categories.find(params[:id])
-
+    params[:record_category][:data].reject! { |x| x['key'].blank? } if params[:record_category][:data]
     respond_to do |format|
       if @record_category.update_attributes(params[:record_category])
-        format.html { redirect_to(@record_category, :notice => 'Record category was successfully updated.') }
+        format.html { 
+          logger.info @record_category.inspect
+          redirect_to(@record_category, :notice => 'Record category was successfully updated.') }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }
@@ -135,5 +146,9 @@ class RecordCategoriesController < ApplicationController
       redirect_to track_time_path(:timestamp => params[:timestamp], :source => params[:source], :destination => params[:destination]) and return
     end
     # Display the list
+  end
+
+  def get_autocomplete_items(parameters)
+    super(parameters).where(:user_id => current_account.id)
   end
 end

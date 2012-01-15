@@ -27,14 +27,14 @@ class User < ActiveRecord::Base
   validates :username, :exclusion => { :in => %w(admin superuser root www) }
   # validates :username, :presence => true
   validates_length_of :username, :maximum => 20
-  validates :username, :uniqueness => { :case_sensitive => false }
+  validates :username, :uniqueness => { :case_sensitive => false }, :allow_blank => true
   validates :email, :presence => true, :email => true
   validates :email, :uniqueness => { :case_sensitive => false }
-  validates_format_of :username, :with => /^[A-Za-z\d]+$/
+  validates_format_of :username, :with => /^[A-Za-z\d]*$/
   # Include default devise modules. Others available are:
   # :token_authenticatable, :encryptable, :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :invitable, :database_authenticatable, 
-         :recoverable, :rememberable, :trackable, :validatable, :token_authenticatable
+  devise :database_authenticatable, :registerable,
+         :recoverable, :rememberable, :trackable, :validatable, :token_authenticatable, :confirmable
   attr_accessor :login
 
   # Setup accessible (or protected) attributes for your model
@@ -94,6 +94,27 @@ class User < ActiveRecord::Base
     self.beginning_of_week.midnight.in_time_zone..Time.now
   end
 
+  # devise_invitable accept_invitation! method overriden
+  def accept_invitation!
+    self.confirm!
+    super
+  end
+
+  def admin?
+    self.role == 'admin'
+  end
+#  def active_for_authentication? 
+#    super && (approved? || self.admin?)
+#  end 
+
+  # def inactive_message 
+  #   if !approved? 
+  #     :not_approved 
+  #   else 
+  #     super # Use whatever other message 
+  #   end 
+  # end
+
   protected
 
   # Attempt to find a user by email. If a record is found, send new
@@ -112,17 +133,13 @@ class User < ActiveRecord::Base
     attributes.delete_if { |key, value| value.blank? }
 
     if attributes.size == required_attributes.size
-      if attributes.has_key?(:username)
-        username = attributes.delete(:username)
-        record = find_record(username)
-      else  
-        record = where(attributes).first
-      end  
+      conditions = attributes.dup
+      login = conditions.delete(:login)
+      record = where(["lower(username) = :value OR lower(email) = :value", { :value => login.downcase }]).first
     end  
 
     unless record
       record = new
-
       required_attributes.each do |key|
         value = attributes[key]
         record.send("#{key}=", value)

@@ -1,6 +1,11 @@
+= help "http://sachachua.com"
 = setup_page 'categories', nil, 'time/nav'
-
-- if managing?
-  = link_to 'New record category', new_record_category_path
-
-= render 'list', :list => @record_categories
+- if @record_categories.length > 0
+  - if managing?
+    = render 'quick_record'
+    %p= link_to 'Create record category', new_record_category_path, :class => 'btn'
+  = render 'list', :list => @record_categories
+- else
+  - if managing?
+    You don't have any record categories yet.
+    %p= link_to "Create a record category", new_record_category_path, :class => 'btn primary'

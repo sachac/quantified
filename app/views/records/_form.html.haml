@@ -1,9 +1,14 @@
 = semantic_form_for @record, :html => { :class => mobile? ? 'form-stacked' : 'form' } do |f|
-  - data = @record.record_category.data
-  - if data
-    - data.each do |k,v|
-      = record_data_input @record, k, v
   = f.inputs do
+    - data = @record.record_category.data
+    - if data
+      - if data.is_a? Hash
+        - data.each do |k,v|
+          = record_data_input @record, v
+      - else
+        - data.each_with_index do |v, i|
+          = i
+          = record_data_input @record, v, i
     = f.input :timestamp, :as => :string, :input_html => { :value => l(f.object.timestamp, :format => :long) }
     = f.input :record_category, :collection => current_account.record_categories.order('full_name')
   .actions
