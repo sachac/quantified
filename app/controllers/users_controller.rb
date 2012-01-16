@@ -65,9 +65,18 @@ class UsersController < ApplicationController
       params[:user].delete(:password)
       params[:user].delete(:password_confirmation)
     end
+    if params[:user][:settings]
+      settings = params[:user][:settings]
+      @user.settings.timezone = settings['time_zone']
+      logger.info "Trying to set timezone? " + @user.settings.timezone
+      params[:user].delete(:settings)
+    end
     respond_to do |format|
       if @user.update_attributes(params[:user])
-        format.html { redirect_to(@user, :notice => 'User was successfully updated.') }
+        format.html { 
+          logger.info "Did we keep the timezone? " + @user.settings.timezone
+          
+          redirect_to(root_path, :notice => 'User was successfully updated.') }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }

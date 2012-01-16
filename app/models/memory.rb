@@ -7,4 +7,8 @@ class Memory < ActiveRecord::Base
   def private?
     self.access != 'public'
   end
+
+  def public?
+    self.access == 'public'
+  end
 end

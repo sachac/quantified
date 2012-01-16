@@ -1,16 +1,24 @@
-= form_for @context do |f|
+= semantic_form_for @context do |f|
   -if @context.errors.any?
     #error_explanation
       %h2= "#{pluralize(@context.errors.count, "error")} prohibited this context from being saved:"
       %ul
         - @context.errors.full_messages.each do |msg|
           %li= msg
-
-  .field
-    = f.label :name
-    = f.text_field :name
-  .field
-    = f.label :rules
-    = f.text_area :rules
+  = f.inputs do
+    = f.input :name, :input_html => {:autofocus => true}
+    .clear-fix
+      %label Stuff
+      .input
+        %table
+          %tr
+            %th Stuff
+            %th Location
+          = f.fields_for :context_rules do |r|
+            %tr
+              %td= r.autocomplete_field :stuff, autocomplete_stuff_path, :value => r.object.stuff ? r.object.stuff.name : ''
+              %td= r.autocomplete_field :location, autocomplete_stuff_path, :value => r.object.location ? r.object.location.name : ''
   .actions
-    = f.submit 'Save'
+    = f.submit 'Save', :class => 'btn primary'
+    - unless @context.new_record?
+      = link_to 'Delete', context_path(@context), :method => :delete, :class => 'btn'

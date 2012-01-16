@@ -7,8 +7,9 @@
           %li= msg
   = f.inputs do
     = f.input :name
+    = f.input :stuff_type, :as => :radio, :collection => [['Stuff: Things that you move around. Stuff can contain other stuff.', 'stuff'], ['Location: Places that contain stuff. Locations generally don\'t move.', 'location']]
     = f.input :status
-    = f.input :home_location, :collection => (Location.all + Stuff.all).sort_by(&:name).collect { |x| [x.name, "#{x.id}-#{x.class.name}"] }
-    = f.input :notes
+    = f.input :home_location, :collection => current_account.stuff.order('name')
+    = f.input :notes, :input_html => { :rows => 5 }
   .actions
-    = f.submit 'Save'
+    = f.submit 'Save', :class => 'btn primary'

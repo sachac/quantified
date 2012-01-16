@@ -25,6 +25,7 @@ class ContextsController < ApplicationController
   def new
     authorize! :create, Context
     @context = Context.new
+    5.times do @context.context_rules.build end
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @context }
@@ -34,6 +35,7 @@ class ContextsController < ApplicationController
   # GET /contexts/1/edit
   def edit
     @context = current_account.contexts.find(params[:id])
+    5.times do @context.context_rules.build end
     authorize! :update, @context
   end
 
@@ -41,8 +43,17 @@ class ContextsController < ApplicationController
   # POST /contexts.xml
   def create
     authorize! :create, Context
-    @context = Context.new(params[:context])
-    @context.user = current_account
+    # Change context_rules_attributes to stuff and locations
+    rules = params[:context].delete :context_rules_attributes if params[:context] 
+    @context = current_account.contexts.new(params[:context])
+    if rules
+      rules.each do |k, v|
+        next if v['stuff'].blank? or v['location'].blank?
+        stuff = @account.stuff.find_or_create_by_name(v['stuff'])
+        location = @account.get_location(v['location'])
+        @context.context_rules.build(:stuff => stuff, :location => location)
+      end
+    end
     respond_to do |format|
       if @context.save
         format.html { redirect_to(@context, :notice => 'Context was successfully created.') }
@@ -59,6 +70,23 @@ class ContextsController < ApplicationController
   def update
     @context = current_account.contexts.find(params[:id])
     authorize! :update, @context
+    rules = params[:context][:context_rules_attributes] if params[:context] 
+    if rules
+      rules.each do |k, v|
+        if v['stuff'].blank? or v['location'].blank?
+          params[:context][:context_rules_attributes][k]['_destroy'] = 1
+        else
+          location = @account.get_location(v['location'])
+          stuff = @account.stuff.find_by_name(v['stuff'])
+          if stuff.nil?
+            stuff = @account.stuff.create(:name => v['stuff'], :location => location, :home_location => location, :status => 'active', :stuff_type => 'stuff')
+          end
+          params[:context][:context_rules_attributes][k]['stuff'] = stuff
+          params[:context][:context_rules_attributes][k]['location'] = location
+        end
+      end
+    end
+    logger.info "New context rules attributes " + params[:context][:context_rules_attributes].inspect
     respond_to do |format|
       if @context.update_attributes(params[:context])
         format.html { redirect_to(@context, :notice => 'Context was successfully updated.') }
@@ -87,28 +115,16 @@ class ContextsController < ApplicationController
     # Parse the list of items in this context
     @context = current_account.contexts.find(params[:id])
     authorize! :start, @context
-    @stuff = @context.stuff_rules
-    @in_place = Array.new
-    @out_of_place = Array.new
-    @stuff.each do |name, val|
-      if val[:in_place]
-        @in_place << name
-      else
-        @out_of_place << name
-      end
-    end
+    @in_place = @context.context_rules.in_place
+    @out_of_place = @context.context_rules.out_of_place
   end
 
   def complete
+    authorize! :manage_account, current_account
     @context = current_account.contexts.find(params[:id])
-    authorize! :start, @context
-    @stuff = @context.stuff_rules
-    @stuff.each do |key, stuff|
-      unless stuff[:in_place]
-        stuff[:stuff].location = current_account.get_location(stuff[:destination])
-        stuff[:stuff].save!
-      end
+    @context.context_rules.out_of_place.each do |r|
+      r.stuff.update_attributes(:location => r.location)
     end
-    redirect_to start_context_path(@context)
+    go_to stuff_index_path, :notice => "Context marked complete."
   end
 end
