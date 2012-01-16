@@ -3025,83 +3025,88 @@ form .clear-fix {
 }
 
 /* line 35, ../../app/assets/stylesheets/style.css.sass */
+.row, .category {
+  margin-left: 0px;
+}
+
+/* line 37, ../../app/assets/stylesheets/style.css.sass */
 .actions .btn {
   margin-right: 10px;
 }
 
-/* line 39, ../../app/assets/stylesheets/style.css.sass */
+/* line 41, ../../app/assets/stylesheets/style.css.sass */
 .category_label {
   text-align: right;
   display: block;
   float: left;
 }
 
-/* line 44, ../../app/assets/stylesheets/style.css.sass */
+/* line 46, ../../app/assets/stylesheets/style.css.sass */
 .category_detail {
   padding-top: 13px;
   margin-left: 170px;
 }
 
-/* line 48, ../../app/assets/stylesheets/style.css.sass */
+/* line 50, ../../app/assets/stylesheets/style.css.sass */
 .contexts .category_detail, .time .category_detail {
   padding-top: 0;
 }
 
-/* line 50, ../../app/assets/stylesheets/style.css.sass */
+/* line 52, ../../app/assets/stylesheets/style.css.sass */
 .category_detail .pills {
   margin-bottom: 0px;
 }
 
-/* line 52, ../../app/assets/stylesheets/style.css.sass */
+/* line 54, ../../app/assets/stylesheets/style.css.sass */
 a[data-method] {
   color: green;
   font-weight: bold;
 }
 
-/* line 55, ../../app/assets/stylesheets/style.css.sass */
+/* line 57, ../../app/assets/stylesheets/style.css.sass */
 .radio legend.label, .radio legend.status, .radio legend.private {
   float: left;
 }
 
-/* line 58, ../../app/assets/stylesheets/style.css.sass */
+/* line 60, ../../app/assets/stylesheets/style.css.sass */
 .tap_log_record .timestamp {
   width: 150px;
   text-align: right;
 }
-/* line 61, ../../app/assets/stylesheets/style.css.sass */
+/* line 63, ../../app/assets/stylesheets/style.css.sass */
 .tap_log_record .categories {
   width: 200px;
 }
 
-/* line 63, ../../app/assets/stylesheets/style.css.sass */
+/* line 65, ../../app/assets/stylesheets/style.css.sass */
 .status {
   font-weight: normal;
   display: inline;
 }
 
-/* line 67, ../../app/assets/stylesheets/style.css.sass */
+/* line 69, ../../app/assets/stylesheets/style.css.sass */
 .private {
   font-weight: normal;
   display: inline;
 }
 
-/* line 71, ../../app/assets/stylesheets/style.css.sass */
+/* line 73, ../../app/assets/stylesheets/style.css.sass */
 .collapsible > legend {
   font-weight: bold;
   margin-bottom: 10px;
 }
 
-/* line 74, ../../app/assets/stylesheets/style.css.sass */
+/* line 76, ../../app/assets/stylesheets/style.css.sass */
 td.h {
   font-weight: bold;
 }
 
-/* line 76, ../../app/assets/stylesheets/style.css.sass */
+/* line 78, ../../app/assets/stylesheets/style.css.sass */
 .login, .sign_up {
   padding-right: 10px;
 }
 
-/* line 78, ../../app/assets/stylesheets/style.css.sass */
+/* line 80, ../../app/assets/stylesheets/style.css.sass */
 .radio legend.label, .radio legend.status, .radio legend.private {
   padding-top: 6px;
   font-size: 13px;
@@ -3115,7 +3120,7 @@ td.h {
   text-transform: none;
 }
 
-/* line 89, ../../app/assets/stylesheets/style.css.sass */
+/* line 91, ../../app/assets/stylesheets/style.css.sass */
 label.inline, .inline label {
   padding-top: 0px;
   width: auto;
@@ -3124,64 +3129,74 @@ label.inline, .inline label {
   float: none;
 }
 
-/* line 95, ../../app/assets/stylesheets/style.css.sass */
+/* line 97, ../../app/assets/stylesheets/style.css.sass */
 .inline .input {
   display: inline-block;
   margin-left: 0;
 }
 
-/* line 98, ../../app/assets/stylesheets/style.css.sass */
+/* line 100, ../../app/assets/stylesheets/style.css.sass */
 .condensed-table {
   font-size: smaller;
 }
 
-/* line 100, ../../app/assets/stylesheets/style.css.sass */
+/* line 102, ../../app/assets/stylesheets/style.css.sass */
 .right {
   text-align: right;
 }
 
-/* line 102, ../../app/assets/stylesheets/style.css.sass */
+/* line 104, ../../app/assets/stylesheets/style.css.sass */
 .clearfix {
   clear: both;
 }
 
-/* line 104, ../../app/assets/stylesheets/style.css.sass */
+/* line 106, ../../app/assets/stylesheets/style.css.sass */
 .full .login, .full .sign_up {
   display: table-cell;
 }
 
-/* line 107, ../../app/assets/stylesheets/style.css.sass */
+/* line 109, ../../app/assets/stylesheets/style.css.sass */
 input.imagebtn {
   height: auto;
   width: auto;
 }
 
-/* line 111, ../../app/assets/stylesheets/style.css.sass */
+/* line 113, ../../app/assets/stylesheets/style.css.sass */
 .time .category_detail, .time .start {
   padding-top: 7px;
 }
 
-/* line 113, ../../app/assets/stylesheets/style.css.sass */
+/* line 115, ../../app/assets/stylesheets/style.css.sass */
 .spreadsheet {
   float: right;
 }
 
-/* line 116, ../../app/assets/stylesheets/style.css.sass */
+/* line 118, ../../app/assets/stylesheets/style.css.sass */
 .topbar .feedback, .topbar .track {
   font-size: 120%;
   font-weight: bold;
 }
-/* line 119, ../../app/assets/stylesheets/style.css.sass */
+/* line 121, ../../app/assets/stylesheets/style.css.sass */
 .topbar .feedback a, .topbar .track a {
   color: white;
   text-decoration: underline;
 }
-/* line 122, ../../app/assets/stylesheets/style.css.sass */
+/* line 124, ../../app/assets/stylesheets/style.css.sass */
 .topbar a[data-method] {
   color: #bfbfbf;
 }
 
-/* line 124, ../../app/assets/stylesheets/style.css.sass */
+/* line 126, ../../app/assets/stylesheets/style.css.sass */
 a[data-method].btn {
   color: black;
+}
+
+/* line 128, ../../app/assets/stylesheets/style.css.sass */
+a[data-method].btn.primary {
+  color: white;
+}
+
+/* line 130, ../../app/assets/stylesheets/style.css.sass */
+.input table {
+  width: auto;
 }

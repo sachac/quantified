@@ -3,7 +3,7 @@
 %p
   = form_tag log_stuff_path do
     Quick entry:
-    = text_field_tag :stuff_name, stuff_name, :autofocus => stuff_name.blank?, :placeholder => 'Stuff name'
-    = text_field_tag :location_name, location_name, :autofocus => !stuff_name.blank?, :placeholder => 'Stuff location'
+    = autocomplete_field_tag :stuff_name, stuff_name, autocomplete_stuff_path, :autofocus => stuff_name.blank?, :placeholder => 'Stuff name'
+    = autocomplete_field_tag :location_name, location_name, autocomplete_stuff_path, :autofocus => !stuff_name.blank?, :placeholder => 'Stuff location'
     = submit_tag 'Update'
     

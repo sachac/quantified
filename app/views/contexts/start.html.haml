@@ -1,5 +1,6 @@
-= link_to 'Contexts', contexts_path
-= title @context.name
+= setup_page "context#{@context.id}", @context.name, 'stuff/nav'
+- if managing?
+  %p= link_to 'Edit', edit_context_path(@context)
 
 - if @out_of_place.length > 0
   %h3 Stuff out of place
@@ -11,16 +12,19 @@
         %th Current location
     %tbody
       - @out_of_place.each do |o|
-        - stuff = @stuff[o][:stuff]
+        - stuff = o.stuff
         %tr{:class => 'stuff_' + stuff.id.to_s}
           %td= link_to stuff.name, stuff
           %td
-            - if can? :update, stuff
-              = move_stuff_link(stuff, @stuff[o][:destination], request.fullpath).html_safe
+            - if managing?
+              = move_stuff_link(stuff, o.location, request.fullpath).html_safe
             - else
               = link_to stuff.name, stuff
           %td= stuff.location ? stuff.location.name : ''
-
+  - if managing?
+    = link_to 'Complete', complete_context_path(@context.id), :method => :put, :class => 'btn primary', :title => 'Updates all the out-of-place items with their home locations'
+- elsif @in_place.length > 0
+  Hooray! Everything in its place. 
 - if @in_place.length > 0  
   %h3 Stuff in place
   %table.stuff_in_place.lined
@@ -30,10 +34,7 @@
         %th Current location
     %tbody
       - @in_place.each do |o|
-        - stuff = @stuff[o][:stuff]
+        - stuff = o.stuff
         %tr{:class => 'stuff_' + stuff.id.to_s}
           %td= link_to stuff.name, stuff
           %td= stuff.location ? stuff.location.name : ''
-
-- if can? :start, @context
-  = link_to 'Complete', complete_context_path(@context.id), :method => :put          

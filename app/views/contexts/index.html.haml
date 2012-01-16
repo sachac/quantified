@@ -1,17 +1,25 @@
-%h1 Contexts
+= setup_page 'contexts', nil, 'stuff/nav'
 
-%table
-  %tr
-    %th Name
-    %th Rules
-    %th
-    %th
-    %th
+Sometimes stuff belongs in different places, depending on the context.
+For example, you might have a context for going to work, or a context
+for when you're home. Defining contexts lets you focus on just the
+stuff that you need to take out or return.
 
-  - @contexts.each do |context|
+- if managing?
+  %p= link_to 'Create context', new_context_path, :class => 'btn'
+
+- if @contexts.length > 0
+  %table
     %tr
-      %td= link_to context.name, context
-      %td= context.rules
+      - if managing?
+        %th Actions
+      %th Name
+      %th Rules
 
-- if can? :create, Context
-  = link_to 'New Context', new_context_path
+    - @contexts.each do |context|
+      %tr
+        - if managing?
+          %td= action_list context
+        %td= link_to context.name, context
+        %td= context.rules
+

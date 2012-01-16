@@ -1,9 +1,5 @@
-%h1 Where's my stuff?
+= setup_page 'stuff'
 
-%ul.pills
-  %li.active= link_to 'Index', stuff_index_path
-  - @contexts.each do |c|
-    %li= link_to c.name, c
 %p
   Status:
   = link_to 'all', stuff_index_path(:status => 'all')
@@ -12,8 +8,13 @@
     - if s and !s.status.blank?
       = link_to s.status, stuff_index_path(:status => s.status)
 
-    
-= render :partial => 'quicklog'
+To create or update an item, enter the item's name and its location below.      
+= render 'quicklog'
+
+- if @account.stuff.locations.length > 0
+  Locations:
+  = @account.stuff.locations.order('name').map { |x| link_to x.name, x }.join(', ').html_safe
+  
 %table.lined
   %tr
     %th= sortable_column "Name", :column => "name"
@@ -39,14 +40,14 @@
                   = link_to "Return to #{stuff.home_location.name}", log_stuff_path(:stuff_name => stuff.name, :location_name => stuff.home_location.name), :method => :post
                   - if stuff.location
                     \-
-                    = link_to 'Set current', stuff_path(stuff.id, :destination => request.url, :stuff => {:home_location_id => "#{stuff.location_id}-#{stuff.location_type}"}), :method => :put
+                    = link_to 'Set current', stuff_path(stuff.id, :destination => request.url, :stuff => {:home_location_id => stuff.location_id}), :method => :put
                 - else
                   Home:
                   = stuff.home.location.name
           - else
             No home?
-            - if stuff.location and can? :update, @stuff
-              = link_to 'Set current', stuff_path(stuff.id, :destination => request.url, :stuff => {:home_location_id => "#{stuff.location_id}-#{stuff.location_type}"}), :method => :put
+            - if stuff.location and can? :update, stuff
+              = link_to 'Set current', stuff_path(stuff.id, :destination => request.url, :stuff => {:home_location_id => stuff.location_id}), :method => :put, :title => "Set this item's home location to its current location"
         %td= l stuff.updated_at, :format => :short
         - if can? :update, stuff
           %td
