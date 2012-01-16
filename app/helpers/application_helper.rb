@@ -135,7 +135,12 @@ module ApplicationHelper
       if can? :manage_account, current_account
         actions << link_to('Edit', edit_record_path(o))
         actions << link_to('Clone', clone_record_path(o), :method => :post)
-        actions << link_to('Destroy', o, :confirm => 'Are you sure?', :method => :delete)
+        actions << link_to('Delete', o, :confirm => 'Are you sure?', :method => :delete)
+      end
+    elsif o.is_a? Context
+      if managing?
+        actions << link_to('Edit', edit_context_path(o))
+        actions << link_to('Start', start_context_path(o))
       end
     end
     actions

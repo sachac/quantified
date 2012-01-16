@@ -21,14 +21,14 @@ Home::Application.routes.draw do
   end
   match '/offline.manifest' => offline
 
-
   resources :records do
     member do
       post :clone
     end
   end
 
-  match 'record_categories/autocomplete_record_category_full_name', :as => :autocomplete_record_category
+  match 'record_categories/autocomplete' => 'record_categories#autocomplete_record_category_full_name', :as => :autocomplete_record_category
+  match 'stuff/autocomplete' => 'stuff#autocomplete_stuff_name', :as => :autocomplete_stuff
   resources :record_categories do
     member do
       post :track
@@ -112,6 +112,7 @@ Home::Application.routes.draw do
   match 'clothing/tag/:id' => 'clothing#tag', :as => :clothing_by_tag
   match 'clothing/status/:status' => 'clothing#by_status', :as => :clothing_by_status
   match 'clothing/analyze(/:start(/:end))' => 'clothing#analyze', :as => :clothing_analyze
+  match 'files/clothing/:user_id/:id/:style/:filename' => 'clothing#download_thumbnail'
   match 'library/update' => 'library#update', :as => :library_refresh
   match 'summary' => 'home#summary', :as => :summary
   # The priority is based upon order of creation:

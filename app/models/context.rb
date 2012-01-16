@@ -1,24 +1,11 @@
 class Context < ActiveRecord::Base
   belongs_to :user
-  def rules_array
-    self.rules.split /[\r\n]+/
-  end
+  has_many :context_rules
+  accepts_nested_attributes_for :context_rules, :allow_destroy => true
+  validates_presence_of :name
+  before_save :update_rules
 
-  def stuff_rules
-    rules = self.rules_array
-    stuff = Hash.new { |h,k| h[k] = Hash.new }
-    rules.each do |r|
-      matches = r.match(/^stuff:[ \t]*([^,]+),[ \t]*(.*)/)
-      if matches
-        stuff[matches[1]][:destination] = matches[2]
-      end
-    end
-    stuff_hash = self.user.stuff.includes(:location).where('name in (?)', stuff.keys)
-    stuff_hash.each do |s|
-      stuff[s.name][:stuff] = s
-      stuff[s.name][:in_place] = (s.location and s.location.name == stuff[s.name][:destination])
-    end
-    stuff
+  def update_rules
+    self.rules = self.context_rules.includes(:stuff).order('LOWER(stuff.name)').map { |x| x.stuff.name }.join(', ')
   end
-
 end

@@ -75,14 +75,11 @@ class User < ActiveRecord::Base
 
   def get_location(val)
     if val.is_a? String
-      if match = val.match(/^([0-9]+)-(Stuff|Location)/)
-        id = match[1]
-        model = match[2]
-        model.classify.constantize.find(id)
+      if match = val.match(/^([0-9]+)/)
+        self.stuff.find_by_id(val)
       else  
         loc = self.stuff.find(:first, :conditions => ['lower(name)=?', val.downcase.strip])
-        loc ||= self.locations.find(:first, :conditions => ['lower(name)=?', val.downcase.strip])
-        loc ||= self.locations.create(:name => val.strip)
+        loc ||= self.stuff.create(:name => val.strip, :stuff_type => 'location')
       end
     else
       val
@@ -114,6 +111,10 @@ class User < ActiveRecord::Base
   #     super # Use whatever other message 
   #   end 
   # end
+
+  def demo?
+    self.id == 1
+  end
 
   protected
 
@@ -158,5 +159,4 @@ class User < ActiveRecord::Base
     login = conditions.delete(:login)
     where(conditions).where(["lower(username) = :value OR lower(email) = :value", { :value => login.downcase }]).first
   end
-
 end
