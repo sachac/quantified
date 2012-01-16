@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120113184311) do
+ActiveRecord::Schema.define(:version => 20120115215056) do
 
   create_table "clothing", :force => true do |t|
     t.string   "name"
@@ -57,6 +57,14 @@ ActiveRecord::Schema.define(:version => 20120113184311) do
   end
 
   add_index "clothing_matches", ["user_id"], :name => "index_clothing_matches_on_user_id"
+
+  create_table "context_rules", :force => true do |t|
+    t.integer  "stuff_id"
+    t.integer  "location_id"
+    t.integer  "context_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "contexts", :force => true do |t|
     t.string   "name"
@@ -182,7 +190,6 @@ ActiveRecord::Schema.define(:version => 20120113184311) do
   create_table "location_histories", :force => true do |t|
     t.integer  "stuff_id"
     t.integer  "location_id"
-    t.string   "location_type"
     t.datetime "datetime"
     t.text     "notes"
     t.datetime "created_at"
@@ -306,18 +313,17 @@ ActiveRecord::Schema.define(:version => 20120113184311) do
   create_table "stuff", :force => true do |t|
     t.string   "name"
     t.string   "status"
-    t.decimal  "price",              :precision => 10, :scale => 0
+    t.decimal  "price",            :precision => 10, :scale => 0
     t.date     "purchase_date"
     t.text     "notes"
     t.string   "long_name"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "location_id"
-    t.string   "location_type"
     t.integer  "home_location_id"
-    t.string   "home_location_type"
     t.boolean  "in_place"
     t.integer  "user_id"
+    t.string   "stuff_type",                                      :default => "stuff"
   end
 
   add_index "stuff", ["location_id"], :name => "index_stuff_on_location_id"

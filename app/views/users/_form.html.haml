@@ -6,9 +6,16 @@
         - @user.errors.full_messages.each do |msg|
           %li= msg
   = f.inputs do
-    = f.input :username
-    = f.input :email
-    = f.input :password, :required => false
-    = f.input :password_confirmation
+    = f.input :email, :input_html => { :autocomplete => 'off' }
+    = f.input :username, :input_html => { :autocomplete => 'off' }
+    .clear-fix
+      %label Timezone
+      .input= select_tag 'user[settings][time_zone]', time_zone_options_for_select(@user.settings.timezone)
+
+    .clear-fix
+      .input If you'd like to change your password, enter your new password below:
+    = f.input :password, :required => false, :autocomplete => 'off'
+    = f.input :password_confirmation, :autocomplete => 'off'
+    
   .actions
     = f.submit 'Save', :class => 'btn primary'

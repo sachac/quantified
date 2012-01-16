@@ -3,18 +3,22 @@ class Stuff < ActiveRecord::Base
   delegate :url_helpers, :to => 'Rails.application.routes' 
 
   has_many :location_histories
-  belongs_to :location, :polymorphic => true
-  belongs_to :home_location, :polymorphic => true
-  has_many :stuff, :through => :stuff, :foreign_key => :location_id
+  belongs_to :location, :class_name => 'Stuff'
+  belongs_to :home_location, :class_name => 'Stuff'
+  has_many :context_rules
+  has_many :contexts, :through => :context_rules
+  has_many :contained_stuff, :class_name => 'Stuff', :foreign_key => :location_id
   before_save :update_in_place
 
+  scope :locations, where(:stuff_type => 'location')
+  scope :out_of_place, where('location_id != home_location_id')
   def update_in_place
     self.in_place = (self.location and self.home_location and self.location == self.home_location)
     true
   end
 
   def distinct_locations
-    LocationHistory.where('stuff_id=?', self.id).group('location_id, location_type')
+    self.location_histories.group('location_id')
   end
 
   def set_location(sym, val)
@@ -43,8 +47,5 @@ class Stuff < ActiveRecord::Base
     list
   end
 
-  def self.out_of_place
-    Stuff.where('status="active" AND (location_id != home_location_id OR location_type != home_location_type)')
-  end
-
+ 
 end

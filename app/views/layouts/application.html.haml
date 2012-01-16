@@ -40,17 +40,4 @@
             - if content_for? :after_title
               = yield :after_title
         = yield
-      %footer
-        .block
-          %p
-            Copyright &copy; #{Time.now.year} Sacha Chua - 
-            - if session
-              - if mobile?
-                = link_to I18n.t('app.layout.full'), params.merge(:layout => 'full')
-              - else
-                = link_to I18n.t('app.layout.mobile'), params.merge(:layout => 'mobile')
-            \-     
-            = feedback_link "Send feedback"
-    - if Rails.env.development?
-      .alert-message.warning This is the development site.
-- flash.discard
+      = render 'footer'  

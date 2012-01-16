@@ -1,58 +1,47 @@
-= render :partial => 'quicklog', :locals => { :stuff_name => @stuff.name }
-
-%h1
-  = @stuff.name
-  - if @stuff.location
-    = h('<')
-    = @stuff.hierarchy.map {|l| link_to h(l.name), l}.join(h(' < ')).html_safe
-      
-  - if can? :update, @stuff
-    - if @stuff.home_location and @stuff.location != @stuff.home_location
-      = link_to "(return to #{@stuff.home_location.name})", log_stuff_path(:stuff_name => @stuff.name, :location_name => @stuff.home_location.name), :method => :post
+= setup_page 'stuff', name_and_location(@stuff).html_safe
 
 %p
-  - if can? :update, @stuff
+  - if managing?
     = link_to 'Edit', edit_stuff_path(@stuff)
     \|
   = link_to 'Back', stuff_index_path
+
+= render :partial => 'quicklog', :locals => { :stuff_name => @stuff.name }
 
 - if @stuff.location 
   Current:
   = link_to @stuff.location.name, @stuff.location
   according to the system
-  - if @stuff.home_location and can? :update, @stuff
+  - if @stuff.home_location and @stuff.home_location != @stuff.location and managing?
     \-
-    = link_to 'Set home', stuff_path(@stuff.id, :destination => request.url, :stuff => {:home_location_id => "#{@stuff.location_id}-#{@stuff.location_type}"}), :method => :put
-  %br
-- if @stuff.home_location    
-  Home:
-  = link_to @stuff.home_location.name, @stuff.home_location
-  - if @stuff.location == @stuff.home_location
-    .in_place
-      (Hooray! A place for everything, and everything in its place)
+    = link_to 'Set home', stuff_path(@stuff.id, :destination => request.url, :stuff => {:home_location_id => @stuff.location_id}), :method => :put
 
+- if @stuff.context_rules.length > 0
+  %h2 Contexts
+  %table
+    %tr
+      %th Context
+      %th Location
+    - @stuff.context_rules.includes(:context, :location).each do |c|
+      %tr
+        %td= link_to c.context.name, c.context
+        %td= move_link_to(@stuff, c.location)
 %h2 Locations
+%p Click on a link below to mark this item as moved to that location.
 
-%ul.locations
-  - loc = @stuff.distinct_locations
-  - loc.each do |l|
-    - if l and l.location
-      %li
-        - if can? :update, @stuff
-          = link_to l.location.name, log_stuff_path(:stuff_name => @stuff.name, :location_name => l.location.name), :method => :post
-        - else
-          = link_to l.location.name, l
+- if @stuff.distinct_locations.length > 0
+  Past locations: 
+  = location_list @stuff, @stuff.distinct_locations.map(&:location)
 
-- if can? :update, @stuff
+- if managing?
   %p
-    Other locations: 
-    = Location.order('lower(name)').map { |l| link_to h(l.name), log_stuff_path(:stuff_name => @stuff.name, :location_name => l.name), :method => :post unless loc.include? l }.compact.join(', ').html_safe
+    Move to any location: 
+    = location_list(@stuff, current_account.stuff.locations.order('lower(name)'))
     %br
-    Other stuff: 
-    = Stuff.order('lower(name)').map { |l| link_to h(l.name), log_stuff_path(:stuff_name => @stuff.name, :location_name => l.name), :method => :post unless loc.include? l }.compact.join(', ').html_safe
+    Move inside other stuff:
+    = location_list(@stuff, current_account.stuff.where('stuff_type != ? and id != ?', 'location', @stuff.id).order('lower(name)'))
     
-    
-- within = Stuff.where('location_id=? AND location_type=?', @stuff.id, 'Stuff').order('name')
+- within = @stuff.contained_stuff.order('LOWER(name)')
 - if within.length > 0
   %h2 What's in or on this?
   %p= render :partial => 'list', :locals => { :stuff => within }
