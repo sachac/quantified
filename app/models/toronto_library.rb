@@ -5,7 +5,7 @@ class TorontoLibrary < ActiveRecord::Base
   def login
     @agent ||= Mechanize.new
     self.logout
-    page = @agent.get 'http://beta.torontopubliclibrary.ca/youraccount'
+    page = @agent.get 'https://www.torontopubliclibrary.ca/youraccount'
     form = page.form_with :name => 'form_signin'
     if form
       form.userId = self.read_attribute('card')
