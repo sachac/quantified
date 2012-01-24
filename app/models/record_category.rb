@@ -170,7 +170,7 @@ class RecordCategory < ActiveRecord::Base
    
     # Split the previous entry if needed
     previous = records.where('timestamp < ?', range.begin).order('timestamp DESC').first
-    if previous and previous.end_timestamp > range.begin
+    if previous and previous.end_timestamp and previous.end_timestamp > range.begin
       duration += previous.end_timestamp - range.begin
     end
 

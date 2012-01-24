@@ -96,3 +96,9 @@ en:
       record_category:
         name: "A short, descriptive name for the category. Example: Sleep"
         color: "Used for displaying in the timeline. Specify an HTML/CSS color name or value."
+      clothing:
+        name: A short description that uniquely identifies this clothing item
+        tags: "Comma-separated keywords that will help you filter clothing items. For example: sweater, winter, fuzzy"
+        clothing_type: "Handy for sorting clothes and analyzing matches. \"top\" and \"bottom\" are used when suggesting matches and analyzing use. You can use other keywords if you like."
+        image: "Upload a picture of the item to make it easier for you to choose it when reviewing. (No objectionable images, please!)"
+        cost: "Handy for calculating cost per use, although we don't do that yet"

@@ -16,8 +16,13 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from CanCan::AccessDenied do |exception|
-    flash[:notice] = exception.message
-    redirect_to new_user_session_path
+    if current_user
+      flash[:error] = "Sorry! Access denied. If you think you should be able to access that, please send me feedback!"
+      redirect_to :back
+    else
+      flash[:error] = exception.message
+      redirect_to new_user_session_path
+    end
   end
 
   def before_awesome
