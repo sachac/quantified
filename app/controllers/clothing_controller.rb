@@ -275,11 +275,12 @@ class ClothingController < ApplicationController
   def download_thumbnail
     @clothing = current_account.clothing.find(params[:id])
     authorize! :view, @clothing
-    # response.headers['X-Accel-Redirect'] = '/protected/' + @clothing.image.url
+    # response.headers['X-Accel-Redirect'] = 'files' + @clothing.image.url
     # response.headers['Content-Type'] = @clothing.image_content_type
     # response.headers['Content-Disposition'] = "inline; filename=#{@clothing.image_file_name}"
-    # #Make sure we don't render anything
-    # render :nothing => true
+    # logger.info response.headers.inspect
+    # # #Make sure we don't render anything
+    # render :nothing => true 
     send_file @clothing.image.path(params[:style]), :type => @clothing.image_content_type, :disposition => 'inline' 
   end
 
