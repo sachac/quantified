@@ -7,7 +7,9 @@
           = link_to I18n.t('app.layout.full'), params.merge(:layout => 'full')
         - else
           = link_to I18n.t('app.layout.mobile'), params.merge(:layout => 'mobile')
-        \-     
+        \-
+      = link_to "Privacy, terms, etc.", page_path("terms_privacy")    
+      \-
       = feedback_link "Send feedback"
       \- Current timezone:
       = @account.settings.timezone

@@ -15,6 +15,13 @@
   {{/if}}
   {{/each}}
   .actions= submit_tag "Update", :class => 'btn primary', :id => 'update'
+%script{:type => 'text/html', :id => 'update_template'}
+  {{if (type != 'edit')}}
+  %li
+    %time.timeago{:datetime=>"${date}"} ${date}
+    ${name}
+    %a{:href => '#', :'data-date' => '${date}', :class => 'remove'} Remove
+  {{/if}}  
 %form#form.form-stacked
 %ul#categories
   %li

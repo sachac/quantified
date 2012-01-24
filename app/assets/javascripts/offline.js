@@ -1,7 +1,7 @@
 var updating = false;
 var status;
 var lastID = null;
-var version = "0.2";
+var version = "0.3";
 
 // %li= link_to c.full_name, c, :class => :category, :'data-id' => c.id
 function loadCategories() {
@@ -32,6 +32,7 @@ function ISODateString(d) {
 //   Attempt to post it.
 //   If it succeeds, 
 function synchronize() {
+	return false;
 	if (!navigator.onLine) return false;
 	var pendingItems = $.parseJSON(localStorage["pendingItems"]);
 	updateMessage();
@@ -75,6 +76,7 @@ function updateMessage() {
 		}
 	}
 	$('.message').html(message);
+	updatePending(); 
 	jQuery('time.timeago').timeago();
 }
 
@@ -125,6 +127,11 @@ function trackCategory(event) {
 	event.preventDefault();
 }
 
+function updatePending(pendingItems) {
+	var out = $('#update_template').tmpl(pendingItems);
+	$('#pending_updates').html('<ul>' + out) + '</ul>';
+}
+
 $(document).ready(function() {
 		if (!localStorage["pendingItems"]) {
 			localStorage["pendingItems"] = JSON.stringify([]);
@@ -136,6 +143,7 @@ $(document).ready(function() {
 		loadCategories();
 		$(window).bind('online', synchronize);
     synchronize();
+		updatePending($.parseJSON(localStorage["pendingItems"]));
 		$('#form').submit(updateRecord);
 	});
 
