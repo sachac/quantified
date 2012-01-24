@@ -26,7 +26,7 @@ class User < ActiveRecord::Base
 
   validates :username, :exclusion => { :in => %w(admin superuser root www) }
   # validates :username, :presence => true
-  validates_length_of :username, :maximum => 20
+  validates_length_of :username, :maximum => 20, :allow_blank => true
   validates :username, :uniqueness => { :case_sensitive => false }, :allow_blank => true
   validates :email, :presence => true, :email => true
   validates :email, :uniqueness => { :case_sensitive => false }
@@ -34,7 +34,7 @@ class User < ActiveRecord::Base
   # Include default devise modules. Others available are:
   # :token_authenticatable, :encryptable, :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable, :token_authenticatable
+         :recoverable, :rememberable, :trackable, :validatable, :token_authenticatable, :confirmable
   attr_accessor :login
 
   # Setup accessible (or protected) attributes for your model
