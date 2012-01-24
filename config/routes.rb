@@ -112,7 +112,6 @@ Home::Application.routes.draw do
   match 'clothing/tag/:id' => 'clothing#tag', :as => :clothing_by_tag
   match 'clothing/status/:status' => 'clothing#by_status', :as => :clothing_by_status
   match 'clothing/analyze(/:start(/:end))' => 'clothing#analyze', :as => :clothing_analyze
-  match 'f/clothing/:user_id/:id/:style/:filename' => 'clothing#download_thumbnail'
   match 'library/update' => 'library#update', :as => :library_refresh
   match 'summary' => 'home#summary', :as => :summary
   # The priority is based upon order of creation:
