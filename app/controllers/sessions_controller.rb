@@ -10,7 +10,7 @@ class SessionsController < Devise::SessionsController
     resource.confirm!
     sign_in(resource_name, resource)
     respond_to do |format|  
-      format.html { respond_with resource, :location => after_sign_in_path_for(resource) }  
+      format.html { go_to root_path and return }
       format.json {  
         return render :json => {  :success => true, 
            :user => resource
