@@ -14,7 +14,7 @@
     = f.input :image
     = f.input :status
     = f.input :cost
-    = f.input :notes, :as => :text
+    = f.input :notes, :as => :text, :input_html => { :rows => 5 }
   .actions
     = f.submit I18n.t('app.general.save'), :class => 'btn primary'
     - if !@clothing.new_record? and can? :delete, @clothing

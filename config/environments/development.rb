@@ -4,7 +4,7 @@ Home::Application.configure do
   # In the development environment your application's code is reloaded on
   # every request.  This slows down response time but is perfect for development
   # since you don't have to restart the webserver when you make code changes.
-  config.cache_classes = false
+  config.cache_classes = true
 
   # Log error messages when you accidentally call methods on nil.
   config.whiny_nils = true
@@ -31,6 +31,8 @@ Home::Application.configure do
   config.assets.digest = false
   config.log_level = :debug
 
+
+  config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect'
   config.action_mailer.default_url_options = { :host => "dev.quantifiedawesome.com" }
 end
 

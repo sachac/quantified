@@ -56,7 +56,7 @@
       - if current_account.clothing.length > 0
         = render :partial => 'clothing_logs/by_date', :locals => { :dates => @dates, :by_date => @by_date, :size => :tiny }
       - else
-        .start= link_to "Start tracking your clothes by creating items", clothing_index_path
+        .start= link_to "Start tracking your clothes by creating items", new_clothing_path
   - if managing? and current_account.library_items.length > 0
     .library.category
       .category_label
