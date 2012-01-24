@@ -281,6 +281,7 @@ class ClothingController < ApplicationController
     # logger.info response.headers.inspect
     # # #Make sure we don't render anything
     # render :nothing => true 
+    logger.info @clothing.image.path(params[:style])
     send_file @clothing.image.path(params[:style]), :type => @clothing.image_content_type, :disposition => 'inline' 
   end
 
