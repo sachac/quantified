@@ -2,7 +2,7 @@ class ChangeContextToSerialize < ActiveRecord::Migration
   def up
     # Convert string-based context rule definitions to model-based rule definitions
     Context.all.each do |c|
-      rules = c.rules_array
+      rules = c.rules.split(/[\r\n]+/)
       rules.each do |r|
         matches = r.match(/^stuff:[ \t]*([^,]+),[ \t]*(.*)/)
         if matches
