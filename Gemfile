@@ -66,13 +66,13 @@ gem 'omniauth-openid'
 gem 'ruby_parser'
 gem 'passgen'
 gem 'high_voltage'
+gem 'sass-rails', "~> 3.1.0.rc"
+gem 'compass'
+gem 'compass-bootstrap'
 group :assets do
   gem 'therubyracer'
-  gem 'sass-rails', "~> 3.1.0.rc"
   gem 'coffee-rails', "~> 3.1.0.rc"
   gem 'uglifier'
-  gem 'compass'
-  gem 'compass-bootstrap'
 end
 	
 gem 'barometer'
