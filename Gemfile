@@ -25,6 +25,7 @@ gem 'gdata'
 gem 'cancan'
 gem 'n_gram'
 gem 'statsample'
+gem 'exception_notification', :require => 'exception_notifier'
 
 # Use unicorn as the web server
 # gem 'unicorn'
@@ -69,6 +70,7 @@ gem 'high_voltage'
 gem 'sass-rails', "~> 3.1.0.rc"
 gem 'compass'
 gem 'compass-bootstrap'
+
 group :assets do
   gem 'therubyracer'
   gem 'coffee-rails', "~> 3.1.0.rc"
