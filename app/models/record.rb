@@ -27,10 +27,8 @@ class Record < ActiveRecord::Base
     span.where('manual = FALSE').update_all('duration = NULL, end_timestamp = NULL')
     last_time_record = nil
     span.joins(:record_category).where(:record_categories => { :category_type => 'activity' }).readonly(false).order('timestamp DESC').each do |x|
-      if x.manual
-        x.update_attributes(:duration => x.end_timestamp - x.timestamp)
-      else
-        x.update_attributes(:end_timestamp => last_time_record.timestamp, :duration => last_time_record.timestamp - x.timestamp) if last_time_record
+      unless x.manual
+        x.update_attributes(:end_timestamp => last_time_record.timestamp) if last_time_record and x.end_timestamp != last_time_record.timestamp
       end
       last_time_record = x
     end
