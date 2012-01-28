@@ -26,7 +26,7 @@
       - data.each do |entry|
         - v = @record.data[entry['key'] || entry[:key]]
         %tr
-          %td.h= entry[:label] || entry['label'] || (entry[:key] || entry['key']).humanize
+          %td.h= (entry['label'] || entry['key']).humanize
           %td
             - if can?(:manage_account, current_account) or !v.downcase.include?('!private')
               = v
@@ -36,11 +36,11 @@
       %tr
         %td.h= t('.current')
         %td= link_to @context[:current].full_name, @context[:current]
-    - if @context[:previous][:activity] != @context[:current]
+    - if @context[:previous] and @context[:previous][:activity] and @context[:previous][:activity] != @context[:current]
       %tr
         %td.h= t('.previous.activity')
         %td= link_to @context[:previous][:activity].full_name, @context[:previous][:activity]
-    - if @context[:previous][:entry] != @context[:previous][:activity]
+    - if @context[:previous] and @context[:previous][:entry] and @context[:previous][:entry] != @context[:previous][:activity]
       %tr
         %td.h= t('.previous.entry')
         %td= link_to @context[:previous][:entry].full_name, @context[:previous][:entry]
@@ -48,7 +48,7 @@
       %tr
         %td.h= t('.next.activity')
         %td= link_to @context[:next][:activity].full_name, @context[:next][:activity]
-    - if @context[:next][:entry] != @context[:next][:activity]
+    - if @context[:next] and @context[:next][:entry] and @context[:next][:entry] != @context[:next][:activity]
       %tr
         %td.h= t('.next.entry')
         %td= link_to @context[:next][:entry].full_name, @context[:next][:entry]

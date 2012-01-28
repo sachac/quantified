@@ -1,7 +1,8 @@
 = setup_page 'dashboard'
-%h3
-  Current activity:
-  = record_category_full(@current_activity.record_category)
+- if @current_activity
+  %h3
+    Current activity:
+    = record_category_full(@current_activity.record_category)
 - if can? :manage_account, current_account
   = form_tag track_time_path do
     .clearfix
