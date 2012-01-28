@@ -18,19 +18,23 @@ class Record < ActiveRecord::Base
     logger.info "Updating the data for #{self.id} #{self.record_category.name}"
     if !self.manual and self.end_timestamp_changed?
       next_activity = self.next_activity
-      logger.info "NEXT activity #{next_activity.inspect}"
-      if next_activity.timestamp != self.end_timestamp
-        next_activity.update_attributes(:timestamp => self.end_timestamp)
+      if next_activity and next_activity.timestamp != self.end_timestamp
+        next_act = Record.where(:id => next_activity.id)
+        logger.info "NEXT activity #{next_activity.inspect}"
+        next_act.update_all(['timestamp = ?', self.timestamp])
+        if next_activity.end_timestamp
+          next_act.update_all(['duration = ?', next_activity.timestamp])
+        end
       end
     end
     if self.timestamp_changed?
       previous_activity = self.previous_activity
       logger.info "Previous activity #{previous_activity.inspect}"
       if previous_activity and !previous_activity.manual? and previous_activity.end_timestamp != self.timestamp
-        puts "Changing timestamp..."
-        previous_activity.end_timestamp = self.timestamp
-        previous_activity.duration = self.timestamp - previous_activity.timestamp
-        previous_activity.save :validate => false
+        puts "Changing timestamp #{previous_activity.end_timestamp == self.timestamp}"
+        prev = Record.where(:id => previous_activity.id)
+        prev.update_all(['end_timestamp = ?', self.timestamp])
+        prev.update_all(['duration = ?', self.timestamp - previous_activity.timestamp])
       end
     end
   end
