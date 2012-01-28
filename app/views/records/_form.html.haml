@@ -9,13 +9,20 @@
         - data.each_with_index do |v, i|
           = record_data_input @record, v, i
     = f.input :record_category, :collection => current_account.record_categories.order('full_name')
-    = f.input :timestamp, :as => :string, :input_html => { :value => l(f.object.timestamp, :format => :long) }
-    - next_activity = @record.next.activities.first
-    - hint = "Leave blank for ongoing activities."
+    - previous_activity = @record.previous_activity
+    - previous_hint = nil
+    - if previous_activity
+      - if previous_activity.manual?
+        - previous_hint = "Changing this will not affect the previous activity (#{link_to previous_activity.record_category.full_name, previous_activity})".html_safe
+      - else
+        - previous_hint = "Changing this will also update the previous activity (#{link_to previous_activity.record_category.full_name, previous_activity}). Change the previous activity to a manual end time if you don't want that activity to be updated".html_safe
+    = f.input :timestamp, :as => :string, :input_html => { :value => l(f.object.timestamp, :format => :long) }, :hint => previous_hint
+    - next_activity = @record.next_activity
+    = f.input :end_timestamp, :as => :string, :input_html => { :value => f.object.end_timestamp ? l(f.object.end_timestamp, :format => :long) : '' }, :hint => "Leave blank for ongoing activities."
+    - next_hint = ""
     - if next_activity
-      - hint += " (Next activity: #{link_to next_activity.record_category.full_name, next_activity})".html_safe
-    = f.input :end_timestamp, :as => :string, :input_html => { :value => f.object.end_timestamp ? l(f.object.end_timestamp, :format => :long) : '' }, :hint => hint.html_safe
-    = f.input :manual, :as => :radio, :collection => [["Automatically update the next activity's start time", false], ["Manually set end time independent of next activity", true]], :label => ''
+      - next_hint = ": #{link_to next_activity.record_category.full_name, next_activity}".html_safe
+    = f.input :manual, :as => :radio, :collection => [[("Automatically update the next activity's start time" + next_hint).html_safe, false], ["Manually set end time independent of next activity", true]], :label => ''
     
   .actions
     = f.submit t('app.general.save'), :class => 'btn primary'
