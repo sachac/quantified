@@ -19,8 +19,10 @@ module Home
 
     config.assets.enabled = true
     config.assets.version = '1.0'
-    config.sass.load_paths << File.expand_path('../../lib/assets/stylesheets/')
-    config.sass.load_paths << File.expand_path('../../vendor/assets/stylesheets/')
+    if Rails.configuration.respond_to?(:sass)
+      config.sass.load_paths << File.expand_path('../../lib/assets/stylesheets/')
+      config.sass.load_paths << File.expand_path('../../vendor/assets/stylesheets/')
+    end
 
     # Activate observers that should always be running.
     # config.active_record.observers = :cacher, :garbage_collector, :forum_observer
