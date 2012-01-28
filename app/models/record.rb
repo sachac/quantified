@@ -5,18 +5,39 @@ class Record < ActiveRecord::Base
   scope :activities, joins(:record_category).where(:record_categories => {:category_type => 'activity'}).readonly(false)
   scope :public, where("LOWER(records.data) NOT LIKE '%!private%'")
   before_save :add_data
+  after_save :update_adjacent
   def add_data
     self.date = self.timestamp.in_time_zone.to_date
     # Follow manual
     if self.end_timestamp and self.timestamp and (self.timestamp_changed? || self.end_timestamp_changed?)
       self.duration = self.end_timestamp - self.timestamp
     end
+  end
+
+  def update_adjacent
+    logger.info "Updating the data for #{self.id} #{self.record_category.name}"
     if !self.manual and self.end_timestamp_changed?
       next_activity = self.next_activity
-      next_activity.update_attributes(:timestamp => self.end_timestamp)
+      logger.info "NEXT activity #{next_activity.inspect}"
+      if next_activity.timestamp != self.end_timestamp
+        next_activity.update_attributes(:timestamp => self.end_timestamp)
+      end
+    end
+    if self.timestamp_changed?
+      previous_activity = self.previous_activity
+      logger.info "Previous activity #{previous_activity.inspect}"
+      if previous_activity and !previous_activity.manual? and previous_activity.end_timestamp != self.timestamp
+        puts "Changing timestamp..."
+        previous_activity.end_timestamp = self.timestamp
+        previous_activity.duration = self.timestamp - previous_activity.timestamp
+        previous_activity.save :validate => false
+      end
     end
   end
 
+  def previous_activity
+    self.previous.activities.first
+  end
   def next_activity
     self.next.activities.first
   end
@@ -28,7 +49,13 @@ class Record < ActiveRecord::Base
     last_time_record = nil
     span.joins(:record_category).where(:record_categories => { :category_type => 'activity' }).readonly(false).order('timestamp DESC').each do |x|
       unless x.manual
-        x.update_attributes(:end_timestamp => last_time_record.timestamp) if last_time_record and x.end_timestamp != last_time_record.timestamp
+        if last_time_record and x.end_timestamp != last_time_record.timestamp
+          x.end_timestamp = last_time_record.timestamp
+          if x.end_timestamp
+            x.duration = x.end_timestamp - x.timestamp
+          end
+          x.save :validate => false
+        end
       end
       last_time_record = x
     end
@@ -163,17 +190,6 @@ class Record < ActiveRecord::Base
     list
   end
 
-  def update_previous
-    Record.update_last(self.user, self.timestamp)
-  end
-
-  def self.update_last(account, timestamp)
-    last = account.records.activities.where('timestamp < ?', timestamp).order('timestamp DESC').first
-    if last
-      last.update_attributes(:end_timestamp => timestamp, :duration => timestamp - last.timestamp)
-    end
-  end
-
   # If unambiguous, create an entry based on string
   # String can be of the form hh:mm category words
   def self.create_from_query(account, string, options = {})
@@ -192,9 +208,6 @@ class Record < ActiveRecord::Base
     cat = RecordCategory.search(account, string)
     if cat and cat.is_a? RecordCategory
       record = account.records.create(:timestamp => time, :record_category => cat, :user => account)
-      if cat.activity?
-        Record.update_last(account, record.timestamp)
-      end
       return record
     else
       # Return results so the controller can figure out what to do

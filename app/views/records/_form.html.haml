@@ -14,7 +14,7 @@
     - hint = "Leave blank for ongoing activities."
     - if next_activity
       - hint += " (Next activity: #{link_to next_activity.record_category.full_name, next_activity})".html_safe
-    = f.input :end_timestamp, :as => :string, :input_html => { :value => f.object.end_timestamp ? l(f.object.end_timestamp, :format => :long) : '' }, :hint => hint
+    = f.input :end_timestamp, :as => :string, :input_html => { :value => f.object.end_timestamp ? l(f.object.end_timestamp, :format => :long) : '' }, :hint => hint.html_safe
     = f.input :manual, :as => :radio, :collection => [["Automatically update the next activity's start time", false], ["Manually set end time independent of next activity", true]], :label => ''
     
   .actions
