@@ -51,9 +51,9 @@ class Clothing < ActiveRecord::Base
   def Clothing.guess_color(file, x = nil, y = nil)
     # http://www.jamievandyke.com/red-and-yellow-and
     if x =~ /^[0-9]+$/ and y =~ /^[0-9]+$/
-      command = "convert #{file.to_file.path} -crop 1x1+#{x}+#{y} -format '%[pixel:u]' info:-"
+      command = "convert #{file.path(:large)} -crop 1x1+#{x}+#{y} -format '%[pixel:u]' info:-"
     else
-      command = "convert #{file.to_file.path} -scale 1x1\! -format '%[pixel:u]' info:-"
+      command = "convert #{file.path(:large)} -scale 1x1\! -format '%[pixel:u]' info:-"
     end
     color = %x[#{command}]
     if color && $?.exitstatus != 0

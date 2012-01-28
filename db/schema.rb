@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120115215056) do
+ActiveRecord::Schema.define(:version => 20120127231840) do
 
   create_table "clothing", :force => true do |t|
     t.string   "name"
@@ -278,6 +278,7 @@ ActiveRecord::Schema.define(:version => 20120115215056) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.date     "date"
+    t.boolean  "manual",             :default => false
   end
 
   add_index "records", ["record_category_id"], :name => "index_records_on_record_category_id"

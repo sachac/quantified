@@ -13,10 +13,14 @@ class Record < ActiveRecord::Base
     span = user.records
     span = span.where('timestamp >= ?', start_time) if start_time
     span = span.where('timestamp <= ?', end_time) if end_time
-    span.update_all('duration = NULL, end_timestamp = NULL')
+    span.where('manual = FALSE').update_all('duration = NULL, end_timestamp = NULL')
     last_time_record = nil
     span.joins(:record_category).where(:record_categories => { :category_type => 'activity' }).readonly(false).order('timestamp DESC').each do |x|
-      x.update_attributes(:end_timestamp => last_time_record.timestamp, :duration => last_time_record.timestamp - x.timestamp) if last_time_record
+      if x.manual
+        x.update_attributes(:duration => x.end_timestamp - x.timestamp)
+      else
+        x.update_attributes(:end_timestamp => last_time_record.timestamp, :duration => last_time_record.timestamp - x.timestamp) if last_time_record
+      end
       last_time_record = x
     end
   end

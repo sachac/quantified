@@ -21,6 +21,7 @@ module ApplicationHelper
     image || nil
   end
   def clothing_thumbnail(clothing, options = {})
+    return unless clothing
     title = clothing.name
     if clothing.last_worn then
       title += " - #{clothing.clothing_logs_count} - #{date_ago_future clothing.last_worn}"

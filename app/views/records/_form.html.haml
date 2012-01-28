@@ -7,7 +7,6 @@
           = record_data_input @record, v
       - else
         - data.each_with_index do |v, i|
-          = i
           = record_data_input @record, v, i
     = f.input :timestamp, :as => :string, :input_html => { :value => l(f.object.timestamp, :format => :long) }
     = f.input :record_category, :collection => current_account.record_categories.order('full_name')
