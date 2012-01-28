@@ -7,8 +7,19 @@ class Record < ActiveRecord::Base
   before_save :add_data
   def add_data
     self.date = self.timestamp.in_time_zone.to_date
+    # Follow manual
+    if self.end_timestamp and self.timestamp and (self.timestamp_changed? || self.end_timestamp_changed?)
+      self.duration = self.end_timestamp - self.timestamp
+    end
+    if !self.manual and self.end_timestamp_changed?
+      next_activity = self.next_activity
+      next_activity.update_attributes(:timestamp => self.end_timestamp)
+    end
   end
 
+  def next_activity
+    self.next.activities.first
+  end
   def self.recalculate_durations(user, start_time = nil, end_time = nil)
     span = user.records
     span = span.where('timestamp >= ?', start_time) if start_time

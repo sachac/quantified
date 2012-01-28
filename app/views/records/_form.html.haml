@@ -8,7 +8,14 @@
       - else
         - data.each_with_index do |v, i|
           = record_data_input @record, v, i
-    = f.input :timestamp, :as => :string, :input_html => { :value => l(f.object.timestamp, :format => :long) }
     = f.input :record_category, :collection => current_account.record_categories.order('full_name')
+    = f.input :timestamp, :as => :string, :input_html => { :value => l(f.object.timestamp, :format => :long) }
+    - next_activity = @record.next.activities.first
+    - hint = "Leave blank for ongoing activities."
+    - if next_activity
+      - hint += " (Next activity: #{link_to next_activity.record_category.full_name, next_activity})".html_safe
+    = f.input :end_timestamp, :as => :string, :input_html => { :value => f.object.end_timestamp ? l(f.object.end_timestamp, :format => :long) : '' }, :hint => hint
+    = f.input :manual, :as => :radio, :collection => [["Automatically update the next activity's start time", false], ["Manually set end time independent of next activity", true]], :label => ''
+    
   .actions
     = f.submit t('app.general.save'), :class => 'btn primary'
