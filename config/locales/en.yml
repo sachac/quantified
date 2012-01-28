@@ -87,6 +87,7 @@ en:
   formtastic:
     labels:
       record:
+        timestamp: Start time
         end_timestamp: End time
       user:  
         login: "Username or e-mail"
