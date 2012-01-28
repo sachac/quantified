@@ -105,10 +105,6 @@ class RecordCategoriesController < ApplicationController
     @record_category = current_account.record_categories.find(params[:id])
     # Update the latest activity now that we know the ending timestamp
     now = Time.zone.now
-    if @record_category.activity?
-      Record.update_last(current_account, now)
-      # Create record and allow user to edit it
-    end
     rec = current_account.records.create(:timestamp => now, :source => 'quantified awesome record categories', :source_id => @record_category.id, :record_category_id => @record_category.id)
     redirect_to edit_record_path(rec)
   end

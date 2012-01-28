@@ -32,7 +32,6 @@ class Api::Offline::V1::OfflineController < ApplicationController
               end
             end
             @record.save!
-            @record.update_previous
           end
           respond_with @record and return
         else
