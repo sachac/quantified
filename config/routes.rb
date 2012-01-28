@@ -6,7 +6,7 @@ Home::Application.routes.draw do
   resources :services, :only => [:index, :create, :destroy]
   match 'signups' => 'signups#index'
   match 'admin' => 'admin#index'
-  match 'admin/invite_user' => 'admin#invite_user', :via => :post
+  match 'admin/become/:id' => 'admin#become', :as => :become_user, :via => :post
   match 'feedback' => 'home#send_feedback', :via => :post
   match 'feedback' => 'home#feedback', :as => :feedback
   match 'help/record_categories' => 'help#record_categories'
@@ -95,6 +95,7 @@ Home::Application.routes.draw do
   match 'time/refresh' => 'time#refresh', :as => :refresh_time
   match 'time/review' => 'time#review', :as => :time_review
   match 'time/track' => 'time#track', :as => :track_time, :via => :post
+  match 'time/track' => 'time#dashboard'
   match 'time' => 'time#dashboard'
   match 'clothing/missing_info' => 'clothing#update_missing_info', :as => :update_missing_clothing_information, :via => :post
   match 'clothing/missing_info' => 'clothing#missing_info', :as => :missing_clothing_information

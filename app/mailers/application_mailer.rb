@@ -3,6 +3,7 @@ class ApplicationMailer < ActionMailer::Base
   def feedback(info)
     @info = info
     mail(:to => 'sacha@quantifiedawesome.com',
+         :from => info[:email],
          :subject => 'Quantified Awesome: Feedback')
   end
 

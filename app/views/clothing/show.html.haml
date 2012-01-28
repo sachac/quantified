@@ -18,7 +18,7 @@
   \|
   - if managing?
     - {'store' => 'stored', 'activate' => 'active', 'donate' => 'donated'}.each do |action,status|
-      - unless @clothing.status == status
+      - unless status.nil? or @clothing.status == status
         = link_to action, clothing_path(@clothing.id) + '?clothing[status]=' + status, :method => :put
 
 
@@ -77,7 +77,8 @@
     .entry
       .date= current_user ? (link_to c.date, clothing_log_path(c)) : c.date
       .clothes
-        - ClothingLog.find(:all, :select => 'clothing_logs.id, clothing_id, clothing.name', :order => 'clothing.name', :joins => 'INNER JOIN clothing ON clothing_logs.clothing_id=clothing.id', :conditions => ["date >= ? and date < ? and outfit_id=?", c.date, c.date + 1.day, c.outfit_id]).each do |x| 
-          .item= clothing_thumbnail x.clothing, {:size => :medium, :path => current_user ? clothing_log_path(x) : clothing_path(x.clothing)}
+        - if c.date
+          - current_account.clothing_logs.find(:all, :select => 'clothing_logs.id, clothing_id, clothing.name', :order => 'clothing.name', :joins => 'INNER JOIN clothing ON clothing_logs.clothing_id=clothing.id', :conditions => ["date >= ? and date < ? and outfit_id=?", c.date, c.date + 1.day, c.outfit_id]).each do |x| 
+            .item= clothing_thumbnail x.clothing, {:size => :medium, :path => current_user ? clothing_log_path(x) : clothing_path(x.clothing)}
 
 .clear-both

@@ -46,8 +46,6 @@ class RecordCategoriesController < ApplicationController
     @record_category = current_account.record_categories.find(params[:id])
     if @record_category.category_type != 'list'
       @record_category.data ||= Array.new
-      @record_category.data.reject! { |x| x['key'].blank? }
-
       @record_category.data << {'key' => nil, 'label' => nil, 'type' => nil}
     end
       

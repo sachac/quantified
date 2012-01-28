@@ -2,7 +2,7 @@
   .fill
     .container
       - if current_account
-        = link_to "#{current_account.username || current_account.email}", root_path, :class => 'brand'
+        = link_to "#{current_account.username.blank? ? current_account.email : current_account.username}", root_path, :class => 'brand'
       - else
         = link_to "quantified awesome",root_path, :class => 'brand'
       %ul.nav
