@@ -1,7 +1,7 @@
 require 'lib/exceptions'
 class ApplicationController < ActionController::Base
   include Exceptions
-  check_authorization :unless => proc { devise_controller? || controller.name == 'pages' }
+  check_authorization :unless => :devise_controller?
   protect_from_forgery
   before_filter :before_awesome
   helper_method :current_account  
