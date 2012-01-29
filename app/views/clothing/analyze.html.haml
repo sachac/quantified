@@ -1,6 +1,9 @@
-%h1 Analyzing clothing
+= setup_page 'analysis'
 
-- form_tag(nil, :method => :get) do 
+- if managing?
+  For best effect, make sure clothing items like skirts or pants are tagged as 'bottom' as well.
+
+= form_tag(nil, :method => :get) do 
   Start: 
   = text_field_tag :start, @start_date.strftime("%Y-%m-%d"), {:class => "datepicker"}
   End: 
@@ -9,6 +12,9 @@
 
 %h2 Logs
 
+A/B/etc. distinguish multiple outfits worn on the same day.
+- if managing?
+  To change the outfit number, click on its entry and edit the clothing log entry.
 - col_total = Hash.new
 %table.lined
   %tr
@@ -26,7 +32,7 @@
       - row_total = 0
       - while date < new_end
         - if @logs[id][date] then
-          %td= link_to "ABCDEFG"[(@logs[id][date].outfit_id || 1) - 1,1], current_user ? edit_clothing_log_path(@logs[id][date]) : clothing_log_path(@logs[id][date])
+          %td= link_to "ABCDEFGHIJKLMNOPQRSTUVWXYZ"[(@logs[id][date].outfit_id || 1) - 1,1], current_user ? edit_clothing_log_path(@logs[id][date], :destination => request.fullpath) : clothing_log_path(@logs[id][date])
           - row_total += 1
           - col_total[date] ||= 0
           - col_total[date] += 1
