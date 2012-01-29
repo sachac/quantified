@@ -3,14 +3,14 @@ class ClothingLogsController < ApplicationController
   # GET /clothing_logs.xml
   before_filter :authenticate_user!, :except => [:index, :show, :by_date]
   def index
-    authorize! :view_clothing_logs, current_account
+    authorize! :view_clothing, current_account
     @clothing_logs = current_account.clothing_logs.find(:all, :order => "date DESC, outfit_id DESC, clothing.clothing_type", :include => [:clothing])
     @by_date = Hash.new
     @clothing_logs.each do |l|
       @by_date[l.date] ||= Array.new
       @by_date[l.date] << l
     end
-    @dates = @by_date.keys.sort { |a,b| b <=> a }
+    @dates = @by_date.keys.sort { |a,b| b  <=> a }
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @clothing_logs }
@@ -21,7 +21,7 @@ class ClothingLogsController < ApplicationController
   # GET /clothing_logs/1.xml
   def show
     @clothing_log = current_account.clothing_logs.find(params[:id])
-    authorize! :view, @clothing
+    authorize! :view, @clothing_log
 
     respond_to do |format|
       format.html # show.html.erb
@@ -32,8 +32,8 @@ class ClothingLogsController < ApplicationController
   # GET /clothing_logs/new
   # GET /clothing_logs/new.xml
   def new
-    @clothing_log = current_account.clothing_logs.new
     authorize! :create, ClothingLog
+    @clothing_log = current_account.clothing_logs.new
     @clothing_log.date = Time.now
     respond_to do |format|
       format.html # new.html.erb

@@ -1,8 +1,8 @@
 class Clothing < ActiveRecord::Base
   belongs_to :user
   acts_as_taggable_on :tags
-  has_many :clothing_logs
-  has_many :clothing_matches, :foreign_key => :clothing_a_id
+  has_many :clothing_logs, :dependent => :destroy
+  has_many :clothing_matches, :foreign_key => :clothing_a_id, :dependent => :destroy
   has_attached_file :image, :styles => { :large => "400x400", :medium => "x90", :small => "x40" }, :default_url => '/images/clothing/:style/missing.jpg', :path => ':rails_root/public/f/clothing/:user_id/:hashed_path/:id/:style/:basename.:extension', :url => '/f/clothing/:user_id/:hashed_path/:id/:style/:basename.:extension'
   before_save :update_hsl
 
