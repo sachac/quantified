@@ -10,6 +10,9 @@ class ClothingLog < ActiveRecord::Base
 
   after_save :update_matches
   after_destroy :delete_matches
+  validates_presence_of :date
+  validates_presence_of :clothing_id
+  validates_presence_of :user_id
 
   def update_matches
     logger.info "Updating matches..."
