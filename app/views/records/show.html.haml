@@ -28,7 +28,7 @@
         %tr
           %td.h= (entry['label'] || entry['key']).humanize
           %td
-            - if can?(:manage_account, current_account) or !v.downcase.include?('!private')
+            - if can?(:manage_account, current_account) or (v and !v.downcase.include?('!private'))
               = v
             - else
               %span{:class => 'private'}= t('app.general.private')
