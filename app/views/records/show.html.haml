@@ -28,10 +28,11 @@
         %tr
           %td.h= (entry['label'] || entry['key']).humanize
           %td
-            - if can?(:manage_account, current_account) or (v and !v.downcase.include?('!private'))
-              = v
-            - else
-              %span{:class => 'private'}= t('app.general.private')
+            - if v
+              - if can?(:manage_account, current_account) or (v and !v.downcase.include?('!private'))
+                = v
+              - else
+                %span{:class => 'private'}= t('app.general.private')
     - if @context[:current] and @context[:current] != @record
       %tr
         %td.h= t('.current')
