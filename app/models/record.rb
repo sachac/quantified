@@ -124,10 +124,10 @@ class Record < ActiveRecord::Base
       user.adjust_beginning_of_week(timestamp.to_date) + 6.days
     when :monthly
       date = timestamp.to_date
-      new Date(date.year, date.month, 1)
+      Date.new(date.year, date.month, 1)
     when :yearly
       date = timestamp.to_date
-      new Date(date.year, 1, 1)
+      Date.new(date.year, 1, 1)
     end
   end
 
