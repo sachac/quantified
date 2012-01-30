@@ -62,10 +62,10 @@ class ServicesController < ApplicationController
           flash[:notice] = 'Sign in via ' + provider.capitalize + ' has been added to your account ' + existing_user.email + '. Signed in successfully!'
           sign_in_and_redirect(:user, existing_user)
         elsif Devise.mappings[:user].registerable?
+          # new user, set email, a random password and take the name from the authentication service
           # let's create a new user: register this user and add this authentication method for this user
           name = name[0, 39] if name.length > 39             # otherwise our user validation will hit us
-          # new user, set email, a random password and take the name from the authentication service
-          user = User.new :email => email, :password => SecureRandom.hex(10), :fullname => name, :username => name
+          user = User.new :email => email, :password => SecureRandom.hex(10)
           # add this authentication service to our new user
           user.services.build(:provider => provider, :uid => uid, :uname => name, :uemail => email)
           
