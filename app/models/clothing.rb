@@ -21,7 +21,7 @@ class Clothing < ActiveRecord::Base
 
   def get_color
     if self.color.blank? and self.image.file?
-      self.color = Clothing.guess_color(self.image)
+      begin self.color = Clothing.guess_color(self.image) rescue end
     end
     return unless self.color
     base = self.color.to_s.split(',')[0]
