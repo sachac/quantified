@@ -10,6 +10,7 @@
     %link{:href => '/assets/mobile.css', :media => 'screen', :rel => 'stylesheet', :type => 'text/css'}
     %link{:href => '/assets/offline.css', :media => 'screen', :rel => 'stylesheet', :type => 'text/css'}
     = csrf_meta_tag
+    = google_analytics_js  
   %body{:manifest=>"/offline.manifest"}
     = render 'mobile_nav'
     .container
