@@ -5,8 +5,8 @@
 //= require jquery-ui
 //= require jquery.timeago
 //= require json
-//= require jquery.tmpl.min
 //= require jquery.offline
+//= require jquery.tmpl.min
 //= require autocomplete-rails
 //= require raphael-min
 //= require jquery.sparkline.min

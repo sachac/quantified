@@ -16,7 +16,7 @@
   {{/each}}
   .actions= submit_tag "Update", :class => 'btn primary', :id => 'update'
 %script{:type => 'text/html', :id => 'update_template'}
-  {{if (type != 'edit')}}
+  {{if ($item['entry_type'] != 'edit')}}
   %li
     %time.timeago{:datetime=>"${date}"} ${date}
     ${name}
