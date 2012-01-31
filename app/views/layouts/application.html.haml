@@ -15,6 +15,7 @@
       = stylesheet_link_tag 'mobile'  
     = javascript_include_tag "application"
     = csrf_meta_tag
+    = google_analytics_js  
   %body{:class => mobile? ? "mobile" : "full"}
     = render mobile? ? 'mobile_nav' : 'main_nav'
     .container
