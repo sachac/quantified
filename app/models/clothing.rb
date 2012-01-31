@@ -23,7 +23,7 @@ class Clothing < ActiveRecord::Base
     if self.color.blank? and self.image.file?
       begin 
         self.color = Clothing.guess_color(self.image) 
-      rescue Exception 
+      rescue 
         nil
       end
     end
