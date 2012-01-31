@@ -56,11 +56,10 @@ class Clothing < ActiveRecord::Base
       command = "convert #{file.path(:large)} -scale 1x1\! -format '%[pixel:u]' info:-"
     end
     color = %x[#{command}]
-    if color && $?.exitstatus != 0
-      raise StandardError, "There was an error determining the color!"
+    if color && $?.exitstatus == 0
+      @red, @green, @blue = color[/rgb\((.*)\)/, 1].split(",").collect(&:to_i)
+      "%2x%2x%2x" % [ @red, @green, @blue ]
     end
-    @red, @green, @blue = color[/rgb\((.*)\)/, 1].split(",").collect(&:to_i)
-    "%2x%2x%2x" % [ @red, @green, @blue ]
   end
   scope :active, where("(status IS NULL or status = 'active')")
 end
