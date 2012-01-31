@@ -90,7 +90,7 @@ function updateRecord(event) {
 	// Queue an update if we have already synchronized
 	if (lastID != null) {
 		// The latest entry has already been synchronized, so attempt to update it
-		pendingItems.push({type: 'edit', id: lastID.id, 'data': $('#form').serializeArray()});
+		pendingItems.push({entry_type: 'edit', id: lastID.id, 'data': $('#form').serializeArray()});
 		localStorage["pendingItems"] = JSON.stringify(pendingItems);
 	} else {
 		// Update the latest record if it has not yet been sent
