@@ -29,7 +29,7 @@ class ApplicationController < ActionController::Base
     notice_layout!
     @account = current_account
     # Set the timezone
-    Time.zone = @account.settings.timezone if @account.settings.timezone 
+    Time.zone = @account.settings.timezone if @account and @account.settings.timezone 
 
     true
   end
