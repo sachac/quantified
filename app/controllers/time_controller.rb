@@ -61,19 +61,26 @@ class TimeController < ApplicationController
       go_to time_dashboard_path and return
     end
     # Look for the category
-    now = params[:timestamp] ? Time.zone.parse(params[:timestamp]) : Time.now
+    if params[:category]
+      data = Record.guess_time(params[:category])
+      time = data[1]
+    end
+    unless params[:timestamp].blank?
+      time ||= params[:timestamp]
+    end
+    time ||= Time.now
     if params[:category_id]
       cat = current_account.record_categories.find_by_id(params[:category_id])
-      rec = Record.create(:user => current_account, :record_category => cat, :timestamp => params[:timestamp] ? Time.zone.parse(params[:timestamp]) : Time.now)
+      rec = Record.create(:user => current_account, :record_category => cat, :timestamp => time)
     elsif params[:category]
-      rec = Record.create_from_query(current_account, params[:category], :timestamp => params[:timestamp])
+      rec = Record.create_from_query(current_account, data[0], :timestamp => time)
     end
     if rec.nil?
       go_to time_dashboard_path, :error => 'Could not find matching category' and return
     elsif rec.is_a? Record
       redirect_to edit_record_path(rec, :destination => params[:destination]) and return
     else
-      redirect_to disambiguate_record_categories_path(:timestamp => now, :category => params[:category]), :method => :post and return 
+      redirect_to disambiguate_record_categories_path(:timestamp => time, :category => params[:category]), :method => :post and return 
     end
   end
 
