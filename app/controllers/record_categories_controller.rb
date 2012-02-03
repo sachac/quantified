@@ -131,13 +131,19 @@ class RecordCategoriesController < ApplicationController
 
   def disambiguate
     authorize! :manage_account, current_account
-    @list = RecordCategory.search(current_account, params[:category])
+    data = Record.guess_time(params[:category])
+    time = data[1]
+    unless params[:timestamp].blank?
+      time ||= params[:timestamp]
+    end
+    time ||= Time.now
+    @list = RecordCategory.search(current_account, data[0])
     if @list.nil?
       # No match
-      go_to root_path, :error => "Could not find category matching: " + params[:category] and return
+      go_to root_path, :error => "Could not find category matching: " + params[:category] + ". " + link_to("Create?", new_category_path(:category => { :name => data[0] }, :first_timestamp => time))  and return
     elsif @list.is_a? RecordCategory
       # Just one, so track it directly
-      redirect_to track_time_path(:timestamp => params[:timestamp], :source => params[:source], :destination => params[:destination]) and return
+      redirect_to track_time_path(:timestamp => time, :source => params[:source], :destination => params[:destination]) and return
     end
     # Display the list
   end

@@ -194,21 +194,30 @@ class Record < ActiveRecord::Base
     list
   end
 
+  # Returns an array of [string, time]
+  def self.guess_time(string)
+    return [nil, nil] unless string.is_a? String
+    matches = string.match /([0-9]+:[0-9]+) */
+    new_string = string
+    if matches
+      time = Time.zone.parse(matches[1])
+      new_string = string.gsub /([0-9]+:[0-9]+) */, ''
+    end
+    [new_string.strip, time]
+  end
   # If unambiguous, create an entry based on string
   # String can be of the form hh:mm category words
   def self.create_from_query(account, string, options = {})
-    matches = string.match /([0-9]+:[0-9]+) */
-    if options[:timestamp] and options[:timestamp].is_a? String
-      time = Time.zone.parse(options[:timestamp])
-    elsif options[:timestamp]
-      time = options[:timestamp]
-    else
-      time = Time.now
+    data = Record.guess_time(string)
+    time = data[1]
+    if !options[:timestamp].blank? 
+      if options[:timestamp].is_a? String
+        time ||= Time.zone.parse(options[:timestamp])
+      else
+        time ||= options[:timestamp]
+      end
     end
-    if matches
-      time = Time.zone.parse(matches[1])
-      string.gsub! /([0-9]+:[0-9]+) */, ''
-    end
+    time ||= Time.now
     cat = RecordCategory.search(account, string)
     if cat and cat.is_a? RecordCategory
       record = account.records.create(:timestamp => time, :record_category => cat, :user => account)
