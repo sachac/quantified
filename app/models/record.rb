@@ -8,6 +8,14 @@ class Record < ActiveRecord::Base
   after_save :update_adjacent
   def add_data
     self.date = self.timestamp.in_time_zone.to_date
+    # Set end time automatically if we are backdating activities
+    if !self.end_timestamp
+      # See if there are any activities after this
+      next_act = self.next_activity
+      if next_act
+        self.end_timestamp = next_act.timestamp
+      end
+    end
     # Follow manual
     if self.end_timestamp and self.timestamp and (self.timestamp_changed? || self.end_timestamp_changed?)
       self.duration = self.end_timestamp - self.timestamp
@@ -15,12 +23,10 @@ class Record < ActiveRecord::Base
   end
 
   def update_adjacent
-    logger.info "Updating the data for #{self.id} #{self.record_category.name}"
     if !self.manual and self.end_timestamp_changed?
       next_activity = self.next_activity
       if next_activity and next_activity.timestamp != self.end_timestamp
         next_act = Record.where(:id => next_activity.id)
-        logger.info "NEXT activity #{next_activity.inspect}"
         next_act.update_all(['timestamp = ?', self.timestamp])
         if next_activity.end_timestamp
           next_act.update_all(['duration = ?', next_activity.timestamp])
@@ -29,9 +35,7 @@ class Record < ActiveRecord::Base
     end
     if self.timestamp_changed?
       previous_activity = self.previous_activity
-      logger.info "Previous activity #{previous_activity.inspect}"
       if previous_activity and !previous_activity.manual? and previous_activity.end_timestamp != self.timestamp
-        puts "Changing timestamp #{previous_activity.end_timestamp == self.timestamp}"
         prev = Record.where(:id => previous_activity.id)
         prev.update_all(['end_timestamp = ?', self.timestamp])
         prev.update_all(['duration = ?', self.timestamp - previous_activity.timestamp])
@@ -83,11 +87,11 @@ class Record < ActiveRecord::Base
   end
 
   def previous
-    self.user.records.where('timestamp <= ? and records.id < ?', self.timestamp, self.id).order('timestamp desc, id desc')
+    self.user.records.where('(timestamp < ? OR (timestamp = ? AND records.id < ?))', self.timestamp, self.timestamp, self.id).order('timestamp desc, id desc')
   end
 
   def next
-    self.user.records.where('timestamp >= ? and records.id > ?', self.timestamp, self.id).order('timestamp asc, id asc')
+    self.user.records.where('(timestamp > ? OR (timestamp = ? AND records.id > ?))', self.timestamp, self.timestamp, self.id).order('timestamp asc, id asc')
   end
 
   def context
@@ -208,16 +212,6 @@ class Record < ActiveRecord::Base
   # If unambiguous, create an entry based on string
   # String can be of the form hh:mm category words
   def self.create_from_query(account, string, options = {})
-    data = Record.guess_time(string)
-    time = data[1]
-    if !options[:timestamp].blank? 
-      if options[:timestamp].is_a? String
-        time ||= Time.zone.parse(options[:timestamp])
-      else
-        time ||= options[:timestamp]
-      end
-    end
-    time ||= Time.now
     cat = RecordCategory.search(account, string)
     if cat and cat.is_a? RecordCategory
       record = account.records.create(:timestamp => time, :record_category => cat, :user => account)

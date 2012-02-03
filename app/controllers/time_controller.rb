@@ -66,14 +66,18 @@ class TimeController < ApplicationController
       time = data[1]
     end
     unless params[:timestamp].blank?
-      time ||= params[:timestamp]
+      time ||= Time.zone.parse(params[:timestamp])
     end
     time ||= Time.now
     if params[:category_id]
       cat = current_account.record_categories.find_by_id(params[:category_id])
       rec = Record.create(:user => current_account, :record_category => cat, :timestamp => time)
     elsif params[:category]
-      rec = Record.create_from_query(current_account, data[0], :timestamp => time)
+      cat = RecordCategory.search(current_account, data[0])
+      if cat
+        logger.info "ABOUT TO CREATE! #{time}"
+        rec = current_account.records.create(:record_category => cat, :timestamp => time)
+      end
     end
     if rec.nil?
       go_to time_dashboard_path, :error => 'Could not find matching category' and return
