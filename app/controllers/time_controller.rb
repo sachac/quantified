@@ -74,9 +74,10 @@ class TimeController < ApplicationController
       rec = Record.create(:user => current_account, :record_category => cat, :timestamp => time)
     elsif params[:category]
       cat = RecordCategory.search(current_account, data[0])
-      if cat
-        logger.info "ABOUT TO CREATE! #{time}"
+      if cat.is_a? RecordCategory
         rec = current_account.records.create(:record_category => cat, :timestamp => time)
+      else
+        rec = cat
       end
     end
     if rec.nil?
