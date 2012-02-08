@@ -1,9 +1,11 @@
 <%= setup_page 'graph' %>
 <%= render 'filters' %>
-<div id="canvas" style="width: 900px; height: 500px"></div>
+
+<h2>Schedule</h2>
+<div id="canvas" style="width: 900px; height: 300px"></div>
 
 <script type="text/javascript">
-  var canvasID = "canvas"
+  var canvasID = "canvas";
   var dayWidth;
   var dayHeight;
   var canvas;
@@ -11,25 +13,45 @@
     canvasID = id;
     canvasWidth = $("#" + id).width();
     canvasHeight = $("#" + id).height();
-    dayWidth = canvasWidth;
-    dayHeight = canvasHeight / numDays;
+    dayWidth = canvasWidth / numDays;
+    dayWidth = Math.min(dayWidth, 20);
+    dayHeight = canvasHeight;
     canvas = Raphael(canvasID);
   }
-  
-  function graphTimeEntry(dayOffset, startOffset, endOffset, title, color, entryClass) {
-    x = (startOffset * dayWidth / 86400.0);
-    y = (dayOffset * dayHeight);
-    width = (endOffset - startOffset) * dayWidth / 86400;
-    r = canvas.rect(x, y, width, dayHeight).attr({fill: color, stroke: 'none', title: title});
+
+  var sets = new Array();
+  function graphTimeEntry(canvas, dayOffset, startOffset, endOffset, title, color, entryClass) {
+    x = (dayOffset * dayWidth);
+    y = (startOffset * dayHeight / 86400.0);
+    height = (endOffset - startOffset) * dayHeight / 86400;
+    r = canvas.rect(x, y, dayWidth, height).attr({fill: color, stroke: '#000', title: title});
+    if (!sets[entryClass]) { sets[entryClass] = canvas.set(); }
+    sets[entryClass].push(r);
+    r.hover(
+      function(event) { sets[entryClass].attr({'fill': '#000'}) },
+      function(event) { sets[entryClass].attr({'fill': color}) });
+  }
+
+  function graphTimeTotal(dayOffset, startOffset, endOffset, title, color, entryClass) {
+    x = (dayOffset * dayWidth);
+    y = (startOffset * dayHeight / 86400.0);
+    height = (endOffset - startOffset) * dayHeight / 86400;
+    r = canvas.rect(x, y, dayWidth, height).attr({fill: color, stroke: '#000', title: title});
+    if (!sets[entryClass]) { sets[entryClass] = canvas.set(); }
+    sets[entryClass].push(r);
+    r.hover(
+      function(event) { sets[entryClass].attr({'fill': '#000'}) },
+      function(event) { sets[entryClass].attr({'fill': color}) });
   }
   
   $(document).ready(function() {
     setupCanvas('canvas', <%= @records.size %>);
     <% @records.each do |day_offset, row| %>
-      <% row.each do |entry| %>
-        <%= graph_time_entry(day_offset, entry) %>
+      <% row[:record].each do |entry| %>
+        <%= graph_time_entry('canvas', day_offset, entry) %>
       <% end %>
     <% end %>
+    
   });
 </script>
 
