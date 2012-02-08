@@ -228,13 +228,12 @@ module ApplicationHelper
     end
   end
 
-  def graph_time_entry(day_offset, row)
+  def graph_time_entry(canvas_var, day_offset, row)
     # Turn this into the Javascript call
     # Javascript needs start time, end time, title, color, and duration
-    logger.info(row.inspect)
     start_offset = row[0] - row[0].midnight.in_time_zone
     end_offset = row[1] - row[0].midnight.in_time_zone
-    "graphTimeEntry(#{day_offset}, #{start_offset}, #{end_offset}, " +
+    "graphTimeEntry(#{canvas_var}, #{day_offset}, #{start_offset}, #{end_offset}, " +
       "'#{escape_javascript row[0].strftime('%Y-%m-%d %-H:%M')} - #{escape_javascript row[1].strftime('%-H:%M')}: " +
       "#{escape_javascript row[2].full_name} (#{escape_javascript(duration(row[1] - row[0]))})', " +
       "'#{escape_javascript row[2].color}', '#{row[2].record_category.full_name.parameterize.underscore}');"

@@ -170,21 +170,32 @@ class Record < ActiveRecord::Base
   # Return an array of [date => [[start time, end time, category], [start time, end time, category]]]
   # Pre-fill colors
   def self.prepare_graph(range, records)
-    result = Hash.new { |h,k| h[k] = Array.new }
+    result = Hash.new
+    result = Hash.new { |h,k| h[k] = Hash.new }
     colors = Hash.new
     records.each do |r|
       r.split(range).each do |row|
+        print range.begin
         unless row[2].color
           colors[row[2].record_category_id] ||= row[2].record_category.get_color
           row[2].record_category.color = colors[row[2].record_category_id]
         end
-        result[row[0].to_date - range.begin] << row
+        day = row[0].to_date - range.begin
+        result[day][:record] ||= Array.new
+        result[day][:record] << row
+        result[day][:total] ||= Hash.new
+        unless result[day][:total][row[2].record_category_id]
+          result[day][:total][row[2].record_category_id] = Hash.new
+          result[day][:total][row[2].record_category_id][:info] = row[2].record_category
+          result[day][:total][row[2].record_category_id][:duration] = 0
+        end
+        result[day][:total][row[2].record_category_id][:duration] += row[1] - row[0]
       end
     end
     result
   end
 
-  # Return an array of [start time, end time, category] split over multiple days or over the range
+  # Return an array of [start time, end time, record] split over multiple days or over the range
   def split(range = nil)
     entry_end = self.end_timestamp || Time.now
     time = range ? [self.timestamp, range.begin.midnight.in_time_zone].max : self.timestamp
