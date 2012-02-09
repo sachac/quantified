@@ -11,6 +11,17 @@
         = label_tag :end, 'End' 
         .input= text_field_tag :end, @end ? @end.strftime("%Y-%m-%d") : nil, :class => 'datepicker' 
       .clearfix
+        = label_tag :order, 'Order'
+        .input
+          %ul.inputs-list
+            %li
+              %label
+                = radio_button_tag :order, 'newest', @order != 'desc'
+                Newest on top
+              %label  
+                = radio_button_tag :order, 'oldest', @order == 'desc'
+                Oldest on top
+      .clearfix
         = label_tag :filter, t('app.general.filter')
         .input
           = text_field_tag :filter_string, params[:filter_string]

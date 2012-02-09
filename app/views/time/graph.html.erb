@@ -2,27 +2,45 @@
 <%= render 'filters' %>
 
 <h2>Schedule</h2>
-<div id="canvas" style="width: 900px; height: 300px"></div>
+<div id="canvas" style="width: 900px; height: 200px"></div>
+
+<h2>Totals (sorted by duration per day)</h2>
+<div id="canvas_totals" style="width: 900px; height: 200px"></div>
 
 <script type="text/javascript">
   var canvasID = "canvas";
   var dayWidth;
   var dayHeight;
+  var hourHeight;
   var canvas;
-  function setupCanvas(id, numDays) {
-    canvasID = id;
-    canvasWidth = $("#" + id).width();
-    canvasHeight = $("#" + id).height();
-    dayWidth = canvasWidth / numDays;
+  var canvas_totals;
+  var yMargin = 10;
+  var xMargin = 40;
+  function setupCanvas(numDays) {
+    canvasWidth = $("#canvas").width();
+    canvasHeight = $("#canvas").height();
+    dayWidth = (canvasWidth - xMargin) / numDays;
     dayWidth = Math.min(dayWidth, 20);
-    dayHeight = canvasHeight;
-    canvas = Raphael(canvasID);
+    dayHeight = canvasHeight - yMargin * 2;
+    hourHeight = dayHeight * 3600.0 / 86400.0;
+    canvas = Raphael("canvas");
+    canvas_totals = Raphael("canvas_totals");
+    // Labels
+    canvas.text(xMargin - 5, yMargin, "12 AM").attr({'text-anchor': 'end'});
+    canvas.text(xMargin - 5, yMargin + 3 * hourHeight, "3 AM").attr({'text-anchor': 'end'});
+    canvas.text(xMargin - 5, yMargin + 6 * hourHeight, "6 AM").attr({'text-anchor': 'end'});
+    canvas.text(xMargin - 5, yMargin + 9 * hourHeight, "9 AM").attr({'text-anchor': 'end'});
+    canvas.text(xMargin - 5, yMargin + 12 * hourHeight, "12 PM").attr({'text-anchor': 'end'});
+    canvas.text(xMargin - 5, yMargin + 15 * hourHeight, "3 PM").attr({'text-anchor': 'end'});
+    canvas.text(xMargin - 5, yMargin + 18 * hourHeight, "6 PM").attr({'text-anchor': 'end'});
+    canvas.text(xMargin - 5, yMargin + 21 * hourHeight, "9 PM").attr({'text-anchor': 'end'});
+    canvas.text(xMargin - 5, yMargin + 24 * hourHeight, "12 AM").attr({'text-anchor': 'end'});
   }
 
   var sets = new Array();
   function graphTimeEntry(canvas, dayOffset, startOffset, endOffset, title, color, entryClass) {
-    x = (dayOffset * dayWidth);
-    y = (startOffset * dayHeight / 86400.0);
+    x = (dayOffset * dayWidth) + xMargin;
+    y = (startOffset * dayHeight / 86400.0) + yMargin;
     height = (endOffset - startOffset) * dayHeight / 86400;
     r = canvas.rect(x, y, dayWidth, height).attr({fill: color, stroke: '#000', title: title});
     if (!sets[entryClass]) { sets[entryClass] = canvas.set(); }
@@ -32,27 +50,24 @@
       function(event) { sets[entryClass].attr({'fill': color}) });
   }
 
-  function graphTimeTotal(dayOffset, startOffset, endOffset, title, color, entryClass) {
-    x = (dayOffset * dayWidth);
-    y = (startOffset * dayHeight / 86400.0);
-    height = (endOffset - startOffset) * dayHeight / 86400;
-    r = canvas.rect(x, y, dayWidth, height).attr({fill: color, stroke: '#000', title: title});
-    if (!sets[entryClass]) { sets[entryClass] = canvas.set(); }
-    sets[entryClass].push(r);
-    r.hover(
-      function(event) { sets[entryClass].attr({'fill': '#000'}) },
-      function(event) { sets[entryClass].attr({'fill': color}) });
-  }
-  
   $(document).ready(function() {
-    setupCanvas('canvas', <%= @records.size %>);
+    setupCanvas(<%= @records.size %>);
     <% @records.each do |day_offset, row| %>
-      <% row[:record].each do |entry| %>
+      <% row.each do |entry| %>
         <%= graph_time_entry('canvas', day_offset, entry) %>
       <% end %>
     <% end %>
-    
+    <% @totals.each do |days| %>
+       <% day = days[0]
+	  list = days[1]
+	  list.each do |item|
+	    category = item[0]
+	    total = item[1] %>
+          <%= graph_time_total('canvas_totals', @range, day, category, total) %>
+       <% end %>
+    <% end %>
+
   });
 </script>
 
- 
+    
