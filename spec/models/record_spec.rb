@@ -33,9 +33,9 @@ describe Record do
     end
     it "tallies up the totals for categories" do
       @records = @user.records
-      list = Record.prepare_graph(Date.yesterday..Date.today, @records)
-      list[0][:total][@cat.id][:duration].should == 4.hours
-      list[0][:total][@cat2.id][:duration].should == 1.hours
+      list = Record.prepare_totals(Date.yesterday..Date.today, @records)
+      list[0][@cat.id][:duration].should == 4.hours
+      list[0][@cat2.id][:duration].should == 1.hours
     end
   end
   describe "#split" do

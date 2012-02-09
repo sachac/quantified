@@ -11,8 +11,12 @@ class RecordsController < ApplicationController
       Record.recalculate_durations(current_account, @start - 1.day, @end + 1.day)
       add_flash :notice, t('records.index.recalculated_durations')
     end
-
-    @records = current_account.records.order('timestamp DESC')
+    @order = params[:order]
+    if @order == 'oldest'
+      @records = current_account.records.order('timestamp ASC')
+    else
+      @records = current_account.records.order('timestamp DESC')
+    end
     @records = @records.where(:timestamp => @start..@end)
     unless params[:filter_string].blank?
       query = "%" + params[:filter_string].downcase + "%"
