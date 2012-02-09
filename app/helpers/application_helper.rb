@@ -145,9 +145,9 @@ module ApplicationHelper
       end
     elsif o.is_a? Record
       if can? :manage_account, current_account
-        actions << link_to('Edit', edit_record_path(o))
-        actions << link_to('Clone', clone_record_path(o), :method => :post)
-        actions << link_to('Delete', o, :confirm => 'Are you sure?', :method => :delete)
+        actions << link_to('Edit', edit_record_path(o, :destination => request.fullpath))
+        actions << link_to('Clone', clone_record_path(o, :destination => request.fullpath), :method => :post)
+        actions << link_to('Delete', record_path(o, :destination => request.fullpath), :confirm => 'Are you sure?', :method => :delete)
       end
     elsif o.is_a? Context
       if managing?
@@ -231,12 +231,37 @@ module ApplicationHelper
   def graph_time_entry(canvas_var, day_offset, row)
     # Turn this into the Javascript call
     # Javascript needs start time, end time, title, color, and duration
+    @colors ||= Hash.new
+    @colors[row[2].record_category_id] ||= row[2].record_category.get_color
+    unless row[2].color
+      row[2].record_category.color = @colors[row[2].record_category_id]
+    end
     start_offset = row[0] - row[0].midnight.in_time_zone
     end_offset = row[1] - row[0].midnight.in_time_zone
     "graphTimeEntry(#{canvas_var}, #{day_offset}, #{start_offset}, #{end_offset}, " +
-      "'#{escape_javascript row[0].strftime('%Y-%m-%d %-H:%M')} - #{escape_javascript row[1].strftime('%-H:%M')}: " +
+      "'#{escape_javascript row[0].strftime('%a %Y-%m-%d %-H:%M')} - #{escape_javascript row[1].strftime('%-H:%M')}: " +
       "#{escape_javascript row[2].full_name} (#{escape_javascript(duration(row[1] - row[0]))})', " +
       "'#{escape_javascript row[2].color}', '#{row[2].record_category.full_name.parameterize.underscore}');"
+  end
+
+  def graph_time_total(canvas_var, range, day, category, total)
+    # Turn this into the Javascript call
+    # Javascript needs start time, end time, title, color, and duration
+    @colors ||= Hash.new
+    @colors[category.id] ||= category.get_color
+    @totals_so_far ||= Hash.new { |h,k| h[k] = 86400 }
+    day_offset = day - range.begin
+    unless category.color
+      category.color = @colors[category.id]
+    end
+    start_offset = @totals_so_far[day_offset] - total
+    end_offset = @totals_so_far[day_offset] 
+    if start_offset < end_offset
+      @totals_so_far[day_offset] -= total
+      "graphTimeEntry(#{canvas_var}, #{day_offset}, #{start_offset}, #{end_offset}, " +
+        "'#{escape_javascript day.strftime('%a %Y-%m-%d')} #{escape_javascript category.full_name} (#{escape_javascript(duration(total))})', " +
+        "'#{escape_javascript category.color}', '#{category.full_name.parameterize.underscore}');"
+    end
   end
 
   def record_data_input(record, info, index = nil)
