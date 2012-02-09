@@ -6,6 +6,14 @@ class Record < ActiveRecord::Base
   scope :public, where("LOWER(records.data) NOT LIKE '%!private%'")
   before_save :add_data
   after_save :update_adjacent
+  validate :end_timestamp_must_be_after_start
+ 
+  def end_timestamp_must_be_after_start
+    if !end_timestamp.blank? and end_timestamp < timestamp
+      errors.add(:end_timestamp, 'must be after beginning of record')
+    end
+  end
+
   def add_data
     self.date = self.timestamp.in_time_zone.to_date
     # Set end time automatically if we are backdating activities
@@ -25,7 +33,7 @@ class Record < ActiveRecord::Base
   def update_adjacent
     if !self.manual and self.end_timestamp_changed?
       next_activity = self.next_activity
-      if next_activity and next_activity.timestamp != self.end_timestamp
+      if next_activity and next_activity.timestamp != self.end_timestamp and next_activity.timestamp == self.end_timestamp_was
         next_act = Record.where(:id => next_activity.id)
         next_act.update_all(['timestamp = ?', self.timestamp])
         if next_activity.end_timestamp
@@ -35,7 +43,7 @@ class Record < ActiveRecord::Base
     end
     if self.timestamp_changed?
       previous_activity = self.previous_activity
-      if previous_activity and !previous_activity.manual? and previous_activity.end_timestamp != self.timestamp
+      if previous_activity and !previous_activity.manual? and previous_activity.end_timestamp != self.timestamp and previous_activity.end_timestamp == self.timestamp_was
         prev = Record.where(:id => previous_activity.id)
         prev.update_all(['end_timestamp = ?', self.timestamp])
         prev.update_all(['duration = ?', self.timestamp - previous_activity.timestamp])
@@ -170,26 +178,11 @@ class Record < ActiveRecord::Base
   # Return an array of [date => [[start time, end time, category], [start time, end time, category]]]
   # Pre-fill colors
   def self.prepare_graph(range, records)
-    result = Hash.new
-    result = Hash.new { |h,k| h[k] = Hash.new }
-    colors = Hash.new
+    result = Hash.new { |h,k| h[k] = Array.new }
     records.each do |r|
       r.split(range).each do |row|
-        print range.begin
-        unless row[2].color
-          colors[row[2].record_category_id] ||= row[2].record_category.get_color
-          row[2].record_category.color = colors[row[2].record_category_id]
-        end
         day = row[0].to_date - range.begin
-        result[day][:record] ||= Array.new
-        result[day][:record] << row
-        result[day][:total] ||= Hash.new
-        unless result[day][:total][row[2].record_category_id]
-          result[day][:total][row[2].record_category_id] = Hash.new
-          result[day][:total][row[2].record_category_id][:info] = row[2].record_category
-          result[day][:total][row[2].record_category_id][:duration] = 0
-        end
-        result[day][:total][row[2].record_category_id][:duration] += row[1] - row[0]
+        result[day] << row
       end
     end
     result
