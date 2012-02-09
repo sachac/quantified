@@ -95,9 +95,11 @@ class RecordsController < ApplicationController
   def create
     authorize! :manage_account, current_account
     @record = current_account.records.new(params[:record])
-
     respond_to do |format|
       if @record.save
+        @record.update_previous
+        @record.update_next
+
         format.html { redirect_to(@record, :notice => 'Record was successfully created.') }
         format.xml  { render :xml => @record, :status => :created, :location => @record }
       else
@@ -112,9 +114,10 @@ class RecordsController < ApplicationController
   def update
     authorize! :manage_account, current_account
     @record = current_account.records.find(params[:id])
-
     respond_to do |format|
       if @record.update_attributes(params[:record])
+        @record.update_previous
+        @record.update_next
         format.html { redirect_to(@record, :notice => 'Record was successfully updated.') }
         format.xml  { head :ok }
       else

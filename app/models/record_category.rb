@@ -52,9 +52,9 @@ class RecordCategory < ActiveRecord::Base
           ids.each do |cat|
             case options[:key]
             when :date
-              summary[:rows][key][categories[cat]] += split_record[1] - split_record[0]
+              summary[:rows][key][categories[cat.to_i]] += split_record[1] - split_record[0]
             else
-              summary[:rows][categories[cat]][key] += split_record[1] - split_record[0]
+              summary[:rows][categories[cat.to_i]][key] += split_record[1] - split_record[0]
             end
           end
           summary[:total][:total][key] += split_record[1] - split_record[0]
@@ -89,7 +89,6 @@ class RecordCategory < ActiveRecord::Base
   
   def self.summarize(options = {})
     options[:records] ||= options[:user].records
-    options[:range] ||= records.min('timestamp')..records.max('timestamp')
     options[:zoom] ||= Record.choose_zoom_level(options[:range])
     self.roll_up_records(options)
   end
