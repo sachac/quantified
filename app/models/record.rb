@@ -5,7 +5,6 @@ class Record < ActiveRecord::Base
   scope :activities, joins(:record_category).where(:record_categories => {:category_type => 'activity'}).readonly(false)
   scope :public, where("LOWER(records.data) NOT LIKE '%!private%'")
   before_save :add_data
-  after_save :update_adjacent
   validate :end_timestamp_must_be_after_start
  
   def end_timestamp_must_be_after_start
@@ -30,10 +29,10 @@ class Record < ActiveRecord::Base
     end
   end
 
-  def update_adjacent
-    if !self.manual and self.end_timestamp_changed?
+  def update_next
+    if !self.manual
       next_activity = self.next_activity
-      if next_activity and next_activity.timestamp != self.end_timestamp and next_activity.timestamp == self.end_timestamp_was
+      if next_activity and next_activity.timestamp != self.end_timestamp
         next_act = Record.where(:id => next_activity.id)
         next_act.update_all(['timestamp = ?', self.timestamp])
         if next_activity.end_timestamp
@@ -41,21 +40,23 @@ class Record < ActiveRecord::Base
         end
       end
     end
-    if self.timestamp_changed?
-      previous_activity = self.previous_activity
-      if previous_activity and !previous_activity.manual? and previous_activity.end_timestamp != self.timestamp and previous_activity.end_timestamp == self.timestamp_was
-        prev = Record.where(:id => previous_activity.id)
-        prev.update_all(['end_timestamp = ?', self.timestamp])
-        prev.update_all(['duration = ?', self.timestamp - previous_activity.timestamp])
-      end
+  end
+  def update_previous
+    previous_activity = self.previous_activity
+    if previous_activity and !previous_activity.manual? and previous_activity.end_timestamp != self.timestamp
+      prev = Record.where(:id => previous_activity.id)
+      prev.update_all(['end_timestamp = ?', self.timestamp])
+      prev.update_all(['duration = ?', self.timestamp - previous_activity.timestamp])
     end
   end
 
   def previous_activity
-    self.previous.activities.first
+    # Added guard for double-entry
+    self.previous.activities.where('(timestamp != end_timestamp OR end_timestamp IS NULL)').first
   end
   def next_activity
-    self.next.activities.first
+    # Added guard for double-entry
+    self.next.activities.where('(timestamp != end_timestamp OR end_timestamp IS NULL)').first
   end
   def self.recalculate_durations(user, start_time = nil, end_time = nil)
     span = user.records
