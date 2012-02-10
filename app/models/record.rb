@@ -34,7 +34,7 @@ class Record < ActiveRecord::Base
       next_activity = self.next_activity
       if next_activity and next_activity.timestamp != self.end_timestamp
         next_act = Record.where(:id => next_activity.id)
-        next_act.update_all(['timestamp = ?', self.timestamp])
+        next_act.update_all(['timestamp = ?', self.end_timestamp])
         if next_activity.end_timestamp
           next_act.update_all(['duration = ?', next_activity.timestamp])
         end
