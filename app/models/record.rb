@@ -43,7 +43,7 @@ class Record < ActiveRecord::Base
   end
   def update_previous
     previous_activity = self.previous_activity
-    if previous_activity and !previous_activity.manual? and previous_activity.end_timestamp != self.timestamp
+    if previous_activity and !previous_activity.manual? and (!previous_activity.end_timestamp or previous_activity.end_timestamp != self.timestamp)
       prev = Record.where(:id => previous_activity.id)
       prev.update_all(['end_timestamp = ?', self.timestamp])
       prev.update_all(['duration = ?', self.timestamp - previous_activity.timestamp])
