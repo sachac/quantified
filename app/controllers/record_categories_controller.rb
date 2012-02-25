@@ -56,7 +56,8 @@ class RecordCategoriesController < ApplicationController
   def create
     authorize! :manage_account, current_account
     @record_category = current_account.record_categories.new(params[:record_category])
-    @record_category.data = Array.new
+    params[:record_category][:data].reject! { |x| x['key'].blank? } if params[:record_category][:data]
+    @record_category.data ||= Array.new
     respond_to do |format|
       if @record_category.save
         format.html { redirect_to(record_categories_path, :notice => 'Record category was successfully created.') }
