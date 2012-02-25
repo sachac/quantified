@@ -11,6 +11,7 @@
     .clear-fix
       %label Data
       .input
+        You can use this to enter additional data in your log entries. For example, if you want to add a note, you can add a line with the key "note", the label "Note", and the type "Multiple lines of text". The key is used when exporting data, the label will be displayed on the form, and the type controls what kind of form element will be used to collect data.
         %table.compact
           %tr
             %th Key
@@ -21,7 +22,7 @@
               %tr
                 %td= text_field_tag "record_category[data][][key]", datum["key"]
                 %td= text_field_tag "record_category[data][][label]", datum["label"]
-                %td= select_tag "record_category[data][][type]", options_for_select([["Text field", "string"], ["Text area", "text"]], datum["type"])
+                %td= select_tag "record_category[data][][type]", options_for_select([["One line of text", "string"], ["Multiple lines of text", "text"]], datum["type"])
     = f.input :color
   .actions
     = f.submit t('general.save'), :class => 'btn primary'
