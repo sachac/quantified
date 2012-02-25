@@ -100,7 +100,7 @@ class RecordsController < ApplicationController
         @record.update_previous
         @record.update_next
 
-        format.html { redirect_to(@record, :notice => 'Record was successfully created.') }
+        format.html { go_to(@record, :notice => 'Record was successfully created.') }
         format.xml  { render :xml => @record, :status => :created, :location => @record }
       else
         format.html { render :action => "new" }
@@ -118,7 +118,7 @@ class RecordsController < ApplicationController
       if @record.update_attributes(params[:record])
         @record.update_previous
         @record.update_next
-        format.html { redirect_to(@record, :notice => 'Record was successfully updated.') }
+        format.html { go_to(@record, :notice => 'Record was successfully updated.') }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }
