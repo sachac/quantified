@@ -133,9 +133,8 @@ class RecordsController < ApplicationController
     authorize! :manage_account, current_account
     @record = current_account.records.find(params[:id])
     @record.destroy
-
     respond_to do |format|
-      format.html { redirect_to(records_url) }
+      format.html { go_to(records_url) }
       format.xml  { head :ok }
     end
   end
