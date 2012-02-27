@@ -19,39 +19,32 @@ Tags:
 - Clothing.tag_counts do |tag, css_class|
   = link_to tag.name, { :action => :tag, :id => tag.name }, :class => css_class
 
-- if can? :create, Clothing
+- if managing?
   %p= link_to 'New Clothing', new_clothing_path
 
 = render "clothing_thumbnails"
 
 - if @clothing.count > 0
   = form_tag clothing_bulk_path do
-    - if can? :update, Clothing
+    - if managing?
       = select_tag 'op', options_for_select(['Store', 'Donate', 'Activate'])
-      = submit_tag
+      = submit_tag 'Save changes', :class => 'btn'
     %table.lined
       %tr
         - if can? :update, Clothing
           %th
-        %th= sortable_column "#", :column => "id"
-        - if user_signed_in?
-          %th Wear
         %th= sortable_column "Name"
         %th= sortable_column "Status"
         %th= sortable_column "Count", :column => "clothing_logs_count", :direction => :desc
         %th= sortable_column "Last worn"
         %th= sortable_column "Colour", :column => "hue"
         %th Tags
+        - if managing?
+          %th
       - @clothing.each do |clothing|
         %tr
           - if can? :update, Clothing
             %td= check_box_tag 'bulk[]', clothing.id
-          %td= clothing.id
-          - if user_signed_in?
-            %td
-              = link_to 'Yesterday', clothing_logs_path + "?clothing_id=" + clothing.id.to_s + "&date=" + Date.yesterday.to_s, :method => :post
-              = link_to 'Today', clothing_logs_path + "?clothing_id=" + clothing.id.to_s + "&date=" + Date.today.to_s, :method => :post
-              = link_to 'Tomorrow', clothing_logs_path + "?clothing_id=" + clothing.id.to_s + "&date=" + Date.tomorrow.to_s, :method => :post
           %td= link_to clothing.name, clothing
           %td= clothing.status
           %td= clothing.clothing_logs_count
@@ -64,6 +57,10 @@ Tags:
           %td
             - clothing.tag_list.each do |tag|
               = link_to tag, { :action => :tag, :id => tag }
-    - if can? :update, Clothing
-      = submit_tag
+          - if managing?
+            %td
+              = edit_icon edit_clothing_path(clothing)
+              = delete_icon clothing_path(clothing)
+    - if managing?
+      = submit_tag 'Save changes', :class => 'btn'
 

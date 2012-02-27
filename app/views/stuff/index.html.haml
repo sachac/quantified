@@ -51,4 +51,5 @@ To create or update an item, enter the item's name and its location below.
         %td= l stuff.updated_at, :format => :short
         - if can? :update, stuff
           %td
-            = link_to 'Edit', edit_stuff_path(stuff)
+            = edit_icon edit_stuff_path(stuff)
+            = delete_icon stuff_path(stuff)
