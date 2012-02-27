@@ -263,11 +263,27 @@ class ClothingController < ApplicationController
     render 'missing_info'
   end
 
+  def delete_color
+    authorize! :manage_account, current_account
+    @clothing = current_account.clothing.find_by_id(params[:id])
+    colors = (@clothing.color || '').split /,/
+    result = colors.delete(params[:color])
+    if result and @clothing.update_attributes(:color => colors.join(','))
+      go_to clothing_path(@clothing), :notice => 'Colour removed.'
+    else
+      go_to clothing_path(@clothing), :error => 'Could not remove colour.'
+    end
+  end
+
   def save_color
     authorize! :manage_account, current_account
     @clothing = current_account.clothing.find_by_id(params[:id])
     if @clothing and params[:x] and params[:y]
-      @clothing.color = Clothing.guess_color(@clothing.image, params[:x], params[:y])
+      if @clothing.color.blank?
+        @clothing.color = Clothing.guess_color(@clothing.image, params[:x], params[:y])
+      else
+        @clothing.color += ',' + Clothing.guess_color(@clothing.image, params[:x], params[:y])
+      end
       @clothing.save!
     end
     redirect_to @clothing
