@@ -21,7 +21,71 @@ describe Record do
       o[0].should == "test"
       o[1].hour.should == 8
     end
+    it "recognizes -30min" do
+      o = Record.guess_time("test 8:00 -30min")
+      o[0].should == "test"
+      o[1].hour.should == 7
+      o[1].min.should == 30
+    end
+    it "recognizes m/d" do
+      o = Record.guess_time("test 8:00 1/1")
+      o[0].should == "test"
+      o[1].month.should == 1
+      o[1].day.should == 1
+    end
   end
+  describe '#create_batch' do
+    it "creates unambiguous records" do
+      @user = Factory(:user, :confirmed_at => Time.now)
+      @cat = Factory(:record_category, :user => @user, :name => 'ABCX')
+      @cat2 = Factory(:record_category, :user => @user, :name => 'XYZ')
+      lines = <<END
+7:30 ABC
+8:30 XYZ
+9:30 X
+10:00 J
+END
+      out = Record.confirm_batch(@user, lines)
+      Record.create_batch(@user, out)
+      @user.records.length.should == 2
+    end
+  end
+
+  describe '#confirm_batch' do
+    it "parses lines" do 
+      @user = Factory(:user, :confirmed_at => Time.now)
+      @cat = Factory(:record_category, :user => @user, :name => 'ABCX')
+      @cat2 = Factory(:record_category, :user => @user, :name => 'XYZ')
+      lines = <<END
+7:30 ABC
+8:30 XYZ
+9:30 X
+10:00 J
+END
+      out = Record.confirm_batch(@user, lines)
+      out.length.should == 4
+      out[0][:time].hour.should == 7
+      out[0][:time].min.should == 30
+      out[0][:text].should == "7:30 ABC"
+      out[0][:category].should == @cat
+      out[1][:time].hour.should == 8
+      out[1][:time].min.should == 30
+      out[1][:category].should == @cat2
+      out[2][:category].length.should == 2
+      out[3][:category].should be_nil
+    end
+    def confirm_batch(account, lines)
+      if lines.is_a? String
+        lines = lines.split /[\r\n]+/
+      end
+      lines.map do |line|
+        # See if we need to disambiguate them
+        { :time => Record.guess_time(line), :category => RecordCategory.search(account, line), :text => line }
+      end
+    end
+
+  end
+
   describe '#prepare_graph' do
     before :each do
       @user = Factory(:user, :confirmed_at => Time.now)

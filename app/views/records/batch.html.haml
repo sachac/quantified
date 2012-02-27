@@ -1,0 +1,54 @@
+= setup_page 'batch', 'Batch entry', 'time/nav'
+
+= form_tag batch_records_path do
+  %h3 1. Enter data
+  .clearfix
+    = label_tag :date, 'Date'
+    .input= text_field_tag :date, params[:date] || Date.today, :class => 'datepicker'
+  .clearfix
+    = label_tag 'batch', 'Text'
+    .input
+      = text_area_tag 'batch', params[:batch], :required => true
+      %br
+      Example:
+      %pre
+        7:00 category1
+        8:00 category2
+        13:30 category3
+    .input
+      .inputs-list
+        %label
+          = check_box_tag 'set_end', params[:set_end], :class => 'checkbox'
+          Automatically set ending timestamps
+    .actions    
+      = submit_tag 'Update', :class => 'btn primary'
+  - if @records  
+    %h3 2. Confirm data
+    %table
+      %tr
+        %th Start
+        %th End
+        %th Activity
+        %th Original text
+      - @records.each_with_index do |r, i|
+        %tr
+          %td
+            - if r[:timestamp]
+              = l(r[:timestamp], :format => :short)
+              = hidden_field_tag "row[#{i}][timestamp]", r[:timestamp]
+          %td
+            - if r[:end_timestamp]
+              = l(r[:end_timestamp], :format => :short)
+              = hidden_field_tag "row[#{i}][end_timestamp]", r[:end_timestamp]
+          %td
+            - if r[:category]
+              - if r[:category].is_a? RecordCategory
+                = link_to r[:category].full_name, r[:category] 
+                = hidden_field_tag "row[#{i}][record_category_id]", r[:record_category_id]
+              - elsif r[:category].is_a? ActiveRecord::Relation
+                = select_tag "row[#{i}][record_category_id]", options_from_collection_for_select(r[:category].order('full_name'), 'id', 'full_name')
+            - else
+              .label.error Unknown category
+          %td= r[:text]
+    .actions      
+      = submit_tag 'Create records', :class => 'btn primary'

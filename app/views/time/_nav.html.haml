@@ -6,4 +6,5 @@
     %li{:class => active_class(active, 'refresh')}= link_to 'Upload data', refresh_time_path
   %li{:class => active_class(active, 'categories')}= link_to 'Categories', record_categories_path
   %li{:class => active_class(active, 'records')}= link_to 'Logs', records_path(:start => params[:start], :end => params[:end])
+  %li{:class => active_class(active, 'batch')}= link_to 'Batch', batch_records_path
       
