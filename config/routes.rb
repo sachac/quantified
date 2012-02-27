@@ -103,6 +103,7 @@ Home::Application.routes.draw do
   match 'clothing/missing_info' => 'clothing#update_missing_info', :as => :update_missing_clothing_information, :via => :post
   match 'clothing/missing_info' => 'clothing#missing_info', :as => :missing_clothing_information
   match 'clothing/:id/save_color' => 'clothing#save_color', :as => :save_clothing_color, :via => :post
+  match 'clothing/:id/:color' => 'clothing#delete_color', :as => :delete_clothing_color, :via => :delete
   resources :clothing do
     collection do
       get :autocomplete_clothing_name
