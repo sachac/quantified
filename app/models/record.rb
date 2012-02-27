@@ -208,18 +208,26 @@ class Record < ActiveRecord::Base
     return [nil, nil] unless string.is_a? String
     # Match hh:mm
     regex = /([0-9]+:[0-9]+)\b */
-    matches = string.match regex
     new_string = string
     time = Time.now
+    end_time = nil
+    matches = new_string.match regex
     if matches
       time = Time.zone.parse(matches[1])
-      new_string.gsub! regex, ''
+      new_string.sub! regex, ''
     end
+
+    matches = new_string.match regex
+    if matches
+      end_time = Time.zone.parse(matches[1])
+      new_string.sub! regex, ''
+    end
+
+
     if options[:date] 
       time = time - (Date.today - options[:date]).days
     end
       
-
     # match -30m or -30min example, always as an offset from now
     regex = /-([\.0-9]+)(m(ins?)?|h(rs?|ours?)?)\b */
     matches = new_string.match regex
@@ -230,8 +238,20 @@ class Record < ActiveRecord::Base
       when "m", "min", "mins"
         time = time - matches[1].to_i.minutes
       end
-      new_string.gsub! regex, ''
+      new_string.sub! regex, ''
     end
+
+    matches = new_string.match regex
+    if matches
+      case matches[2]
+      when "h", "hr", "hrs", "hour", "hours"
+        end_time = (end_time || Time.now) - matches[1].to_i.hours
+      when "m", "min", "mins"
+        end_time = (end_time || Time.now) - matches[1].to_i.minutes
+      end
+      new_string.sub! regex, ''
+    end
+
     # match m-d or m/d
     regex = /\b([0-9]?[0-9])[-\/]([0-9]?[0-9])\b */
     matches = new_string.match regex
@@ -243,7 +263,7 @@ class Record < ActiveRecord::Base
       time = time - (Date.today - d).days
       new_string.gsub! regex, ''
     end
-    [new_string.strip, time]
+    [new_string.strip, time, end_time]
   end
   # If unambiguous, create an entry based on string
   # String can be of the form hh:mm category words
@@ -268,18 +288,23 @@ class Record < ActiveRecord::Base
       # See if we need to disambiguate them
       time = Record.guess_time(line.dup, options)
       cat = RecordCategory.search(account, time[0], :activity => true)
-      list << { :line_id => i, :timestamp => time[1], :category => cat, :record_category_id => (cat.is_a?(RecordCategory) ? cat.id : nil), :text => line }
+      list << { :line_id => i, 
+        :timestamp => time[1], 
+        :category => cat, 
+        :record_category_id => (cat.is_a?(RecordCategory) ? cat.id : nil), 
+        :text => line,
+        :end_timestamp => time[2]}
     end
     end_timestamp = nil
     list = list.sort { |a,b| a[:timestamp] <=> b[:timestamp] }.reverse.map { |l|
-      l[:end_timestamp] = end_timestamp
+      l[:end_timestamp] ||= end_timestamp
       end_timestamp = l[:timestamp]
       l
     }.reverse
     
     next_activity = account.records.where('timestamp > ?', list.last[:timestamp]).activities.first
     if next_activity
-      list.last[:end_timestamp] = next_activity.timestamp
+      list.last[:end_timestamp] ||= next_activity.timestamp
     end
     list
   end
