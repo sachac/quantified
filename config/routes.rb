@@ -21,6 +21,7 @@ Home::Application.routes.draw do
   end
   match '/offline.manifest' => offline
 
+  match 'records/batch' => 'records#batch', :as => :batch_records, :via => [:post, :get]
   resources :records do
     member do
       post :clone
@@ -95,6 +96,8 @@ Home::Application.routes.draw do
   match 'time/refresh' => 'time#refresh', :as => :refresh_time
   match 'time/review' => 'time#review', :as => :time_review
   match 'time/track' => 'time#track', :as => :track_time, :via => :post
+  match 'time/batch' => 'records#batch', :as => :batch_records, :via => [:post, :get]
+
   match 'time/track' => 'time#dashboard'
   match 'time' => 'time#dashboard'
   match 'clothing/missing_info' => 'clothing#update_missing_info', :as => :update_missing_clothing_information, :via => :post
