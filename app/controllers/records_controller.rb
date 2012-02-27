@@ -146,4 +146,17 @@ class RecordsController < ApplicationController
     render 'edit'
   end
 
+  def batch
+    account = current_account
+    authorize! :manage_account, account
+    op = params[:commit]
+    if params[:batch]
+      @records = Record.confirm_batch(account, params[:batch], :date => params[:date] ? Date.parse(params[:date]) : nil)
+    end
+    if op == "Create records"
+      Record.create_batch(account, params[:row].values.map { |r| r.symbolize_keys })
+      go_to records_path, :notice => 'Records created.'
+    end
+  end
+
 end

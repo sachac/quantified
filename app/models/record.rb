@@ -204,13 +204,44 @@ class Record < ActiveRecord::Base
   end
 
   # Returns an array of [string, time]
-  def self.guess_time(string)
+  def self.guess_time(string, options = {})
     return [nil, nil] unless string.is_a? String
-    matches = string.match /([0-9]+:[0-9]+) */
+    # Match hh:mm
+    regex = /([0-9]+:[0-9]+)\b */
+    matches = string.match regex
     new_string = string
+    time = Time.now
     if matches
       time = Time.zone.parse(matches[1])
-      new_string = string.gsub /([0-9]+:[0-9]+) */, ''
+      new_string.gsub! regex, ''
+    end
+    if options[:date] 
+      time = time - (Date.today - options[:date]).days
+    end
+      
+
+    # match -30m or -30min example, always as an offset from now
+    regex = /-([\.0-9]+)(m(ins?)?|h(rs?|ours?)?)\b */
+    matches = new_string.match regex
+    if matches
+      case matches[2]
+      when "h", "hr", "hrs", "hour", "hours"
+        time = time - matches[1].to_i.hours
+      when "m", "min", "mins"
+        time = time - matches[1].to_i.minutes
+      end
+      new_string.gsub! regex, ''
+    end
+    # match m-d or m/d
+    regex = /\b([0-9]?[0-9])[-\/]([0-9]?[0-9])\b */
+    matches = new_string.match regex
+    if matches
+      d = Date.new(Date.today.year, matches[1].to_i, matches[2].to_i)
+      if d > Date.today
+        d = Date.new(Date.today.year - 1, matches[1].to_i, matches[2].to_i)
+      end
+      time = time - (Date.today - d).days
+      new_string.gsub! regex, ''
     end
     [new_string.strip, time]
   end
@@ -224,6 +255,47 @@ class Record < ActiveRecord::Base
     else
       # Return results so the controller can figure out what to do
       return cat
+    end
+  end
+
+  # Turn LINES into an array of { :time => Date, :category => RecordCategory or list, :text => input text }
+  def self.confirm_batch(account, lines, options = {})
+    if lines.is_a? String
+      lines = lines.split /[\r\n]+/
+    end
+    list = Array.new
+    lines.each_with_index do |line, i|
+      # See if we need to disambiguate them
+      time = Record.guess_time(line.dup, options)
+      cat = RecordCategory.search(account, time[0], :activity => true)
+      list << { :line_id => i, :timestamp => time[1], :category => cat, :record_category_id => (cat.is_a?(RecordCategory) ? cat.id : nil), :text => line }
+    end
+    end_timestamp = nil
+    list = list.sort { |a,b| a[:timestamp] <=> b[:timestamp] }.reverse.map { |l|
+      l[:end_timestamp] = end_timestamp
+      end_timestamp = l[:timestamp]
+      l
+    }.reverse
+    
+    next_activity = account.records.where('timestamp > ?', list.last[:timestamp]).activities.first
+    if next_activity
+      list.last[:end_timestamp] = next_activity.timestamp
+    end
+    list
+  end
+
+  def self.create_batch(account, records, options = {})
+    list = Array.new
+    records.map do |line|
+      # See if we need to disambiguate them
+      if line[:record_category_id] and line[:timestamp]
+        list << account.records.create(:timestamp => line[:timestamp], :end_timestamp => line[:end_timestamp], :record_category_id => line[:record_category_id])
+      end
+    end
+    if options[:set_end]
+      list.sort! { |a,b| a.timestamp <=> b.timestamp }
+      list.first.update_previous
+      list.last.update_next
     end
   end
 
