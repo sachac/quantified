@@ -9,7 +9,8 @@ en:
   general:
     download_as_spreadsheet: Download as spreadsheet
     save: Save
-    delete: Delete  
+    delete: Delete
+    edit: Edit
     are_you_sure: Are you sure?
   time_log:
     logged: Activity has been logged.

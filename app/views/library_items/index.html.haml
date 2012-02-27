@@ -22,8 +22,8 @@
     %th= sortable_column 'Status', :column => 'status'
     %th Pages
     %th Price
-    - if can? :delete, LibraryItem 
-      %th
+    - if managing?
+      %th{:width => 35}
   - if @library_items.size > 0 
     - @library_items.each do |library_item|
       - if can? :read, library_item
@@ -36,8 +36,10 @@
           %td= library_item.status
           %td= library_item.pages
           %td= '%.2f' % (library_item.price || 0)
-          - if can? :delete, library_item
-            %td= link_to 'Delete', library_item, :confirm => 'Are you sure?', :method => :delete
+          - if managing?
+            %td
+              = edit_icon(edit_library_item_path(library_item))
+              = delete_icon(library_item)
 
 %br
 

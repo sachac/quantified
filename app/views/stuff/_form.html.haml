@@ -13,3 +13,5 @@
     = f.input :notes, :input_html => { :rows => 5 }
   .actions
     = f.submit 'Save', :class => 'btn primary'
+    - if !@stuff.new_record? and can? :delete, @stuff
+      = link_to I18n.t('general.delete'), stuff_path(@stuff), :method => :delete, :confirm => I18n.t('general.are_you_sure'), :class => 'btn'
