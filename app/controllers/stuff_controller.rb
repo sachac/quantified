@@ -19,7 +19,9 @@ class StuffController < ApplicationController
     end
     @stuff = current_account.stuff.order(order).includes(:location).where(:stuff_type => 'stuff')
     if params[:status] and params[:status] != 'all'
-      @stuff = @stuff.where('status=?', 'stuff')
+      @stuff = @stuff.where('status=?', params[:status])
+    elsif params[:status] and params[:status] == 'all'
+      @stuff = @stuff
     else
       @stuff = @stuff.where('status=? OR status IS NULL', 'active')
     end
