@@ -41,9 +41,11 @@
     %tr
       %td Color
       - colors.each do |x|
-        %td
+        %td.color
           .color-box{:style => "background: ##{x}"}
-            = x
+            = "#" + x
+          = link_to image_tag('trash.png', :alt => t('general.delete'), :title => t('general.delete')), delete_clothing_color_path(@clothing.id, x), :method => :delete, :class => 'delete'
+          
     %tr
       %td
         Complementary
