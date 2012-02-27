@@ -128,30 +128,30 @@ module ApplicationHelper
     actions = Array.new
     if o.is_a? Memory
       if can? :update, o
-        actions << link_to(I18n.t('app.general.edit'), edit_memory_path(o))
-        actions << link_to(I18n.t('app.general.delete'), o, :confirm => I18n.t('app.general.are_you_sure'), :method => :delete)
+        actions << edit_icon(edit_memory_path(o))
+        actions << delete_icon(memory_path(o))
       else
         actions << link_to(I18n.t('app.general.view'), memory_path(o))
       end
     elsif o.is_a? RecordCategory
       if can? :manage_account, current_account
+        actions << edit_icon(edit_record_category_path(o))
         case o.category_type
         when 'activity'
           actions << link_to(t('record_categories.show.start_activity'), track_time_path(:category_id => o.id), :method => :post)
         when 'record'
           actions << link_to(t('record_categories.show.record'), track_time_path(:category_id => o.id), :method => :post)
         end
-        actions << link_to(t('app.general.edit'), edit_record_category_path(o))
       end
     elsif o.is_a? Record
       if can? :manage_account, current_account
-        actions << link_to('Edit', edit_record_path(o, :destination => request.fullpath))
+        actions << edit_icon(edit_record_path(o, :destination => request.fullpath))
+        actions << delete_icon(record_path(o, :destination => request.fullpath))
         actions << link_to('Clone', clone_record_path(o, :destination => request.fullpath), :method => :post)
-        actions << link_to('Delete', record_path(o, :destination => request.fullpath), :confirm => 'Are you sure?', :method => :delete)
       end
     elsif o.is_a? Context
       if managing?
-        actions << link_to('Edit', edit_context_path(o))
+        actions << edit_icon(edit_context_path(o))
         actions << link_to('Start', start_context_path(o))
       end
     end
@@ -163,7 +163,7 @@ module ApplicationHelper
   end
 
   def action_list(o)
-    actions(o).join(' | ').html_safe
+    actions(o).join(' ').html_safe
   end
   def access_collection
     [[I18n.t('app.general.public'), 'public'],
@@ -294,4 +294,13 @@ module ApplicationHelper
   def help(url)
     # link_to 'Help', url
   end
+
+  def delete_icon(path)
+    link_to image_tag('trash.png', :alt => t('general.delete'), :title => t('general.delete')), path, :method => :delete, :class => 'icon delete', :confirm => I18n.t('general.are_you_sure')
+  end
+
+  def edit_icon(path)
+    link_to image_tag('edit.png', :alt => t('general.edit'), :title => t('general.edit')), path, :class => 'icon edit'
+  end
+
 end
