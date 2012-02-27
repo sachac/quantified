@@ -155,11 +155,14 @@ class RecordCategory < ActiveRecord::Base
     end
   end
 
-  def self.search(account, string)
+  def self.search(account, string, options = {})
     split = string.downcase.split
     list = account.record_categories
     split.each do |l|
       list = list.where('LOWER(full_name) LIKE LOWER(?)', "%#{l.strip}%")
+    end
+    if options[:activity]
+      list = list.where('category_type = ?', 'activity')
     end
     return list.first if list.length == 1
     return nil if list.length == 0
