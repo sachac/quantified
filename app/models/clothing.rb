@@ -62,7 +62,9 @@ class Clothing < ActiveRecord::Base
     color = %x[#{command}]
     if color && $?.exitstatus == 0
       @red, @green, @blue = color[/rgb\((.*)\)/, 1].split(",").collect(&:to_i)
-      "%2x%2x%2x" % [ @red, @green, @blue ]
+      logger.info "RED #{@red} GREEN #{@green} BLUE #{@blue}"
+      logger.info("RESULT: %02x%02x%02x" % [ @red, @green, @blue ])
+      "%02x%02x%02x" % [ @red, @green, @blue ]
     end
   end
   scope :active, where("(status IS NULL or status = 'active')")
