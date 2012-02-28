@@ -79,6 +79,10 @@ class TimeController < ApplicationController
       cat = RecordCategory.search(current_account, data[0])
       if cat.is_a? RecordCategory
         rec = current_account.records.create(:record_category => cat, :timestamp => time, :end_timestamp => end_time)
+        if rec
+          rec.update_previous
+          rec.update_next
+        end
       else
         rec = cat
       end
