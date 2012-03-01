@@ -6,7 +6,7 @@
   = text_field_tag :food, nil, :placeholder => 'Food', :autofocus => true
   = text_field_tag :quantity, nil, :placeholder => 'Quantity', :size => 4, :class => 'span2'
   = text_field_tag :unit, 'g', :class => 'span1'
-  = submit_tag 'Save', :class => 'button'
+  = submit_tag 'Save', :class => 'btn primary'
 = form_tag bulk_update_csa_foods_path do
   .food
     - remaining = (current_account.csa_foods.where('disposition = ""').sum(:quantity) / 1000.0)
@@ -15,7 +15,7 @@
     = "#{pluralize days, "day"} until next delivery = "
     = "#{'%0.1f' % (remaining * 1.0 / days)}kg per day"
     - if can? :update, CsaFood
-      = submit_tag 'Save disposition notes'
+      = submit_tag 'Save disposition notes', :class => 'btn'
   %table.lined
     %tr
       %th Date received
@@ -23,13 +23,12 @@
       %th Quantity
       %th Unit
       %th Disposition
-      %th Notes
       %th
 
     - @csa_foods.each do |csa_food|
       %tr
         %td= link_to csa_food.date_received, csa_food
-        %td= link_to csa_food.food.name, csa_food.food
+        %td= link_to csa_food.food.name, csa_food.food if csa_food.food
         %td= csa_food.quantity
         %td= csa_food.unit
         %td
@@ -37,7 +36,7 @@
             = text_field_tag "bulk[#{csa_food.id}]", csa_food.disposition
           - else
             = csa_food.disposition
-        %td= csa_food.notes
         %td
-          - if can?(:update, csa_food)
-            = link_to 'Edit', edit_csa_food_path(csa_food)
+          - if managing?
+            = edit_icon edit_csa_food_path(csa_food)
+            = delete_icon csa_food_path(csa_food)
