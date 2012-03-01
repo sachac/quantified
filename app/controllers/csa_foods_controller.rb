@@ -56,18 +56,14 @@ class CsaFoodsController < ApplicationController
   # POST /csa_foods.xml
   def create
     authorize! :manage_account, current_account
-    food = Food.find_by_name(params[:csa_food][:food_id])
-    food = Food.find_by_name(params[:csa_food][:food_id].pluralize) unless food
-    unless food
-      food = Food.create(:name => params[:csa_food][:food_id])
-      food.save
-    end
-    params[:csa_food][:food_id] = food.id
-    @csa_food = current_account.csa_foods.new(params[:csa_food])
-    @csa_food.user_id = current_account.id
+    @csa_food = CsaFood.log(current_account, 
+                            :food => params[:csa_food][:food_id], 
+                            :quantity => params[:csa_food][:quantity], 
+                            :unit => params[:csa_food][:unit],
+                            :date_received => params[:csa_food][:date_received] || Date.today)
     respond_to do |format|
-      if @csa_food.save
-        format.html { redirect_to(new_csa_food_path, :notice => 'Csa food was successfully created.') }
+      if result
+        format.html { redirect_to(new_csa_food_path, :notice => 'Logged.') }
         format.xml  { render :xml => @csa_food, :status => :created, :location => @csa_food }
       else
         format.html { render :action => "new" }
@@ -108,13 +104,11 @@ class CsaFoodsController < ApplicationController
 
   def quick_entry
     authorize! :manage_account, current_account
-    @food = current_account.foods.find_by_name(params[:food])
-    @food ||= current_account.foods.find_by_name(params[:food].singularize)
-    @food ||= current_account.foods.find_by_name(params[:food].pluralize)
-    unless @food
-      @food = Food.create(:user => current_account, :name => params[:food])
-    end
-    @log = current_account.csa_foods.create(:user => current_account, :food => @food, :quantity => params[:quantity].to_f, :unit => params[:unit], :date_received => Date.parse(params[:date]))
+    @log = CsaFood.log(current_account, 
+                       :food => params[:food], 
+                       :quantity => params[:quantity].to_f, 
+                       :unit => params[:unit],
+                       :date_received => Date.parse(params[:date]))
     if @log
       redirect_to csa_foods_path, :notice => 'Food successfully logged.' and return
     else
