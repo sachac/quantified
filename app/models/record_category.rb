@@ -38,7 +38,11 @@ class RecordCategory < ActiveRecord::Base
             ids = categories[rec.record_category_id].dotted_ids.split('.')
           end
         when :next_level
-          ids = [rec.record_category.as_child(options[:parent].dotted_ids)].compact
+          if options[:parent]
+            ids = [rec.record_category.as_child(options[:parent].dotted_ids)].compact.map(&:id)
+          else
+            ids = [rec.record_category.as_child(nil)].compact.map(&:id)
+          end
         else
           ids = [rec.record_category_id]
         end
@@ -46,9 +50,6 @@ class RecordCategory < ActiveRecord::Base
       if ids.length > 0
         rec.split(options[:range]).each do |split_record|
           key = Record.get_zoom_key(options[:user], zoom, split_record[0])
-          if key == Date.parse('2012-01-10')
-            puts "#{split_record[2].id} #{key} #{ids.inspect}\t#{split_record[0]}\t#{split_record[1]}\t#{split_record[1] - split_record[0]}"
-          end
           ids.each do |cat|
             case options[:key]
             when :date
