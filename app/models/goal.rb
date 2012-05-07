@@ -18,9 +18,9 @@ class Goal < ActiveRecord::Base
     elsif matches = self.expression.match(/\[(.*)\] *(>|<|<=|>=|=) \[(.*)\]/)
         cat1 = self.user.record_categories.find_by_full_name matches[1]
         cat2 = self.user.record_categories.find_by_full_name matches[3]
-        time1 = cat1.cumulative_time(range) / 3600.0
-        time2 = cat2.cumulative_time(range) / 3600.0
-        delta = (time1 - time2)
+        time1 = cat1.cumulative_time(range) / 3600.0 if cat1
+        time2 = cat2.cumulative_time(range) / 3600.0 if cat2
+        delta = (time1 || 0 - time2 || 0)
         percentage = delta / [time1, time2].max
         epsilon = 0.10
         performance = percentage
@@ -64,14 +64,16 @@ class Goal < ActiveRecord::Base
     list.each do |g|
       hash = g.parse_expression
       logger.info hash.inspect
-      if hash[:success] 
-        hash[:class] = 'good'
-        hash[:performance_color] = '#0c0'
-      else
-        hash[:class] = 'attention'
-        hash[:performance_color] = '#c00'
+      if hash
+        if hash[:success] 
+          hash[:class] = 'good'
+          hash[:performance_color] = '#0c0'
+        else
+          hash[:class] = 'attention'
+          hash[:performance_color] = '#c00'
+        end
+        goals[hash[:label]] = hash
       end
-      goals[hash[:label]] = hash
     end
     goals
   end
