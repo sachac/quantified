@@ -5,4 +5,5 @@
     = autocomplete_field_tag 'clothing', '', autocomplete_clothing_name_clothing_index_path, :id_element => '#clothing_id', :placeholder => 'Clothing'
     = hidden_field_tag 'clothing_id'
     = text_field_tag 'date', default_date.to_s, :placeholder => 'Date'
+    = select_tag 'outfit_id', options_for_select([[1, 1], [2, 2], [3, 3], [4, 4]])
     = submit_tag 'Save', :class => 'btn'

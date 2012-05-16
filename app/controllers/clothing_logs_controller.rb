@@ -69,6 +69,8 @@ class ClothingLogsController < ApplicationController
       @clothing_log = current_account.clothing_logs.new(params[:clothing_log])
     end
     @clothing_log.user_id = current_account.id
+    params[:outfit_id] ||= 1
+    @clothing_log.outfit_id = params[:outfit_id]
     respond_to do |format|
       if @clothing_log.save
         format.html { redirect_to(:back, :notice => "Logged #{@clothing_log.date}.") }

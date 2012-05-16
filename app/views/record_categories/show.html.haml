@@ -1,4 +1,5 @@
 = setup_page 'categories', @record_category.name, 'time/nav'
+= render 'filters'
 
 - if managing?
   - if @record_category.activity?
@@ -23,7 +24,7 @@
 
 
 - if @record_category.activity? or @record_category.record?
-  = render 'records/summary', :records => @records
+  = render 'records/summary', :records => @records, :show_duration => @record_category.activity?
   = will_paginate @records, :renderer => PaginationListLinkRenderer
   
 - if @record_category.category_type == 'list'

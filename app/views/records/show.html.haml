@@ -1,4 +1,5 @@
 = setup_page 'records', @record.record_category.name + " - " + l(@record.timestamp), 'time/nav'
+= render "filters"
 = after_title object_labels(@record)
 = record_category_breadcrumbs(@record.record_category)
 - if can? :manage_account, current_account

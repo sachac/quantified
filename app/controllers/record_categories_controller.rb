@@ -1,7 +1,7 @@
 class RecordCategoriesController < ApplicationController
   skip_authorization_check :only => [:autocomplete_record_category_full_name]
   autocomplete :record_category, :full_name, :full => true
-  respond_to :html, :json
+  respond_to :html, :json, :csv
   
   # GET /record_categories
   # GET /record_categories.xml
@@ -16,14 +16,56 @@ class RecordCategoriesController < ApplicationController
   def show
     authorize! :view_time, current_account
     @record_category = RecordCategory.find(params[:id])
-    if html?
-      if @record_category.list?
-        @records = @record_category.tree_records.order('timestamp DESC').paginate :page => params[:page], :per_page => 10
-      else
-        @records = @record_category.records.order('timestamp DESC').paginate :page => params[:page], :per_page => 10
+    params[:order] ||= 'newest'
+    if @record_category.list?
+      @records = @record_category.tree_records
+    else
+      @records = @record_category.records
+    end
+    @summary_start = params && params[:start] ? Date.parse(params[:start]).midnight.in_time_zone : (Date.today - 1.year).midnight.in_time_zone
+    @summary_end = params && params[:end] ? Date.parse(params[:end]).midnight.in_time_zone : Date.tomorrow.midnight.in_time_zone
+    prepare_filters [:date_range, :order, :filter_string]
+    @records = @records.where("timestamp >= ?", @summary_start).where("timestamp <= ?", @summary_end)
+    if params[:order] == 'oldest'
+      @records = @records.order('timestamp ASC')
+    else
+      @records = @records.order('timestamp DESC')
+    end
+    if params[:filter_string]
+      query = "%" + params[:filter_string].downcase + "%"
+      @records = @records.where('LOWER(records.data) LIKE ?', query) 
+      unless managing?
+        @records = @records.public
       end
     end
-    respond_with @record_category
+    unless html? or managing?
+      @records = @records.public
+    end
+
+    respond_to do |format|
+      format.html { @records = @records.paginate :page => params[:page], :per_page => 20 }
+      format.json { render :json => @record_category }
+      format.csv {
+        csv_string = FasterCSV.generate do |csv|
+          csv << [@record_category.id, @record_category.full_name]
+          csv << ['start_time', 'end_time', 'record_category_name', 'record_category_id', 'duration', 'source', 'source_id', 'data']
+          @records.each do |e|
+            row = [e.timestamp ? l(e.timestamp, :format => :long) : '',
+                   e.end_timestamp ? l(e.end_timestamp, :format => :long) : '',
+                   e.record_category.full_name,
+                   e.record_category_id,
+                   e.duration,
+                   e.source,
+                   e.source_id]
+            if e.data
+              row += e.data.map { |k, v| [k, v]}.flatten
+            end
+            csv << row
+          end
+        end
+        send_data csv_string, :type => "text/plain", :filename=>"records.csv", :disposition => 'attachment'
+      }
+    end
   end
 
   # GET /record_categories/new

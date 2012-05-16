@@ -11,6 +11,7 @@
     .inline
       = label_tag :date, 'Date'
       .input= text_field_tag :date, Date.today, :class => 'datepicker'
+      = select_tag :outfit_id, options_for_select([[1,1], [2,2], [3,3], [4,4]])
       = submit_tag 'Log', :class => 'btn primary'
 
 %p
