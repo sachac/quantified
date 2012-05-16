@@ -1,25 +1,45 @@
-.filters.collapsible.collapsed
-  %legend Filters [+]
-  .details
-    = form_tag request.url, :method => :get do
-      - if @filters[:date_range]
-        .clearfix
-          = label_tag :start, 'Start' 
-          .input= text_field_tag :start, Date.parse(params[:start]).strftime("%Y-%m-%d"), :class => 'datepicker' 
-        .clearfix
-          = label_tag :end, 'End' 
-          .input= text_field_tag :end, Date.parse(params[:end]).strftime("%Y-%m-%d"), :class => 'datepicker'
-      - if @filters[:parent_id]
-        .clearfix
-          = label_tag :parent_id, 'Parent'
-          .input= select_tag :parent_id, options_from_collection_for_select(@categories, 'id', 'full_name')
-      - if @filters[:category_tree]
-        .clearfix
-          = label_tag :category_tree, 'Detail level'
-          .input
-            = radio_button_tag :category_tree, 'full', params[:category_tree] == 'full'
-            = label_tag :category_tree_full, 'Full tree', :class => 'inline'
-            = radio_button_tag :category_tree, 'next_level', params[:category_tree] == 'next_level'
-            = label_tag :category_tree_next_level, 'Next level', :class => 'inline'
-      .actions   
-        = submit_tag t('app.general.filter'), :class => 'btn primary'
+- legend ||= "Filters [+]"
+- if @filters
+  .filters.collapsible.collapsed
+    %legend= legend
+    .details
+      = form_tag request.url, :method => :get do
+        - if @filters[:date_range]
+          .clearfix
+            = label_tag :start, 'Start' 
+            .input= text_field_tag :start, (params[:start] ? Date.parse(params[:start]).strftime("%Y-%m-%d") : ''), :class => 'datepicker' 
+          .clearfix
+            = label_tag :end, 'End' 
+            .input= text_field_tag :end, (params[:end] ? Date.parse(params[:end]).strftime("%Y-%m-%d") : ''), :class => 'datepicker'
+        - if @filters[:parent_id]
+          .clearfix
+            = label_tag :parent_id, 'Parent'
+            .input= select_tag :parent_id, options_from_collection_for_select(@categories, 'id', 'full_name')
+        - if @filters[:category_tree]
+          .clearfix
+            = label_tag :category_tree, 'Detail level'
+            .input
+              = radio_button_tag :category_tree, 'full', params && params[:category_tree] == 'full'
+              = label_tag :category_tree_full, 'Full tree', :class => 'inline'
+              = radio_button_tag :category_tree, 'next_level', params && params[:category_tree] == 'next_level'
+              = label_tag :category_tree_next_level, 'Next level', :class => 'inline'
+        - if @filters[:order]
+          .clearfix
+            = label_tag :order, 'Order'
+            .input
+              %ul.inputs-list
+                %li
+                  %label
+                    = radio_button_tag :order, 'newest', @order != 'desc'
+                    Newest on top
+                  %label
+                    = radio_button_tag :order, 'oldest', @order == 'desc'
+                    Oldest on top
+        - if @filters[:filter_string]
+          .clearfix
+            = label_tag :filter, t('app.general.filter')
+            .input
+              = text_field_tag :filter_string, params ? params[:filter_string] : ''
+  
+        .actions   
+          = submit_tag t('app.general.filter'), :class => 'btn primary'
