@@ -22,6 +22,7 @@
       %th Food
       %th Quantity
       %th Unit
+      %th Notes
       %th Disposition
       %th
 
@@ -31,6 +32,10 @@
         %td= link_to csa_food.food.name, csa_food.food if csa_food.food
         %td= csa_food.quantity
         %td= csa_food.unit
+        %td
+          = csa_food.food.notes
+          - if managing?
+            = edit_icon edit_food_path(csa_food.food)
         %td
           - if can? :update, csa_food
             = text_field_tag "bulk[#{csa_food.id}]", csa_food.disposition

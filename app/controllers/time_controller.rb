@@ -18,6 +18,7 @@ class TimeController < ApplicationController
   def review
     authorize! :view_time, current_account
     params[:start] ||= current_account.beginning_of_week.advance(:weeks => -1).strftime('%Y-%m-%d')
+    params[:category_tree] ||= 'full'
     params[:end] ||= Time.zone.now.strftime('%Y-%m-%d')
     prepare_filters [:date_range, :category_tree, :parent_id]
     @categories = current_account.record_categories

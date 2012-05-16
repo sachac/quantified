@@ -122,16 +122,27 @@ class RecordCategory < ActiveRecord::Base
 
   # Given: 1.2.3, 1.2.3.4.5, return 4 (the next-level child of parent)
   # Given: 1.2.3, 4, return nil (item is not a child of parent)
+  # Given: 1.2.3, 1.2.3, return ''
   def self.as_child_id(parent, child)
+    if parent == child
+      return ''
+    end
     if child[0, parent.length + 1] == parent + "."
       child[parent.length + 1, child.length - parent.length].split('.')[0]
     end
   end
   def as_child_id(parent)
     # If this category is a descendant of parent, return the next level in the category tree below parent
+    # If the same, return the parent
     id = Record.as_child_id(parent, self.dotted_ids)
     if parent.is_a? RecordCategory
-      return RecordCategory.find_by_id(id) if id 
+      if id.nil?
+        return nil
+      elsif id == ''
+        return this
+      else
+        return RecordCategory.find_by_id(id)
+      end
     else
       return id
     end
