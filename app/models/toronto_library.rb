@@ -33,6 +33,22 @@ class TorontoLibrary < ActiveRecord::Base
     end
   end
 
+  REQUEST_ITEM_BASE_URL = 'https://www.torontopubliclibrary.ca/placehold?itemId=';
+  def request_item(item_id)
+    page = @agent.get(REQUEST_ITEM_BASE_URL + URI.escape(item_id))
+    form = page.form :name => 'form_place-hold'
+    if form
+      result = form.submit
+      if result.content =~ /The hold was successfully placed/
+        return :success
+      else
+        return false
+      end
+    else
+      return nil
+    end
+  end
+
   def count_pickups!
     self.pickup_count = @agent.page.parser.css('#avail_list').css('input').count { |x| x.attributes['name'] && x.attributes['name'].value != 'id' }
     self 
