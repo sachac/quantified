@@ -241,7 +241,8 @@ module ApplicationHelper
     "graphTimeEntry(#{canvas_var}, #{day_offset}, #{start_offset}, #{end_offset}, " +
       "'#{escape_javascript row[0].strftime('%a %Y-%m-%d %-H:%M')} - #{escape_javascript row[1].strftime('%-H:%M')}: " +
       "#{escape_javascript row[2].full_name} (#{escape_javascript(duration(row[1] - row[0]))})', " +
-      "'#{escape_javascript row[2].color}', '#{row[2].record_category.full_name.parameterize.underscore}');"
+      "'#{escape_javascript row[2].color}', '#{row[2].record_category.full_name.parameterize.underscore}', " +
+      "'#{record_path(row[2])}');"
   end
 
   def graph_time_total(canvas_var, range, day, category, total)
