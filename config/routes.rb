@@ -27,6 +27,7 @@ Home::Application.routes.draw do
       post :clone
     end
   end
+  match 'toronto_libraries/:id/request' => 'toronto_libraries#request_items', :as => :request_library_items, :via => :post
 
   match 'record_categories/autocomplete' => 'record_categories#autocomplete_record_category_full_name', :as => :autocomplete_record_category
   match 'stuff/autocomplete' => 'stuff#autocomplete_stuff_name', :as => :autocomplete_stuff
@@ -81,7 +82,8 @@ Home::Application.routes.draw do
   resources :decision_logs
 
   resources :decisions
-  resources :toronto_libraries
+  resources :toronto_libraries 
+
   resources :library_items do
     get :tag, :on => :collection
     get :current, :on => :collection
