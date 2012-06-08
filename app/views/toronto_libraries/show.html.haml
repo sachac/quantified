@@ -11,7 +11,12 @@
     %td
       %strong PIN
     %td= @toronto_library.pin
-      
+
+= form_tag request_library_items_path(@toronto_library), :method => :post do
+  Paste item IDs below
+  %br
+  %textarea{:name => 'items'}
+  = submit_tag t('library.request') 
 = link_to 'Edit', edit_toronto_library_path(@toronto_library)
 \|
 = link_to 'Back', toronto_libraries_path

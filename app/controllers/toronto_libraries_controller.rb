@@ -87,4 +87,27 @@ class TorontoLibrariesController < ApplicationController
       format.xml  { head :ok }
     end
   end
+
+  def request_items
+    @toronto_library = TorontoLibrary.find(params[:id])
+    @toronto_library.login
+    authorize! :manage_account, current_account
+    params[:items] ||= ''
+    success = Array.new
+    error = Array.new
+    params[:items].scan(/[0-9]{14}/).each do |item|
+      if @toronto_library.request_item(item)
+         success << item
+      else
+         error << item
+      end
+    end
+    if success.size > 0
+      add_flash :notice, "Success: #{success.join(', ')}"
+    end
+    if error.size > 0
+      add_flash :error, "Error: #{error.join(', ')}"
+    end
+    redirect_to toronto_library_path(@toronto_library)
+  end
 end
