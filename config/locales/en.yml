@@ -12,6 +12,8 @@ en:
     delete: Delete
     edit: Edit
     are_you_sure: Are you sure?
+  library:
+    request: Request items
   time_log:
     logged: Activity has been logged.
   time:
