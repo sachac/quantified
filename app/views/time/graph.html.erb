@@ -38,11 +38,11 @@
   }
 
   var sets = new Array();
-  function graphTimeEntry(canvas, dayOffset, startOffset, endOffset, title, color, entryClass) {
+  function graphTimeEntry(canvas, dayOffset, startOffset, endOffset, title, color, entryClass, link) {
     x = (dayOffset * dayWidth) + xMargin;
     y = (startOffset * dayHeight / 86400.0) + yMargin;
     height = (endOffset - startOffset) * dayHeight / 86400;
-    r = canvas.rect(x, y, dayWidth, height).attr({fill: color, stroke: '#000', title: title});
+    r = canvas.rect(x, y, dayWidth, height).attr({fill: color, stroke: '#000', title: title, href: link});
     if (!sets[entryClass]) { sets[entryClass] = canvas.set(); }
     sets[entryClass].push(r);
     r.hover(
