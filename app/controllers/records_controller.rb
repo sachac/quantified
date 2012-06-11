@@ -162,4 +162,7 @@ class RecordsController < ApplicationController
     end
   end
 
+  def help
+    authorize! :manage_account, current_account
+  end
 end

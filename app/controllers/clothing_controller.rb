@@ -252,7 +252,7 @@ class ClothingController < ApplicationController
     authorize! :manage_account, current_account
     if params[:image]
       params[:image].each do |k, v|
-        c = current_account.clothing.find_by_id(c)
+        c = current_account.clothing.find_by_id(k)
         if c
           c.image = v
           c.save
