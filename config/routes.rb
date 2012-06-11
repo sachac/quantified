@@ -23,6 +23,9 @@ Home::Application.routes.draw do
 
   match 'records/batch' => 'records#batch', :as => :batch_records, :via => [:post, :get]
   resources :records do
+    collection do
+      get :help
+    end
     member do
       post :clone
     end

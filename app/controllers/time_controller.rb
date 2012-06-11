@@ -63,31 +63,11 @@ class TimeController < ApplicationController
       add_flash :error, 'Please specify a category.'
       go_to time_dashboard_path and return
     end
-    # Look for the category
-    if params[:category]
-      data = Record.guess_time(params[:category])
-      time = data[1]
-      end_time = data[2]
-    end
+    rec = Record.parse(current_account, params)
     unless params[:timestamp].blank?
       time ||= Time.zone.parse(params[:timestamp])
     end
     time ||= Time.now
-    if params[:category_id]
-      cat = current_account.record_categories.find_by_id(params[:category_id])
-      rec = Record.create(:user => current_account, :record_category => cat, :timestamp => time, :end_timestamp => end_time)
-    elsif params[:category]
-      cat = RecordCategory.search(current_account, data[0])
-      if cat.is_a? RecordCategory
-        rec = current_account.records.create(:record_category => cat, :timestamp => time, :end_timestamp => end_time)
-        if rec
-          rec.update_previous
-          rec.update_next
-        end
-      else
-        rec = cat
-      end
-    end
     if rec.nil?
       go_to time_dashboard_path, :error => 'Could not find matching category' and return
     elsif rec.is_a? Record
