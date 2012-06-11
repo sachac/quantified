@@ -11,6 +11,7 @@ class Ability
         can :create, item
       end
       can :manage_account, User, :id => user.id
+      can :delete, User, :id => user.id
       can :view_tap_log_records, User, :id => user.id
       can :view_time, User
       can :send_feedback, User

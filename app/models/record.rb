@@ -323,6 +323,34 @@ class Record < ActiveRecord::Base
       list.last.update_next
     end
   end
+  def self.parse(account, attributes)
+    # Look for the category
+    if attributes[:category]
+      data = Record.guess_time(attributes[:category])
+      time = data[1]
+      end_time = data[2]
+    end
+    unless attributes[:timestamp].blank?
+      time ||= Time.zone.parse(attributes[:timestamp])
+    end
+    time ||= Time.now
+    if attributes[:category_id]
+      cat = account.record_categories.find_by_id(attributes[:category_id])
+      rec = Record.create(:user => account, :record_category => cat, :timestamp => time, :end_timestamp => end_time)
+    elsif attributes[:category]
+      cat = RecordCategory.search(account, data[0])
+      if cat.is_a? RecordCategory
+        rec = account.records.create(:record_category => cat, :timestamp => time, :end_timestamp => end_time, :data => attributes[:data])
+        if rec
+          rec.update_previous
+          rec.update_next
+        end
+      else
+        rec = cat
+      end
+    end
+    rec
+  end
 
   delegate :activity?, :to => :record_category
   delegate :full_name, :to => :record_category
