@@ -21,8 +21,14 @@
     - {'store' => 'stored', 'activate' => 'active', 'donate' => 'donated'}.each do |action,status|
       - unless status.nil? or @clothing.status == status
         = link_to action, clothing_path(@clothing.id) + '?clothing[status]=' + status, :method => :put
-
-
+  %span.meta
+    - if @logs.size > 0
+      \|
+      Worn #{pluralize @logs.size, "time"}, last worn:
+      - date = @logs.first.date
+      = l date
+      = surround '(', ')' do
+        %time.timeago{:datetime => date.iso8601}= time_ago_in_words date
 - if @clothing.image.file?
   .image
     - if managing?
@@ -32,10 +38,12 @@
     - else
       = clothing_thumbnail @clothing, :size => :large
       
-%tags
-  Tags:
-  - @clothing.tags.each do |t|
-    = link_to t.name, clothing_by_tag_path(t.name)
+.metadata
+  %span.tags
+    Tags:
+    - @clothing.tags.each do |t|
+      = link_to t.name, clothing_by_tag_path(t.name)
+      
 - unless @clothing.color.nil?
   - colors = @clothing.color.split(",")
   %table.auto
