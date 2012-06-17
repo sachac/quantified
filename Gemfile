@@ -11,7 +11,7 @@ gem 'jquery-rails'
 gem 'sqlite3'
 gem 'isbndb'
 gem 'haml'
-gem 'mysql'
+gem 'mysql2'
 gem "paperclip", "~> 2.0"
 gem 'will_paginate'
 gem 'haml-rails'
