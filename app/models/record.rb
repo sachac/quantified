@@ -323,9 +323,17 @@ class Record < ActiveRecord::Base
       list.last.update_next
     end
   end
+
   def self.parse(account, attributes)
     # Look for the category
     if attributes[:category]
+      # Copy any record data if specified
+      matches = attributes[:category].match /^(.*?)\|(.*)/
+      logger.info "Matches? #{matches.inspect}"
+      if matches
+        attributes[:category] = matches[1]
+        record_data = matches[2]
+      end
       data = Record.guess_time(attributes[:category])
       time = data[1]
       end_time = data[2]
@@ -336,17 +344,26 @@ class Record < ActiveRecord::Base
     time ||= Time.now
     if attributes[:category_id]
       cat = account.record_categories.find_by_id(attributes[:category_id])
-      rec = Record.create(:user => account, :record_category => cat, :timestamp => time, :end_timestamp => end_time)
+      new_record = {:user => account, :record_category => cat, :timestamp => time, :end_timestamp => end_time}
     elsif attributes[:category]
       cat = RecordCategory.search(account, data[0])
       if cat.is_a? RecordCategory
-        rec = account.records.create(:record_category => cat, :timestamp => time, :end_timestamp => end_time, :data => attributes[:data])
-        if rec
-          rec.update_previous
-          rec.update_next
-        end
+        new_record = {:user => account, :record_category => cat, :timestamp => time, :end_timestamp => end_time}
       else
         rec = cat
+      end
+    end
+    if cat.is_a? RecordCategory 
+      if cat.data and record_data
+        record_key = cat.data.first['key']
+        if record_key
+          new_record[:data] = {record_key => record_data}
+        end
+      end
+      rec = Record.create(new_record)
+      if rec
+        rec.update_previous
+        rec.update_next
       end
     end
     rec
