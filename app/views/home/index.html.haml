@@ -55,6 +55,11 @@
     .category_detail
       - if current_account.clothing.length > 0
         = render :partial => 'clothing_logs/by_date', :locals => { :dates => @dates, :by_date => @by_date, :size => :tiny }
+        .category_tags
+          Tags:
+          = link_to 'all', clothing_index_path
+          - tag_cloud(@clothing_tags, %w(css1 css2 css3 css4)) do |tag, css_class| 
+            = link_to tag.name, { :action => :tag, :controller => :clothing, :id => tag.name }, :class => css_class
       - else
         .start= link_to "Start tracking your clothes by creating items", new_clothing_path
   - if managing? and current_account.library_items.length > 0
