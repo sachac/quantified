@@ -59,6 +59,7 @@ class TimeController < ApplicationController
 
   def track
     authorize! :manage_account, current_account
+    category_input = params[:category]
     unless params[:category] or params[:category_id]
       add_flash :error, 'Please specify a category.'
       go_to time_dashboard_path and return
@@ -73,7 +74,7 @@ class TimeController < ApplicationController
     elsif rec.is_a? Record
       redirect_to edit_record_path(rec, :destination => params[:destination]) and return
     else
-      redirect_to disambiguate_record_categories_path(:timestamp => time, :category => params[:category]), :method => :post and return 
+      redirect_to disambiguate_record_categories_path(:timestamp => time, :category => category_input), :method => :post and return 
     end
   end
 
