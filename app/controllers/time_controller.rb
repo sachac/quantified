@@ -20,7 +20,7 @@ class TimeController < ApplicationController
     params[:start] ||= current_account.beginning_of_week.advance(:weeks => -1).strftime('%Y-%m-%d')
     params[:category_tree] ||= 'full'
     params[:end] ||= Time.zone.now.strftime('%Y-%m-%d')
-    prepare_filters [:date_range, :category_tree, :parent_id]
+    prepare_filters [:date_range, :category_tree, :parent_id, :display_type]
     @categories = current_account.record_categories
     @summary_start = Date.parse(params[:start])
     @summary_end = Date.parse(params[:end])
