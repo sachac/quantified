@@ -27,19 +27,22 @@
           .clearfix
             = label_tag :order, 'Order'
             .input
-              %ul.inputs-list
-                %li
-                  %label
-                    = radio_button_tag :order, 'newest', @order != 'desc'
-                    Newest on top
-                  %label
-                    = radio_button_tag :order, 'oldest', @order == 'desc'
-                    Oldest on top
+              = radio_button_tag :order, 'newest', @order != 'desc', :class => 'inline'
+              = label_tag :order_newest, 'Newest on top', :class => 'inline'
+              = radio_button_tag :order, 'oldest', @order == 'desc'
+              = label_tag :order_oldest, 'Oldest on top', :class => 'inline'
         - if @filters[:filter_string]
           .clearfix
             = label_tag :filter, t('app.general.filter')
             .input
               = text_field_tag :filter_string, params ? params[:filter_string] : ''
-  
+        - if @filters[:display_type]
+          .clearfix
+            = label_tag :display_type, 'Display'
+            .input
+              = radio_button_tag :display_type, 'time', params[:display_type] != 'decimal', :class => 'inline'
+              = label_tag :display_type_inline, 'Time', :class => 'inline'
+              = radio_button_tag :display_type, 'decimal', params[:display_type] == 'decimal', :class => 'inline'
+              = label_tag :display_type_decimal, 'Decimal', :class => 'inline'
         .actions   
           = submit_tag t('app.general.filter'), :class => 'btn primary'

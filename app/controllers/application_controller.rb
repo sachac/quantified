@@ -102,6 +102,9 @@ class ApplicationController < ActionController::Base
       when :category_tree
         @filters[:category_tree] = true
         params[:category_tree] ||= 'tree'
+      when :display_type
+        @filters[:display_type] = true
+        params[:display_type] ||= 'time'
       end
     end
   end
