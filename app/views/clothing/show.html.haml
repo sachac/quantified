@@ -27,8 +27,11 @@
       Worn #{pluralize @clothing.clothing_logs_count, "time"}, last worn:
       - date = @clothing.last_worn
       = l date
-      = surround '(', ')' do
-        %time.timeago{:datetime => date.iso8601}= time_ago_in_words date
+      - if date == Date.today
+        (today)
+      - else
+        = surround '(', ')' do
+          %time.timeago{:datetime => date.iso8601}= time_ago_in_words date
 - if @clothing.image.file?
   .image
     - if managing?
