@@ -4,7 +4,11 @@ class ClothingLogsController < ApplicationController
   before_filter :authenticate_user!, :except => [:index, :show, :by_date]
   def index
     authorize! :view_clothing, current_account
-    @clothing_logs = current_account.clothing_logs.find(:all, :order => "date DESC, outfit_id DESC, clothing.clothing_type", :include => [:clothing])
+    params[:start] ||= current_account.beginning_of_week.advance(:weeks => -4).strftime('%Y-%m-%d')
+    params[:end] ||= Time.zone.now.strftime('%Y-%m-%d')
+    prepare_filters [:date_range]
+    @range = Date.parse(params[:start])..Date.parse(params[:end])
+    @clothing_logs = current_account.clothing_logs.where(:date => @range).includes(:clothing).order("date DESC, outfit_id DESC, clothing.clothing_type")
     @by_date = Hash.new
     @clothing_logs.each do |l|
       @by_date[l.date] ||= Array.new

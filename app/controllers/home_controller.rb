@@ -5,14 +5,11 @@ class HomeController < ApplicationController
     flash.keep
     @clothing_today = ClothingLog.where('date = ?', Date.today)
     if current_account then
-      @memento_mori = current_account.memento_mori
-      @yesterday = Day.yesterday
-      @today = Day.today
-      @clothing_logs = current_account.clothing_logs.includes(:clothing).where('date >= ? and date <= ?', Date.today - 1.week, Date.today).order('date, outfit_id DESC, clothing.clothing_type')
+      @clothing_logs = current_account.clothing_logs.select('clothing_logs.date, clothing.clothing_logs_count, clothing.last_worn, clothing.image_file_name').includes(:clothing).where('date >= ? and date <= ?', Date.today - 1.week, Date.today).order('date, outfit_id DESC, clothing.clothing_type')
       @clothing_tags = current_account.clothing.tag_counts_on(:tags).sort_by(&:name)
       @by_date = current_account.clothing_logs.by_date(@clothing_logs)
       @dates = 7.downto(0).collect { |i| Date.today - i.days }
-      @contexts = current_account.contexts
+      @contexts = current_account.contexts.select('id, name')
       @current_activity = current_account.records.activities.order('timestamp DESC').first
       @goal_summary = Goal.check_goals(current_account)
     end
