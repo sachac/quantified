@@ -18,7 +18,6 @@
   %tr
     %th{:width => 100}= sortable_column 'Due', :column => 'due'
     %th= sortable_column 'Name', :column => 'title'
-    %th Tags
     %th= sortable_column 'Status', :column => 'status'
     %th Pages
     %th Price
@@ -26,20 +25,20 @@
       %th{:width => 35}
   - if @library_items.size > 0 
     - @library_items.each do |library_item|
-      - if can? :read, library_item
-        %tr
-          %td= link_to library_item.due, library_item
+      %tr
+        %td= link_to library_item.due, library_item
+        %td
+          = link_to library_item.title, (can? :edit, library_item) ? edit_library_item_path(library_item) : library_item
+          = "(*)" unless library_item.public
+        %td= library_item.status
+        %td= library_item.pages
+        %td= '%.2f' % (library_item.price || 0)
+        - if managing?
           %td
-            = link_to library_item.title, (can? :edit, library_item) ? edit_library_item_path(library_item) : library_item
-            = "(*)" unless library_item.public
-          %td= library_item.tags.join ', '
-          %td= library_item.status
-          %td= library_item.pages
-          %td= '%.2f' % (library_item.price || 0)
-          - if managing?
-            %td
-              = edit_icon(edit_library_item_path(library_item))
-              = delete_icon(library_item)
+            = edit_icon(edit_library_item_path(library_item))
+            = delete_icon(library_item)
+
+= will_paginate @library_items, :renderer => PaginationListLinkRenderer
 
 %br
 

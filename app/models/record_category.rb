@@ -26,9 +26,9 @@ class RecordCategory < ActiveRecord::Base
       min = options[:range].begin.midnight.in_time_zone
     end
     records ||= user.records
-    records = records.activities
+    records = records.activities.select('records.id, records.record_category_id, records.timestamp, records.end_timestamp')
     parent = options[:parent]
-    categories = user.record_categories.index_by(&:id)
+    categories = user.record_categories.select('id, full_name, category_type, dotted_ids').index_by(&:id)
     if parent
       all_children = parent.all_children.index_by(&:id)
     end
@@ -54,7 +54,7 @@ class RecordCategory < ActiveRecord::Base
           ids = [rec.record_category_id]
         end
       end
-      if ids.length > 0
+      if ids and ids.length > 0
         rec.split(options[:range]).each do |split_record|
           key = Record.get_zoom_key(options[:user], zoom, split_record[0])
           ids.each do |cat|
