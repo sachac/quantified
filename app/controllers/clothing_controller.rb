@@ -146,6 +146,7 @@ class ClothingController < ApplicationController
     # Show by tags
     authorize! :view_clothing, current_account
     order = filter_sortable_column_order %w{clothing_type name status clothing_logs_count last_worn hue}
+    order ||= 'last_worn'
     @tags = current_account.clothing.tag_counts_on(:tags).sort_by(&:name)
     @clothing = current_account.clothing.tagged_with(params[:id]).where("status='active' or status='' or status is null").order(order)
     render :index
