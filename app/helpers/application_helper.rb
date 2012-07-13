@@ -311,4 +311,12 @@ module ApplicationHelper
     link_to image_tag('edit.png', :alt => t('general.edit'), :title => t('general.edit')), path, :class => 'icon edit'
   end
 
+  def colors(colors)
+    if colors.is_a? String
+      colors = colors.split(',')
+    end
+    if colors
+      colors.map { |x| '<div class="color-box" style="' + x + '">' }.join
+    end    
+  end
 end
