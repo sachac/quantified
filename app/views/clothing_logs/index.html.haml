@@ -5,6 +5,8 @@
   = set_focus_to_id("#clothing")
 - last_date = nil
 
+= render 'filters'
+
 %div
   - @dates.each do |date|
     .entry
@@ -38,7 +40,7 @@
         - if can? :update, clothing_log
           %td= link_to 'Edit', edit_clothing_log_path(clothing_log)
           %td= link_to 'Delete', clothing_log, :confirm => 'Are you sure?', :method => :delete
-        %td= render :partial => "colors", :locals => { :colors => clothing_log.clothing.color }
+        %td= colors clothing_log.clothing.color
 %br
 
 - if can? :create, ClothingLog

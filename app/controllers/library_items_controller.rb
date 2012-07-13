@@ -14,6 +14,7 @@ class LibraryItemsController < ApplicationController
       @tags = current_account.library_items.where('public=1').tag_counts_on(:tags).sort_by(&:name)
       @library_items = current_account.library_items.where('public=1').order(order)
     end
+    @library_items = @library_items.paginate :page => params[:page]
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @library_items }

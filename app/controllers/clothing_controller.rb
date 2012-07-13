@@ -9,10 +9,11 @@ class ClothingController < ApplicationController
     @tags = current_account.clothing.tag_counts_on(:tags).sort_by(&:name)
     order = filter_sortable_column_order %w{clothing_type name status clothing_logs_count last_worn hue}
     order ||= 'last_worn'
-    @clothing = current_account.clothing
+    @clothing = current_account.clothing.select
     @clothing = @clothing.find(:all, 
                                :conditions => ["status='active' OR status IS NULL OR status=''"],
-                               :order => order)
+                               :order => order,
+                               :select => 'id, name, image_file_name, user_id, color, status, last_worn, clothing_logs_count')
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @clothing }

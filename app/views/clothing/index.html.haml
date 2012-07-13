@@ -38,7 +38,6 @@ Tags:
         %th= sortable_column "Count", :column => "clothing_logs_count", :direction => :desc
         %th= sortable_column "Last worn"
         %th= sortable_column "Colour", :column => "hue"
-        %th Tags
         - if managing?
           %th
       - @clothing.each do |clothing|
@@ -54,9 +53,6 @@ Tags:
               - clothing.color.split(",").each do |x|
                 .color-box{:style => "background: ##{x}"}
                   &nbsp;
-          %td
-            - clothing.tag_list.each do |tag|
-              = link_to tag, { :action => :tag, :id => tag }
           - if managing?
             %td
               = edit_icon edit_clothing_path(clothing)
