@@ -16,6 +16,7 @@ gem "paperclip", "~> 2.0"
 gem 'will_paginate'
 gem 'haml-rails'
 gem 'color'
+gem 'ruby-graphviz', :git => "https://github.com/glejeune/Ruby-Graphviz.git"
 gem 'narray'
 gem 'formtastic'
 gem 'rails3-jquery-autocomplete'

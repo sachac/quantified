@@ -36,6 +36,12 @@ GIT
     rack-offline (0.6.1)
 
 GIT
+  remote: https://github.com/glejeune/Ruby-Graphviz.git
+  revision: abe4b04e62e4a211043977c81cb627756ec6afde
+  specs:
+    ruby-graphviz (1.0.9)
+
+GIT
   remote: https://github.com/makandra/cucumber_factory.git
   revision: 358b6280507e040cb4bb471fa322a17a1268221f
   specs:
@@ -415,6 +421,7 @@ DEPENDENCIES
   rcov
   rspec
   rspec-rails
+  ruby-graphviz!
   ruby_parser
   sass-rails (~> 3.1.0.rc)
   sqlite3

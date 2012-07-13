@@ -27,10 +27,17 @@ class RecordCategory < ActiveRecord::Base
     end
     records ||= user.records
     records = records.activities
+    parent = options[:parent]
     categories = user.record_categories.index_by(&:id)
+    if parent
+      all_children = parent.all_children.index_by(&:id)
+    end
     # Cache the record categories for performance instead of retrieving them one at a time
     records.each do |rec|
       ids = nil
+      if parent and rec.record_category_id != parent.id and !all_children[rec.record_category_id]
+        next
+      end
       if categories[rec.record_category_id]
         case options[:tree]
         when :full
@@ -69,7 +76,6 @@ class RecordCategory < ActiveRecord::Base
     count = path.length
     parent = nil
     cat = nil
-    logger.info path.inspect
     path.each_with_index do |p, i|
       return cat if p.blank?
       if parent
