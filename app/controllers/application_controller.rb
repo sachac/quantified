@@ -80,14 +80,18 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def add_flash(symbol, value)
-    if flash[symbol].blank?
-      flash[symbol] = value
+  def add_flash(symbol, value = '')
+    if symbol.is_a? Hash
+      symbol.each do |k,v| add_flash k, v end
     else
-      if flash[symbol].is_a? String
-        flash[symbol] = [flash[symbol]]
+      if flash[symbol].blank?
+        flash[symbol] = value
+      else
+        if flash[symbol].is_a? String
+          flash[symbol] = [flash[symbol]]
+        end
+        flash[symbol] << value
       end
-      flash[symbol] << value
     end
   end
 

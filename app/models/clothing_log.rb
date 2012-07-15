@@ -45,4 +45,20 @@ class ClothingLog < ActiveRecord::Base
     end
     by_date
   end
+
+  delegate :name, :to => :clothing, :prefix => true
+  def to_xml(options = {})
+    super(options.update(:methods => [:clothing_name]))
+  end
+  
+  def as_json(options = {})
+    super(options.update(:methods => [:clothing_name]))
+  end
+  
+  comma do
+    clothing_id
+    date
+    outfit_id
+    clothing :name
+  end
 end

@@ -1,8 +1,10 @@
 class FoodsController < ApplicationController
   # GET /foods
   # GET /foods.xml
+  respond_to :html, :xml, :json, :csv
+
   def index
-    authorize! :view_food, current_accoun
+    authorize! :view_food, current_account
     @info = Hash.new
     current_account.csa_foods.all.each do |log|
       @info[log.food_id] ||= Hash.new
@@ -15,10 +17,7 @@ class FoodsController < ApplicationController
       end
     end
     @foods = current_account.foods.all
-    respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @foods }
-    end
+    respond_with @foods
   end
 
   # GET /foods/1
@@ -26,10 +25,7 @@ class FoodsController < ApplicationController
   def show
     @food = current_account.foods.find(params[:id])
     authorize! :view, @food
-    respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @food }
-    end
+    respond_with @food
   end
 
   # GET /foods/new
@@ -37,11 +33,7 @@ class FoodsController < ApplicationController
   def new
     authorize! :manage_account, current_account
     @food = current_account.foods.new
-
-    respond_to do |format|
-      format.html # new.html.erb
-      format.xml  { render :xml => @food }
-    end
+    respond_with @food
   end
 
   # GET /foods/1/edit
@@ -56,15 +48,8 @@ class FoodsController < ApplicationController
     authorize! :manage_account, current_account
     @food = current_account.foods.new(params[:food])
     @food.user_id = current_account.id
-    respond_to do |format|
-      if @food.save
-        format.html { redirect_to(@food, :notice => 'Food was successfully created.') }
-        format.xml  { render :xml => @food, :status => :created, :location => @food }
-      else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @food.errors, :status => :unprocessable_entity }
-      end
-    end
+    add_flash :notice, 'Food was successfully created.' if @food.save
+    respond_with @food
   end
 
   # PUT /foods/1
@@ -72,16 +57,8 @@ class FoodsController < ApplicationController
   def update
     authorize! :manage_account, current_account
     @food = current_account.foods.find(params[:id])
-
-    respond_to do |format|
-      if @food.update_attributes(params[:food])
-        format.html { redirect_to(@food, :notice => 'Food was successfully updated.') }
-        format.xml  { head :ok }
-      else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @food.errors, :status => :unprocessable_entity }
-      end
-    end
+    add_flash :notice, 'Food was successfully updated.' if @food.update_attributes(params[:food])
+    respond_with @food
   end
 
   # DELETE /foods/1
@@ -90,10 +67,6 @@ class FoodsController < ApplicationController
     authorize! :manage_account, current_account
     @food = current_account.foods.find(params[:id])
     @food.destroy
-
-    respond_to do |format|
-      format.html { redirect_to(foods_url) }
-      format.xml  { head :ok }
-    end
+    respond_with @food, :location => foods_url
   end
 end
