@@ -10,4 +10,20 @@ class LibraryItem < ActiveRecord::Base
       query
     end
   end
+  
+  comma do
+    library_id
+    title
+    author
+    status
+    checkout_date
+    due
+    return_date
+    read_date
+    rating
+    price
+    public
+    notes
+    dewey
+  end
 end

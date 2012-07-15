@@ -31,6 +31,5 @@
       .actions   
         = submit_tag t('app.general.filter'), :class => 'btn primary'
         = submit_tag t('.recalculate_durations'), :class => 'btn'
-= download_as_spreadsheet
 = render 'summary', :records => @records, :show_duration => true
 = will_paginate @records, :renderer => PaginationListLinkRenderer

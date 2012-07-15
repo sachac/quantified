@@ -1,7 +1,7 @@
 class ClothingController < ApplicationController
   autocomplete :clothing, :name, :display_value => :autocomplete_view, :extra_data => [:number], :full => true
   handles_sortable_columns
-
+  respond_to :html, :xml, :json, :csv
   # GET /clothing
   # GET /clothing.xml
   def index
@@ -9,15 +9,11 @@ class ClothingController < ApplicationController
     @tags = current_account.clothing.tag_counts_on(:tags).sort_by(&:name)
     order = filter_sortable_column_order %w{clothing_type name status clothing_logs_count last_worn hue}
     order ||= 'last_worn'
-    @clothing = current_account.clothing.select
+    @clothing = current_account.clothing
     @clothing = @clothing.find(:all, 
                                :conditions => ["status='active' OR status IS NULL OR status=''"],
-                               :order => order,
-                               :select => 'id, name, image_file_name, user_id, color, status, last_worn, clothing_logs_count')
-    respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @clothing }
-    end
+                               :order => order)
+    respond_with @clothing
   end
 
   # GET /clothing/1
@@ -72,12 +68,19 @@ class ClothingController < ApplicationController
         end
       end
     end
-    respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @clothing }
-    end
+    respond_with @clothing
   end
 
+  def logs
+    @clothing = current_account.clothing.find(params[:id])
+    authorize! :view, @clothing
+    if request.format.html?
+      redirect_to clothing_path(@clothing) and return
+    end
+    @logs = current_account.clothing_logs.find(:all, :conditions => ["clothing_id=?", @clothing.id], :order => 'date DESC')
+    respond_with @logs
+  end
+  
   # GET /clothing/new
   # GET /clothing/new.xml
   def new
@@ -85,10 +88,7 @@ class ClothingController < ApplicationController
     @clothing = Clothing.new
     @clothing.status = 'active'
     @clothing.user_id = current_account.id
-    respond_to do |format|
-      format.html # new.html.erb
-      format.xml  { render :xml => @clothing }
-    end
+    respond_with @clothing
   end
 
   # GET /clothing/1/edit
@@ -103,15 +103,10 @@ class ClothingController < ApplicationController
     authorize! :create, Clothing
     @clothing = Clothing.new(params[:clothing])
     @clothing.user_id = current_account.id
-    respond_to do |format|
-      if @clothing.save
-        format.html { redirect_to(new_clothing_path, :notice => 'Clothing was successfully created.') }
-        format.xml  { render :xml => @clothing, :status => :created, :location => @clothing }
-      else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @clothing.errors, :status => :unprocessable_entity }
-      end
+    if @clothing.save
+      add_flash :notice, 'Clothing was successfully created.'
     end
+    respond_with @clothing, :location => new_clothing_path
   end
 
   # PUT /clothing/1
@@ -119,15 +114,10 @@ class ClothingController < ApplicationController
   def update
     @clothing = current_account.clothing.find(params[:id])
     authorize! :update, @clothing
-    respond_to do |format|
-      if @clothing.update_attributes(params[:clothing])
-        format.html { redirect_to(clothing_path(@clothing), :notice => 'Clothing was successfully updated.') and return }
-        format.xml  { head :ok }
-      else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @clothing.errors, :status => :unprocessable_entity }
-      end
+    if @clothing.update_attributes(params[:clothing])
+      add_flash :notice, 'Clothing was successfully updated.'
     end
+    respond_with @clothing
   end
 
   # DELETE /clothing/1
@@ -136,11 +126,7 @@ class ClothingController < ApplicationController
     @clothing = current_account.clothing.find(params[:id])
     authorize! :delete, @clothing
     @clothing.destroy
-
-    respond_to do |format|
-      format.html { redirect_to(clothing_index_url) }
-      format.xml  { head :ok }
-    end
+    respond_with @clothing, :location => clothing_index_url
   end
 
   def tag
@@ -150,7 +136,9 @@ class ClothingController < ApplicationController
     order ||= 'last_worn'
     @tags = current_account.clothing.tag_counts_on(:tags).sort_by(&:name)
     @clothing = current_account.clothing.tagged_with(params[:id]).where("status='active' or status='' or status is null").order(order)
-    render :index
+    respond_with @clothing do |format|
+      format.html { render :index }
+    end
   end
   
   def by_status
@@ -163,7 +151,9 @@ class ClothingController < ApplicationController
     if @status != 'all' then
       @clothing = @clothing.where('status = ?', @status)
     end
-    render :index
+    respond_with @clothing do |format|
+      format.html { render :index }
+    end
   end
   
   def analyze
@@ -249,6 +239,7 @@ class ClothingController < ApplicationController
   def missing_info
     authorize! :manage_account, current_account
     @clothing = current_account.clothing.active.where('image_file_name IS NULL')
+    respond_with @clothing
   end
 
   def update_missing_info
@@ -263,7 +254,9 @@ class ClothingController < ApplicationController
       end
     end
     @clothing = current_account.clothing.active.where("image_file_name IS NULL")
-    render 'missing_info'
+    respond_with @clothing do |format|
+      format.html { render 'missing_info' }
+    end
   end
 
   def delete_color
@@ -290,7 +283,6 @@ class ClothingController < ApplicationController
       @clothing.save!
     end
     redirect_to @clothing
-
   end
 
   
