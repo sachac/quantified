@@ -2,6 +2,7 @@ class StuffController < ApplicationController
   autocomplete :stuff, :name, :full => true
   skip_authorization_check :only => [:autocomplete_stuff_name]
   load_and_authorize_resource
+  respond_to :html, :xml, :json, :csv
   handles_sortable_columns
   # GET /stuff
   # GET /stuff.xml
@@ -25,12 +26,8 @@ class StuffController < ApplicationController
     else
       @stuff = @stuff.where('status=? OR status IS NULL', 'active')
     end
-
     @contexts = current_account.contexts.order('name')
-    respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @stuff }
-    end
+    respond_with @stuff
   end
 
   def log
@@ -49,26 +46,28 @@ class StuffController < ApplicationController
   def show
     @stuff = current_account.stuff.find(params[:id])
     @location_histories = @stuff.location_histories.order(:updated_at)
-    respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @stuff }
-    end
+    respond_with @stuff
   end
 
+  def history
+    if request.format.html?
+      redirect_to stuff_path(params[:id]) and return
+    end
+    @stuff = current_account.stuff.find(params[:id])
+    @location_histories = @stuff.location_histories.order(:updated_at)
+    respond_with @location_histories
+  end
   # GET /stuff/new
   # GET /stuff/new.xml
   def new
     @stuff = current_account.stuff.new
-
-    respond_to do |format|
-      format.html # new.html.erb
-      format.xml  { render :xml => @stuff }
-    end
+    respond_with @stuff
   end
 
   # GET /stuff/1/edit
   def edit
     @stuff = current_account.stuff.find(params[:id])
+    respond_with @stuff
   end
 
   # POST /stuff
@@ -83,15 +82,8 @@ class StuffController < ApplicationController
     @stuff.home_location = loc
     @stuff.location = @stuff.home_location
     @stuff.user = current_account
-    respond_to do |format|
-      if @stuff.save
-        format.html { redirect_to(@stuff, :notice => 'Stuff was successfully created.') }
-        format.xml  { render :xml => @stuff, :status => :created, :location => @stuff }
-      else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @stuff.errors, :status => :unprocessable_entity }
-      end
-    end
+    add_flash :notice => 'Stuff was successfully created.' if @stuff.save
+    respond_with @stuff
   end
 
   # PUT /stuff/1
@@ -109,15 +101,8 @@ class StuffController < ApplicationController
       @stuff.home_location = loc
       result = @stuff.save
     end
-    respond_to do |format|
-      if result
-        format.html { redirect_to(params[:destination] || @stuff, :notice => 'Stuff was successfully updated.') }
-        format.xml  { head :ok }
-      else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @stuff.errors, :status => :unprocessable_entity }
-      end
-    end
+    add_flash :notice => 'Stuff was successfully updated.' if result
+    respond_with @stuff, :location => params[:destination] || stuff_path(@stuff)
   end
 
   # DELETE /stuff/1
@@ -125,11 +110,7 @@ class StuffController < ApplicationController
   def destroy
     @stuff = current_account.stuff.find(params[:id])
     @stuff.destroy
-
-    respond_to do |format|
-      format.html { redirect_to(stuff_index_url) }
-      format.xml  { head :ok }
-    end
+    respond_with @stuff, :location => stuff_index_url
   end
 
   def get_autocomplete_items(parameters)

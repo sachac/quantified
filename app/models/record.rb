@@ -369,8 +369,36 @@ class Record < ActiveRecord::Base
     rec
   end
 
+  def self.get_records(account, options = {})
+    if options[:order] == 'oldest'
+      records = account.records.order('timestamp ASC')
+    else
+      records = account.records.order('timestamp DESC')
+    end
+    records = records.where(:timestamp => options[:start]..options[:end])
+    unless options[:filter_string].blank?
+      query = "%" + options[:filter_string].downcase + "%"
+      records = records.joins(:record_category).where('LOWER(records.data) LIKE ? OR LOWER(record_categories.full_name) LIKE ?', query, query)
+    end
+    unless options[:include_private]
+      records = records.public
+    end
+    records
+  end
+  
   delegate :activity?, :to => :record_category
   delegate :full_name, :to => :record_category
   delegate :get_color, :to => :record_category
   delegate :color, :to => :record_category
+  
+  comma do
+    timestamp { |timestamp| I18n.l(timestamp, :format => :long) if timestamp }
+    end_timestamp { |timestamp| I18n.l(timestamp, :format => :long) if timestamp }
+    record_category :full_name => 'Record category'
+    record_category :id => 'Record category ID'
+    duration
+    source
+    source_id
+    data 'Data' do |data| data.to_json if data and data.size > 0 end
+  end
 end

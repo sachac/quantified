@@ -1,15 +1,13 @@
 class ContextsController < ApplicationController
   before_filter :authenticate_user!, :except => [:index, :show, :start]
+  respond_to :html, :xml, :json, :csv
   # GET /contexts
   # GET /contexts.xml
   def index
     authorize! :view_contexts, current_account
     @user = current_account
     @contexts = current_account.contexts.order('name')
-    respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @contexts }
-    end
+    respond_with @contexts
   end
 
   # GET /contexts/1
@@ -17,7 +15,7 @@ class ContextsController < ApplicationController
   def show
     @context = current_account.contexts.find(params[:id])
     authorize! :start, @context
-    redirect_to start_context_path(params[:id])
+    respond_with @context, :location => start_context_path(params[:id])
   end
 
   # GET /contexts/new
@@ -26,10 +24,7 @@ class ContextsController < ApplicationController
     authorize! :create, Context
     @context = Context.new
     5.times do @context.context_rules.build end
-    respond_to do |format|
-      format.html # new.html.erb
-      format.xml  { render :xml => @context }
-    end
+    respond_with @context
   end
 
   # GET /contexts/1/edit
@@ -54,15 +49,10 @@ class ContextsController < ApplicationController
         @context.context_rules.build(:stuff => stuff, :location => location)
       end
     end
-    respond_to do |format|
-      if @context.save
-        format.html { redirect_to(@context, :notice => 'Context was successfully created.') }
-        format.xml  { render :xml => @context, :status => :created, :location => @context }
-      else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @context.errors, :status => :unprocessable_entity }
-      end
+    if @context.save
+      add_flash :notice, 'Context was successfully created.'
     end
+    respond_with @context
   end
 
   # PUT /contexts/1
@@ -87,15 +77,10 @@ class ContextsController < ApplicationController
       end
     end
     logger.info "New context rules attributes " + params[:context][:context_rules_attributes].inspect
-    respond_to do |format|
-      if @context.update_attributes(params[:context])
-        format.html { redirect_to(@context, :notice => 'Context was successfully updated.') }
-        format.xml  { head :ok }
-      else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @context.errors, :status => :unprocessable_entity }
-      end
+    if @context.update_attributes(params[:context])
+      add_flash :notice, 'Context was successfully updated.'
     end
+    respond_with @context
   end
 
   # DELETE /contexts/1
@@ -104,11 +89,7 @@ class ContextsController < ApplicationController
     @context = current_account.contexts.find(params[:id])
     authorize! :delete, @context
     @context.destroy
-
-    respond_to do |format|
-      format.html { redirect_to(contexts_url) }
-      format.xml  { head :ok }
-    end
+    respond_with @context, :location => contexts_url
   end
 
   def start
@@ -117,6 +98,7 @@ class ContextsController < ApplicationController
     authorize! :start, @context
     @in_place = @context.context_rules.in_place
     @out_of_place = @context.context_rules.out_of_place
+    respond_with({ :in_place => @in_place, :out_of_place => @out_of_place })
   end
 
   def complete
@@ -125,6 +107,7 @@ class ContextsController < ApplicationController
     @context.context_rules.out_of_place.each do |r|
       r.stuff.update_attributes(:location => r.location)
     end
-    go_to stuff_index_path, :notice => "Context marked complete."
+    add_flash :notice, "Context marked complete."
+    respond_with @context, :location => stuff_index_path
   end
 end

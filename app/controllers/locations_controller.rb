@@ -1,14 +1,12 @@
 class LocationsController < ApplicationController
   handles_sortable_columns
+  respond_to :html, :xml, :json, :csv
   # GET /locations
   # GET /locations.xml
   def index
     authorize! :view_locations, current_account
     @locations = current_account.locations.all
-    respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @locations }
-    end
+    respond_with @locations
   end
 
   # GET /locations/1
@@ -17,12 +15,19 @@ class LocationsController < ApplicationController
     authorize! :view_locations, current_account
     @location = current_account.locations.find(params[:id])
     @stuff = @location.stuff
-    respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @location }
-    end
+    respond_with @location
   end
 
+  def stuff
+    authorize! :view_locations, current_account
+    if request.format.html?
+      redirect_to location_path(params[:id])
+    end
+    @location = current_account.locations.find(params[:id])
+    @stuff = @location.stuff
+    respond_with @stuff
+  end
+  
   # GET /locations/new
   # GET /locations/new.xml
   def new

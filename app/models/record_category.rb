@@ -1,4 +1,5 @@
 class RecordCategory < ActiveRecord::Base
+  require 'comma'
   acts_as_tree_with_dotted_ids :order => "name"
   has_many :records
   belongs_to :user
@@ -231,5 +232,40 @@ class RecordCategory < ActiveRecord::Base
     end
 
     duration
+  end
+  
+  # order: newest, oldest
+  # start
+  # end
+  # filter_string
+  def category_records(options = {})
+    if self.list?
+      records = self.tree_records
+    else
+      records = self.records
+    end
+    records = records.where("timestamp >= ?", options[:start]).where("timestamp <= ?", options[:end])
+    if options[:order] == 'oldest'
+      records = records.order('timestamp ASC')
+    else
+      records = records.order('timestamp DESC')
+    end
+    if options[:filter_string]
+      query = "%" + options[:filter_string].downcase + "%"
+      records = records.where('LOWER(records.data) LIKE ?', query) 
+    end
+    records
+  end
+  
+  # CSV support
+  comma do
+    id
+    name
+    category_type
+    full_name
+    color
+    parent_id
+    dotted_ids
+    data 'Data' do |data| data.to_json if data and data.size > 0 end
   end
 end

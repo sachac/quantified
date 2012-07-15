@@ -47,5 +47,27 @@ class Stuff < ActiveRecord::Base
     list
   end
 
- 
+  delegate :name, :to => :home_location, :prefix => true
+  delegate :name, :to => :location, :prefix => true
+  
+  comma do
+    id
+    name
+    long_name
+    in_place
+    location_id
+    location_name
+    home_location_id
+    home_location_name
+    price
+    notes
+  end
+  
+  def to_xml(options = {})
+    super(options.update(:methods => [:home_location_name, :location_name]))
+  end
+  def to_json(options = {})
+    super(options.update(:methods => [:home_location_name, :location_name]))
+  end
+
 end

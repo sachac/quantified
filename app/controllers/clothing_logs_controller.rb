@@ -2,6 +2,7 @@ class ClothingLogsController < ApplicationController
   # GET /clothing_logs
   # GET /clothing_logs.xml
   before_filter :authenticate_user!, :except => [:index, :show, :by_date]
+  respond_to :html, :xml, :json, :csv
   def index
     authorize! :view_clothing, current_account
     params[:start] ||= current_account.beginning_of_week.advance(:weeks => -4).strftime('%Y-%m-%d')
@@ -15,10 +16,7 @@ class ClothingLogsController < ApplicationController
       @by_date[l.date] << l
     end
     @dates = @by_date.keys.sort { |a,b| b  <=> a }
-    respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @clothing_logs }
-    end
+    respond_with @clothing_logs
   end
 
   # GET /clothing_logs/1
@@ -26,11 +24,7 @@ class ClothingLogsController < ApplicationController
   def show
     @clothing_log = current_account.clothing_logs.find(params[:id])
     authorize! :view, @clothing_log
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @clothing_log }
-    end
+    respond_with @clothing_log
   end
 
   # GET /clothing_logs/new
@@ -39,10 +33,7 @@ class ClothingLogsController < ApplicationController
     authorize! :create, ClothingLog
     @clothing_log = current_account.clothing_logs.new
     @clothing_log.date = Time.now
-    respond_to do |format|
-      format.html # new.html.erb
-      format.xml  { render :xml => @clothing_log }
-    end
+    respond_with @clothing_log
   end
 
   # GET /clothing_logs/1/edit
@@ -75,14 +66,12 @@ class ClothingLogsController < ApplicationController
     @clothing_log.user_id = current_account.id
     params[:outfit_id] ||= 1
     @clothing_log.outfit_id = params[:outfit_id]
-    respond_to do |format|
-      if @clothing_log.save
+    if @clothing_log.save
+      respond_with @clothing_log do |format|
         format.html { redirect_to(:back, :notice => "Logged #{@clothing_log.date}.") }
-        format.xml  { render :xml => @clothing_log, :status => :created, :location => @clothing_log }
-      else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @clothing_log.errors, :status => :unprocessable_entity }
       end
+    else
+      respond_with @clothing_log
     end
   end
 
@@ -91,16 +80,7 @@ class ClothingLogsController < ApplicationController
   def update
     @clothing_log = current_account.clothing_logs.find(params[:id])
     authorize! :update, @clothing_log
-
-    respond_to do |format|
-      if @clothing_log.update_attributes(params[:clothing_log])
-        format.html { redirect_to(@clothing_log, :notice => 'Clothing log was successfully updated.') }
-        format.xml  { head :ok }
-      else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @clothing_log.errors, :status => :unprocessable_entity }
-      end
-    end
+    respond_with @clothing_log
   end
 
   # DELETE /clothing_logs/1
@@ -109,11 +89,7 @@ class ClothingLogsController < ApplicationController
     @clothing_log = current_account.clothing_logs.find(params[:id])
     authorize! :destroy, @clothing_log
     @clothing_log.destroy
-
-    respond_to do |format|
-      format.html { redirect_to(clothing_logs_url) }
-      format.xml  { head :ok }
-    end
+    respond_with @clothing_log, :location => clothing_logs_url
   end
 
   def by_date
@@ -122,5 +98,6 @@ class ClothingLogsController < ApplicationController
     @clothing_logs = current_account.clothing_logs.where('date = ?', @date).includes(:clothing).order('outfit_id, clothing.clothing_type')
     @previous_date = @date - 1.day
     @next_date = @date + 1.day
+    respond_with @clothing_logs
   end
 end

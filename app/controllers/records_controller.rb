@@ -1,5 +1,5 @@
 class RecordsController < ApplicationController
-  respond_to :html, :json, :csv
+  respond_to :html, :json, :csv, :xml
   # GET /records
   # GET /records.xml
   def index
@@ -12,45 +12,19 @@ class RecordsController < ApplicationController
       add_flash :notice, t('records.index.recalculated_durations')
     end
     @order = params[:order]
-    if @order == 'oldest'
-      @records = current_account.records.order('timestamp ASC')
+    @records = Record.get_records(current_account, :order => @order, :include_private => managing?, :start => @start, :end => @end)
+    if request.format.csv?
+      @data = @records
     else
-      @records = current_account.records.order('timestamp DESC')
-    end
-    @records = @records.where(:timestamp => @start..@end)
-    unless params[:filter_string].blank?
-      query = "%" + params[:filter_string].downcase + "%"
-      @records = @records.joins(:record_category).where('LOWER(records.data) LIKE ? OR LOWER(record_categories.full_name) LIKE ?', query, query)
-      unless managing?
-        @records = @records.public
-      end
-    end
-    unless html? or managing?
-      @records = @records.public
-    end
-    respond_to do |format|
-      format.html { @records = @records.paginate :page => params[:page] }
-      format.json { render :json => json_paginate(@records) }
-      format.csv { 
-        csv_string = FasterCSV.generate do |csv|
-          csv << ['start_time', 'end_time', 'record_category_name', 'record_category_id', 'duration', 'source', 'source_id', 'data']
-          @records.each do |e|
-            row = [e.timestamp ? l(e.timestamp, :format => :long) : '',
-                   e.end_timestamp ? l(e.end_timestamp, :format => :long) : '',
-                   e.record_category.full_name,
-                   e.record_category_id,
-                   e.duration,
-                   e.source,
-                   e.source_id]
-            if e.data
-              row += e.data.map { |k, v| [k, v]}.flatten
-            end
-            csv << row
-          end
-        end
-        send_data csv_string, :type => "text/plain", :filename=>"records.csv", :disposition => 'attachment'
+      @records = @records.paginate :page => params[:page] 
+      @data = { 
+        :current_page => @records.current_page,
+        :per_page => @records.per_page,
+        :total_entries => @records.total_entries,
+        :entries => @records 
       }
     end
+    respond_with @data
   end
 
   # GET /records/1
@@ -64,12 +38,7 @@ class RecordsController < ApplicationController
     elsif @record.private?
       authorize! :manage_account, current_account
     end
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @record }
-      format.json { render :json => { :record => @record, :context => @context } }
-    end
+    respond_with({ :record => @record, :context => @context })
   end
 
   # GET /records/new
@@ -77,11 +46,7 @@ class RecordsController < ApplicationController
   def new
     authorize! :manage_account, current_account
     @record = current_account.records.new
-
-    respond_to do |format|
-      format.html # new.html.erb
-      format.xml  { render :xml => @record }
-    end
+    respond_with @record
   end
 
   # GET /records/1/edit
@@ -95,18 +60,12 @@ class RecordsController < ApplicationController
   def create
     authorize! :manage_account, current_account
     @record = current_account.records.new(params[:record])
-    respond_to do |format|
-      if @record.save
-        @record.update_previous
-        @record.update_next
-
-        format.html { go_to(@record, :notice => 'Record was successfully created.') }
-        format.xml  { render :xml => @record, :status => :created, :location => @record }
-      else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @record.errors, :status => :unprocessable_entity }
-      end
+    if @record.save
+      @record.update_previous
+      @record.update_next
+      add_flash :notice, 'Record was successfully created.'
     end
+    respond_with @record
   end
 
   # PUT /records/1
@@ -121,11 +80,7 @@ class RecordsController < ApplicationController
       if @record.update_attributes(params[:record])
         @record.update_previous
         @record.update_next
-        format.html { go_to(@record, :notice => 'Record was successfully updated.') }
-        format.xml  { head :ok }
-      else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @record.errors, :status => :unprocessable_entity }
+        add_flash :notice, 'Record was successfully updated.'
       end
     end
   end
@@ -136,17 +91,14 @@ class RecordsController < ApplicationController
     authorize! :manage_account, current_account
     @record = current_account.records.find(params[:id])
     @record.destroy
-    respond_to do |format|
-      format.html { go_to(records_url) }
-      format.xml  { head :ok }
-    end
+    respond_with @record, :location => records_url
   end
 
   def clone
     authorize! :manage_account, current_account
     @record = current_account.records.find(params[:id])
     @record = @record.dup
-    render 'edit'
+    respond_with @record
   end
 
   def batch
@@ -157,8 +109,11 @@ class RecordsController < ApplicationController
       @records = Record.confirm_batch(account, params[:batch], :date => params[:date] ? Date.parse(params[:date]) : nil)
     end
     if op == "Create records"
-      Record.create_batch(account, params[:row].values.map { |r| r.symbolize_keys })
-      go_to records_path, :notice => 'Records created.'
+      @created = Record.create_batch(account, params[:row].values.map { |r| r.symbolize_keys })
+      add_flash :notice, 'Records created.'
+      respond_with @created, :location => records_path
+    else
+      respond_with @records
     end
   end
 

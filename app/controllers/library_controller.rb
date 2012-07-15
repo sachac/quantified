@@ -1,9 +1,11 @@
 class LibraryController < ApplicationController
   before_filter :authenticate_user!, :except => [:index, :current]
+  respond_to :html, :xml, :json, :csv
 
   def index
     authorize! :manage_account, current_account
     @items = current_account.library_items
+    respond_with @items
   end
 
   def update
