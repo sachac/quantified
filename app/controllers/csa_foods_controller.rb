@@ -1,15 +1,13 @@
 class CsaFoodsController < ApplicationController
   autocomplete :food, :name
+  respond_to :html, :xml, :json, :csv
 
   # GET /csa_foods
   # GET /csa_foods.xml
   def index
     @csa_foods = current_account.csa_foods.includes(:food).order('date_received DESC, disposition ASC')
     authorize! :view_food, @csa_foods
-    respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @csa_foods }
-    end
+    respond_with @csa_foods
   end
 
   def bulk_update
@@ -25,12 +23,8 @@ class CsaFoodsController < ApplicationController
   # GET /csa_foods/1.xml
   def show
     @csa_food = current_account.csa_foods.find(params[:id])
-
     authorize! :view, @csa_food
-    respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @csa_food }
-    end
+    respond_with @csa_food
   end
 
   # GET /csa_foods/new
@@ -40,10 +34,7 @@ class CsaFoodsController < ApplicationController
     @csa_food = current_account.csa_foods.new
     @csa_food.date_received = Date.today
     @csa_food.unit = 'g'
-    respond_to do |format|
-      format.html # new.html.erb
-      format.xml  { render :xml => @csa_food }
-    end
+    respond_with @csa_food
   end
 
   # GET /csa_foods/1/edit
@@ -61,15 +52,10 @@ class CsaFoodsController < ApplicationController
                             :quantity => params[:csa_food][:quantity], 
                             :unit => params[:csa_food][:unit],
                             :date_received => params[:csa_food][:date_received] || Date.today)
-    respond_to do |format|
-      if result
-        format.html { redirect_to(new_csa_food_path, :notice => 'Logged.') }
-        format.xml  { render :xml => @csa_food, :status => :created, :location => @csa_food }
-      else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @csa_food.errors, :status => :unprocessable_entity }
-      end
+    if result
+      add_flash :notice, 'Logged.'
     end
+    respond_with @csa_food, :location => new_csa_food_path
   end
 
   # PUT /csa_foods/1
@@ -77,16 +63,10 @@ class CsaFoodsController < ApplicationController
   def update
     authorize! :manage_account, current_account
     @csa_food = current_account.csa_foods.find(params[:id])
-
-    respond_to do |format|
-      if @csa_food.update_attributes(params[:csa_food])
-        format.html { redirect_to(csa_foods_path, :notice => 'Csa food was successfully updated.') }
-        format.xml  { head :ok }
-      else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @csa_food.errors, :status => :unprocessable_entity }
-      end
+    if @csa_food.update_attributes(params[:csa_food])
+      add_flash :notice, 'CSA food successfully updated.'
     end
+    respond_with @csa_food, :location => csa_foods_path
   end
 
   # DELETE /csa_foods/1
@@ -95,11 +75,7 @@ class CsaFoodsController < ApplicationController
     authorize! :manage_account, current_account
     @csa_food = current_account.csa_foods.find(params[:id])
     @csa_food.destroy
-
-    respond_to do |format|
-      format.html { redirect_to(csa_foods_url) }
-      format.xml  { head :ok }
-    end
+    respond_with @csa_food, :location => csa_foods_url
   end
 
   def quick_entry
@@ -110,10 +86,10 @@ class CsaFoodsController < ApplicationController
                        :unit => params[:unit],
                        :date_received => Date.parse(params[:date]))
     if @log
-      redirect_to csa_foods_path, :notice => 'Food successfully logged.' and return
+      add_flash :notice, 'Food successfully logged.'
+      respond_with @log
     else
-#      flash[:error] = 'Could not log food.'
-      redirect_to csa_foods_path(:date => params[:date]) and return
+      respond_with :error, :location => csa_foods_path(:date => params[:date])
     end
   end
 end

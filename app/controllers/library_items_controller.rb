@@ -1,6 +1,7 @@
 class LibraryItemsController < ApplicationController
   handles_sortable_columns
   before_filter :authenticate_user!, :except => [:index, :show, :tag, :current]
+  respond_to :html, :xml, :json, :csv
   # GET /library_items
   # GET /library_items.xml
   def index
@@ -14,11 +15,18 @@ class LibraryItemsController < ApplicationController
       @tags = current_account.library_items.where('public=1').tag_counts_on(:tags).sort_by(&:name)
       @library_items = current_account.library_items.where('public=1').order(order)
     end
-    @library_items = @library_items.paginate :page => params[:page]
-    respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @library_items }
+    if request.format.csv?
+      @data = @library_items
+    else
+      @library_items = @library_items.paginate :page => params[:page] 
+      @data = { 
+        :current_page => @library_items.current_page,
+        :per_page => @library_items.per_page,
+        :total_entries => @library_items.total_entries,
+        :entries => @library_items
+      }
     end
+    respond_with @library_items
   end
 
   # GET /library_items/1
@@ -26,10 +34,7 @@ class LibraryItemsController < ApplicationController
   def show
     @library_item = current_account.library_items.find(params[:id])
     authorize! :view, @library_item
-    respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @library_item }
-    end
+    respond_with @library_item
   end
 
   # GET /library_items/new
@@ -37,11 +42,7 @@ class LibraryItemsController < ApplicationController
   def new
     @library_item = current_account.library_items.new
     authorize! :create, LibraryItem
-
-    respond_to do |format|
-      format.html # new.html.erb
-      format.xml  { render :xml => @library_item }
-    end
+    respond_with @library_item
   end
 
   # GET /library_items/1/edit
@@ -51,6 +52,7 @@ class LibraryItemsController < ApplicationController
     [:read_date, :status].each do |v|
       @library_item.send(v.to_s + '=', params[v]) if params[v]
     end
+    respond_with @library_item
   end
 
   # POST /library_items
@@ -59,15 +61,8 @@ class LibraryItemsController < ApplicationController
     authorize! :create, LibraryItem
     @library_item = current_account.library_items.new(params[:library_item])
     @library_item.user_id = current_account.id
-    respond_to do |format|
-      if @library_item.save
-        format.html { redirect_to(@library_item, :notice => 'Library item was successfully created.') }
-        format.xml  { render :xml => @library_item, :status => :created, :location => @library_item }
-      else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @library_item.errors, :status => :unprocessable_entity }
-      end
-    end
+    add_flash :notice => 'Library item was successfully created.' if @library_item.save
+    respond_with @library_item
   end
 
   # PUT /library_items/1
@@ -143,5 +138,6 @@ class LibraryItemsController < ApplicationController
     end
     @tags = @library_items.tag_counts_on(:tags).sort_by(&:name)
     @library_items = @library_items.order(:due, :status)
+    respond_with @library_items
   end
 end

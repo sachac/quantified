@@ -37,6 +37,7 @@ Home::Application.routes.draw do
   resources :record_categories do
     member do
       post :track
+      get :records
     end
     collection do
       post :bulk_update
@@ -62,8 +63,16 @@ Home::Application.routes.draw do
   resources :measurement_logs
 
   resources :measurements
-  resources :locations
-  resources :stuff 
+  resources :locations do
+    member do
+      get :stuff
+    end
+  end
+  resources :stuff do
+    member do
+      get :history
+    end
+  end
   resources :location_histories
   match 'stuff/log', :via => :post, :as => :log_stuff
   match 'menu' => 'home#menu', :as => :menu
@@ -114,6 +123,9 @@ Home::Application.routes.draw do
       get :autocomplete_clothing_name
       get :analyze
       get :graph
+    end
+    member do
+      get :logs
     end
   end
 

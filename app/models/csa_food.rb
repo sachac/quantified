@@ -28,4 +28,25 @@ class CsaFood < ActiveRecord::Base
       account.csa_foods.create(:quantity => options[:quantity], :food => food, :unit => options[:unit], :date_received => options[:date_received])
     end
   end
+  
+  delegate :name, :to => :food
+
+  comma do
+    id
+    date_received
+    food_id
+    name
+    quantity
+    unit
+    disposition
+    notes
+  end
+  
+  def to_xml(options = {})
+    super(options.update(:methods => :name))
+  end
+  def to_json(options = {})
+    super(options.update(:methods => :name))
+  end
+
 end

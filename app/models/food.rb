@@ -11,4 +11,10 @@ class Food < ActiveRecord::Base
     end
     food
   end
+  
+  comma do
+    id
+    name
+    notes
+  end
 end

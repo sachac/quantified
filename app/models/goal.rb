@@ -77,4 +77,11 @@ class Goal < ActiveRecord::Base
     end
     goals
   end
+  
+  comma do
+    id
+    label
+    expression
+    period
+  end
 end

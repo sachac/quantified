@@ -68,4 +68,24 @@ class Clothing < ActiveRecord::Base
     end
   end
   scope :active, where("(status IS NULL or status = 'active')")
+  
+  def image_url
+    self.image.url
+  end
+  def to_xml(options = {})
+    super(options.update(:methods => [:image_url]))
+  end
+  
+  comma do
+    id
+    name
+    clothing_type
+    status
+    color 
+    last_worn
+    clothing_logs_count
+    cost
+    notes
+  end
+
 end
