@@ -88,4 +88,5 @@ class Clothing < ActiveRecord::Base
     notes
   end
 
+  fires :new, :on => :create, :actor => :user
 end

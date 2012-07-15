@@ -70,4 +70,6 @@ class Stuff < ActiveRecord::Base
     super(options.update(:methods => [:home_location_name, :location_name]))
   end
 
+  fires :new, :on => :create, :actor => :user
+
 end

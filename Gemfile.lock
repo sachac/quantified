@@ -42,6 +42,12 @@ GIT
     ruby-graphviz (1.0.9)
 
 GIT
+  remote: https://github.com/jamesgolick/timeline_fu.git
+  revision: 45b695375045ff80e852dbe52ecbd600d64b14a5
+  specs:
+    timeline_fu (0.4.1)
+
+GIT
   remote: https://github.com/makandra/cucumber_factory.git
   revision: 358b6280507e040cb4bb471fa322a17a1268221f
   specs:
@@ -432,6 +438,7 @@ DEPENDENCIES
   statsample
   subdomain-fu!
   therubyracer
+  timeline_fu!
   uglifier
   will_paginate
   workflow
