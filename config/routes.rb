@@ -6,6 +6,7 @@ Home::Application.routes.draw do
   resources :services, :only => [:index, :create, :destroy]
   match 'signups' => 'signups#index'
   match 'admin' => 'admin#index'
+  match 'admin/activity' => 'admin#activity'
   match 'admin/become/:id' => 'admin#become', :as => :become_user, :via => :post
   match 'feedback' => 'home#send_feedback', :via => :post
   match 'feedback' => 'home#feedback', :as => :feedback
@@ -22,6 +23,7 @@ Home::Application.routes.draw do
   match '/offline.manifest' => offline
 
   match 'records/batch' => 'records#batch', :as => :batch_records, :via => [:post, :get]
+  resources :timeline_events
   resources :records do
     collection do
       get :help

@@ -15,6 +15,9 @@ class ContextsController < ApplicationController
   def show
     @context = current_account.contexts.find(params[:id])
     authorize! :start, @context
+    if request.format.html?
+      redirect_to start_context_path(params[:id]) and return
+    end
     respond_with @context, :location => start_context_path(params[:id])
   end
 

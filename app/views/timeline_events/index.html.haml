@@ -1,0 +1,24 @@
+%h1 Timeline events
+
+%ul
+  - @timeline_events.each do |e|
+    %li
+      = link_to e.actor.username, e.actor
+      - case e.subject_type
+        - when 'ClothingLog'
+          - if e.secondary_subject
+            = "wore #{link_to e.secondary_subject.name, e.secondary_subject} on #{link_to e.subject.date, e.subject}".html_safe
+        - when 'Record'
+          = "tracked #{link_to e.secondary_subject.full_name, e.secondary_subject} starting #{e.subject.timestamp}".html_safe
+        - when 'Clothing'
+          = "created a clothing item #{link_to e.subject.name, e.subject}".html_safe
+        - when 'Stuff'
+          = "created stuff #{link_to e.subject.name, e.subject}".html_safe
+        - when 'LocationHistory'
+          = "moved #{link_to e.secondary_subject.name, e.secondary_subject} to #{link_to e.subject.location.name, e.subject.location}".html_safe
+      = link_to e do 
+        = surround '(', ')' do
+          %time.timeago{:datetime => e.created_at} e.created_at    
+= will_paginate @timeline_events, :renderer => PaginationListLinkRenderer      
+%br
+
