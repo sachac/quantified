@@ -61,4 +61,6 @@ class ClothingLog < ActiveRecord::Base
     outfit_id
     clothing :name
   end
+
+  fires :new, :on => :create, :actor => :user, :secondary_subject => :clothing
 end

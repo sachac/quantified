@@ -21,5 +21,6 @@ class LocationHistory < ActiveRecord::Base
   def to_json(options = {})
     super(options.update(:methods => [:stuff_name, :location_name]))
   end
+  fires :new, :on => :create, :actor => :user, :secondary_subject => :stuff
 
 end
