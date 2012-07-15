@@ -28,7 +28,7 @@ class RecordCategory < ActiveRecord::Base
     records ||= user.records
     records = records.activities.select('records.id, records.record_category_id, records.timestamp, records.end_timestamp')
     parent = options[:parent]
-    categories = user.record_categories.select('id, full_name, category_type, dotted_ids').index_by(&:id)
+    categories = user.record_categories.select('color, id, full_name, category_type, dotted_ids').index_by(&:id)
     if parent
       all_children = parent.all_children.index_by(&:id)
     end
