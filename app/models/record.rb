@@ -401,4 +401,7 @@ class Record < ActiveRecord::Base
     source_id
     data 'Data' do |data| data.to_json if data and data.size > 0 end
   end
+  
+  fires :new, :on => :create, :actor => :user, :secondary_subject => :record_category
+
 end

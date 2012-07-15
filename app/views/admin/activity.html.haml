@@ -1,0 +1,15 @@
+%table
+  %tr
+    %th Type
+    %th Total
+    %th Not me
+    %th Last 30
+    %th Last 30 not me
+  - @totals.each do |k,v|
+    %tr
+      %td= k.to_s
+      %td= v[:total]
+      %td= v[:not_me]
+      %td= v[:last_30]
+      %td= v[:last_30_not_me]
+  
