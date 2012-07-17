@@ -73,16 +73,15 @@ class RecordsController < ApplicationController
   def update
     authorize! :manage_account, current_account
     @record = current_account.records.find(params[:id])
-    respond_to do |format|
-      if params[:record][:end_timestamp].blank?
-        params[:record][:end_timestamp] = nil
-      end
-      if @record.update_attributes(params[:record])
-        @record.update_previous
-        @record.update_next
-        add_flash :notice, 'Record was successfully updated.'
-      end
+    if params[:record][:end_timestamp].blank?
+      params[:record][:end_timestamp] = nil
     end
+    if @record.update_attributes(params[:record])
+      @record.update_previous
+      @record.update_next
+      add_flash :notice, 'Record was successfully updated.'
+    end
+    respond_with @record
   end
 
   # DELETE /records/1
