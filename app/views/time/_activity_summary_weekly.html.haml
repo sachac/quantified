@@ -10,9 +10,10 @@
           - date += 1.week
         %th.right Total  
     %tbody
-      - summary[:rows].sort_by { |k,v| k.full_name }.each do |row|
-        - category = row[0]
+      - summary[:rows].sort_by { |k,v| if k and @categories[k] then @categories[k].full_name else "" end }.each do |row|
+        - category = @categories[row[0]]
         - values = row[1]
+        - next if category == :total or category.nil?
         %tr
           %td
             = link_to category.full_name, time_review_path(params.merge(:action => 'review', :controller => 'time', :parent_id => category.id)), :title => category.full_name
