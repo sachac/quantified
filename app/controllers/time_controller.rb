@@ -22,7 +22,7 @@ class TimeController < ApplicationController
     params[:category_tree] ||= 'full'
     params[:end] ||= Time.zone.now.strftime('%Y-%m-%d')
     prepare_filters [:date_range, :category_tree, :parent_id, :display_type]
-    @categories = current_account.record_categories
+    @categories = current_account.record_categories.index_by(&:id)
     @summary_start = Date.parse(params[:start])
     @summary_end = Date.parse(params[:end])
     # Pick the appropriate level of review
@@ -30,7 +30,7 @@ class TimeController < ApplicationController
     range = @summary_start..@summary_end
     @zoom = Record.choose_zoom_level(range)
     @summary = RecordCategory.summarize(:user => current_account, :range => range, :zoom => @zoom, :parent => @category, :tree => params[:category_tree] ? params[:category_tree].to_sym : nil, :key => nil)
-    respond_with({:categories => @categories.index_by(&:id), :summary => @summary})
+    respond_with({:categories => @categories, :summary => @summary})
   end
 
   def graph
@@ -43,7 +43,7 @@ class TimeController < ApplicationController
     @records = Record.prepare_graph(@range, entries)
     unsorted = RecordCategory.summarize(:key => :date, :range => @range, :records => entries, :zoom => :daily, :user => current_account, :tree => :individual)[:rows] 
     
-    @categories = current_account.record_categories
+    @categories = current_account.record_categories.index_by(&:id)
     @totals = unsorted.map { |k,v| [k, v.sort { |a,b| b[1] <=> a[1] }] }
     respond_with({:categories => @categories, :totals => @totals})
   end
@@ -54,7 +54,7 @@ class TimeController < ApplicationController
     @week_beginning = current_account.beginning_of_week
     @summary = RecordCategory.summarize(:user => current_account, :range => @week_beginning..Date.tomorrow, :zoom => :daily, :tree => :full)
     @current_activity = current_account.records.activities.order('timestamp DESC').first
-    @categories = current_account.record_categories
+    @categories = current_account.record_categories.index_by(&:id)
     # Display current activity
     # Display quick-entry box for tracking a new activity
     respond_with @summary
