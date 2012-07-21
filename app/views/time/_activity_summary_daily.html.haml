@@ -27,9 +27,10 @@
           %th.right Total
     %tbody
       - summary[:rows].sort_by { |k,v| if k and @categories[k] then @categories[k].full_name else "" end }.each do |row|
+        - next unless row[0] and row[0].is_a? Integer
         - category = @categories[row[0]]
+        - next unless category
         - values = row[1]
-        - next if category == :total or category.nil?
         %tr
           %td
             = link_to((show_full_path ? category.full_name : category.name), time_review_path(params.merge({:action => 'review', :controller => 'time', :parent_id => category.id})), :title => category.full_name)

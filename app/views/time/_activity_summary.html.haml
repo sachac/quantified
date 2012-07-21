@@ -20,9 +20,9 @@
           %th.right Total  
     %tbody
       - summary.sort_by { |k,v| (k == :total) ? "ZZZ" : k.name }.each do |row|
+        - next unless row[0] and row[0].is_a? Integer
         - category = row[0]
         - values = row[1]
-        - next if category == :total 
         %tr
           %td
             = link_to category.name, time_review_path(:parent_id => category.id)
