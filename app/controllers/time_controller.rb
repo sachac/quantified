@@ -1,6 +1,7 @@
 # Challenges: 
 # I have to manually create my time graphs
 class TimeController < ApplicationController
+  respond_to :html, :xml, :json, :csv
   # POST
   def refresh_from_csv
     authorize! :manage_account, current_account
@@ -29,10 +30,7 @@ class TimeController < ApplicationController
     range = @summary_start..@summary_end
     @zoom = Record.choose_zoom_level(range)
     @summary = RecordCategory.summarize(:user => current_account, :range => range, :zoom => @zoom, :parent => @category, :tree => params[:category_tree] ? params[:category_tree].to_sym : nil, :key => nil)
-    respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @record_categories }
-    end
+    respond_with({:categories => @categories.index_by(&:id), :summary => @summary})
   end
 
   def graph
@@ -44,7 +42,10 @@ class TimeController < ApplicationController
     entries = current_account.records.activities.where(:timestamp => @range).order('timestamp').includes(:record_category)
     @records = Record.prepare_graph(@range, entries)
     unsorted = RecordCategory.summarize(:key => :date, :range => @range, :records => entries, :zoom => :daily, :user => current_account, :tree => :individual)[:rows] 
+    
+    @categories = current_account.record_categories
     @totals = unsorted.map { |k,v| [k, v.sort { |a,b| b[1] <=> a[1] }] }
+    respond_with({:categories => @categories, :totals => @totals})
   end
 
   def dashboard
@@ -55,6 +56,7 @@ class TimeController < ApplicationController
     @current_activity = current_account.records.activities.order('timestamp DESC').first
     # Display current activity
     # Display quick-entry box for tracking a new activity
+    respond_with @summary
   end
 
   def track

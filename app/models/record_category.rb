@@ -61,10 +61,11 @@ class RecordCategory < ActiveRecord::Base
           ids.each do |cat|
             case options[:key]
             when :date
-              summary[:rows][key][categories[cat.to_i]] += split_record[1] - split_record[0]
+              summary[:rows][key][cat.to_i] += split_record[1] - split_record[0]
             else
-              summary[:rows][categories[cat.to_i]][key] += split_record[1] - split_record[0]
+              summary[:rows][cat.to_i][key] += split_record[1] - split_record[0]
             end
+            summary[:rows][cat.to_i][:total] += split_record[1] - split_record[0]
           end
           summary[:total][:total][key] += split_record[1] - split_record[0]
         end
