@@ -1,6 +1,5 @@
 - show_averages = false unless defined? show_averages
 - show_full_path = false unless defined? show_full_path
-  
 %p
   - summary_end -= 1.day
   -# Display the last two weeks
@@ -26,9 +25,9 @@
             - date += 1.day
           %th.right Total
     %tbody
-      - summary[:rows].sort_by { |k,v| if k and @categories[k] then @categories[k].full_name else "" end }.each do |row|
-        - next unless row[0] and row[0].is_a? Integer
-        - category = @categories[row[0]]
+      - summary[:rows].sort_by { |k,v| if k and @categories[k.to_i] then @categories[k.to_i].full_name else "" end }.each do |row|
+        - next unless row[0] and !row[0].is_a? Symbol
+        - category = @categories[row[0].to_i]
         - next unless category
         - values = row[1]
         %tr
