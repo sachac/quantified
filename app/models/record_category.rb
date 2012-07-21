@@ -22,9 +22,10 @@ class RecordCategory < ActiveRecord::Base
     max = Time.now
     zoom = options[:zoom]
     if options[:range]
-      records = records.where(:timestamp => options[:range])
       max = options[:range].end.midnight.in_time_zone
       min = options[:range].begin.midnight.in_time_zone
+      options[:range] = options[:range].begin..(options[:range].end + 1.day)
+      records = records.where(:timestamp => options[:range])
     end
     records ||= user.records
     records = records.activities.select('records.id, records.record_category_id, records.timestamp, records.end_timestamp')

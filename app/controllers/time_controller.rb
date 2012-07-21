@@ -54,6 +54,7 @@ class TimeController < ApplicationController
     @week_beginning = current_account.beginning_of_week
     @summary = RecordCategory.summarize(:user => current_account, :range => @week_beginning..Date.tomorrow, :zoom => :daily, :tree => :full)
     @current_activity = current_account.records.activities.order('timestamp DESC').first
+    @categories = current_account.record_categories
     # Display current activity
     # Display quick-entry box for tracking a new activity
     respond_with @summary
