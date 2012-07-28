@@ -209,7 +209,7 @@ class Record < ActiveRecord::Base
     # Match hh:mm
     regex = /([0-9]+:[0-9]+)\b */
     new_string = string
-    time = Time.now
+    time = nil
     end_time = nil
     matches = new_string.match regex
     if matches
@@ -223,9 +223,8 @@ class Record < ActiveRecord::Base
       new_string.sub! regex, ''
     end
 
-
     if options[:date] 
-      time = time - (Date.today - options[:date]).days
+      time = (time || Time.now) - (Date.today - options[:date]).days
     end
       
     # match -30m or -30min example, always as an offset from now
@@ -234,9 +233,9 @@ class Record < ActiveRecord::Base
     if matches
       case matches[2]
       when "h", "hr", "hrs", "hour", "hours"
-        time = time - matches[1].to_i.hours
+        time = (time || Time.now) - matches[1].to_i.hours
       when "m", "min", "mins"
-        time = time - matches[1].to_i.minutes
+        time = (time || Time.now) - matches[1].to_i.minutes
       end
       new_string.sub! regex, ''
     end
@@ -260,7 +259,7 @@ class Record < ActiveRecord::Base
       if d > Date.today
         d = Date.new(Date.today.year - 1, matches[1].to_i, matches[2].to_i)
       end
-      time = time - (Date.today - d).days
+      time = (time || Time.now) - (Date.today - d).days
       new_string.gsub! regex, ''
     end
     [new_string.strip, time, end_time]
@@ -326,6 +325,7 @@ class Record < ActiveRecord::Base
 
   def self.parse(account, attributes)
     # Look for the category
+    time = nil
     if attributes[:category]
       # Copy any record data if specified
       matches = attributes[:category].match /^(.*?)\|(.*)/
@@ -338,10 +338,13 @@ class Record < ActiveRecord::Base
       time = data[1]
       end_time = data[2]
     end
+    logger.info "#{time} after trying to get it from category"
     unless attributes[:timestamp].blank?
-      time ||= Time.zone.parse(attributes[:timestamp])
+      time = Time.zone.parse(attributes[:timestamp]) if time.blank?
     end
+    logger.info "#{time} after trying to get it from timestamp #{attributes.inspect}"
     time ||= Time.now
+    logger.info "#{time} after default"
     if attributes[:category_id]
       cat = account.record_categories.find_by_id(attributes[:category_id])
       new_record = {:user => account, :record_category => cat, :timestamp => time, :end_timestamp => end_time}
