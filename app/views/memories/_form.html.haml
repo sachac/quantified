@@ -4,6 +4,7 @@
     = f.input :body
     = f.input :tag_list
     = f.input :access, :as => :radio, :collection => access_collection
+    = f.input :date_entry
     = hidden_field_tag :destination, params[:destination]
   .actions  
     = f.submit I18n.t('app.general.save'), :class => 'btn primary'
