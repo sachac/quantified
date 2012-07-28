@@ -32,4 +32,5 @@ class Memory < ActiveRecord::Base
   def public?
     self.access == 'public'
   end
+  fires :new, :on => :create, :actor => :user
 end

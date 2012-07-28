@@ -28,21 +28,21 @@
         %ul.pills  
           - @contexts.each do |c|
             %li= link_to c.name, c
-  -# .stuff.category
-  -#   .category_label
-  -#     %h2 Stuff
-  -#   .category_detail
-  -#     - if current_account.stuff.length > 0          
-  -#       - if current_account.stuff.out_of_place.count > 0
-  -#         %span.label.important= "#{pluralize current_account.stuff.out_of_place.count, "item"}"
-  -#         = link_to "out of place", stuff_index_path
-  -#         .list
-  -#           = current_account.stuff.out_of_place.map{ |stuff| return_stuff_info stuff }.join(', ').html_safe
-  -#       - else
-  -#         .green= link_to "A place for everything, and everything in its place", stuff_index_path
-  -#         %span.label.notice Yay!
-  -#     - else
-  -#       .start= link_to "Start tracking your stuff by creating items", stuff_index_path
+  .stuff.category
+    .category_label
+      %h2 Stuff
+    .category_detail
+      - if current_account.stuff.length > 0          
+        - if current_account.stuff.out_of_place.count > 0
+          %span.label.important= "#{pluralize current_account.stuff.out_of_place.count, "item"}"
+          = link_to "out of place", stuff_index_path
+          .list
+            = current_account.stuff.out_of_place.map{ |stuff| return_stuff_info stuff }.join(', ').html_safe
+        - else
+          .green= link_to "A place for everything, and everything in its place", stuff_index_path
+          %span.label.notice Yay!
+      - else
+        .start= link_to "Start tracking your stuff by creating items", stuff_index_path
   -# .weather.category
   -#   .category_label
   -#     %h2 Toronto weather

@@ -159,4 +159,7 @@ class User < ActiveRecord::Base
     login = conditions.delete(:login)
     where(conditions).where(["lower(username) = :value OR lower(email) = :value", { :value => login.downcase }]).first
   end
+ 
+  fires :new, :on => :create, :actor => :self
+  fires :update, :on => :update, :actor => :self
 end
