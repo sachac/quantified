@@ -2,6 +2,12 @@
 - show_parent = true if show_parent.nil?
 = semantic_form_for rec do |f|
   = f.inputs do
+    - if params and params[:timestamp]
+      .clear-fix
+        %label Timestamp
+        .input
+          = l Time.zone.parse(params[:timestamp]), :format => :short
+          = hidden_field_tag 'timestamp', params[:timestamp]
     = f.input :name, :input_html => { :autofocus => true }
     - if show_parent and current_account.record_categories.where('id IS NOT NULL AND category_type = ?', 'list').length > 0
       = f.input :parent, :collection => current_account.record_categories.where('category_type = ?', 'list').order('full_name').map { |x| [x.full_name, x.id] }
