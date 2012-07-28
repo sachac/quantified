@@ -10,6 +10,7 @@ class Ability
         can :manage, item, :user_id => user.id
         can :create, item
       end
+      can :view_food, User, :id => user.id
       can :manage_account, User, :id => user.id
       can :delete, User, :id => user.id
       can :view_tap_log_records, User, :id => user.id
