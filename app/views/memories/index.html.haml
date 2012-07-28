@@ -11,18 +11,17 @@
 
 %table
   %tr
-    %th Name
-    %th Tags
+    %th= sortable_column "Date", :column => 'sort_time'
+    %th= sortable_column "Name"
     %th
 
   - @memories.each do |memory|
-    - if can? :view, memory
-      %tr
-        %td
-          = link_to memory.name, memory
-          = object_labels(memory)
-        %td= tags memory
-        %td= action_list memory
+    %tr
+      %td= memory.date_entry
+      %td
+        = link_to memory.name, memory
+        = object_labels(memory)
+      %td= action_list memory
 
 %br
 - if can? :create, Memory

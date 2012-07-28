@@ -1,4 +1,6 @@
 class MemoriesController < ApplicationController
+  handles_sortable_columns
+  respond_to :html, :xml, :json, :csv
   # GET /memories
   # GET /memories.xml
   def index
@@ -8,14 +10,14 @@ class MemoriesController < ApplicationController
     else
       @memories = current_account.memories.where('access=?', 'public')
     end
+    order = filter_sortable_column_order %w{sort_time name}
+    order ||= '-sort_time'
     @tags = @memories.tag_counts_on(:tags).sort_by(&:name)
     if params[:tag] 
       @memories = @memories.tagged_with(params[:tag])
     end
-    respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @memories }
-    end
+    @memories = @memories.order(order)
+    respond_with @memories
   end
 
   # GET /memories/1
@@ -23,11 +25,7 @@ class MemoriesController < ApplicationController
   def show
     @memory = Memory.find(params[:id])
     authorize! :view, @memory
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @memory }
-    end
+    respond_with @memory
   end
 
   # GET /memories/new
@@ -36,10 +34,7 @@ class MemoriesController < ApplicationController
     authorize! :create, Memory
     @memory = Memory.new
     @memory.access = 'public'
-    respond_to do |format|
-      format.html # new.html.erb
-      format.xml  { render :xml => @memory }
-    end
+    respond_with @memory
   end
 
   # GET /memories/1/edit
@@ -54,15 +49,11 @@ class MemoriesController < ApplicationController
     @memory = Memory.new(params[:memory])
     authorize! :create, Memory
     @memory.user = current_account
-
-    respond_to do |format|
-      if @memory.save
-        format.html { redirect_to(params[:destination].blank? ? memories_path : params[:destination], :notice => 'Memory was successfully created.') }
-        format.xml  { render :xml => @memory, :status => :created, :location => @memory }
-      else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @memory.errors, :status => :unprocessable_entity }
-      end
+    if @memory.save
+      add_flash :notice, 'Memory was successfully created.'
+      respond_with @memory, :location => params[:destination].blank? ? memories_path : params[:destination]
+    else
+      respond_with @memory
     end
   end
 
@@ -71,15 +62,11 @@ class MemoriesController < ApplicationController
   def update
     @memory = Memory.find(params[:id])
     authorize! :update, @memory
-
-    respond_to do |format|
-      if @memory.update_attributes(params[:memory])
-        format.html { redirect_to(memories_path, :notice => 'Memory was successfully updated.') }
-        format.xml  { head :ok }
-      else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @memory.errors, :status => :unprocessable_entity }
-      end
+    if @memory.update_attributes(params[:memory])
+      add_flash :notice, 'Memory was successfully updated.'
+      respond_with @memory, :location => memories_path
+    else
+      respond_with @memory
     end
   end
 
