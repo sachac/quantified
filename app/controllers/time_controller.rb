@@ -62,18 +62,23 @@ class TimeController < ApplicationController
 
   def track
     authorize! :manage_account, current_account
-    category_input = params[:category]
+    category_input = params[:category].dup
     unless params[:category] or params[:category_id]
       add_flash :error, 'Please specify a category.'
       go_to time_dashboard_path and return
     end
     rec = Record.parse(current_account, params)
+    if category_input
+      data = Record.guess_time(category_input)
+      time = data[1]
+    end
     unless params[:timestamp].blank?
       time ||= Time.zone.parse(params[:timestamp])
     end
     time ||= Time.now
     if rec.nil?
-      go_to time_dashboard_path, :error => 'Could not find matching category' and return
+      # Could not find matching category. Offer to create?
+      go_to new_record_category_path(:timestamp => time), :notice => 'Could not find matching category. Create?' and return
     elsif rec.is_a? Record
       redirect_to edit_record_path(rec, :destination => params[:destination]) and return
     else
