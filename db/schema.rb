@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120715160943) do
+ActiveRecord::Schema.define(:version => 20120728132009) do
 
   create_table "clothing", :force => true do |t|
     t.string   "name"
@@ -245,6 +245,8 @@ ActiveRecord::Schema.define(:version => 20120715160943) do
     t.datetime "updated_at"
     t.datetime "timestamp"
     t.integer  "rating"
+    t.string   "date_entry"
+    t.datetime "sort_time"
   end
 
   add_index "memories", ["name"], :name => "index_memories_on_name"
