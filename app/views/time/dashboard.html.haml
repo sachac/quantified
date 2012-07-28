@@ -3,13 +3,7 @@
   %h3
     Current activity:
     = record_category_full(@current_activity.record_category)
-- if can? :manage_account, current_account
-  = form_tag track_time_path do
-    .clearfix
-      = label_tag :category, "Category"
-      .input
-        = text_field_tag :category
-        = submit_tag t('.track'), :class => 'btn'
+= render "application/quick_record"
   
 %h3= "Week beginning #{l @week_beginning}"
 
