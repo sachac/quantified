@@ -18,7 +18,11 @@ class ApplicationController < ActionController::Base
   rescue_from CanCan::AccessDenied do |exception|
     if current_user
       flash[:error] = "Sorry! Access denied. If you think you should be able to access that, please send me feedback!"
-      redirect_to :back
+      if request.env['HTTP_REFERER']
+        redirect_to :back
+      else
+        redirect_to root_path
+      end
     else
       flash[:error] = exception.message
       redirect_to new_user_session_path
