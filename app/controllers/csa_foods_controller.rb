@@ -6,7 +6,7 @@ class CsaFoodsController < ApplicationController
   # GET /csa_foods.xml
   def index
     @csa_foods = current_account.csa_foods.includes(:food).order('date_received DESC, disposition ASC')
-    authorize! :view_food, @csa_foods
+    authorize! :view_food, current_account
     respond_with @csa_foods
   end
 
@@ -87,7 +87,7 @@ class CsaFoodsController < ApplicationController
                        :date_received => Date.parse(params[:date]))
     if @log
       add_flash :notice, 'Food successfully logged.'
-      respond_with @log
+      respond_with @log, :location => csa_foods_path(:date => params[:date])
     else
       respond_with :error, :location => csa_foods_path(:date => params[:date])
     end

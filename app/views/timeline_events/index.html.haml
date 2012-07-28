@@ -7,15 +7,22 @@
       - case e.subject_type
         - when 'ClothingLog'
           - if e.secondary_subject
-            = "wore #{link_to e.secondary_subject.name, e.secondary_subject} on #{link_to e.subject.date, e.subject}".html_safe
+            = "wore #{link_to h(e.secondary_subject.name), e.secondary_subject} on #{link_to h(e.subject.date), e.subject}".html_safe
         - when 'Record'
-          = "tracked #{link_to e.secondary_subject.full_name, e.secondary_subject} starting #{e.subject.timestamp}".html_safe
+          = "tracked #{link_to h(e.secondary_subject.full_name), e.secondary_subject} starting #{h(e.subject.timestamp)}".html_safe
         - when 'Clothing'
-          = "created a clothing item #{link_to e.subject.name, e.subject}".html_safe
+          = "created a clothing item #{link_to h(e.subject.name), e.subject}".html_safe
         - when 'Stuff'
-          = "created stuff #{link_to e.subject.name, e.subject}".html_safe
+          = "created stuff #{link_to h(e.subject.name), e.subject}".html_safe
         - when 'LocationHistory'
-          = "moved #{link_to e.secondary_subject.name, e.secondary_subject} to #{link_to e.subject.location.name, e.subject.location}".html_safe
+          = "moved #{link_to h(e.secondary_subject.name), e.secondary_subject} to #{link_to h(e.subject.location.name), e.subject.location}".html_safe
+        - when 'Memory'
+          = "added a memory: #{link_to h(e.subject.name), e.subject} (#{h e.subject.entry_date})}".html_safe
+        - when 'CsaFood'
+          = "#{h e.event_type} CSA food: #{link_to h(e.secondary_subject.name), e.secondary_subject} (#{h e.subject.quantity} #{h e.subject.unit})".html_safe
+        - when 'User'
+          = "#{h e.event_type} user: #{link_to h(e.subject.email), e.subject}".html_safe
+          
       = link_to e do 
         = surround '(', ')' do
           %time.timeago{:datetime => e.created_at} e.created_at    

@@ -48,5 +48,7 @@ class CsaFood < ActiveRecord::Base
   def to_json(options = {})
     super(options.update(:methods => :name))
   end
+  fires :new, :on => :create, :actor => :user, :secondary_subject => :food
+  fires :update, :on => :update, :actor => :user, :secondary_subject => :food
 
 end
