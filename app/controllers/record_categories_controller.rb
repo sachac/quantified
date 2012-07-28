@@ -137,7 +137,14 @@ class RecordCategoriesController < ApplicationController
     if @record_category.save
       add_flash :notice, 'Record category was successfully created.'
     end
-    respond_with @record_category
+    if params[:timestamp]
+      rec = current_account.records.create(:timestamp => Time.zone.parse(params[:timestamp]), :source => 'category creation', :source_id => @record_category.id, :record_category_id => @record_category.id)
+      respond_with rec do |format|
+        format.html { redirect_to(edit_record_path(rec)) }
+      end
+    else
+      respond_with @record_category
+    end
   end
 
   # PUT /record_categories/1
