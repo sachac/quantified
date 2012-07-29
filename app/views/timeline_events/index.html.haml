@@ -28,7 +28,7 @@
             = "#{h e.event_type} CSA food: #{link_to h(e.secondary_subject.name), e.secondary_subject} (#{h e.subject.quantity} #{h e.subject.unit})".html_safe
         - when 'User'
           - if e.subject
-             = "#{h e.event_type} user: #{link_to h(e.subject.email), e.subject}".html_safe
+            = "#{h e.event_type} user: #{link_to h(e.subject.email), e.subject}".html_safe
           
       = link_to e do 
         = surround '(', ')' do
