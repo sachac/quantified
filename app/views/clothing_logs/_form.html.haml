@@ -10,4 +10,4 @@
     = f.input :outfit_id
     = f.input :clothing, :collection => current_account.clothing.order('name').map { |x| [ x.name, x.id ] }
   .actions
-    = f.submit 'Save'
+    = f.submit 'Save', :class => 'btn primary'
