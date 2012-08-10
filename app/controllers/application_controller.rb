@@ -138,4 +138,19 @@ class ApplicationController < ActionController::Base
       :entries => entries
     }
   end
+  
+  protected
+  def respond_with_data(data)
+    if !request.format.csv?
+      temp_data = data.paginate :page => params[:page]
+      data = {
+        :current_page => temp_data.current_page,
+        :per_page => temp_data.per_page,
+        :total_entries => temp_data.total_entries,
+        :entries => temp_data
+      }
+    end
+    respond_with(data)
+  end
 end
+
