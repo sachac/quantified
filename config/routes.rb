@@ -111,7 +111,7 @@ Home::Application.routes.draw do
   match 'time/refresh' => 'time#refresh_from_csv', :as => :refresh_from_csv, :via => :post
   match 'time/refresh' => 'time#refresh', :as => :refresh_time
   match 'time/review' => 'time#review', :as => :time_review
-  match 'time/track' => 'time#track', :as => :track_time, :via => :post
+  match 'time/track' => 'time#track', :as => :track_time, :via => [:post, :get]
   match 'time/batch' => 'records#batch', :as => :batch_records, :via => [:post, :get]
 
   match 'time/track' => 'time#dashboard'
@@ -131,7 +131,11 @@ Home::Application.routes.draw do
     end
   end
 
-  resources :clothing_logs
+  resources :clothing_logs do
+    collection do
+      get :matches
+    end
+  end
   match 'clothing_logs/by_date/:date' => 'clothing_logs#by_date', :as => :clothing_logs_by_date
   match 'clothing/tag/:id' => 'clothing#tag', :as => :clothing_by_tag
   match 'clothing/status/:status' => 'clothing#by_status', :as => :clothing_by_status

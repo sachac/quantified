@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120728132009) do
+ActiveRecord::Schema.define(:version => 20120810150517) do
 
   create_table "clothing", :force => true do |t|
     t.string   "name"
@@ -54,6 +54,7 @@ ActiveRecord::Schema.define(:version => 20120728132009) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "user_id"
+    t.date     "clothing_log_date"
   end
 
   add_index "clothing_matches", ["user_id"], :name => "index_clothing_matches_on_user_id"
