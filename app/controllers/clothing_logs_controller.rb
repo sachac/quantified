@@ -19,6 +19,14 @@ class ClothingLogsController < ApplicationController
     respond_with @clothing_logs
   end
 
+  def matches
+    authorize! :manage, current_account
+    params[:start] ||= current_account.beginning_of_week.advance(:weeks => -4).strftime('%Y-%m-%d')
+    params[:end] ||= Time.zone.now.strftime('%Y-%m-%d')
+    range = Date.parse(params[:start])..Date.parse(params[:end])
+    @clothing_matches = current_account.clothing_matches #.where(:clothing_log_date => range)
+    respond_with_data @clothing_matches
+  end
   # GET /clothing_logs/1
   # GET /clothing_logs/1.xml
   def show

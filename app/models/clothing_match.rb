@@ -8,11 +8,11 @@ class ClothingMatch < ActiveRecord::Base
     self.delete_matches(object)
     # Recreate matches for this date
     if (object.is_a? ClothingLog) then
-      ClothingLog.where('clothing_id != ? AND outfit_id = ? AND date = ?', object.clothing_id, object.outfit_id, object.date).each do |l|
+      object.user.clothing_logs.where('clothing_id != ? AND outfit_id = ? AND date = ?', object.clothing_id, object.outfit_id, object.date).each do |l|
         ClothingMatch.new(:clothing_a_id => object.clothing_id, :clothing_b_id => l.clothing_id, 
-          :clothing_log_a_id => object.id, :clothing_log_b_id => l.id, :user_id => object.user_id).save
+          :clothing_log_a_id => object.id, :clothing_log_b_id => l.id, :user_id => object.user_id, :clothing_log_date => object.date).save
         ClothingMatch.new(:clothing_b_id => object.clothing_id, :clothing_a_id => l.clothing_id, 
-          :clothing_log_b_id => object.id, :clothing_log_a_id => l.id, :user_id => object.user_id).save
+          :clothing_log_b_id => object.id, :clothing_log_a_id => l.id, :user_id => object.user_id, :clothing_log_date => object.date).save
       end
     else
       object.clothing_logs.each do |l|
@@ -49,5 +49,28 @@ class ClothingMatch < ActiveRecord::Base
       end
     end
 
+  end
+  
+  delegate :name, :to => :clothing_a, :prefix => true
+  delegate :name, :to => :clothing_b, :prefix => true
+  delegate :id, :to => :clothing_a, :prefix => true
+  delegate :id, :to => :clothing_b, :prefix => true
+  def to_xml(options = {})
+    super(options.update(:methods => [:clothing_a_id, :clothing_a_name, :clothing_b_id, :clothing_b_name]))
+  end
+  
+  def as_json(options = {})
+    super(options.update(:methods => [:clothing_a_id, :clothing_a_name, :clothing_b_id, :clothing_b_name]))
+  end
+  
+  comma do
+    user_id
+    clothing_log_date
+    clothing_log_a_id
+    clothing_a 'Clothing A ID' do |x| x.id if x end
+    clothing_a 'Clothing A name' do |x| x.name if x end
+    clothing_log_b_id
+    clothing_b 'Clothing B ID' do |x| x.id if x end
+    clothing_b 'Clothing B name' do |x| x.name if x end
   end
 end

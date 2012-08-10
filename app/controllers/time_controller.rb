@@ -64,7 +64,6 @@ class TimeController < ApplicationController
     authorize! :manage_account, current_account
     category_input = params[:category].dup
     unless params[:category] or params[:category_id]
-      add_flash :error, 'Please specify a category.'
       go_to time_dashboard_path and return
     end
     rec = Record.parse(current_account, params)
