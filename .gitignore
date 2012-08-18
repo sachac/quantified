@@ -11,3 +11,5 @@ webrat.log
 config/initializers/local.rb
 config/database.yml
 public/assets/*
+config/newrelic.yml
+
