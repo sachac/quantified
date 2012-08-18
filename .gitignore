@@ -9,4 +9,5 @@ tmp/
 vendor/cache
 webrat.log
 config/initializers/local.rb
+config/database.yml
 public/assets/*
