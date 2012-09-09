@@ -10,3 +10,4 @@ vendor/cache
 webrat.log
 config/initializers/local.rb
 public/assets/*
+config/initializers/secret_token.rb
