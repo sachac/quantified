@@ -20,7 +20,7 @@ class RecordCategoriesController < ApplicationController
   def show
     authorize! :view_time, current_account
     @record_category = current_account.record_categories.find(params[:id])
-    if request.format.html?
+    if request.format.html? or request.format.csv?
       params[:order] ||= 'newest'
       @order = params[:order]
       @summary_start = params && params[:start] ? Date.parse(params[:start]).midnight.in_time_zone : (Date.today - 1.year).midnight.in_time_zone
@@ -30,6 +30,7 @@ class RecordCategoriesController < ApplicationController
       unless managing?
         @records = @records.public
       end
+      @total = @records.sum(:duration)
     end
 
     respond_to do |format|

@@ -40,7 +40,8 @@
         - if can? :update, clothing_log
           %td= link_to 'Edit', edit_clothing_log_path(clothing_log)
           %td= link_to 'Delete', clothing_log, :confirm => 'Are you sure?', :method => :delete
-        %td= colors clothing_log.clothing.color
+        %td
+          = colors(clothing_log.clothing.color)
 %br
 
 - if can? :create, ClothingLog

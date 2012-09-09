@@ -22,7 +22,8 @@
   \|
   = link_to t('app.general.back'), record_categories_path
 
-
+Total:
+= duration @total
 - if @record_category.activity? or @record_category.record?
   = render 'records/summary', :records => @records, :show_duration => @record_category.activity?
   = will_paginate @records, :renderer => PaginationListLinkRenderer

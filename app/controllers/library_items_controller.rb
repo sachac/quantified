@@ -107,11 +107,12 @@ class LibraryItemsController < ApplicationController
       @tags = current_account.library_items.where('public=1').tag_counts_on(:tags).sort_by(&:name)
       @library_items = current_account.library_items.where('public=1').tagged_with(params[:id]).order(order)
     end
+    @library_items = @library_items.paginate :page => params[:page] 
     render :index
   end
 
   def bulk
-    authorize :manage_account, current_account
+    authorize! :manage_account, current_account
     if params[:bulk] and params[:op] then
       params[:bulk].compact.each do |i|
         item = current_account.library_items.find(i)
