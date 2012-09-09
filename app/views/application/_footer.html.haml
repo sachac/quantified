@@ -11,6 +11,8 @@
       = link_to "Privacy, terms, etc.", page_path("terms_privacy")    
       \-
       = feedback_link "Send feedback"
+      \-
+      = link_to 'Source', 'https://github.com/sachac/quantified'
       \- Current timezone:
       = @account.settings.timezone
       = link_to '(Change?)', edit_user_path(@account)
