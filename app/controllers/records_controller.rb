@@ -1,5 +1,6 @@
 class RecordsController < ApplicationController
   respond_to :html, :json, :csv, :xml
+  skip_before_filter :verify_authenticity_token, :only => [:create]
   # GET /records
   # GET /records.xml
   def index
@@ -59,6 +60,9 @@ class RecordsController < ApplicationController
   # POST /records.xml
   def create
     authorize! :manage_account, current_account
+    if params[:record][:timestamp].match /^[0-9]+/  # probably a timestamp
+       params[:record][:timestamp] = Time.at(params[:record][:timestamp].to_f)
+    end
     @record = current_account.records.new(params[:record])
     if @record.save
       @record.update_previous
