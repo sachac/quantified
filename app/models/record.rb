@@ -7,6 +7,14 @@ class Record < ActiveRecord::Base
   before_save :add_data
   validate :end_timestamp_must_be_after_start
  
+  def data=(val)
+    if val.is_a? String
+      write_attribute(:data, ActiveSupport::JSON.decode(val))
+    else
+      write_attribute(:data, val)
+    end
+  end
+
   def end_timestamp_must_be_after_start
     if !end_timestamp.blank? and end_timestamp < timestamp
       errors.add(:end_timestamp, 'must be after beginning of record')

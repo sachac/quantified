@@ -229,7 +229,7 @@ module ApplicationHelper
     if data.length == 1
       content_tag(:strong, data.keys.first.to_s.humanize) + ": " + data.values.first
     elsif data.length > 0
-      content_tag(:ul, data.map { |k, v| content_tag(:li, (content_tag(:strong, k.to_s.humanize).html_safe + ": " + v.html_safe).html_safe) }.join.html_safe).html_safe
+      content_tag(:ul, data.map { |k, v| content_tag(:li, (content_tag(:strong, k.to_s.humanize).html_safe + ": " + (v || '').html_safe).html_safe) }.join.html_safe).html_safe
     else
       ''
     end
