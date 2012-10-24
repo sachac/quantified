@@ -34,6 +34,8 @@ Tags:
         - if can? :update, Clothing
           %th
         %th= sortable_column "Name"
+        - if managing?
+          %th Actions
         %th= sortable_column "Status"
         %th= sortable_column "Count", :column => "clothing_logs_count", :direction => :desc
         %th= sortable_column "Last worn"
@@ -45,6 +47,11 @@ Tags:
           - if can? :update, Clothing
             %td= check_box_tag 'bulk[]', clothing.id
           %td= link_to clothing.name, clothing
+          - if managing?
+            %td
+              = link_to 'Yesterday', clothing_logs_path + "?clothing_id=" + clothing.id.to_s + "&date=" + Date.yesterday.to_s, :method => :post
+              = link_to 'Today', clothing_logs_path + "?clothing_id=" + clothing.id.to_s + "&date=" + Date.today.to_s, :method => :post
+              = link_to 'Tomorrow', clothing_logs_path + "?clothing_id=" + clothing.id.to_s + "&date=" + Date.tomorrow.to_s, :method => :post
           %td= clothing.status
           %td= clothing.clothing_logs_count
           %td= date_ago_future(clothing.last_worn)
