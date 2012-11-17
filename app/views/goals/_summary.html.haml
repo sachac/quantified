@@ -3,6 +3,6 @@
     %tr
       %td.h= g[:label]
       %td
-        .sparkline{'sparkType' => 'bullet', :class => g[:class], :sparkPerformanceColor => g[:performance_color]}
+        .sparkline{'sparkType' => 'bullet', :class => g[:class], :sparkPerformanceColor => g[:performance_color], :title => "Value: #{g[:performance]}, target: #{g[:target]}"}
           = ([g[:target] || 0, g[:performance] || 0] + (g[:range] || [])).join(',')
       %td= g[:text]

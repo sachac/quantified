@@ -54,7 +54,7 @@ class ClothingController < ApplicationController
     list ||= Hash.new
     @past_matches = @clothing.clothing_matches.count(:group => :clothing_b_id).sort { |a,b| b[1] <=> a[1] }.each do |id, count| 
       item = current_account.clothing.find_by_id(id)
-      if item
+      if item and item.status == 'active'
         list[id] ||= item
         list[id].name += " (#{count})"
         @previous_matches << list[id]
