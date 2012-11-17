@@ -316,11 +316,7 @@ module ApplicationHelper
       colors = colors.split(',')
     end
     if colors
-<<<<<<< HEAD
       colors.map { |x| '<div class="color-box" style="' + x + '">' }.join.html_safe
-=======
-      colors.map { |x| '<div class="color-box" style="' + x + '">' }.join
->>>>>>> 329ff106815f323e6ff6ad8e8bcf4470b17ddb78
     end    
   end
 end

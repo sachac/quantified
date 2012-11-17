@@ -70,10 +70,7 @@ class TorontoLibrary < ActiveRecord::Base
       # Does the item exist?
       rec = LibraryItem.where("library_id = ?", item[:library_id]).first
       if rec then
-<<<<<<< HEAD
         rec.status = 'due'
-=======
->>>>>>> 329ff106815f323e6ff6ad8e8bcf4470b17ddb78
         rec.due = item[:due]
         rec.updated_at = stamp
       else
