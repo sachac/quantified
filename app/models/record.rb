@@ -130,10 +130,8 @@ class Record < ActiveRecord::Base
       :daily
     elsif diff <= 8 * 7
       :weekly
-    elsif diff <= 365
-      :monthly
     else
-      :yearly
+      :monthly
     end
   end
 

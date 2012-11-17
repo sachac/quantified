@@ -62,7 +62,7 @@ class TimeController < ApplicationController
 
   def track
     authorize! :manage_account, current_account
-    category_input = params[:category].dup
+    category_input = params[:category] && params[:category].dup
     unless params[:category] or params[:category_id]
       go_to time_dashboard_path and return
     end
