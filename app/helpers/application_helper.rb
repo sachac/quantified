@@ -217,7 +217,8 @@ module ApplicationHelper
   end
 
   def record_category_breadcrumbs(category)
-    ([link_to t('app.general.home'), record_categories_path] + category.ancestors.reverse.map{ |c| link_to c.name, c }).join(' &raquo; ').html_safe
+    list = [link_to(I18n.t('app.general.home'), record_categories_path)] + category.ancestors.reverse.map{ |c| link_to c.name, c }
+    list.join(' &raquo; ').html_safe
   end
 
   def record_category_full(category)

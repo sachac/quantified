@@ -13,6 +13,7 @@ gem 'rails-dev-tweaks'
 gem 'jquery-rails'
 gem 'sqlite3'
 gem 'isbndb'
+gem 'rake'
 gem 'haml'
 gem 'mysql2'
 gem "paperclip", "~> 2.0"

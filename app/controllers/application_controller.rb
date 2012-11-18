@@ -1,4 +1,4 @@
-require 'lib/exceptions'
+require './lib/exceptions'
 class ApplicationController < ActionController::Base
   include Exceptions
   check_authorization :unless => :devise_controller?

@@ -80,6 +80,7 @@ en:
       cancel: Cancel
       public: Public
       private: Private
+      home: Home
       total: Total
       average_per_day: Avg/day
       average: Avg
