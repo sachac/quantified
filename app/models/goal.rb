@@ -26,12 +26,18 @@ class Goal < ActiveRecord::Base
         performance = percentage
         target = 0
         case matches[2]
-        when '<': success = delta < -epsilon
-        when '=': success = delta.abs < epsilon
-        when '>': success = delta > -epsilon
-        when '<=': success = delta <= epsilon
-        when '>=': success = delta >= -epsilon
-        when '!=': success = delta.abs > epsilon
+        when '<'
+	 success = delta < -epsilon
+        when '='
+	success = delta.abs < epsilon
+        when '>'
+	 success = delta > -epsilon
+        when '<='
+	success = delta <= epsilon
+        when '>='
+	success = delta >= -epsilon
+        when '!='
+	success = delta.abs > epsilon
         end
         {:label => self.label, :performance => performance, :target => target, :success => success, :text => "#{matches[1]}: #{"%0.1f" % time1} - #{matches[3]}: #{"%0.1f" % time2}"}
     elsif matches = self.expression.match(/^([0-9]+) *< *\[(.*)\] *< *([0-9]+)/)

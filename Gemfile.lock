@@ -157,7 +157,7 @@ GEM
     faraday (0.7.5)
       addressable (~> 2.2.6)
       multipart-post (~> 1.1.3)
-      rack (< 2, >= 1.1.0)
+      rack (>= 1.1.0, < 2)
     fastercsv (1.5.4)
     ffi (1.0.9)
     forgery (0.5.0)
@@ -428,6 +428,7 @@ DEPENDENCIES
   rails-dev-tweaks
   rails-settings-cached
   rails3-jquery-autocomplete
+  rake
   rcov
   rspec
   rspec-rails
