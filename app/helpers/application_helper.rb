@@ -241,6 +241,7 @@ module ApplicationHelper
     # Javascript needs start time, end time, title, color, and duration
     @colors ||= Hash.new
     @colors[row[2].record_category_id] ||= row[2].record_category.get_color
+    @colors[row[2].record_category_id] ||= "#ccc"
     unless row[2].color
       row[2].record_category.color = @colors[row[2].record_category_id]
     end

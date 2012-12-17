@@ -38,7 +38,7 @@ class Record < ActiveRecord::Base
   end
 
   def update_next
-    if !self.manual
+    if !self.manual and self.record_category.category_type == 'activity'
       next_activity = self.next_activity
       if next_activity and self.end_timestamp and next_activity.timestamp != self.end_timestamp
         next_act = Record.where(:id => next_activity.id)
@@ -51,7 +51,7 @@ class Record < ActiveRecord::Base
   end
   def update_previous
     previous_activity = self.previous_activity
-    if previous_activity and !previous_activity.manual? and (!previous_activity.end_timestamp or previous_activity.end_timestamp != self.timestamp)
+    if self.record_category.category_type == 'activity' and previous_activity and !previous_activity.manual? and (!previous_activity.end_timestamp or previous_activity.end_timestamp != self.timestamp)
       prev = Record.where(:id => previous_activity.id)
       prev.update_all(['end_timestamp = ?', self.timestamp])
       prev.update_all(['duration = ?', self.timestamp - previous_activity.timestamp])
