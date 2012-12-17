@@ -3,7 +3,7 @@
 
 en:
   user:
-    invited: %{email} invited.
+    invited: "%{email} invited."
     username: Username
     sign_up: Sign up 
   general:
