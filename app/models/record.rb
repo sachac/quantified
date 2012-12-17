@@ -21,6 +21,26 @@ class Record < ActiveRecord::Base
     end
   end
 
+  def self.split(records)
+    if records.is_a? Record
+      if records.end_timestamp and records.end_timestamp.midnight > records.timestamp.midnight
+        record_a = records.dup
+        record_b = records.dup
+        record_a.end_timestamp = record_a.end_timestamp.midnight
+        record_a.duration = record_a.end_timestamp - record_a.timestamp
+        record_b.timestamp = record_b.end_timestamp.midnight
+        record_b.duration = record_b.end_timestamp - record_b.timestamp
+        record_a.id = records.id
+        record_b.id = records.id
+        [record_b, record_a]
+      else
+        [records]
+      end
+    else
+      records.map { |x| Record.split(x) }.flatten
+    end
+  end
+  
   def add_data
     self.date = self.timestamp.in_time_zone.to_date
     # Set end time automatically if we are backdating activities
