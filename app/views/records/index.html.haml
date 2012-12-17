@@ -25,11 +25,18 @@
           = radio_button_tag :display_type, 'decimal', params[:display_type] == 'decimal', :class => 'inline'
           = label_tag :display_type_decimal, 'Decimal', :class => 'inline'
       .clearfix
+        = label_tag :split, 'Split'
+        .input
+          = radio_button_tag :split, 'keep', params[:split] != 'split', :class => 'inline'
+          = label_tag :split_keep, 'Keep original entries', :class => 'inline'
+          = radio_button_tag :split, 'split', params[:split] == 'split', :class => 'inline'
+          = label_tag :split_split, 'Split by midnight', :class => 'inline'
+      .clearfix
         = label_tag :filter, t('app.general.filter')
         .input
           = text_field_tag :filter_string, params[:filter_string]
       .actions   
         = submit_tag t('app.general.filter'), :class => 'btn primary'
         = submit_tag t('.recalculate_durations'), :class => 'btn'
-= render 'summary', :records => @records, :show_duration => true
+= render 'summary', :records => @data[:entries], :show_duration => true
 = will_paginate @records, :renderer => PaginationListLinkRenderer

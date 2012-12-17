@@ -15,14 +15,21 @@ class RecordsController < ApplicationController
     @order = params[:order]
     @records = Record.get_records(current_account, :order => @order, :include_private => managing?, :start => @start, :end => @end)
     if request.format.csv?
+      if params[:split] and params[:split] == 'split'
+        @records = Record.split(@records)
+      end
       @data = @records
     else
       @records = @records.paginate :page => params[:page] 
+      list = @records
+      if params[:split] and params[:split] == 'split'
+        list = Record.split(@records)
+      end
       @data = { 
         :current_page => @records.current_page,
         :per_page => @records.per_page,
         :total_entries => @records.total_entries,
-        :entries => @records 
+        :entries => list
       }
     end
     respond_with @data
