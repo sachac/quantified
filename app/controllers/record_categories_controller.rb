@@ -172,9 +172,12 @@ class RecordCategoriesController < ApplicationController
   def track
     authorize! :manage_account, current_account
     @record_category = current_account.record_categories.find(params[:id])
-    # Update the latest activity now that we know the ending timestamp
     now = Time.zone.now
     rec = current_account.records.create(:timestamp => now, :source => 'quantified awesome record categories', :source_id => @record_category.id, :record_category_id => @record_category.id)
+    if rec
+      rec.update_previous
+      rec.update_next
+    end
     respond_with rec do |format|
       format.html { redirect_to(edit_record_path(rec)) }
     end
