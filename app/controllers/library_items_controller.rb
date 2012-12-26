@@ -113,19 +113,32 @@ class LibraryItemsController < ApplicationController
 
   def bulk
     authorize! :manage_account, current_account
-    if params[:bulk] and params[:op] then
+    list = Hash.new
+    if params[:bulk] and params[:op] 
       params[:bulk].compact.each do |i|
         item = current_account.library_items.find(i)
         case params[:op]
-          when 'Make public'
-            item.public = true
-          when 'Make private'
-            item.public = false
-          when 'Mark read'
-            item.status = 'read'
-            item.read_date ||= Date.today
+        when 'Renew'
+          list[item.toronto_library] ||= Array.new
+          list[item.toronto_library] << item
+        when 'Make public'
+          item.public = true
+          item.save
+        when 'Make private'
+          item.public = false
+          item.save
+        when 'Mark read'
+          item.status = 'read'
+          item.read_date ||= Date.today
+          item.save
         end
-        item.save
+      end
+    end
+    if params[:op] == 'Renew'
+      logger.info(list.inspect)
+      list.each do |card, items|
+        card.renew_items(items)
+        card.refresh_items
       end
     end
     redirect_to :back and return
