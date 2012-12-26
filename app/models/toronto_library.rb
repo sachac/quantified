@@ -29,7 +29,7 @@ class TorontoLibrary < ActiveRecord::Base
          :author => info[4], 
          :title => info[5], 
          :toronto_library_id => self.id,
-         :status => !status || status[1].blank? ? 'due' : status[1].strip.downcase,
+         :status => !status || status[1].blank? || status[1] == 'overdue' ? 'due' : status[1].strip.downcase,
          :due => Date.new(match_data[3].to_i, match_data[2].to_i, match_data[1].to_i)}
         if (row[:due] <= date)
           checkbox = form.checkbox_with(x.attributes['name'])
@@ -58,7 +58,7 @@ class TorontoLibrary < ActiveRecord::Base
          :author => info[4], 
          :title => info[5], 
          :toronto_library_id => self.id,
-         :status => !status || status[1].blank? ? 'due' : status[1].strip.downcase,
+         :status => !status || status[1].blank? || (status[1] == 'overdue') ? 'due' : status[1].strip.downcase,
          :due => Date.new(match_data[3].to_i, match_data[2].to_i, match_data[1].to_i)}
       end
     end
@@ -101,7 +101,7 @@ class TorontoLibrary < ActiveRecord::Base
       # Does the item exist?
       rec = LibraryItem.where("library_id = ?", item[:library_id]).first
       if rec then
-        rec.status = 'due'
+        rec.status = 'due' if rec.status != 'lost'
         rec.due = item[:due]
         rec.updated_at = stamp
       else
