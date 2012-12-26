@@ -1,5 +1,6 @@
 class LibraryItem < ActiveRecord::Base
   belongs_to :user
+  belongs_to :toronto_library
   acts_as_taggable_on :tags
   def self.current_items(account, public_only = false)
     if account
@@ -10,7 +11,7 @@ class LibraryItem < ActiveRecord::Base
       query
     end
   end
-  
+
   comma do
     library_id
     title

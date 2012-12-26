@@ -10,7 +10,7 @@
 
 = form_tag library_item_bulk_path do
   - if can? :update, LibraryItem
-    = select_tag 'op', options_for_select(['Make public', 'Make private', 'Mark read'])
+    = select_tag 'op', options_for_select(['Renew', 'Make public', 'Make private', 'Mark read'])
     = submit_tag
   %table.lined
     %tr

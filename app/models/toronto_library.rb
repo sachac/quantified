@@ -15,7 +15,30 @@ class TorontoLibrary < ActiveRecord::Base
     self
   end
 
-  def renew_items(date)
+  def renew_items(library_items)
+    self.login if @agent.nil? or @agent.page.nil?
+    form = @agent.page.form_with :id => 'renewitems'
+    ids = library_items.map(&:library_id).compact
+    items_checked = Array.new
+    @agent.page.parser.css('#renewcharge').css('input').each do |x|
+      if x.attributes['name'] && x.attributes['name'].value != 'id' then
+        info = x.attributes['name'].value.split('^')
+        if ids.include?(info[1])
+          checkbox = form.checkbox_with(:name => x.attributes['name'].to_s)
+          if checkbox
+            checkbox.check
+            items_checked << x.attributes['name']
+          else
+          end
+        end
+      end
+    end
+    if items_checked.size > 0
+      form.submit if form
+    end    
+  end
+
+  def renew_items_by_date(date)
     items_checked = Array.new
     form = @agent.page.form_with :id => 'renewitems'
     @agent.page.parser.css('#renewcharge').css('input').each do |x|
@@ -23,16 +46,9 @@ class TorontoLibrary < ActiveRecord::Base
         info = x.attributes['name'].value.split('^')
         due_string = x.parent.parent.inner_html
         match_data = due_string.match(/<!-- Print the date due -->[\r\n\t]*([^\r\n\t<\/]+)\/([^\r\n\t<\/]+)\/([^\r\n\t<\/,]+)/)
-        status = due_string.match(/<!-- Status -->[ \r\n\t]*([^\r\n\t<]+)/)
-        row = {:library_id => info[1], 
-         :dewey => info[2], 
-         :author => info[4], 
-         :title => info[5], 
-         :toronto_library_id => self.id,
-         :status => !status || status[1].blank? || status[1] == 'overdue' ? 'due' : status[1].strip.downcase,
-         :due => Date.new(match_data[3].to_i, match_data[2].to_i, match_data[1].to_i)}
-        if (row[:due] <= date)
-          checkbox = form.checkbox_with(x.attributes['name'])
+        due = Date.new(match_data[3].to_i, match_data[2].to_i, match_data[1].to_i)
+        if (due <= date)
+          checkbox = form.checkbox_with(:name => x.attributes['name'].to_s)
 	  if checkbox
 	    checkbox.check
             items_checked << row
@@ -41,7 +57,6 @@ class TorontoLibrary < ActiveRecord::Base
       end
     end
     if items_checked.size > 0
-      puts items_checked.inspect
       form.submit if form
     end
   end
@@ -57,6 +72,7 @@ class TorontoLibrary < ActiveRecord::Base
          :dewey => info[2], 
          :author => info[4], 
          :title => info[5], 
+         :details => x.attributes['name'],
          :toronto_library_id => self.id,
          :status => !status || status[1].blank? || (status[1] == 'overdue') ? 'due' : status[1].strip.downcase,
          :due => Date.new(match_data[3].to_i, match_data[2].to_i, match_data[1].to_i)}
@@ -92,9 +108,8 @@ class TorontoLibrary < ActiveRecord::Base
   end
 
   def refresh_items
-    # Replace this with selective updating
     stamp = Time.now
-    self.login
+    self.login 
     self.count_pickups!
     items = list_items
     items.each do |item|
