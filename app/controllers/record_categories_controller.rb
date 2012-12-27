@@ -140,6 +140,10 @@ class RecordCategoriesController < ApplicationController
     end
     if params[:timestamp]
       rec = current_account.records.create(:timestamp => Time.zone.parse(params[:timestamp]), :source => 'category creation', :source_id => @record_category.id, :record_category_id => @record_category.id)
+      if rec.save
+        rec.update_previous
+        rec.update_next
+      end
       respond_with rec do |format|
         format.html { redirect_to(edit_record_path(rec)) }
       end
