@@ -74,7 +74,12 @@ Home::Application.routes.draw do
     member do
       get :history
     end
+    collection do
+      get :bulk
+      post :bulk_update
+    end
   end
+  
   resources :location_histories
   match 'stuff/log', :via => :post, :as => :log_stuff
   match 'menu' => 'home#menu', :as => :menu
