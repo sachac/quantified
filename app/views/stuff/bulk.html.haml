@@ -1,0 +1,13 @@
+= setup_page 'bulk'
+
+= form_tag bulk_update_stuff_index_path, :method => :post do
+  .clearfix
+    = label_tag :location, 'Location'
+    .input= autocomplete_field_tag :location, params[:location], autocomplete_stuff_path, :autofocus => true, :placeholder => 'Location name', :required => true
+  .clearfix
+    = label_tag :batch, 'Items'
+    .input
+      = text_area_tag :batch, params[:patch], :required => true
+  .clearfix
+    .actions
+      = submit_tag 'Update', :class => 'btn primary'  
