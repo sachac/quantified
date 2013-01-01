@@ -30,12 +30,28 @@ class StuffController < ApplicationController
     respond_with @stuff
   end
 
-  def log
-    @stuff = current_account.stuff.find(:first, :conditions => [ 'lower(name) = ?', params[:stuff_name].strip.downcase ])
-    unless @stuff
-      @stuff = current_account.stuff.new(:name => params[:stuff_name].strip, :status => 'active', :stuff_type => 'stuff', :location => @location)
-      @stuff.user = current_account
+  def bulk
+    authorize! :manage_account, current_account
+  end
+  
+  def bulk_update
+    authorize! :manage_account, current_account
+    if params[:location] and params[:batch]
+      @response = Stuff.bulk_update(current_account, params[:location], params[:batch])
     end
+    if @response
+      if @response[:success].size > 0
+        add_flash :notice, "Updated: " + @response[:success].map(&:name).join(', ')
+      end
+      if @response[:failure].size > 0
+        add_flash :notice, "Failed: " + @response[:failure].join(', ')
+      end
+    end
+    respond_with @response, :location => bulk_stuff_index_path
+  end
+  
+  def log
+    @stuff = Stuff.find_or_create(current_account.stuff, params[:stuff_name])
     @location = current_account.get_location(params[:location_name])
     @stuff.location = @location
     result = @stuff.save!

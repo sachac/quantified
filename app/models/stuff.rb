@@ -70,6 +70,34 @@ class Stuff < ActiveRecord::Base
     super(options.update(:methods => [:home_location_name, :location_name]))
   end
 
+  # Returns :success => [list of entries], :failure => [list of strings]
+  def self.bulk_update(account, location, input)
+    success = Array.new
+    failure = Array.new
+    location = account.get_location(location)
+    entries = input.split /\n/
+    entries.each do |e|
+      item = Stuff.find_or_create(account, e)
+      item.location = location
+      if item.save
+        success << item
+      else
+        failure << e.strip
+      end
+    end
+    {:success => success, :failure => failure}
+  end
+
+  def self.find_or_create(account, name)
+    stuff = account.stuff.find(:first, :conditions => [ 'lower(name) = ?', name.strip.downcase ])
+    unless stuff
+      stuff = account.stuff.new(:name => name.strip, :status => 'active', :stuff_type => 'stuff', :location => @location)
+      stuff.user = account
+    end
+    stuff.save!
+    stuff
+  end
+  
   fires :new, :on => :create, :actor => :user
 
 end
