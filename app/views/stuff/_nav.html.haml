@@ -1,5 +1,6 @@
 %ul.tabs
   %li{:class => active_class(active, 'stuff')}= link_to 'Stuff', stuff_index_path
+  %li{:class => active_class(active, 'bulk')}= link_to 'Bulk entry', bulk_stuff_index_path
   %li{:class => active_class(active, 'contexts')}= link_to 'Contexts', contexts_path
   - @account.contexts.each do |c|
     %li{:class => active_class(active, "context#{c.id}")}= link_to c.name, c
