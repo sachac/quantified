@@ -1,6 +1,6 @@
 class RecordCategoriesController < ApplicationController
   skip_authorization_check :only => [:autocomplete_record_category_full_name]
-  autocomplete :record_category, :full_name, :full => true
+  autocomplete :record_category, :full_name, :full => true, :scopes => [:active]
   respond_to :html, :json, :csv, :xml
   
   # GET /record_categories
@@ -20,6 +20,11 @@ class RecordCategoriesController < ApplicationController
   def show
     authorize! :view_time, current_account
     @record_category = current_account.record_categories.find(params[:id])
+    if @record_category.active
+      @title = @record_category.name
+    else
+      @title = @record_category.name + " (" + I18n.t('general.inactive') + ")"
+    end
     if request.format.html? or request.format.csv?
       params[:order] ||= 'newest'
       @order = params[:order]
