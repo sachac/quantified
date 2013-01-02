@@ -12,6 +12,7 @@ en:
     delete: Delete
     edit: Edit
     are_you_sure: Are you sure?
+    inactive: Inactive
   library:
     request: Request items
   time_log:

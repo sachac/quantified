@@ -26,6 +26,9 @@
                 = action_list(c)
               %td
                 = link_to c.name, c
+                - if !c.active?
+                  = surround ' (', ')' do
+                    = t('general.inactive')
                 - if c.list?
                   &raquo;
 - else

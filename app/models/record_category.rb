@@ -7,6 +7,14 @@ class RecordCategory < ActiveRecord::Base
   serialize :data
   validates_presence_of :name
   validates_presence_of :category_type
+
+  after_initialize do
+    if self.new_record?
+      # values will be available for new record forms.
+      self.active = true 
+    end
+  end
+  
   def add_data
     self.full_name = self_and_ancestors.reverse.map{ |c| c.name }.join(' - ').html_safe
   end
@@ -177,7 +185,7 @@ class RecordCategory < ActiveRecord::Base
 
   def self.search(account, string, options = {})
     split = string.downcase.split
-    list = account.record_categories
+    list = account.record_categories.active
     split.each do |l|
       list = list.where('LOWER(full_name) LIKE LOWER(?)', "%#{l.strip}%")
     end
@@ -269,4 +277,6 @@ class RecordCategory < ActiveRecord::Base
     dotted_ids
     data 'Data' do |data| data.to_json if data and data.size > 0 end
   end
+  
+  scope :active, where(:active => true)
 end
