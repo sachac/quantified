@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121226135854) do
+ActiveRecord::Schema.define(:version => 20130102150645) do
 
   create_table "clothing", :force => true do |t|
     t.string   "name"
@@ -314,6 +314,7 @@ ActiveRecord::Schema.define(:version => 20121226135854) do
     t.datetime "updated_at"
     t.string   "full_name"
     t.string   "color"
+    t.boolean  "active",                            :default => true, :null => false
   end
 
   add_index "record_categories", ["dotted_ids"], :name => "index_record_categories_on_dotted_ids"
