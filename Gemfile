@@ -1,7 +1,7 @@
 source 'http://rubygems.org'
 
 gem 'rack-offline', :git => 'git://github.com/wycats/rack-offline.git'
-gem 'rails', '3.1.5'
+gem 'rails', '3.1'
 # Bundle edge Rails instead:
 #gem 'rails', :git => 'git://github.com/rails/rails.git'
 #gem 'arel', :git => 'git://github.com/rails/arel.git'
