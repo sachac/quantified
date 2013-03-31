@@ -2,7 +2,7 @@
   .clearfix
     = label_tag :email, "E-mail"
     .input
-      - if current_account
+      - if current_account && current_account.id != 1
         .uneditable-input= current_account.email
       - else
         = text_field_tag :email

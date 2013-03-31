@@ -93,7 +93,7 @@ class HomeController < ApplicationController
     info = params
     puts params.inspect
     if !params[:message].blank?
-      if current_account
+      if current_account && current_account.id != 1
         info[:user_id] = current_account.id
         info[:email] = current_account.email
       end
