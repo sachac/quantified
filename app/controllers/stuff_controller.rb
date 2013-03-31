@@ -51,7 +51,7 @@ class StuffController < ApplicationController
   end
   
   def log
-    @stuff = Stuff.find_or_create(current_account.stuff, params[:stuff_name])
+    @stuff = Stuff.find_or_create(current_account, params[:stuff_name])
     @location = current_account.get_location(params[:location_name])
     @stuff.location = @location
     result = @stuff.save!

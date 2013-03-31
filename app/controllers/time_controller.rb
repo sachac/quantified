@@ -35,7 +35,9 @@ class TimeController < ApplicationController
 
   def graph
     authorize! :view_time, current_account
+    params[:start] ||= params[:url_start]
     params[:start] ||= current_account.beginning_of_week.advance(:weeks => -4).strftime('%Y-%m-%d')
+    params[:end] ||= params[:url_end]
     params[:end] ||= Time.zone.now.strftime('%Y-%m-%d')
     prepare_filters [:date_range]
     @range = Date.parse(params[:start])..Date.parse(params[:end])
