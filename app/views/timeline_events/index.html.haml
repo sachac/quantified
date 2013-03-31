@@ -22,7 +22,7 @@
             = "moved #{link_to h(e.secondary_subject.name), e.secondary_subject} to #{link_to h(e.subject.location.name), e.subject.location}".html_safe
         - when 'Memory'
           - if e.subject
-            = "added a memory: #{link_to h(e.subject.name), e.subject} (#{h e.subject.entry_date})}".html_safe
+            = "added a memory: #{link_to h(e.subject.name), e.subject} (#{h e.subject.date_entry})}".html_safe
         - when 'CsaFood'
           - if e.secondary_subject and e.subject
             = "#{h e.event_type} CSA food: #{link_to h(e.secondary_subject.name), e.secondary_subject} (#{h e.subject.quantity} #{h e.subject.unit})".html_safe

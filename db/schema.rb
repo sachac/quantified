@@ -1,3 +1,4 @@
+# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -58,55 +59,6 @@ ActiveRecord::Schema.define(:version => 20130102150645) do
   end
 
   add_index "clothing_matches", ["user_id"], :name => "index_clothing_matches_on_user_id"
-
-  create_table "contact_group_memberships", :force => true do |t|
-    t.integer "contact_group_id"
-    t.integer "contact_id"
-  end
-
-  create_table "contact_groups", :force => true do |t|
-    t.string   "name"
-    t.string   "server_id"
-    t.integer  "user_id"
-    t.integer  "num_contacts"
-    t.text     "data"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "contact_histories", :force => true do |t|
-    t.integer  "contact_id"
-    t.text     "notes"
-    t.datetime "date"
-    t.integer  "user_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "contact_type"
-  end
-
-  create_table "contact_names", :force => true do |t|
-    t.string   "given_name"
-    t.string   "additional_name"
-    t.string   "family_name"
-    t.string   "name_prefix"
-    t.string   "name_suffix"
-    t.string   "full_name"
-    t.integer  "contact_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "contacts", :force => true do |t|
-    t.text     "data"
-    t.string   "name"
-    t.boolean  "deleted"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.datetime "last_contacted"
-    t.integer  "user_id"
-    t.string   "server_id"
-    t.integer  "frequency"
-  end
 
   create_table "context_rules", :force => true do |t|
     t.integer  "stuff_id"

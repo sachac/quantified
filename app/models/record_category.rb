@@ -67,6 +67,7 @@ class RecordCategory < ActiveRecord::Base
         rec.split(options[:range]).each do |split_record|
           key = Record.get_zoom_key(options[:user], zoom, split_record[0])
           ids.each do |cat|
+            cat = cat.to_i
             case options[:key]
             when :date
               summary[:rows][key][cat] += split_record[1] - split_record[0]
