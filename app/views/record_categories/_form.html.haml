@@ -33,5 +33,6 @@
     = f.input :color
   .actions
     = f.submit t('general.save'), :class => 'btn primary'
-    = link_to t('general.delete'), @record_category, :class => 'btn', :method => :delete, :confirm => t('general.are_you_sure')
+    - if @record_category
+      = link_to t('general.delete'), @record_category, :class => 'btn', :method => :delete, :confirm => t('general.are_you_sure')
     

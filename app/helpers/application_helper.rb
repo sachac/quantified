@@ -222,6 +222,7 @@ module ApplicationHelper
   end
 
   def record_category_full(category)
+    return "(deleted?)" unless category
     category.self_and_ancestors.reverse.map{ |c| link_to c.name, c }.join(' &raquo; ').html_safe
   end
 

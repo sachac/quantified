@@ -45,7 +45,8 @@ class Goal < ActiveRecord::Base
       val1 = matches[1].to_f
       val2 = matches[3].to_f
       target = val1
-      performance = cat.cumulative_time(range) / 3600.0
+      performance = cat.cumulative_time(range) / 3600.0 if cat
+      performance ||= 0
       success = (val1 < performance) && (performance < val2)
       {:label => self.label, :performance => performance, :target => target, :success => success, :text => performance ? '%.1f' % performance : ''}
     end

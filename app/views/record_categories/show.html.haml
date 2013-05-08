@@ -25,10 +25,11 @@
 Total:
 = duration @total
 
-- if @record_category.activity? or @record_category.record?
-  = render 'records/summary', :records => @records, :show_duration => @record_category.activity?
-  = will_paginate @records, :renderer => PaginationListLinkRenderer
-  
 - if @record_category.category_type == 'list'
   - if @record_category.children.length > 0
     = render 'list', :list => @record_category.children
+
+- if @records
+  = render 'records/summary', :records => @records, :show_duration => !@record_category.record?
+  = will_paginate @records, :renderer => PaginationListLinkRenderer
+  

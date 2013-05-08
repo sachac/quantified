@@ -21,7 +21,7 @@
               = record.end_timestamp.strftime('%H:%M')
             - else  
               = l(record.end_timestamp, :format => :short)
-        %td= link_to record_category_full(record.record_category), record.record_category
+        %td= if record.record_category then link_to record_category_full(record.record_category), record.record_category else "Deleted category?" end
         - if show_duration
           %td= duration record.duration
         - if can? :manage_account, current_account  
