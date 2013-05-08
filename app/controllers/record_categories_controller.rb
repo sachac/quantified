@@ -20,6 +20,9 @@ class RecordCategoriesController < ApplicationController
   def show
     authorize! :view_time, current_account
     @record_category = current_account.record_categories.find(params[:id])
+    unless @record_category
+      raise ActionController::RoutingError.new('Not Found')
+    end
     if @record_category.active
       @title = @record_category.name
     else
@@ -33,13 +36,13 @@ class RecordCategoriesController < ApplicationController
       prepare_filters [:date_range, :order, :filter_string]
       @records = @record_category.category_records(:order => @order, :start => @summary_start, :end => @summary_end, :filter_string => params[:filter_string])
       unless managing?
-        @records = @records.public
+        @records = @records.public if @records
       end
       @total = @records.sum(:duration)
     end
 
     respond_to do |format|
-      format.html { @records = @records.paginate :page => params[:page], :per_page => 20 }
+      format.html { if @records then @records = @records.paginate :page => params[:page], :per_page => 20 end }
       format.json { render :json => @record_category }
       format.xml { render :xml => @record_category }
       format.csv {
@@ -175,7 +178,7 @@ class RecordCategoriesController < ApplicationController
     authorize! :manage_account, current_account
     @record_category = current_account.record_categories.find(params[:id])
     @record_category.destroy
-    respond_with @record_category, :location => record_categories_url
+    respond_with(@record_category, :location => record_categories_url)
   end
 
   def track
