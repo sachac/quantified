@@ -1,7 +1,7 @@
 source 'http://rubygems.org'
 
 gem 'rack-offline', :git => 'git://github.com/wycats/rack-offline.git'
-gem 'rails', '3.2.11'
+gem 'rails', '3.1'
 # Bundle edge Rails instead:
 #gem 'rails', :git => 'git://github.com/rails/rails.git'
 #gem 'arel', :git => 'git://github.com/rails/arel.git'
@@ -9,6 +9,7 @@ gem 'rails', '3.2.11'
 gem 'comma'
 gem 'timeline_fu', :git => 'https://github.com/jamesgolick/timeline_fu.git'
 gem 'newrelic_rpm'
+gem 'rails-dev-tweaks'
 gem 'jquery-rails'
 gem 'sqlite3'
 gem 'isbndb'
@@ -21,9 +22,9 @@ gem 'haml-rails'
 gem 'color'
 gem 'ruby-graphviz', :git => "https://github.com/glejeune/Ruby-Graphviz.git"
 gem 'narray'
-gem 'formtastic', :git => 'git://github.com/justinfrench/formtastic.git', :branch => '2.1-stable'
+gem 'formtastic'
 gem 'rails3-jquery-autocomplete'
-gem 'formtastic-bootstrap', :git => 'https://github.com/cgunther/formtastic-bootstrap.git', :branch => 'bootstrap2-rails3-2-formtastic-2-1'
+gem 'formtastic-bootstrap'
 gem 'handles_sortable_columns'
 gem 'gdata_19', '1.1.5'
 gem 'cancan'
@@ -71,16 +72,13 @@ gem 'omniauth-openid'
 gem 'ruby_parser'
 gem 'passgen'
 gem 'high_voltage'
+gem 'sass-rails', "~> 3.1.0.rc"
 gem 'compass'
 gem 'compass-bootstrap'
 
 group :assets do
-  gem 'compass-rails','~> 1.0.0.rc.2'
-  gem 'compass-colors'
-  gem 'sassy-buttons'
-  gem 'sass-rails', '~> 3.2.3'
   gem 'therubyracer'
-  gem 'coffee-rails',  "~> 3.2.1"
+  gem 'coffee-rails', "~> 3.1.0.rc"
   gem 'uglifier'
 end
 	
