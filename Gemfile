@@ -77,9 +77,10 @@ gem 'compass'
 gem 'compass-bootstrap'
 
 group :assets do
-  gem 'therubyracer'
   gem 'coffee-rails', "~> 3.1.0.rc"
   gem 'uglifier'
+  gem 'libv8'
+  gem 'therubyracer', '~> 0.10.1'
 end
 	
 gem 'barometer'
