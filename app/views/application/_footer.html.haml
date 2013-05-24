@@ -13,9 +13,10 @@
       = feedback_link "Send feedback"
       \-
       = link_to 'Source', 'https://github.com/sachac/quantified'
-      \- Current timezone:
-      = @account.settings.timezone
-      = link_to '(Change?)', edit_user_path(@account)
+      - if @account
+        \- Current timezone:
+        = @account.settings.timezone
+        = link_to '(Change?)', edit_user_path(@account)
 - if Rails.env.development?
   .alert-message.warning This is the development site.
 - else

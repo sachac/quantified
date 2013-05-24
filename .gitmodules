@@ -1,0 +1,9 @@
+[submodule "chef/cookbooks/apt"]
+	path = chef/cookbooks/apt
+	url = https://github.com/opscode-cookbooks/apt.git
+[submodule "chef/cookbooks/mysql"]
+	path = chef/cookbooks/mysql
+	url = https://github.com/opscode-cookbooks/mysql.git
+[submodule "chef/cookbooks/openssl"]
+	path = chef/cookbooks/openssl
+	url = https://github.com/opscode-cookbooks/openssl.git
