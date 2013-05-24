@@ -5,5 +5,6 @@
 #
 #   cities = City.create([{ :name => 'Chicago' }, { :name => 'Copenhagen' }])
 #   Mayor.create(:name => 'Daley', :city => cities.first)
-password = Forgery(:basic).password
+password = 'testpasswordgoeshere'
 user = User.create(:username => 'sacha', :email => 'sacha@sachachua.com', :password => password, :password_confirmation => password)
+user.confirm!
