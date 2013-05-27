@@ -42,8 +42,9 @@ class User < ActiveRecord::Base
   before_save :update_memento_mori 
 
   acts_as_tagger
-  has_settings
   
+  include RailsSettings::Extend 
+
   def adjust_beginning_of_week(date)
     if date.wday == 6
       date
