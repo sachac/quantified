@@ -3,7 +3,19 @@ class Clothing < ActiveRecord::Base
   acts_as_taggable_on :tags
   has_many :clothing_logs, :dependent => :destroy
   has_many :clothing_matches, :foreign_key => :clothing_a_id, :dependent => :destroy
+  Paperclip.interpolates :hashed_path do |attachment, style|
+     secret = 'this is a super secret quantified awesome secret' # well, not so secret since it's in the source
+     hash = Digest::MD5.hexdigest("--#{attachment.class.name}--#{attachment.instance.id}--#{secret}--")
+     hash_path = ''
+     6.times { hash_path += '/' + hash.slice!(0..2) }
+     hash_path[1..24]
+  end
+  Paperclip.interpolates :user_id do |attachment, style|
+     attachment.instance.user_id
+  end
+
   has_attached_file :image, :styles => { :large => "400x400", :medium => "x90", :small => "x40" }, :default_url => '/images/clothing/:style/missing.jpg', :path => ':rails_root/public/f/clothing/:user_id/:hashed_path/:id/:style/:basename.:extension', :url => '/f/clothing/:user_id/:hashed_path/:id/:style/:basename.:extension'
+
   before_save :update_hsl
 
   def autocomplete_view

@@ -71,8 +71,8 @@ gem 'ruby_parser'
 gem 'passgen'
 #gem 'high_voltage'
 gem 'sass-rails', "~> 3.2.6"
-gem 'compass'
-gem 'compass-bootstrap'
+gem 'compass_twitter_bootstrap'
+gem 'compass-rails'
 
 group :assets do
   gem 'coffee-rails', "~> 3.2.2"
@@ -83,7 +83,7 @@ end
 	
 #gem 'barometer'
 gem 'mechanize'
-gem 'rails-settings-cached', '~> 0.2.4', :require => 'rails-settings'
+gem 'rails-settings-cached', '~> 0.2.4'
 gem 'subdomain-fu', :git => "git://github.com/nhowell/subdomain-fu.git"
 gem 'fastercsv'
 group :development, :test do
