@@ -38,6 +38,7 @@ class TimelineEventsController < ApplicationController
 
   # GET /timeline_events/1/edit
   def edit
+    authorize! :manage, User
     @timeline_event = TimelineEvent.find(params[:id])
   end
 
