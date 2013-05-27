@@ -1,11 +1,12 @@
 FactoryGirl.define do
   sequence :username do |n| "test#{n}" end
-  factory :user do
-    username { Factory.next(:username) }
-    email { "#{username}@example.org" }
-    role 'user'
-    password { Forgery(:basic).password }
-    password_confirmation { password }
+  factory :user do |f| 
+    f.after_create { |user| user.confirm! }
+    f.username { Factory.next(:username) }
+    f.email { "#{username}@example.org" }
+    f.role 'user'
+    f.password { Forgery(:basic).password }
+    f.password_confirmation { password }
   end
   factory :admin, :parent => :user do 
     role 'admin'

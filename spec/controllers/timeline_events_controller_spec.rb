@@ -26,12 +26,14 @@ describe TimelineEventsController do
   def valid_attributes
     {}
   end
+  before { sign_in FactoryGirl.create(:admin) }
 
   describe "GET index" do
     it "assigns all timeline_events as @timeline_events" do
       timeline_event = TimelineEvent.create! valid_attributes
       get :index
-      assigns(:timeline_events).should eq([timeline_event])
+      puts response.body
+      assigns(:timeline_events).should include(timeline_event)
     end
   end
 

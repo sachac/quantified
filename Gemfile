@@ -89,17 +89,19 @@ gem 'color'
 gem 'subdomain-fu', :git => "git://github.com/nhowell/subdomain-fu.git"
 gem 'fastercsv'
 group :development, :test do
-  gem 'cucumber'
   gem 'hpricot'
-  gem 'capybara'
-  gem 'cucumber-rails'
-  gem 'rspec'
   #gem 'rcov'
+  gem 'database_cleaner'
+end
+group :test do
+  gem 'rspec'
+  gem 'cucumber'
+  gem 'cucumber-rails'
+  gem 'capybara'
   gem 'rspec-rails'
   gem 'factory_girl_rails'  
-  gem 'forgery'
-  gem 'database_cleaner'
   gem 'cucumber_factory', :git => 'https://github.com/makandra/cucumber_factory.git'
+  gem 'forgery'
 end
 gem 'yaml_db'
 gem 'email_validator'

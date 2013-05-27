@@ -35,5 +35,7 @@ Home::Application.configure do
   config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect'
   config.action_mailer.default_url_options = { :host => "dev.quantifiedawesome.com" }
   config.action_mailer.delivery_method = :test
+  config.action_mailer.perform_deliveries = false
 end
 
+ActionMailer::Base.delivery_method = :test
