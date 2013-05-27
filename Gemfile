@@ -1,7 +1,7 @@
 source 'http://rubygems.org'
 
 gem 'rack-offline', :git => 'git://github.com/wycats/rack-offline.git'
-gem 'rails', '>= 3.1'
+gem 'rails', '~> 3.2.13'
 gem 'jquery-rails', '>= 2.2.1'
 gem 'haml-rails', '= 0.4'
 # Bundle edge Rails instead:
@@ -22,7 +22,7 @@ gem 'color'
 gem 'ruby-graphviz', :git => "https://github.com/glejeune/Ruby-Graphviz.git"
 gem 'narray'
 gem 'formtastic'
-gem 'rails3-jquery-autocomplete'
+gem 'rails3-jquery-autocomplete', '>= 1.0.11'
 gem 'formtastic-bootstrap'
 gem 'handles_sortable_columns'
 gem 'gdata_19', '1.1.5'
@@ -53,7 +53,6 @@ gem 'exception_notification', :require => 'exception_notifier'
 # group :development, :test do
 #   gem 'webrat'
 # end
-gem 'rails3-jquery-autocomplete'
 gem 'acts-as-taggable-on', :git => 'git://github.com/mbleigh/acts-as-taggable-on.git'
 gem 'chronic'
 gem 'acts-as-tree-with-dotted-ids'
@@ -71,20 +70,20 @@ gem 'omniauth-openid'
 gem 'ruby_parser'
 gem 'passgen'
 #gem 'high_voltage'
-gem 'sass-rails', ">= 4.0.0rc1"
+gem 'sass-rails', "~> 3.2.6"
 gem 'compass'
 gem 'compass-bootstrap'
 
 group :assets do
-  gem 'coffee-rails', ">= 4.0.0"
+  gem 'coffee-rails', "~> 3.2.2"
   gem 'uglifier'
-  gem 'libv8'
-  gem 'therubyracer', '>= 0.10.1'
+  gem 'libv8', '~> 3.11'
+  gem 'therubyracer', '~> 0.11.4'
 end
 	
 #gem 'barometer'
 gem 'mechanize'
-gem 'rails-settings-cached', :require => 'rails-settings'
+gem 'rails-settings-cached', '~> 0.2.4', :require => 'rails-settings'
 gem 'subdomain-fu', :git => "git://github.com/nhowell/subdomain-fu.git"
 gem 'fastercsv'
 group :development, :test do

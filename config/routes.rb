@@ -1,4 +1,5 @@
 Home::Application.routes.draw do
+  patch :update_many
   resources :goals
   resources :pages
   match 'auth/:service/callback' => 'services#create'
