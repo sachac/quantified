@@ -1,23 +1,23 @@
 source 'http://rubygems.org'
 
 gem 'rack-offline', :git => 'git://github.com/wycats/rack-offline.git'
-gem 'rails', '3.1'
+gem 'rails', '>= 3.1'
+gem 'jquery-rails', '>= 2.2.1'
+gem 'haml-rails', '= 0.4'
 # Bundle edge Rails instead:
 #gem 'rails', :git => 'git://github.com/rails/rails.git'
 #gem 'arel', :git => 'git://github.com/rails/arel.git'
 #gem 'journey', :git => 'git://github.com/rails/journey.git'
 gem 'comma'
 gem 'timeline_fu', :git => 'https://github.com/jamesgolick/timeline_fu.git'
-gem 'rails-dev-tweaks'
-gem 'jquery-rails'
+#gem 'rails-dev-tweaks'
 gem 'sqlite3'
-gem 'isbndb'
+#gem 'isbndb'
 gem 'rake'
 gem 'haml'
 gem 'mysql2'
-gem "paperclip", "~> 2.0"
+gem "paperclip", ">= 2.0"
 gem 'will_paginate'
-gem 'haml-rails'
 gem 'color'
 gem 'ruby-graphviz', :git => "https://github.com/glejeune/Ruby-Graphviz.git"
 gem 'narray'
@@ -27,7 +27,7 @@ gem 'formtastic-bootstrap'
 gem 'handles_sortable_columns'
 gem 'gdata_19', '1.1.5'
 gem 'cancan'
-gem 'n_gram'
+#gem 'n_gram'
 gem 'statsample'
 gem 'exception_notification', :require => 'exception_notifier'
 
@@ -61,8 +61,8 @@ gem 'nifty-generators'
 #gem 'sparklines'
 #gem 'sparklines_generator'
 gem 'workflow'
-gem 'devise', :git => 'git://github.com/plataformatec/devise.git'
-gem 'aizuchi'
+gem 'devise', '>= 3.0.0.rc' 
+#gem 'aizuchi'
 gem 'actionmailer-with-request'
 gem 'omniauth', :git => 'git://github.com/intridea/omniauth.git'
 gem 'omniauth-facebook'
@@ -70,26 +70,25 @@ gem 'omniauth-twitter'
 gem 'omniauth-openid'
 gem 'ruby_parser'
 gem 'passgen'
-gem 'high_voltage'
-gem 'sass-rails', "~> 3.1.0.rc"
+#gem 'high_voltage'
+gem 'sass-rails', ">= 4.0.0rc1"
 gem 'compass'
 gem 'compass-bootstrap'
 
 group :assets do
-  gem 'coffee-rails', "~> 3.1.0.rc"
+  gem 'coffee-rails', ">= 4.0.0"
   gem 'uglifier'
   gem 'libv8'
-  gem 'therubyracer', '~> 0.10.1'
+  gem 'therubyracer', '>= 0.10.1'
 end
 	
-gem 'barometer'
+#gem 'barometer'
 gem 'mechanize'
 gem 'rails-settings-cached', :require => 'rails-settings'
-gem 'color'
 gem 'subdomain-fu', :git => "git://github.com/nhowell/subdomain-fu.git"
 gem 'fastercsv'
 group :development, :test do
-  gem 'hpricot'
+  #gem 'hpricot'
   #gem 'rcov'
   gem 'database_cleaner'
 end
