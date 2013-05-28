@@ -1,4 +1,4 @@
-= semantic_form_for @memory do |f|
+= semantic_form_for @memory, html: {class: 'form-horizontal'} do |f|
   = f.inputs do
     = f.input :name
     = f.input :body
@@ -7,4 +7,4 @@
     = f.input :date_entry
     = hidden_field_tag :destination, params[:destination]
   .actions  
-    = f.submit I18n.t('app.general.save'), :class => 'btn primary'
+    = f.submit I18n.t('app.general.save'), :class => 'btn btn-primary'

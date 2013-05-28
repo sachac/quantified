@@ -1,4 +1,4 @@
-= semantic_form_for @csa_food do |f|
+= semantic_form_for @csa_food, html: {class: 'form-horizontal'} do |f|
   -if @csa_food.errors.any?
     #error_explanation
       %h2= "#{pluralize(@csa_food.errors.count, "error")} prohibited this csa_food from being saved:"

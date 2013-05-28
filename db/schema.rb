@@ -19,8 +19,8 @@ ActiveRecord::Schema.define(:version => 20130102150645) do
     t.string   "clothing_type"
     t.string   "notes"
     t.boolean  "labeled",              :default => true
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                             :null => false
+    t.datetime "updated_at",                             :null => false
     t.string   "status"
     t.float    "hue"
     t.float    "saturation"
@@ -52,8 +52,8 @@ ActiveRecord::Schema.define(:version => 20130102150645) do
     t.integer  "clothing_b_id"
     t.integer  "clothing_log_a_id"
     t.integer  "clothing_log_b_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
     t.integer  "user_id"
     t.date     "clothing_log_date"
   end
@@ -64,16 +64,16 @@ ActiveRecord::Schema.define(:version => 20130102150645) do
     t.integer  "stuff_id"
     t.integer  "location_id"
     t.integer  "context_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
   end
 
   create_table "contexts", :force => true do |t|
     t.string   "name"
-    t.text     "rules",      :limit => 16777215
+    t.text     "rules"
     t.integer  "user_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "csa_foods", :force => true do |t|
@@ -81,9 +81,9 @@ ActiveRecord::Schema.define(:version => 20130102150645) do
     t.integer  "quantity"
     t.string   "unit"
     t.string   "disposition"
-    t.text     "notes",         :limit => 16777215
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.text     "notes"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
     t.date     "date_received"
     t.integer  "user_id"
   end
@@ -97,20 +97,20 @@ ActiveRecord::Schema.define(:version => 20130102150645) do
     t.integer  "library_checked_out"
     t.integer  "library_pickup"
     t.integer  "library_transit"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",           :null => false
+    t.datetime "updated_at",           :null => false
     t.integer  "user_id"
   end
 
   add_index "days", ["user_id"], :name => "index_days_on_user_id"
 
   create_table "decision_logs", :force => true do |t|
-    t.text     "notes",       :limit => 16777215
-    t.text     "notes_html",  :limit => 16777215
+    t.text     "notes"
+    t.text     "notes_html"
     t.date     "date"
     t.string   "status"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
     t.integer  "decision_id"
     t.integer  "user_id"
   end
@@ -120,11 +120,11 @@ ActiveRecord::Schema.define(:version => 20130102150645) do
   create_table "decisions", :force => true do |t|
     t.string   "name"
     t.date     "date"
-    t.text     "notes",      :limit => 16777215
-    t.text     "notes_html", :limit => 16777215
+    t.text     "notes"
+    t.text     "notes_html"
     t.string   "status"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
     t.integer  "rating"
     t.integer  "user_id"
   end
@@ -134,8 +134,8 @@ ActiveRecord::Schema.define(:version => 20130102150645) do
   create_table "foods", :force => true do |t|
     t.string   "name"
     t.string   "notes"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
     t.integer  "user_id"
   end
 
@@ -146,8 +146,8 @@ ActiveRecord::Schema.define(:version => 20130102150645) do
     t.string   "label"
     t.string   "expression"
     t.string   "period"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "library_items", :force => true do |t|
@@ -157,8 +157,8 @@ ActiveRecord::Schema.define(:version => 20130102150645) do
     t.string   "author"
     t.date     "due"
     t.integer  "rating"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                        :null => false
+    t.datetime "updated_at",                                        :null => false
     t.string   "status"
     t.date     "checkout_date"
     t.date     "return_date"
@@ -166,8 +166,8 @@ ActiveRecord::Schema.define(:version => 20130102150645) do
     t.integer  "toronto_library_id"
     t.string   "isbn"
     t.boolean  "public"
-    t.text     "notes",              :limit => 16777215
-    t.decimal  "price",                                  :precision => 10, :scale => 0
+    t.text     "notes"
+    t.decimal  "price",              :precision => 10, :scale => 0
     t.integer  "pages"
     t.integer  "user_id"
     t.string   "details"
@@ -180,10 +180,10 @@ ActiveRecord::Schema.define(:version => 20130102150645) do
     t.string   "link_a_type"
     t.integer  "link_b_id"
     t.string   "link_b_type"
-    t.text     "data",        :limit => 16777215
+    t.text     "data"
     t.integer  "user_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
   end
 
   add_index "links", ["link_a_id", "link_a_type"], :name => "index_links_on_link_a_id_and_link_a_type"
@@ -194,9 +194,9 @@ ActiveRecord::Schema.define(:version => 20130102150645) do
     t.integer  "stuff_id"
     t.integer  "location_id"
     t.datetime "datetime"
-    t.text     "notes",       :limit => 16777215
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.text     "notes"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
     t.integer  "user_id"
   end
 
@@ -204,9 +204,9 @@ ActiveRecord::Schema.define(:version => 20130102150645) do
 
   create_table "locations", :force => true do |t|
     t.string   "name"
-    t.text     "notes",      :limit => 16777215
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.text     "notes"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
     t.integer  "user_id"
   end
 
@@ -215,10 +215,10 @@ ActiveRecord::Schema.define(:version => 20130102150645) do
   create_table "measurement_logs", :force => true do |t|
     t.integer  "measurement_id"
     t.datetime "datetime"
-    t.text     "notes",          :limit => 16777215
-    t.decimal  "value",                              :precision => 10, :scale => 0
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.text     "notes"
+    t.decimal  "value",          :precision => 10, :scale => 0
+    t.datetime "created_at",                                    :null => false
+    t.datetime "updated_at",                                    :null => false
     t.integer  "user_id"
   end
 
@@ -226,14 +226,14 @@ ActiveRecord::Schema.define(:version => 20130102150645) do
 
   create_table "measurements", :force => true do |t|
     t.string   "name"
-    t.text     "notes",      :limit => 16777215
+    t.text     "notes"
     t.string   "unit"
-    t.decimal  "average",                        :precision => 10, :scale => 0
-    t.decimal  "max",                            :precision => 10, :scale => 0
-    t.decimal  "min",                            :precision => 10, :scale => 0
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.decimal  "sum",                            :precision => 10, :scale => 0
+    t.decimal  "average",    :precision => 10, :scale => 0
+    t.decimal  "max",        :precision => 10, :scale => 0
+    t.decimal  "min",        :precision => 10, :scale => 0
+    t.datetime "created_at",                                :null => false
+    t.datetime "updated_at",                                :null => false
+    t.decimal  "sum",        :precision => 10, :scale => 0
     t.integer  "user_id"
   end
 
@@ -241,11 +241,11 @@ ActiveRecord::Schema.define(:version => 20130102150645) do
 
   create_table "memories", :force => true do |t|
     t.string   "name"
-    t.text     "body",       :limit => 16777215
+    t.text     "body"
     t.string   "access"
     t.integer  "user_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
     t.datetime "timestamp"
     t.integer  "rating"
     t.string   "date_entry"
@@ -261,12 +261,12 @@ ActiveRecord::Schema.define(:version => 20130102150645) do
     t.integer  "parent_id"
     t.string   "dotted_ids"
     t.string   "category_type"
-    t.text     "data",          :limit => 16777215
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.text     "data"
+    t.datetime "created_at",                      :null => false
+    t.datetime "updated_at",                      :null => false
     t.string   "full_name"
     t.string   "color"
-    t.boolean  "active",                            :default => true, :null => false
+    t.boolean  "active",        :default => true, :null => false
   end
 
   add_index "record_categories", ["dotted_ids"], :name => "index_record_categories_on_dotted_ids"
@@ -278,13 +278,13 @@ ActiveRecord::Schema.define(:version => 20130102150645) do
     t.integer  "source_id"
     t.datetime "timestamp"
     t.integer  "record_category_id"
-    t.text     "data",               :limit => 16777215
+    t.text     "data"
     t.datetime "end_timestamp"
     t.integer  "duration"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                            :null => false
+    t.datetime "updated_at",                            :null => false
     t.date     "date"
-    t.boolean  "manual",                                 :default => false
+    t.boolean  "manual",             :default => false
   end
 
   add_index "records", ["record_category_id"], :name => "index_records_on_record_category_id"
@@ -296,41 +296,41 @@ ActiveRecord::Schema.define(:version => 20130102150645) do
     t.string   "uid"
     t.string   "uname"
     t.string   "uemail"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "settings", :force => true do |t|
-    t.string   "var",                            :null => false
-    t.text     "value",      :limit => 16777215
+    t.string   "var",                      :null => false
+    t.text     "value"
     t.integer  "thing_id"
     t.string   "thing_type", :limit => 30
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",               :null => false
+    t.datetime "updated_at",               :null => false
   end
 
   add_index "settings", ["thing_type", "thing_id", "var"], :name => "index_settings_on_thing_type_and_thing_id_and_var", :unique => true
 
   create_table "signups", :force => true do |t|
     t.string   "email"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "stuff", :force => true do |t|
     t.string   "name"
     t.string   "status"
-    t.decimal  "price",                                :precision => 10, :scale => 0
+    t.decimal  "price",            :precision => 10, :scale => 0
     t.date     "purchase_date"
-    t.text     "notes",            :limit => 16777215
+    t.text     "notes"
     t.string   "long_name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                                           :null => false
+    t.datetime "updated_at",                                                           :null => false
     t.integer  "location_id"
     t.integer  "home_location_id"
     t.boolean  "in_place"
     t.integer  "user_id"
-    t.string   "stuff_type",                                                          :default => "stuff"
+    t.string   "stuff_type",                                      :default => "stuff"
   end
 
   add_index "stuff", ["location_id"], :name => "index_stuff_on_location_id"
@@ -362,11 +362,11 @@ ActiveRecord::Schema.define(:version => 20130102150645) do
     t.string   "catOne"
     t.string   "catTwo"
     t.string   "catThree"
-    t.decimal  "number",                            :precision => 10, :scale => 2
+    t.decimal  "number",        :precision => 10, :scale => 2
     t.integer  "rating"
-    t.text     "note",          :limit => 16777215
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.text     "note"
+    t.datetime "created_at",                                   :null => false
+    t.datetime "updated_at",                                   :null => false
     t.string   "status"
     t.datetime "end_timestamp"
     t.string   "entry_type"
@@ -382,8 +382,8 @@ ActiveRecord::Schema.define(:version => 20130102150645) do
     t.string   "name"
     t.datetime "start_time"
     t.datetime "end_time"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
     t.integer  "user_id"
   end
 
@@ -397,13 +397,13 @@ ActiveRecord::Schema.define(:version => 20130102150645) do
     t.integer  "subject_id"
     t.integer  "actor_id"
     t.integer  "secondary_subject_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",             :null => false
+    t.datetime "updated_at",             :null => false
   end
 
   create_table "toronto_libraries", :force => true do |t|
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
     t.string   "name"
     t.string   "card"
     t.string   "pin"
@@ -416,26 +416,25 @@ ActiveRecord::Schema.define(:version => 20130102150645) do
   add_index "toronto_libraries", ["user_id"], :name => "index_toronto_libraries_on_user_id"
 
   create_table "users", :force => true do |t|
-    t.string   "email",                                        :default => "",    :null => false
-    t.string   "encrypted_password",       :limit => 128,      :default => ""
+    t.string   "email",                                  :default => "",    :null => false
+    t.string   "encrypted_password",                     :default => ""
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",                                :default => 0
+    t.integer  "sign_in_count",                          :default => 0
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                                :null => false
+    t.datetime "updated_at",                                                :null => false
     t.date     "birthdate"
-    t.float    "life_expectancy"
     t.integer  "life_expectancy_in_years"
     t.date     "projected_end"
     t.string   "role"
     t.string   "username"
     t.string   "authentication_token"
-    t.text     "data",                     :limit => 16777215
+    t.text     "data"
     t.string   "invitation_token",         :limit => 60
     t.datetime "invitation_sent_at"
     t.datetime "invitation_accepted_at"
@@ -445,7 +444,7 @@ ActiveRecord::Schema.define(:version => 20130102150645) do
     t.string   "confirmation_token"
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
-    t.boolean  "approved",                                     :default => false, :null => false
+    t.boolean  "approved",                               :default => false, :null => false
     t.string   "unconfirmed_email"
   end
 

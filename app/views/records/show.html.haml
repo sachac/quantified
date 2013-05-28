@@ -9,7 +9,7 @@
   = link_to t('app.general.edit'), edit_record_path(@record)
 \|
 = link_to "View category", record_category_path(@record.record_category)
-%table
+%table.table
   %tbody
     - if @record.activity? and @record.timestamp?
       - if @record.end_timestamp?

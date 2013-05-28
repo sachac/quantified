@@ -14,7 +14,7 @@
   %input{:name => "${index}"}
   {{/if}}
   {{/each}}
-  .actions= submit_tag "Update", :class => 'btn primary', :id => 'update'
+  .actions= submit_tag "Update", :class => 'btn btn-primary', :id => 'update'
 %script{:type => 'text/html', :id => 'update_template'}
   {{if ($item['entry_type'] != 'edit')}}
   %li

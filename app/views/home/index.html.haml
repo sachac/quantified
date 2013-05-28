@@ -12,7 +12,7 @@
       - if current_account.record_categories.length > 0
         = render 'quick_record'    
         = render 'current_activity'  
-        %ul.pills  
+        %ul.nav.nav-pills  
           %li= link_to 'Dashboard', time_dashboard_path
           %li= link_to 'Graph', time_graph_path
           %li= link_to 'Review', time_review_path

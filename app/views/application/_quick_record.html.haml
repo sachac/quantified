@@ -1,7 +1,5 @@
 - if managing?
-  = form_tag track_time_path, :class => mobile? ? 'form-stacked' : '' do
-    .inline
-      .input
-        = autocomplete_field_tag :category, nil, autocomplete_record_category_path, :autofocus => true, :placeholder => 'Category'
-        = submit_tag t('time.dashboard.track'), :class => 'btn'
-        = link_to 'Help', '/records/help'
+  = form_tag track_time_path, :class => mobile? ? 'form-stacked' : 'form-inline' do
+    = autocomplete_field_tag :category, nil, autocomplete_record_category_path, :autofocus => true, :placeholder => 'Category'
+    = submit_tag t('time.dashboard.track'), :class => 'btn'
+    = link_to 'Help', '/records/help'

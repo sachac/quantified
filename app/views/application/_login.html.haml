@@ -2,7 +2,7 @@
   - flash.each do |type, message|
     %div{ :class => "message #{type}" }
       %p= message
-= form_for(resource, :as => resource_name, :url => session_path(resource_name), :html => { :class => "form login" }) do |f|
+= form_for(resource, :as => resource_name, :url => session_path(resource_name), :html => { :class => "form login form-horizontal" }) do |f|
   .group.wat-cf
     .left= f.label :login, :class => "label right"
     .right= f.text_field :login, :class => "text_field"
@@ -16,6 +16,6 @@
         = f.label :remember_me, :class => "checkbox"
   .group.wat-cf
     .right
-      %button.button{ :type => "submit" }
+      %button.button{ type: "submit", class: 'btn' }
         Log in
 = render :partial => "devise/shared/links", :locals => {:controller_name => 'sessions'}

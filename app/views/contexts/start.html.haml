@@ -4,7 +4,7 @@
 
 - if @out_of_place.length > 0
   %h3 Stuff out of place
-  %table.out_of_place.lined
+  %table.out_of_place.table.table-bordered
     %thead
       %tr
         %th Stuff
@@ -22,12 +22,12 @@
               = link_to stuff.name, stuff
           %td= stuff.location ? stuff.location.name : ''
   - if managing?
-    = link_to 'Complete', complete_context_path(@context.id), :method => :put, :class => 'btn primary', :title => 'Updates all the out-of-place items with their home locations'
+    = link_to 'Complete', complete_context_path(@context.id), :method => :put, :class => 'btn btn-primary', :title => 'Updates all the out-of-place items with their home locations'
 - elsif @in_place.length > 0
   Hooray! Everything in its place. 
 - if @in_place.length > 0  
   %h3 Stuff in place
-  %table.stuff_in_place.lined
+  %table.stuff_in_place.table.table-bordered
     %thead
       %tr
         %th Stuff

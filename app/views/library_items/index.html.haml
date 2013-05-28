@@ -1,8 +1,5 @@
 .clear_both
-%ul.pills
-  = link_to 'All', library_items_path
-  = link_to 'Current items', current_library_items_path
-  = link_to 'Library cards', toronto_libraries_path
+= setup_page 'index', 'Library'
 
 = link_to 'all', library_items_path
 \-
@@ -15,7 +12,7 @@
   %li= "$" + ("%.2f" % @library_items.collect(&:price).compact.sum)
 
 = download_as_spreadsheet
-%table.lined
+%table.table.table-bordered
   %tr
     %th{:width => 100}= sortable_column 'Due', :column => 'due'
     %th= sortable_column 'Name', :column => 'title'

@@ -15,7 +15,7 @@ To create or update an item, enter the item's name and its location below.
   Locations:
   = @account.stuff.locations.order('name').map { |x| link_to x.name, x }.join(', ').html_safe
   
-%table.lined
+%table.table
   %tr
     %th= sortable_column "Name", :column => "name"
     %th= sortable_column "Last location", :column => "location_id"

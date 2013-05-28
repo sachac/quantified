@@ -1,7 +1,7 @@
-= semantic_form_for @goal do |f|
+= semantic_form_for @goal, html: {class: 'form-horizontal'} do |f|
   = f.inputs do
     = f.input :label
     = f.input :expression
     = f.input :period, :as => :select, :collection => ["weekly", "monthly", "daily"]
-  .actions
-    = f.submit 'Save'
+  .control-group
+    .controls= f.submit 'Save', class: 'btn'

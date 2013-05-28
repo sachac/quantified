@@ -18,7 +18,7 @@
         = @account.settings.timezone
         = link_to '(Change?)', edit_user_path(@account)
 - if Rails.env.development?
-  .alert-message.warning This is the development site.
+  .alert.warning This is the development site.
 - else
-  .alert-message.warning This site is in beta. Please send me feedback if you run into anything that doesn't work or can be improved!
+  .alert.warning This site is in beta. Please send me feedback if you run into anything that doesn't work or can be improved!
 - flash.discard

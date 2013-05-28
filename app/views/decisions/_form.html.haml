@@ -1,4 +1,4 @@
-= semantic_form_for @decision do |f|
+= semantic_form_for @decision, html: {class: 'form-horizontal'} do |f|
   -if @decision.errors.any?
     #error_explanation
       %h2= "#{pluralize(@decision.errors.count, "error")} prohibited this decision from being saved:"
@@ -10,5 +10,6 @@
     = f.input :name
     = f.input :notes
     = f.input :status, :as => :radio, :collection => ["Good", "Bad", "Uncertain"]
-  .actions
-    = f.submit 'Save'
+  .control-group
+    .controls
+      = f.submit 'Save', class: 'btn btn-primary'

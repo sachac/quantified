@@ -1,4 +1,4 @@
-= semantic_form_for @record, :html => { :class => mobile? ? 'form-stacked' : 'form' } do |f|
+= semantic_form_for @record, :html => { :class => mobile? ? 'form-stacked' : 'form-horizontal' } do |f|
   = f.inputs do
     - data = @record.record_category.data
     - if data
@@ -26,5 +26,6 @@
         - next_hint = ": #{link_to next_activity.record_category.full_name, next_activity}".html_safe
       = f.input :manual, :as => :radio, :collection => [[("Automatically update the next activity's start time" + next_hint).html_safe, false], ["Manually set end time independent of next activity", true]], :label => ''
     
-  .actions
-    = f.submit t('app.general.save'), :class => 'btn primary'
+  .control-group
+    .controls
+      = f.submit t('app.general.save'), :class => 'btn btn-primary'

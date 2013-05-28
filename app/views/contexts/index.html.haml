@@ -6,10 +6,10 @@ for when you're home. Defining contexts lets you focus on just the
 stuff that you need to take out or return.
 
 - if managing?
-  %p= link_to 'Create context', new_context_path, :class => 'btn'
+  %p= link_to 'Create context', new_context_path
 
 - if @contexts.length > 0
-  %table
+  %table.table
     %tr
       - if managing?
         %th Actions

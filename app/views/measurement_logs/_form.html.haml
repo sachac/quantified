@@ -1,4 +1,4 @@
-= semantic_form_for @measurement_log do |f|
+= semantic_form_for @measurement_log, html: {class: 'form-horizontal'} do |f|
   -if @measurement_log.errors.any?
     #error_explanation
       %h2= "#{pluralize(@measurement_log.errors.count, "error")} prohibited this measurement_log from being saved:"

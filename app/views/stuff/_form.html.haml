@@ -1,4 +1,4 @@
-= semantic_form_for @stuff do |f|
+= semantic_form_for @stuff, html: {class: 'form-horizontal'} do |f|
   -if @stuff.errors.any?
     #error_explanation
       %h2= "#{pluralize(@stuff.errors.count, "error")} prohibited this stuff from being saved:"
@@ -11,7 +11,8 @@
     = f.input :status
     = f.input :home_location, :collection => current_account.stuff.order('name')
     = f.input :notes, :input_html => { :rows => 5 }
-  .actions
-    = f.submit 'Save', :class => 'btn primary'
-    - if !@stuff.new_record? and can? :delete, @stuff
-      = link_to I18n.t('general.delete'), stuff_path(@stuff), :method => :delete, :confirm => I18n.t('general.are_you_sure'), :class => 'btn'
+  .control-group
+    .controls
+      = f.submit 'Save', :class => 'btn btn-primary'
+      - if !@stuff.new_record? and can? :delete, @stuff
+        = link_to I18n.t('general.delete'), stuff_path(@stuff), :method => :delete, :confirm => I18n.t('general.are_you_sure'), :class => 'btn'

@@ -1,23 +1,23 @@
-= form_tag feedback_path do
-  .clearfix
-    = label_tag :email, "E-mail"
-    .input
+= form_tag feedback_path, class: 'form-horizontal' do
+  .control-group
+    = label_tag :email, "E-mail", class: 'control-label'
+    .controls
       - if current_account && current_account.id != 1
         .uneditable-input= current_account.email
       - else
         = text_field_tag :email
-  .clearfix      
-    = label_tag :message, "Message"
-    .input
+  .control-group
+    = label_tag :message, "Message", class: 'control-label'
+    .controls
       = text_area_tag :message, nil, :rows => 10, :cols => 40, :required => true
   - if params[:destination]    
-    .clearfix
-      = label_tag :context, "From page:"
-      .input
+    .control-group
+      = label_tag :context, "From page:", class: 'control-label'
+      .controls
         .uneditable-input= params[:destination]
   = hidden_field_tag :old_params, params[:old_params]
   = hidden_field_tag :destination, params[:destination]
   
-  .actions
-    = submit_tag "Send feedback", :class => 'btn primary' 
+  .control-group
+    .controls= submit_tag "Send feedback", :class => 'btn btn-primary' 
   

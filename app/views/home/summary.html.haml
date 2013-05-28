@@ -1,12 +1,12 @@
-= form_tag do 
+= form_tag class: 'form-inline' do 
   Start:
   = text_field_tag :start, @start.strftime("%Y-%m-%d"), :class => 'datepicker'
   End:
   = text_field_tag :end, @end.strftime("%Y-%m-%d"), :class => 'datepicker'
-  = submit_tag "Go" 
+  = submit_tag "Go", class: 'btn'
 
 %div{:style=>"font-size: 20px"}
-%table
+%table.table
   - @cat.sort.each do |label|
     - list = @time_graphs[label]     
     %tr
@@ -16,7 +16,7 @@
           = list.join(',')
 - days = [['Sat', 6], ['Sun', 0], ['Mon', 1], ['Tue', 2], ['Wed', 3], ['Thu', 4], ['Fri', 5]]
 - sums = ['Sleep', 'Work', 'Discretionary', 'Unpaid work', 'Personal care']
-%table.lined
+%table.table-bordered
   %tr
     %th Activity
     - days.each do |x|

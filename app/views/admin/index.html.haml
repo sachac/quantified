@@ -1,5 +1,5 @@
 %h2= "Users: #{@users.length}"
-%table
+%table.table
   %thead
     %tr
       %th E-mail
@@ -13,7 +13,7 @@
       %td= l s.created_at
       %td= link_to 'Become', become_user_path(s.id), :method => :post
 %h2= "Signups: #{@signups.length}"
-%table
+%table.table
   - @signups.each do |s|
     %tr
       %td= mail_to s.email, s.email

@@ -1,8 +1,8 @@
 <h2>Time versus probability of activity</h2>
-<% form_tag do %>
+<% form_tag class: 'form-inline' do %>
   Start: <%= text_field_tag :start, @start.strftime("%Y-%m-%d"), :class => 'datepicker' %>
   End: <%= text_field_tag :end, @end.strftime("%Y-%m-%d"), :class => 'datepicker' %>
-  <%= submit_tag "Go" %>
+  <%= submit_tag "Go", class: 'btn' %>
 <% end %>
 <% radius = 200 %>
 <div class="day">

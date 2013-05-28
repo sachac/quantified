@@ -11,7 +11,7 @@
 %p
   %b Unit:
   = @measurement.unit
-%table.lined
+%table.table.table-bordered
   %tr
     %th Average
     %td= @measurement.average
@@ -27,7 +27,7 @@
 
 = link_to 'Log entry', new_measurement_log_path + '?measurement_id=' + @measurement.id.to_s
 
-%table.lined
+%table.table.table-bordered
   %tr
     %th Date
     %th Value
