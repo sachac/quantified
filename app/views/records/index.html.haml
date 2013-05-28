@@ -3,40 +3,41 @@
 .filters.collapsible.collapsed
   %legend Options [+]
   .details
-    = form_tag records_path, :method => :get do
-      .clearfix
-        = label_tag :start, 'Start' 
-        .input= text_field_tag :start, @start ? @start.strftime("%Y-%m-%d") : nil, :class => 'datepicker' 
-      .clearfix
-        = label_tag :end, 'End' 
-        .input= text_field_tag :end, @end ? @end.strftime("%Y-%m-%d") : nil, :class => 'datepicker' 
-      .clearfix
-        = label_tag :order, 'Order'
-        .input
+    = form_tag records_path, method: :get, class: 'form-horizontal' do
+      .control-group
+        = label_tag :start, 'Start', class: 'control-label'
+        .controls= text_field_tag :start, @start ? @start.strftime("%Y-%m-%d") : nil, :class => 'datepicker' 
+      .control-group
+        = label_tag :end, 'End', class: 'control-label'
+        .controls= text_field_tag :end, @end ? @end.strftime("%Y-%m-%d") : nil, :class => 'datepicker' 
+      .control-group
+        = label_tag :order, 'Order', class: 'control-label'
+        .controls
           = radio_button_tag :order, 'newest', @order != 'desc', :class => 'inline'
           = label_tag :order_newest, 'Newest on top', :class => 'inline'
           = radio_button_tag :order, 'oldest', @order == 'desc'
           = label_tag :order_oldest, 'Oldest on top', :class => 'inline'
-      .clearfix
-        = label_tag :display_type, 'Display'
-        .input
+      .control-group
+        = label_tag :display_type, 'Display', class: 'control-label'
+        .controls
           = radio_button_tag :display_type, 'time', params[:display_type] != 'decimal', :class => 'inline'
           = label_tag :display_type_inline, 'Time', :class => 'inline'
           = radio_button_tag :display_type, 'decimal', params[:display_type] == 'decimal', :class => 'inline'
           = label_tag :display_type_decimal, 'Decimal', :class => 'inline'
-      .clearfix
-        = label_tag :split, 'Split'
-        .input
+      .control-group
+        = label_tag :split, 'Split', class: 'control-label'
+        .controls
           = radio_button_tag :split, 'keep', params[:split] != 'split', :class => 'inline'
           = label_tag :split_keep, 'Keep original entries', :class => 'inline'
           = radio_button_tag :split, 'split', params[:split] == 'split', :class => 'inline'
           = label_tag :split_split, 'Split by midnight', :class => 'inline'
-      .clearfix
-        = label_tag :filter, t('app.general.filter')
-        .input
+      .control-group
+        = label_tag :filter, t('app.general.filter'), class: 'control-label'
+        .controls
           = text_field_tag :filter_string, params[:filter_string]
-      .actions   
-        = submit_tag t('app.general.filter'), :class => 'btn primary'
-        = submit_tag t('.recalculate_durations'), :class => 'btn'
+      .control-group
+        .controls
+          = submit_tag t('app.general.filter'), :class => 'btn btn-primary'
+          = submit_tag t('.recalculate_durations'), :class => 'btn'
 = render 'summary', :records => @data[:entries], :show_duration => true
 = will_paginate @records, :renderer => PaginationListLinkRenderer

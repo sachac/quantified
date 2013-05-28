@@ -3,46 +3,46 @@
   .filters.collapsible.collapsed
     %legend= legend
     .details
-      = form_tag request.url, :method => :get do
+      = form_tag request.url, method: :get, class: 'form-horizontal' do
         - if @filters[:date_range]
-          .clearfix
-            = label_tag :start, 'Start' 
-            .input= text_field_tag :start, (params[:start] ? Date.parse(params[:start]).strftime("%Y-%m-%d") : ''), :class => 'datepicker' 
-          .clearfix
-            = label_tag :end, 'End' 
-            .input= text_field_tag :end, (params[:end] ? Date.parse(params[:end]).strftime("%Y-%m-%d") : ''), :class => 'datepicker'
+          .control-group
+            = label_tag :start, 'Start', class: 'control-label' 
+            .controls= text_field_tag :start, (params[:start] ? Date.parse(params[:start]).strftime("%Y-%m-%d") : ''), :class => 'datepicker' 
+          .control-group
+            = label_tag :end, 'End', class: 'control-label'
+            .controls= text_field_tag :end, (params[:end] ? Date.parse(params[:end]).strftime("%Y-%m-%d") : ''), :class => 'datepicker'
         - if @filters[:parent_id]
-          .clearfix
-            = label_tag :parent_id, 'Parent'
-            .input= select_tag :parent_id, options_from_collection_for_select(@categories, 'id', 'full_name')
+          .control-group
+            = label_tag :parent_id, 'Parent', class: 'control-label'
+            .controls= select_tag :parent_id, options_from_collection_for_select(@categories, 'id', 'full_name')
         - if @filters[:category_tree]
-          .clearfix
-            = label_tag :category_tree, 'Detail level'
-            .input
+          .control-group
+            = label_tag :category_tree, 'Detail level', class: 'control-label'
+            .controls
               = radio_button_tag :category_tree, 'full', params && params[:category_tree] == 'full'
               = label_tag :category_tree_full, 'Full tree', :class => 'inline'
               = radio_button_tag :category_tree, 'next_level', params && params[:category_tree] == 'next_level'
               = label_tag :category_tree_next_level, 'Next level', :class => 'inline'
         - if @filters[:order]
-          .clearfix
-            = label_tag :order, 'Order'
-            .input
+          .control-group
+            = label_tag :order, 'Order', class: 'control-label'
+            .controls
               = radio_button_tag :order, 'newest', @order != 'desc', :class => 'inline'
               = label_tag :order_newest, 'Newest on top', :class => 'inline'
               = radio_button_tag :order, 'oldest', @order == 'desc'
               = label_tag :order_oldest, 'Oldest on top', :class => 'inline'
         - if @filters[:filter_string]
-          .clearfix
-            = label_tag :filter, t('app.general.filter')
-            .input
+          .control-group
+            = label_tag :filter, t('app.general.filter'), class: 'control-label'
+            .controls
               = text_field_tag :filter_string, params ? params[:filter_string] : ''
         - if @filters[:display_type]
-          .clearfix
-            = label_tag :display_type, 'Display'
-            .input
+          .control-group
+            = label_tag :display_type, 'Display', class: 'control-label'
+            .controls
               = radio_button_tag :display_type, 'time', params[:display_type] != 'decimal', :class => 'inline'
               = label_tag :display_type_inline, 'Time', :class => 'inline'
               = radio_button_tag :display_type, 'decimal', params[:display_type] == 'decimal', :class => 'inline'
               = label_tag :display_type_decimal, 'Decimal', :class => 'inline'
-        .actions   
-          = submit_tag t('app.general.filter'), :class => 'btn primary'
+        .control-group
+          .controls= submit_tag t('app.general.filter'), :class => 'btn btn-primary'

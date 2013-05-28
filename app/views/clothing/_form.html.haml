@@ -1,4 +1,4 @@
-= semantic_form_for @clothing, :class => (mobile? ? 'form-stacked' : '')  do |f|
+= semantic_form_for @clothing, :class => (mobile? ? 'form-stacked' : 'form-inline')  do |f|
   -if @clothing.errors.any?
     #error_explanation
       %h2= "#{pluralize(@clothing.errors.count, "error")} prohibited this clothing from being saved:"
@@ -7,18 +7,19 @@
           %li= msg
   = f.inputs do
     = f.input :name, :input_html => { :autofocus => true }
-    .clearfix
-      = label_tag :tag_list, "Tags"
-      .input= f.text_field :tag_list
+    .control-group
+      = label_tag :tag_list, "Tags", class: 'control-label'
+      .controls= f.text_field :tag_list
     = f.input :clothing_type
     = f.input :image
     = f.input :status
     = f.input :cost
     = f.input :notes, :as => :text, :input_html => { :rows => 5 }
-  .actions
-    = f.submit I18n.t('app.general.save'), :class => 'btn primary'
-    - if !@clothing.new_record? and can? :delete, @clothing
-      = link_to I18n.t('app.general.delete'), clothing_path(@clothing), :method => :delete, :confirm => I18n.t('app.general.are_you_sure'), :class => 'btn'
-    = link_to 'Cancel', clothing_index_path
+  .control-group
+    .controls
+    = f.submit I18n.t('app.general.save'), :class => 'btn btn-primary'
+      - if !@clothing.new_record? and can? :delete, @clothing
+        = link_to I18n.t('app.general.delete'), clothing_path(@clothing), :method => :delete, :confirm => I18n.t('app.general.are_you_sure'), :class => 'btn'
+      = link_to 'Cancel', clothing_index_path
 
 

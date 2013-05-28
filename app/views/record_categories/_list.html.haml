@@ -1,7 +1,7 @@
 - if managing?
   - if mobile?
     .clearfix
-      %table
+      %table.table
         - list.each do |c|
           %tr
             %td{:width => 100}
@@ -14,7 +14,7 @@
     
   - else  
     - if list.length > 0
-      %table
+      %table.table
         %thead
           %tr
             %th{:width => 100} Actions

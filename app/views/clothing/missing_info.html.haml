@@ -1,7 +1,7 @@
 = setup_page('missing', 'Missing information')
 
 = form_tag update_missing_clothing_information_path, :multipart => true do
-  %table
+  %table.table
     %tr
       %th Description
       %th Clothing type
@@ -13,5 +13,5 @@
         %td= c.clothing_type
         %td= file_field_tag "image[#{c.id}]"
         %td= missing_clothing_info c
-  .actions
-    = submit_tag 'Submit', :class => 'btn primary'
+  .controls
+    = submit_tag 'Submit', :class => 'btn btn-primary'

@@ -4,11 +4,11 @@
     %h2.title Home
     .inner
       %p.first
-        = form_tag(refresh_from_csv_path, { :multipart => true }) do
-          .clearfix
-            = label_tag(:tap_file, "Tap Log CSV")
-            .input
+        = form_tag(refresh_from_csv_path, multipart: true, class: 'form-horizontal') do
+          .control-group
+            = label_tag(:tap_file, "Tap Log CSV"), class: 'control-label'
+            .controls
               = file_field_tag :tap_file
               = link_to "Tap Log", "http://loggerlife.blogspot.com/"
-          .actions    
-            = submit_tag "Submit", :class => 'btn primary'
+          .control-group
+            .controls= submit_tag "Submit", :class => 'btn btn-primary'

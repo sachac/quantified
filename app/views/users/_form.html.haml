@@ -1,4 +1,4 @@
-= semantic_form_for @user do |f|
+= semantic_form_for @user, html: {class: 'form-horizontal'} do |f|
   -if @user.errors.any?
     #error_explanation
       %h2= "#{pluralize(@user.errors.count, "error")} prohibited this user from being saved:"
@@ -8,14 +8,15 @@
   = f.inputs do
     = f.input :email, :input_html => { :autocomplete => 'off' }
     = f.input :username, :input_html => { :autocomplete => 'off' }
-    .clear-fix
-      %label Timezone
-      .input= select_tag 'user[settings][time_zone]', time_zone_options_for_select(@user.settings.timezone)
+    .control-group
+      %label.control-label Timezone
+      .controls= select_tag 'user[settings][time_zone]', time_zone_options_for_select(@user.settings.timezone)
 
-    .clear-fix
-      .input If you'd like to change your password, enter your new password below:
-    = f.input :password, :required => false, :autocomplete => 'off'
-    = f.input :password_confirmation, :autocomplete => 'off'
-    
-  .actions
-    = f.submit 'Save', :class => 'btn primary'
+    .control-group
+      .controls 
+        If you'd like to change your password, enter your new password below:
+        = f.input :password, :required => false, :autocomplete => 'off'
+        = f.input :password_confirmation, :autocomplete => 'off'
+  .control-group
+    .controls
+      = f.submit 'Save', :class => 'btn btn-primary'

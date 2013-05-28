@@ -1,4 +1,4 @@
-= form_for @timeline_event do |f|
+= form_for @timeline_event, class: 'form-horizontal' do |f|
   -if @timeline_event.errors.any?
     #error_explanation
       %h2= "#{pluralize(@timeline_event.errors.count, "error")} prohibited this timeline_event from being saved:"
@@ -6,5 +6,6 @@
         - @timeline_event.errors.full_messages.each do |msg|
           %li= msg
 
-  .actions
-    = f.submit 'Save'
+  .control-group
+    .controls
+      = f.submit 'Save', class: 'btn btn-primary'

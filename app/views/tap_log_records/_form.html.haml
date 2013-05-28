@@ -1,4 +1,4 @@
-= semantic_form_for @tap_log_record do |f|
+= semantic_form_for @tap_log_record, html: {class: 'form-horizontal'} do |f|
   = f.inputs do
     = f.input :status
     = f.input :catOne
@@ -8,5 +8,6 @@
     = f.input :rating
     = f.input :note
     = f.input :timestamp
-  .actions
-    = submit_tag I18n.t('app.general.submit'), :class => 'btn primary'
+  .control-group
+    .controls
+      = submit_tag I18n.t('app.general.submit'), :class => 'btn btn-primary'

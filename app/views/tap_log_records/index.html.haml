@@ -3,33 +3,33 @@
 .filters.collapsible.collapsed
   %legend Filters [+]
   .details
-    = form_tag tap_log_records_path, :method => :get do
-      .clearfix
-        = label_tag :start, 'Start' 
-        .input= text_field_tag :start, @start ? @start.strftime("%Y-%m-%d") : nil, :class => 'datepicker' 
-      .clearfix
-        = label_tag :end, 'End' 
-        .input= text_field_tag :end, @end ? @end.strftime("%Y-%m-%d") : nil, :class => 'datepicker' 
+    = form_tag tap_log_records_path, method: :get, class: 'form-horizontal' do
+      .control-group
+        = label_tag :start, 'Start', class: 'control-label'
+        .controls= text_field_tag :start, @start ? @start.strftime("%Y-%m-%d") : nil, :class => 'datepicker' 
+      .control-group
+        = label_tag :end, 'End', class: 'control-label'
+        .controls= text_field_tag :end, @end ? @end.strftime("%Y-%m-%d") : nil, :class => 'datepicker' 
       - ['catOne', 'catTwo', 'catThree'].each do |cat|
-        .clearfix
-          = label_tag cat.to_sym, I18n.t("formtastic.labels.tap_log_record.#{cat}")
-          .input
+        .control-group
+          = label_tag cat.to_sym, I18n.t("formtastic.labels.tap_log_record.#{cat}"), class: 'control-label'
+          .controls
             = select_tag cat.to_sym, options_for_select([['', '']] + TapLogRecord.select("DISTINCT #{cat}").order(cat).collect { |x| [ x.send(cat), x.send(cat) ] }, params[cat.to_sym])
-      .clearfix
-        = label_tag :status, "Status"
-        .input
+      .control-group
+        = label_tag :status, "Status", class: 'control-label'
+        .controls
           = select_tag :status, options_for_select([['', '']] + TapLogRecord.select("DISTINCT status").order('status').collect { |x| [ x.send('status'), x.send('status') ] }, params[:status])
-      .clearfix
-        = label_tag :filter, "Filter"
-        .input
+      .control-group
+        = label_tag :filter, "Filter", class: 'control-label'
+        .controls
           = text_field_tag :filter_string, params[:filter_string]
-      .actions   
-        = submit_tag t('app.general.filter'), :class => 'btn primary'
+      .control-group
+        .controls
+          = submit_tag t('app.general.filter'), :class => 'btn btn-primary'
 - if @total_duration and @total_duration > 0
   = "#{I18n.t('app.tap_log_record.duration')}: #{duration @total_duration},"
   = "#{I18n.t('app.general.average')}: #{duration @average},"
   = "#{I18n.t('app.general.average_per_day')}: #{duration @average_per_day}"
         
-
 = render 'summary', :list => @tap_log_records, :show_duration => true
 = will_paginate @tap_log_records, :renderer => PaginationListLinkRenderer

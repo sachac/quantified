@@ -26,13 +26,13 @@
             = link_to "Sign up!", new_user_session_path
         .flash
           - flash.each do |type, message|
-            %div{:class => "alert-message #{type}"}
+            %div{:class => "alert alert-#{type}"}
               - if message.is_a? Array
                 %ul
                   - message.each do |m|
                     %li= m
               - else
-                %p= message
+                = message
         - if content_for? :nav
           = yield :nav
         - if content_for? :title

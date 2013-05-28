@@ -25,7 +25,7 @@ Tags:
 = render "clothing_thumbnails"
 
 - if @clothing.count > 0
-  = form_tag clothing_bulk_path do
+  = form_tag clothing_bulk_path, class: 'form-inline' do
     - if managing?
       = select_tag 'op', options_for_select(['Store', 'Donate', 'Activate'])
       = submit_tag 'Save changes', :class => 'btn'

@@ -9,7 +9,7 @@
 - if can? :create, Memory
   = link_to 'New memory', new_memory_path
 
-%table
+%table.table
   %tr
     %th= sortable_column "Date", :column => 'sort_time'
     %th= sortable_column "Name"

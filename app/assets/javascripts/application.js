@@ -8,6 +8,7 @@
 //= require jquery.tmpl.min
 //= require autocomplete-rails
 //= require raphael-min
-//= require jquery.sparkline.min
 //= require jquery.qtip.min
+//= require jquery.sparkline.min
+//= require jquery.timeago
 //= require quantified

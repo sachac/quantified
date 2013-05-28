@@ -6,8 +6,8 @@
 
 = form_tag bulk_update_csa_foods_path do
   - if can? :update, CsaFood
-    = submit_tag 'Update records'
-  %table.lined
+    = submit_tag 'Update records', class: 'btn'
+  %table.table.table-bordered
     - @food.csa_foods.order('date_received DESC').each do |l|
       %tr
         %td= link_to l(l.date_received, :format => :long), l

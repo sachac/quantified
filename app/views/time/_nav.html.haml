@@ -1,4 +1,4 @@
-%ul.tabs
+%ul.nav.nav-tabs
   %li{:class => active_class(active, 'dashboard')}= link_to 'Dashboard', time_dashboard_path
   %li{:class => active_class(active, 'graph')}= link_to 'Graph', time_graph_path(:start => @start ? @start.strftime("%Y-%m-%d") : nil, :end => @end ? @end.strftime("%Y-%m-%d") : nil)
   %li{:class => active_class(active, 'review')}= link_to 'Summary', time_review_path(:start => params[:start], :end => params[:end])

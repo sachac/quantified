@@ -1,12 +1,12 @@
 %h1 Community-supported agriculture
 
-= form_tag quick_entry_csa_foods_path do
+= form_tag quick_entry_csa_foods_path, class: 'form-inline' do
   Quick entry:
   = text_field_tag :date, params[:date] || Date.today, :autofocus => true, :class => 'datepicker span2'
   = text_field_tag :food, nil, :placeholder => 'Food', :autofocus => true
   = text_field_tag :quantity, nil, :placeholder => 'Quantity', :size => 4, :class => 'span2'
   = text_field_tag :unit, 'g', :class => 'span1'
-  = submit_tag 'Save', :class => 'btn primary'
+  = submit_tag 'Save', :class => 'btn btn-primary'
 = form_tag bulk_update_csa_foods_path do
   .food
     - remaining = (current_account.csa_foods.where('disposition = ""').sum(:quantity) / 1000.0)
@@ -16,7 +16,7 @@
     = "#{'%0.1f' % (remaining * 1.0 / days)}kg per day"
     - if can? :update, CsaFood
       = submit_tag 'Save disposition notes', :class => 'btn'
-  %table.lined
+  %table.table.table-bordered
     %tr
       %th Date received
       %th Food

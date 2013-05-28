@@ -3,12 +3,12 @@
 - if managing?
   For best effect, make sure clothing items like skirts or pants are tagged as 'bottom' as well.
 
-= form_tag(nil, :method => :get) do 
+= form_tag(nil, method: :get, class: 'form-inline') do 
   Start: 
   = text_field_tag :start, @start_date.strftime("%Y-%m-%d"), {:class => "datepicker"}
   End: 
   = text_field_tag :end, @end_date.strftime("%Y-%m-%d"), {:class => "datepicker"}
-  = submit_tag "Go" 
+  = submit_tag "Go", class: 'btn'
 
 %h2 Logs
 
@@ -16,7 +16,7 @@ A/B/etc. distinguish multiple outfits worn on the same day.
 - if managing?
   To change the outfit number, click on its entry and edit the clothing log entry.
 - col_total = Hash.new
-%table.lined
+%table.table.table-bordered
   %tr
     %th Clothing item
     - date = @start_date
@@ -50,7 +50,7 @@ A/B/etc. distinguish multiple outfits worn on the same day.
 
 %h2 Matches
 
-%table.lined
+%table.table.table-bordered
   %tr 
     %th Bottoms \ Tops
     - @tops.each do |id, clothing|

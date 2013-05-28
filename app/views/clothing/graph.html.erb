@@ -1,9 +1,9 @@
 <h2>Clothing use</h2>
 <% @width = 800; @height = 200 %>
-<% form_tag do %>
+<% form_tag(class: 'form-inline') do %>
   Start: <%= text_field_tag :start, @start.strftime("%Y-%m-%d") %>
   End: <%= text_field_tag :end, @end.strftime("%Y-%m-%d") %>
-  <%= submit_tag "Go" %>
+  <%= submit_tag "Go", class: 'btn' %>
 <% end %>
 <div id="canvas" style="width: <%= @width %>px; height: <%= @height %>px"></div>
 <script type="text/javascript">

@@ -1,4 +1,4 @@
-= semantic_form_for @toronto_library do |f|
+= semantic_form_for @toronto_library, class: 'form-horizontal' do |f|
   -if @toronto_library.errors.any?
     #error_explanation
       %h2= "#{pluralize(@toronto_library.errors.count, "error")} prohibited this toronto_library from being saved:"
@@ -9,6 +9,7 @@
     = f.input :name, :autofocus => true
     = f.input :card
     = f.input :pin
-  .actions
-    = f.submit 'Save', :class => 'btn'
-    = link_to 'Back', toronto_libraries_path
+  .control-group
+    .controls
+      = f.submit 'Save', :class => 'btn'
+      = link_to 'Back', toronto_libraries_path

@@ -1,22 +1,20 @@
-.topbar
-  .fill
-    .container
-      - if current_account
-        = link_to "#{current_account.username.blank? ? current_account.email : current_account.username}", root_path, :class => 'brand'
+.navbar
+  .navbar-inner
+    - if current_account
+      = link_to "#{current_account.username.blank? ? current_account.email : current_account.username}", root_path, :class => 'brand'
+    - else
+      = link_to "quantified awesome",root_path, :class => 'brand'
+    %ul.nav
+      %li{:class => active_menu('/stuff')}= link_to 'stuff', stuff_index_path
+      %li{:class => active_menu('/clothing')}= link_to 'clothing', clothing_index_path
+      - if current_account and current_account.demo?
+        %li{:class => active_menu(['/library', '/toronto_library'])}= link_to 'library', library_items_path
+      %li{:class => active_menu(['/food', '/csa_food'])}= link_to 'food', csa_foods_path
+      %li{:class => active_menu('/memories')}= link_to 'memories', memories_path
+      %li{:class => active_menu(['/time', '/tap_log_records', '/records', '/record_categories'])}= link_to 'time', time_path
+      - if user_signed_in?
+        %li{:class => active_menu('/user')}= link_to 'account', edit_user_path(current_account.id)
+        %li= link_to t("web-app-theme.logout", :default => "log out"), destroy_user_session_path, :method => "delete"
       - else
-        = link_to "quantified awesome",root_path, :class => 'brand'
-      %ul.nav
-        %li{:class => active_menu('/stuff')}= link_to 'stuff', stuff_index_path
-        %li{:class => active_menu('/clothing')}= link_to 'clothing', clothing_index_path
-        - if current_account and current_account.demo?
-          %li{:class => active_menu(['/library', '/toronto_library'])}= link_to 'library', library_items_path
-        %li{:class => active_menu(['/food', '/csa_food'])}= link_to 'food', csa_foods_path
-        %li{:class => active_menu('/memories')}= link_to 'memories', memories_path
-        %li{:class => active_menu(['/time', '/tap_log_records', '/records', '/record_categories'])}= link_to 'time', time_path
-        - if user_signed_in?
-          %li{:class => active_menu('/user')}= link_to 'account', edit_user_path(current_account.id)
-          %li= link_to t("web-app-theme.logout", :default => "log out"), destroy_user_session_path, :method => "delete"
-        - else
-          %li.track= link_to t('app.user.login'), new_user_session_path
-        %li.feedback{:class => active_menu('/feedback')}= feedback_link
-%div{:style => 'clear: both'}       
+        %li.track= link_to t('app.user.login'), new_user_session_path
+      %li.feedback{:class => active_menu('/feedback')}= feedback_link

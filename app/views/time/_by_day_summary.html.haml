@@ -1,6 +1,6 @@
 - days = [['Sat', 6], ['Sun', 0], ['Mon', 1], ['Tue', 2], ['Wed', 3], ['Thu', 4], ['Fri', 5]]
 - sums = ['Sleep', 'Work', 'Discretionary', 'Unpaid work', 'Personal care']
-%table.lined
+%table.table.table-bordered
   %tr
     %th Activity
     - @beginning_of_week..(@beginning_of_week + 6.days) do |d|

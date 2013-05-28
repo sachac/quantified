@@ -1,6 +1,6 @@
 = setup_page 'categories', "Category tree", 'time/nav'
-= form_tag bulk_update_record_categories_path(:destination => request.fullpath) do
-  %table
+= form_tag bulk_update_record_categories_path(:destination => request.fullpath), class: 'form-horizontal' do
+  %table.table
     %thead
       - if managing?
         %th Actions

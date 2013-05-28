@@ -1,9 +1,9 @@
 - location_name ||= ''
 - stuff_name ||= ''
 %p
-  = form_tag log_stuff_path do
+  = form_tag log_stuff_path, class: 'form-inline' do
     Quick entry:
     = autocomplete_field_tag :stuff_name, stuff_name, autocomplete_stuff_path, :autofocus => stuff_name.blank?, :placeholder => 'Stuff name'
     = autocomplete_field_tag :location_name, location_name, autocomplete_stuff_path, :autofocus => !stuff_name.blank?, :placeholder => 'Stuff location'
-    = submit_tag 'Update'
+    = submit_tag 'Update', class: 'btn'
     

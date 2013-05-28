@@ -1,4 +1,4 @@
-= semantic_form_for @library_item do |f|
+= semantic_form_for @library_item, class: 'form-horizontal' do |f|
   -if @library_item.errors.any?
     #error_explanation
       %h2= "#{pluralize(@library_item.errors.count, "error")} prohibited this library_item from being saved:"
@@ -20,5 +20,5 @@
     = f.input :read_date
     = f.input :return_date
     = f.input :status
-  .actions
-    = f.submit 'Save'
+  .control-group
+    .controls= f.submit 'Save'

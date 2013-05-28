@@ -1,30 +1,30 @@
 = setup_page 'batch', 'Batch entry', 'time/nav'
 
-= form_tag batch_records_path do
+= form_tag batch_records_path, class: 'form-horizontal' do
   %h3 1. Enter data
-  .clearfix
-    = label_tag :date, 'Date'
-    .input= text_field_tag :date, params[:date] || Date.today, :class => 'datepicker'
-  .clearfix
-    = label_tag 'batch', 'Text'
-    .input
+  .control-group
+    = label_tag :date, 'Date', class: 'control-label'
+    .controls= text_field_tag :date, params[:date] || Date.today, :class => 'datepicker'
+  .control-group
+    = label_tag 'batch', 'Text', class: 'control-label'
+    .controls
       = text_area_tag 'batch', params[:batch], :required => true
-      %br
-      Example:
-      %pre
-        7:00 category1
-        8:00 category2
-        13:30 14:00 category3
-    .input
-      .inputs-list
-        %label
-          = check_box_tag 'set_end', params[:set_end], :class => 'checkbox'
-          Automatically set ending timestamps
-    .actions    
-      = submit_tag 'Update', :class => 'btn primary'
+      .help-block
+        Example:
+        %pre
+          :preserve
+            7:00 category1
+            8:00 category2
+            13:30 14:00 category3
+  .control-group
+    .controls
+      %label
+        = check_box_tag 'set_end', params[:set_end], :class => 'checkbox'
+        Automatically set ending timestamps
+      = submit_tag 'Update', :class => 'btn btn-primary'
   - if @records  
     %h3 2. Confirm data
-    %table
+    %table.table.table-striped
       %tr
         %th Start
         %th End
@@ -50,5 +50,6 @@
             - else
               .label.error Unknown category
           %td= r[:text]
-    .actions      
-      = submit_tag 'Create records', :class => 'btn primary'
+    .control-group
+      .control
+        = submit_tag 'Create records', :class => 'btn btn-primary'
