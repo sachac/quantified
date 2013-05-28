@@ -1,11 +1,4 @@
 GIT
-  remote: /home/vagrant/formtastic-bootstrap
-  revision: cccc726f624f4694d42235bd4e512a53c8dca5fa
-  specs:
-    formtastic-bootstrap (2.1.1)
-      formtastic (~> 2.2)
-
-GIT
   remote: git://github.com/intridea/omniauth.git
   revision: 0ce45963181281f1617274e0ad9151dade0b4fc4
   specs:
@@ -58,6 +51,13 @@ GIT
     cucumber_factory (1.8.4)
       activesupport
       cucumber
+
+GIT
+  remote: https://github.com/mjbellantoni/formtastic-bootstrap.git
+  revision: cccc726f624f4694d42235bd4e512a53c8dca5fa
+  specs:
+    formtastic-bootstrap (2.1.1)
+      formtastic (~> 2.2)
 
 GEM
   remote: http://rubygems.org/
