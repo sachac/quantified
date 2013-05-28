@@ -1,0 +1,4 @@
+%ul.nav.nav-tabs
+  %li{:class => active_class(active, 'index')}= link_to 'All', library_items_path
+  %li{:class => active_class(active, 'current')}= link_to 'Current items', current_library_items_path
+  %li{:class => active_class(active, 'cards')}= link_to 'Library cards', toronto_libraries_path
