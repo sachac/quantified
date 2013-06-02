@@ -8,7 +8,7 @@
 = form_tag library_item_bulk_path, class: 'form-inline' do
   - if can? :update, LibraryItem
     = select_tag 'op', options_for_select(['Renew', 'Make public', 'Make private', 'Mark read'])
-    = submit_tag 'Submit', class: 'btn'
+    = submit_tag 'Submit', :class => 'btn'
   %table.table.table-bordered
     %tr
       %th{:width => 100} Due
@@ -33,4 +33,4 @@
             = link_to item.title, can?(:update, item) ? edit_library_item_path(item.id) : item 
           %td= item.author
   - if can? :update, LibraryItem
-    = submit_tag, class: 'btn'
+    = submit_tag 'Refresh', :class => 'btn'

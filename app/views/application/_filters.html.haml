@@ -18,7 +18,7 @@
         - if @filters[:category_tree]
           .control-group
             = label_tag :category_tree, 'Detail level', class: 'control-label'
-            .controls
+            .controls.form-inline
               = radio_button_tag :category_tree, 'full', params && params[:category_tree] == 'full'
               = label_tag :category_tree_full, 'Full tree', :class => 'inline'
               = radio_button_tag :category_tree, 'next_level', params && params[:category_tree] == 'next_level'
@@ -26,7 +26,7 @@
         - if @filters[:order]
           .control-group
             = label_tag :order, 'Order', class: 'control-label'
-            .controls
+            .controls.form-inline
               = radio_button_tag :order, 'newest', @order != 'desc', :class => 'inline'
               = label_tag :order_newest, 'Newest on top', :class => 'inline'
               = radio_button_tag :order, 'oldest', @order == 'desc'
@@ -39,7 +39,7 @@
         - if @filters[:display_type]
           .control-group
             = label_tag :display_type, 'Display', class: 'control-label'
-            .controls
+            .controls.form-inline
               = radio_button_tag :display_type, 'time', params[:display_type] != 'decimal', :class => 'inline'
               = label_tag :display_type_inline, 'Time', :class => 'inline'
               = radio_button_tag :display_type, 'decimal', params[:display_type] == 'decimal', :class => 'inline'

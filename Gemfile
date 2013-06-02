@@ -69,7 +69,7 @@ gem 'omniauth-twitter'
 gem 'omniauth-openid'
 gem 'ruby_parser'
 gem 'passgen'
-#gem 'high_voltage'
+gem 'high_voltage'
 gem 'sass-rails', "~> 3.2.6"
 gem 'compass_twitter_bootstrap', '~> 2.2.2.2'
 gem 'compass-rails'

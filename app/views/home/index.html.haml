@@ -72,7 +72,13 @@
         = "#{pluralize TorontoLibrary.pickup_count(current_account), "item"} to pick up"
         - due = LibraryItem.current_items(current_account).minimum('due')
         - if due
-          %span.label{:class => (due > Date.today) ? 'notice' : 'important' }
+          - if due == Date.today
+            - library_class = "label-warning"
+          - elsif due < Date.today
+            - library_class = "label-important"
+          - else
+            - library_class = "label-success"
+          %span.label{:class => 'label ' + library_class}
             = due.strftime('%a %b %e')
         - if can? :refresh_library, current_account  
           = link_to "refresh", library_refresh_path, :class => 'btn', :style => 'margin-left: 5px'
