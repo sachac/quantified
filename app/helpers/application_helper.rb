@@ -248,11 +248,11 @@ module ApplicationHelper
     end
     start_offset = row[0] - row[0].midnight.in_time_zone
     end_offset = row[1] - row[0].midnight.in_time_zone
-    "graphTimeEntry(#{canvas_var}, #{day_offset}, #{start_offset}, #{end_offset}, " +
+    ("graphTimeEntry(#{canvas_var}, #{day_offset}, #{start_offset}, #{end_offset}, " +
       "'#{escape_javascript row[0].strftime('%a %Y-%m-%d %-H:%M')} - #{escape_javascript row[1].strftime('%-H:%M')}: " +
       "#{escape_javascript row[2].full_name} (#{escape_javascript(duration(row[1] - row[0]))})', " +
       "'#{escape_javascript row[2].color}', '#{row[2].record_category.full_name.parameterize.underscore}', " +
-      "'#{record_path(row[2])}');"
+      "'#{record_path(row[2])}');").html_safe
   end
 
   def graph_time_total(canvas_var, range, day, category, total)
@@ -269,9 +269,9 @@ module ApplicationHelper
     end_offset = @totals_so_far[day_offset] 
     if start_offset < end_offset
       @totals_so_far[day_offset] -= total
-      "graphTimeEntry(#{canvas_var}, #{day_offset}, #{start_offset}, #{end_offset}, " +
+      ("graphTimeEntry(#{canvas_var}, #{day_offset}, #{start_offset}, #{end_offset}, " +
         "'#{escape_javascript day.strftime('%a %Y-%m-%d')} #{escape_javascript category.full_name} (#{escape_javascript(duration(total))})', " +
-        "'#{escape_javascript category.color}', '#{category.full_name.parameterize.underscore}');"
+        "'#{escape_javascript category.color}', '#{category.full_name.parameterize.underscore}');").html_safe
     end
   end
 

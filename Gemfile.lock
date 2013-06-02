@@ -179,6 +179,7 @@ GEM
       railties (>= 3.1, < 4.1)
     handles_sortable_columns (0.1.4)
     hashie (2.0.5)
+    high_voltage (1.2.2)
     hike (1.2.2)
     http-cookie (1.0.1)
       domain_name (~> 0.5)
@@ -395,6 +396,7 @@ DEPENDENCIES
   haml
   haml-rails (= 0.4)
   handles_sortable_columns
+  high_voltage
   jquery-rails (~> 2.1.4)
   libv8 (~> 3.11)
   mechanize

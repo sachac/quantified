@@ -8,11 +8,10 @@
 - if managing?
   = form_tag clothing_logs_path, class: 'form-inline' do
     = hidden_field_tag :clothing_id, @clothing.id
-    .inline
-      = label_tag :date, 'Date', class: 'control-label'
-      .controls= text_field_tag :date, Time.zone.now.to_date, :class => 'datepicker'
-      = select_tag :outfit_id, options_for_select([[1,1], [2,2], [3,3], [4,4]])
-      = submit_tag 'Log', :class => 'btn btn-primary'
+    = label_tag :date, 'Date', class: 'control-label'
+    = text_field_tag :date, Time.zone.now.to_date, :class => 'datepicker'
+    = select_tag :outfit_id, options_for_select([[1,1], [2,2], [3,3], [4,4]])
+    = submit_tag 'Log', :class => 'btn btn-primary'
 
 %p
   = @clothing.status
