@@ -1,4 +1,4 @@
-= semantic_form_for @clothing, :class => (mobile? ? 'form-stacked' : 'form-inline')  do |f|
+= semantic_form_for @clothing, :html => {:class => 'form ' + (mobile? ? 'form-stacked' : 'form-horizontal')}  do |f|
   -if @clothing.errors.any?
     #error_explanation
       %h2= "#{pluralize(@clothing.errors.count, "error")} prohibited this clothing from being saved:"
@@ -17,9 +17,7 @@
     = f.input :notes, :as => :text, :input_html => { :rows => 5 }
   .control-group
     .controls
-    = f.submit I18n.t('app.general.save'), :class => 'btn btn-primary'
+      = f.submit I18n.t('app.general.save'), :class => 'btn btn-primary'
       - if !@clothing.new_record? and can? :delete, @clothing
         = link_to I18n.t('app.general.delete'), clothing_path(@clothing), :method => :delete, :confirm => I18n.t('app.general.are_you_sure'), :class => 'btn'
       = link_to 'Cancel', clothing_index_path
-
-
