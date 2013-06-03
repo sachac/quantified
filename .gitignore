@@ -14,3 +14,5 @@ config/initializers/secret_token.rb
 config/database.yml
 public/assets/*
 config/newrelic.yml
+coverage
+public/coverage
