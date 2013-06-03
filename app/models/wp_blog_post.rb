@@ -2,8 +2,8 @@
 class WpBlogPost < ActiveRecord::Base
   establish_connection Rails.configuration.database_configuration["wordpress"]
 
-  set_table_name "wp_posts"
-  set_primary_key "ID"
+  self.table_name = "wp_posts"
+  self.primary_key =   "ID"
 
   has_many :comments, :class_name => "WpBlogComment", :foreign_key => "comment_post_ID"
 

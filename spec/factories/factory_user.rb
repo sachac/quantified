@@ -1,14 +1,16 @@
 FactoryGirl.define do
-  sequence :username do |n| "test#{n}" end
+  sequence(:username) { |n| "test#{n}" }
   factory :user do |f| 
-    f.after_create { |user| user.confirm! }
-    f.username { Factory.next(:username) }
+    f.username { FactoryGirl.generate(:username) }
     f.email { "#{username}@example.org" }
     f.role 'user'
     f.password { Forgery(:basic).password }
     f.password_confirmation { password }
   end
-  factory :admin, :parent => :user do 
+  factory :confirmed_user, :parent => :user do |f|
+    f.after(:create) { |user| user.confirm! }
+  end
+  factory :admin, :parent => :confirmed_user do 
     role 'admin'
   end
   factory :stuff do 
@@ -28,7 +30,7 @@ FactoryGirl.define do
   end
   sequence :context_name do |n| "Context #{n}" end
   factory :context do
-    name { Factory.next(:context_name) }
+    name { FactoryGirl.generate(:context_name) }
     user
   end
 end

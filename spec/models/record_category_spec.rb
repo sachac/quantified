@@ -3,7 +3,7 @@ require 'spec_helper'
 describe RecordCategory do
   describe "#as_child_id" do
     it "handles identity" do
-      RecordCategory.as_child_id('1.2', '1.2').should be_nil
+      RecordCategory.as_child_id('1.2', '1.2').should == ""
     end
     it "handles direct child" do
       RecordCategory.as_child_id('1.2', '1.2.3').should == '3'

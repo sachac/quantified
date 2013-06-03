@@ -3,7 +3,8 @@
 %ul
   - @timeline_events.each do |e|
     %li
-      = link_to e.actor.username, e.actor
+      - if e.actor
+        = link_to e.actor.username, e.actor
       - case e.subject_type
         - when 'ClothingLog'
           - if e.secondary_subject and e.subject
