@@ -1,2 +1,0 @@
-module ContextsHelper
-end
