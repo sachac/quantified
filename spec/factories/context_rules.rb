@@ -3,7 +3,7 @@
 FactoryGirl.define do
   factory :context_rule do
     stuff
-    location { FactoryGirl.create(:stuff) }
+    location { FactoryGirl.create(:stuff, stuff_type: 'location') }
     context
   end
 end

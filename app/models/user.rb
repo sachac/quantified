@@ -58,8 +58,15 @@ class User < ActiveRecord::Base
   end
 
   def this_week
-    self.beginning_of_week..Time.now
+    beginning = self.beginning_of_week
+    beginning..(beginning + 1.week)
   end
+
+  # Return a week range as times
+  def week
+    self.beginning_of_week.midnight.in_time_zone..Time.now
+  end
+
 
   def update_memento_mori
     if birthdate_changed? or life_expectancy_in_years_changed? then
@@ -85,17 +92,6 @@ class User < ActiveRecord::Base
     else
       val
     end
-  end
-
-  # Return a week range
-  def week
-    self.beginning_of_week.midnight.in_time_zone..Time.now
-  end
-
-  # devise_invitable accept_invitation! method overriden
-  def accept_invitation!
-    self.confirm!
-    super
   end
 
   def admin?
