@@ -36,9 +36,9 @@ describe Record do
   end
   describe '#create_batch' do
     it "creates unambiguous records" do
-      @user = Factory(:user, :confirmed_at => Time.now)
-      @cat = Factory(:record_category, :user => @user, :name => 'ABCX')
-      @cat2 = Factory(:record_category, :user => @user, :name => 'XYZ')
+      @user = FactoryGirl.create(:confirmed_user)
+      @cat = FactoryGirl.create(:record_category, :user => @user, :name => 'ABCX')
+      @cat2 = FactoryGirl.create(:record_category, :user => @user, :name => 'XYZ')
       lines = <<END
 7:30 ABC
 8:30 XYZ
@@ -53,9 +53,9 @@ END
 
   describe '#confirm_batch' do
     it "parses lines" do 
-      @user = Factory(:user, :confirmed_at => Time.now)
-      @cat = Factory(:record_category, :user => @user, :name => 'ABCX')
-      @cat2 = Factory(:record_category, :user => @user, :name => 'XYZ')
+      @user = FactoryGirl.create(:confirmed_user)
+      @cat = FactoryGirl.create(:record_category, :user => @user, :name => 'ABCX')
+      @cat2 = FactoryGirl.create(:record_category, :user => @user, :name => 'XYZ')
       lines = <<END
 7:30 ABC
 8:30 XYZ
@@ -64,12 +64,12 @@ END
 END
       out = Record.confirm_batch(@user, lines)
       out.length.should == 4
-      out[0][:time].hour.should == 7
-      out[0][:time].min.should == 30
+      out[0][:timestamp].hour.should == 7
+      out[0][:timestamp].min.should == 30
       out[0][:text].should == "7:30 ABC"
       out[0][:category].should == @cat
-      out[1][:time].hour.should == 8
-      out[1][:time].min.should == 30
+      out[1][:timestamp].hour.should == 8
+      out[1][:timestamp].min.should == 30
       out[1][:category].should == @cat2
       out[2][:category].length.should == 2
       out[3][:category].should be_nil
@@ -87,35 +87,32 @@ END
   end
 
   describe '#prepare_graph' do
-    before :each do
-      @user = Factory(:user, :confirmed_at => Time.now)
-      @cat = Factory(:record_category, :user => @user)
-      @cat2 = Factory(:record_category, :user => @user)
-      Factory(:record, :user => @user, :timestamp => Date.yesterday.midnight.in_time_zone + 7.hours, :end_timestamp => Date.yesterday.midnight.in_time_zone + 10.hours, :record_category => @cat) 
-      Factory(:record, :user => @user, :timestamp => Date.yesterday.midnight.in_time_zone + 10.hours, :end_timestamp => Date.yesterday.midnight.in_time_zone + 11.hours, :record_category => @cat2) 
-      Factory(:record, :user => @user, :timestamp => Date.yesterday.midnight.in_time_zone + 11.hours, :end_timestamp => Date.yesterday.midnight.in_time_zone + 12.hours, :record_category => @cat) 
-    end
-    it "tallies up the totals for categories" do
+    it "splits by date" do
+      @user = FactoryGirl.create(:confirmed_user)
+      @cat = FactoryGirl.create(:record_category, :user => @user)
+      @cat2 = FactoryGirl.create(:record_category, :user => @user)
+      FactoryGirl.create(:record, :user => @user, :timestamp => Date.today.midnight.in_time_zone - 2.hours, 
+                         :end_timestamp => Date.today.midnight.in_time_zone + 1.hour, :record_category => @cat) 
       @records = @user.records
-      list = Record.prepare_totals(Date.yesterday..Date.today, @records)
-      list[0][@cat.id][:duration].should == 4.hours
-      list[0][@cat2.id][:duration].should == 1.hours
+      list = Record.prepare_graph(Date.yesterday..(Date.today + 1.day), @records)
+      (list[0][0][1] - list[0][0][0]).should == 2.hours
+      (list[1][0][1] - list[1][0][0]).should == 1.hour
     end
   end
   describe "#split" do
     it "handles records entirely within a day" do
-      user = Factory(:user, :confirmed_at => Time.now)
-      record = Factory(:record, :user => user, :timestamp => Date.yesterday.midnight.in_time_zone + 7.hours, :end_timestamp => Date.yesterday.midnight.in_time_zone + 10.hours)
+      user = FactoryGirl.create(:confirmed_user)
+      record = FactoryGirl.create(:record, :user => user, :timestamp => Date.yesterday.midnight.in_time_zone + 7.hours, :end_timestamp => Date.yesterday.midnight.in_time_zone + 10.hours)
       record.split.should == [[record.timestamp, record.end_timestamp, record]]
     end
     it "handles records that cross one date boundary" do
-      user = Factory(:user, :confirmed_at => Time.now)
-      record = Factory(:record, :user => user, :timestamp => Date.yesterday.midnight.in_time_zone + 7.hours, :end_timestamp => Date.today.midnight.in_time_zone + 10.hours)
+      user = FactoryGirl.create(:confirmed_user)
+      record = FactoryGirl.create(:record, :user => user, :timestamp => Date.yesterday.midnight.in_time_zone + 7.hours, :end_timestamp => Date.today.midnight.in_time_zone + 10.hours)
       record.split.should == [[record.timestamp, Date.today.midnight.in_time_zone, record], [Date.today.midnight.in_time_zone, record.end_timestamp, record]]
     end
     it "handles records that cross two date boundaries" do
-      user = Factory(:user, :confirmed_at => Time.now)
-      record = Factory(:record, :user => user, :timestamp => Date.yesterday.midnight.in_time_zone + 7.hours, :end_timestamp => Date.tomorrow.midnight.in_time_zone + 10.hours)
+      user = FactoryGirl.create(:confirmed_user)
+      record = FactoryGirl.create(:record, :user => user, :timestamp => Date.yesterday.midnight.in_time_zone + 7.hours, :end_timestamp => Date.tomorrow.midnight.in_time_zone + 10.hours)
       record.split.should == [[record.timestamp, Date.today.midnight.in_time_zone, record], 
                               [Date.today.midnight.in_time_zone, Date.tomorrow.midnight.in_time_zone, record],
                               [Date.tomorrow.midnight.in_time_zone, record.end_timestamp, record]]

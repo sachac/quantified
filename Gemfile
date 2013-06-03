@@ -90,16 +90,16 @@ group :development, :test do
   #gem 'hpricot'
   #gem 'rcov'
   gem 'database_cleaner'
-end
-group :test do
-  gem 'rspec'
-  gem 'cucumber'
-  gem 'cucumber-rails'
-  gem 'capybara'
   gem 'rspec-rails'
   gem 'factory_girl_rails'  
-  gem 'cucumber_factory', :git => 'https://github.com/makandra/cucumber_factory.git'
   gem 'forgery'
+  gem 'rspec'
+end
+group :test do
+  gem 'cucumber'
+  gem 'cucumber-rails', :require => false
+  gem 'capybara'
+  gem 'cucumber_factory', :git => 'https://github.com/makandra/cucumber_factory.git'
 end
 gem 'yaml_db'
 gem 'email_validator'

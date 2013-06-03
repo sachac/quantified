@@ -5,8 +5,8 @@ class WpBlogComment < ActiveRecord::Base
   # if wordpress tables live in a different database (i.e. 'wordpress') change the following
   # line to set_table_name "wordpress.wp_comments"
   # don't forget to give the db user permissions to access the wordpress db
-  set_table_name "wp_comments"
-  set_primary_key "comment_ID"
+  self.table_name = "wp_comments"
+  self.primary_key = "comment_ID"
 
   belongs_to :post , :class_name => "WpBlogPost", :foreign_key => "comment_post_ID"
 

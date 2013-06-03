@@ -208,7 +208,7 @@ class Record < ActiveRecord::Base
     result = Hash.new { |h,k| h[k] = Array.new }
     records.each do |r|
       r.split(range).each do |row|
-        day = row[0].to_date - range.begin
+        day = (row[0].to_date - range.begin).floor
         result[day] << row
       end
     end
@@ -232,10 +232,10 @@ class Record < ActiveRecord::Base
   # Returns an array of [string, time]
   def self.guess_time(string, options = {})
     return [nil, nil] unless string.is_a? String
+
     # Match hh:mm
     regex = /([0-9]+:[0-9]+)\b */
     new_string = string
-    time = nil
     end_time = nil
     matches = new_string.match regex
     if matches
@@ -243,12 +243,14 @@ class Record < ActiveRecord::Base
       new_string.sub! regex, ''
     end
 
+    # Match the end time too if one is specified
     matches = new_string.match regex
     if matches
       end_time = Time.zone.parse(matches[1])
       new_string.sub! regex, ''
     end
 
+    # Have we specified a date, as in batch entry?
     if options[:date] 
       time = (time || Time.now) - (Date.today - options[:date]).days
     end
@@ -259,25 +261,41 @@ class Record < ActiveRecord::Base
     if matches
       case matches[2]
       when "h", "hr", "hrs", "hour", "hours"
-        time = (time || Time.now) - matches[1].to_i.hours
+        time = (time || Time.zone.now) - matches[1].to_i.hours
       when "m", "min", "mins"
-        time = (time || Time.now) - matches[1].to_i.minutes
+        time = (time || Time.zone.now) - matches[1].to_i.minutes
       end
       new_string.sub! regex, ''
     end
 
+    # Match the end time too if specified
     matches = new_string.match regex
     if matches
       case matches[2]
       when "h", "hr", "hrs", "hour", "hours"
-        end_time = (end_time || Time.now) - matches[1].to_i.hours
+        end_time = (end_time || Time.zone.now) - matches[1].to_i.hours
       when "m", "min", "mins"
-        end_time = (end_time || Time.now) - matches[1].to_i.minutes
+        end_time = (end_time || Time.zone.now) - matches[1].to_i.minutes
       end
       new_string.sub! regex, ''
     end
 
-    # match m-d or m/d
+    # recognize +5m as a start time
+    regex = /\+([\.0-9]+)(m(ins?)?|h(rs?|ours?)?)\b */
+    matches = new_string.match regex
+    if matches
+      case matches[2]
+      when "h", "hr", "hrs", "hour", "hours"
+        time = (time || Time.zone.now) + matches[1].to_i.hours
+      when "m", "min", "mins"
+        time = (time || Time.zone.now) + matches[1].to_i.minutes
+      end
+      new_string.sub! regex, ''
+    end
+
+    # At this point, time should be the correct time (except that it's based on today)
+
+    # match m-d or m/d, and subtract as many days as needed to get to that date
     regex = /\b([0-9]?[0-9])[-\/]([0-9]?[0-9])\b */
     matches = new_string.match regex
     if matches
@@ -285,7 +303,7 @@ class Record < ActiveRecord::Base
       if d > Date.today
         d = Date.new(Date.today.year - 1, matches[1].to_i, matches[2].to_i)
       end
-      time = (time || Time.now) - (Date.today - d).days
+      time = (time || Time.zone.now) - (Date.today - d).days 
       new_string.gsub! regex, ''
     end
     [new_string.strip, time, end_time]
