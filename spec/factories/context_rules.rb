@@ -2,8 +2,8 @@
 
 FactoryGirl.define do
   factory :context_rule do
-    stuff_id 1
-    location_id 1
-    context_id 1
+    stuff
+    location { FactoryGirl.create(:stuff) }
+    context
   end
 end
