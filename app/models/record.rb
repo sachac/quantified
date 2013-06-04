@@ -3,10 +3,10 @@ class Record < ActiveRecord::Base
   belongs_to :user
   serialize :data
   scope :activities, joins(:record_category).where(:record_categories => {:category_type => 'activity'}).readonly(false)
-  scope :public, where("LOWER(records.data) NOT LIKE '%!private%'")
+  scope :public, where("records.data IS NULL OR LOWER(records.data) NOT LIKE '%!private%'")
   before_save :add_data
   validate :end_timestamp_must_be_after_start
- 
+
   def data=(val)
     if val.is_a? String
       write_attribute(:data, ActiveSupport::JSON.decode(val))
@@ -21,26 +21,38 @@ class Record < ActiveRecord::Base
     end
   end
 
+  # Returns records split by midnight in reverse chronological order
   def self.split(records)
     if records.is_a? Record
-      if records.end_timestamp and records.end_timestamp.midnight > records.timestamp.midnight
-        record_a = records.dup
-        record_b = records.dup
-        record_a.end_timestamp = record_a.end_timestamp.midnight
-        record_a.duration = record_a.end_timestamp - record_a.timestamp
-        record_b.timestamp = record_b.end_timestamp.midnight
-        record_b.duration = record_b.end_timestamp - record_b.timestamp
-        record_a.id = records.id
-        record_b.id = records.id
-        [record_b, record_a]
-      else
-        [records]
+      start_time = records.timestamp
+      end_time = records.end_timestamp || Time.zone.now
+      list = Array.new
+      current = records
+      # While the end time crosses a midnight
+      while start_time.in_time_zone.midnight != end_time.in_time_zone.midnight
+        current = current.dup
+        current.timestamp = start_time.in_time_zone
+        current.end_timestamp = (start_time.in_time_zone + 1.day).midnight
+        current.duration = current.end_timestamp - current.timestamp
+        current.id = records.id
+        list << current
+        start_time = (start_time + 1.day).midnight
       end
+      if start_time < end_time
+        # At this point, start time and end time are on the same date
+        current = current.dup
+        current.timestamp = start_time
+        current.end_timestamp = end_time
+        current.duration = current.end_timestamp - current.timestamp
+        current.id = records.id
+        list << current
+      end
+      list.reverse
     else
       records.map { |x| Record.split(x) }.flatten
     end
   end
-  
+
   def add_data
     self.date = self.timestamp.in_time_zone.to_date
     # Set end time automatically if we are backdating activities
@@ -61,20 +73,22 @@ class Record < ActiveRecord::Base
     if !self.manual and self.record_category.category_type == 'activity'
       next_activity = self.next_activity
       if next_activity and self.end_timestamp and next_activity.timestamp != self.end_timestamp
-        next_act = Record.where(:id => next_activity.id)
-        next_act.update_all(['timestamp = ?', self.end_timestamp])
+        next_activity.timestamp = self.end_timestamp
         if next_activity.end_timestamp
-          next_act.update_all(['duration = ?', next_activity.timestamp])
+          next_activity.duration = next_activity.end_timestamp - next_activity.timestamp
+        else
+          next_activity.duration = nil
         end
+        next_activity.save
       end
     end
   end
   def update_previous
     previous_activity = self.previous_activity
     if self.record_category.category_type == 'activity' and previous_activity and !previous_activity.manual? and (!previous_activity.end_timestamp or previous_activity.end_timestamp != self.timestamp)
-      prev = Record.where(:id => previous_activity.id)
-      prev.update_all(['end_timestamp = ?', self.timestamp])
-      prev.update_all(['duration = ?', self.timestamp - previous_activity.timestamp])
+      previous_activity.end_timestamp = self.timestamp
+      previous_activity.duration = previous_activity.end_timestamp - previous_activity.timestamp
+      previous_activity.save
     end
   end
 
@@ -115,7 +129,7 @@ class Record < ActiveRecord::Base
     if self.record_category.activity?
       self
     else
-      self.user.records.activities.where('timestamp < ?', self.timestamp).order('timestamp desc').first
+      self.user.records.activities.where('timestamp < ? AND (end_timestamp IS NULL OR end_timestamp >= ?)', self.timestamp, self.timestamp).order('timestamp desc').first
     end
   end
 
@@ -158,7 +172,7 @@ class Record < ActiveRecord::Base
   def self.get_zoom_key(user, zoom, timestamp)
     case zoom
     when :daily
-      timestamp.to_date
+      timestamp.in_time_zone.to_date
     when :weekly
       user.adjust_beginning_of_week(timestamp.to_date) + 6.days
     when :monthly
@@ -181,12 +195,12 @@ class Record < ActiveRecord::Base
     entry = Hash.new
     min = nil
     max = nil
-    FasterCSV.foreach(file, :headers => true) do |row|
-      x = Record.where('user_id=? AND source_id=? AND source=?', user.id, row['_id'], 'tap_log').first
+    CSV.foreach(file, :headers => true) do |row|
+      x = Record.where('user_id=? AND source_id=? AND source_name=?', user.id, row['_id'], 'tap_log').first
       time = Time.zone.parse row['timestamp']
       # Find category
       cat = RecordCategory.find_or_create(user, [row['catOne'], row['catTwo'], row['catThree']].reject(&:blank?).compact)
-      attributes = {:user => user, :timestamp => time, :record_category => cat, :data => {:number => row['number'], :rating => row['rating'], :note => row['note']}.reject { |k,v| v.blank? }, :source_id => row['_id'], :source => 'tap_log'}
+      attributes = {:user => user, :timestamp => time, :record_category => cat, :data => {:number => row['number'], :rating => row['rating'], :note => row['note']}.reject { |k,v| v.blank? }, :source_id => row['_id'], :source_name => 'tap_log'}
       if time
         if x
           x.update_attributes(attributes)
@@ -252,9 +266,9 @@ class Record < ActiveRecord::Base
 
     # Have we specified a date, as in batch entry?
     if options[:date] 
-      time = (time || Time.now) - (Time.zone.now.to_date - options[:date]).days
+      time = (time || Time.now) - (Time.zone.now.to_date - options[:date].to_date).days
     end
-      
+    
     # match -30m or -30min example, always as an offset from now
     regex = /-([\.0-9]+)(m(ins?)?|h(rs?|ours?)?)\b */
     matches = new_string.match regex
@@ -307,18 +321,6 @@ class Record < ActiveRecord::Base
       new_string.gsub! regex, ''
     end
     [new_string.strip, time, end_time]
-  end
-  # If unambiguous, create an entry based on string
-  # String can be of the form hh:mm category words
-  def self.create_from_query(account, string, options = {})
-    cat = RecordCategory.search(account, string)
-    if cat and cat.is_a? RecordCategory
-      record = account.records.create(:timestamp => time, :record_category => cat, :user => account)
-      return record
-    else
-      # Return results so the controller can figure out what to do
-      return cat
-    end
   end
 
   # Turn LINES into an array of { :time => Date, :category => RecordCategory or list, :text => input text }
@@ -373,7 +375,6 @@ class Record < ActiveRecord::Base
     if attributes[:category]
       # Copy any record data if specified
       matches = attributes[:category].match /^(.*?)\|(.*)/
-      logger.info "Matches? #{matches.inspect}"
       if matches
         attributes[:category] = matches[1]
         record_data = matches[2]
@@ -382,13 +383,14 @@ class Record < ActiveRecord::Base
       time = data[1]
       end_time = data[2]
     end
-    logger.info "#{time} after trying to get it from category"
     unless attributes[:timestamp].blank?
-      time = Time.zone.parse(attributes[:timestamp]) if time.blank?
+      if attributes[:timestamp].is_a? String
+        time = Time.zone.parse(attributes[:timestamp]) if time.blank?
+      else
+        time = attributes[:timestamp] if time.blank?
+      end
     end
-    logger.info "#{time} after trying to get it from timestamp #{attributes.inspect}"
     time ||= Time.now
-    logger.info "#{time} after default"
     if attributes[:category_id]
       cat = account.record_categories.find_by_id(attributes[:category_id])
       new_record = {:user => account, :record_category => cat, :timestamp => time, :end_timestamp => end_time}
@@ -404,7 +406,7 @@ class Record < ActiveRecord::Base
       if cat.data and record_data
         record_key = cat.data.first['key']
         if record_key
-          new_record[:data] = {record_key => record_data}
+          new_record[:data] = {record_key => record_data.strip}
         end
       end
       rec = Record.create(new_record)
@@ -422,7 +424,9 @@ class Record < ActiveRecord::Base
     else
       records = account.records.order('timestamp DESC')
     end
-    records = records.where(:timestamp => options[:start]..options[:end])
+    if options[:start] and options[:end]
+      records = records.where(:timestamp => options[:start]..options[:end])
+    end
     unless options[:filter_string].blank?
       query = "%" + options[:filter_string].downcase + "%"
       records = records.joins(:record_category).where('LOWER(records.data) LIKE ? OR LOWER(record_categories.full_name) LIKE ?', query, query)
@@ -432,23 +436,23 @@ class Record < ActiveRecord::Base
     end
     records
   end
-  
+
   delegate :activity?, :to => :record_category
   delegate :full_name, :to => :record_category
   delegate :get_color, :to => :record_category
   delegate :color, :to => :record_category
-  
+
   comma do
     timestamp { |timestamp| I18n.l(timestamp, :format => :long) if timestamp }
     end_timestamp { |timestamp| I18n.l(timestamp, :format => :long) if timestamp }
     record_category :full_name => 'Record category'
     record_category :id => 'Record category ID'
     duration
-    source
+    source_name
     source_id
     data 'Data' do |data| data.to_json if data and data.size > 0 end
   end
-  
+
   fires :new, :on => :create, :actor => :user, :secondary_subject => :record_category
 
 end

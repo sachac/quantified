@@ -2,6 +2,7 @@ require 'rubygems'
 require 'spork'
 require 'database_cleaner'
 require 'paperclip/matchers'
+require 'fakeweb'
  
 #uncomment the following line to use spork with the debugger
 #require 'spork/ext/ruby-debug'
@@ -10,6 +11,7 @@ Spork.prefork do
   # Loading more in this block will cause your tests to run faster. However,
   # if you change any configuration or code from libraries loaded here, you'll
   # need to restart spork for it take effect.
+  FakeWeb.allow_net_connect = false
   unless ENV['DRB']
     require 'simplecov'
     SimpleCov.start 'rails'
@@ -32,6 +34,7 @@ Spork.prefork do
     end
     config.before(:each) do
       DatabaseCleaner.start
+      FakeWeb.clean_registry
     end
     config.after(:each) do
       DatabaseCleaner.clean

@@ -1,20 +1,6 @@
 class CsaFood < ActiveRecord::Base
   belongs_to :user
   belongs_to :food
-  
-  def self.next_delivery(date = nil)
-    date ||= Time.zone.now.to_date
-    d = date.wday
-    # 0 - 4 -   3
-    # 1 - 3 -   4
-    # 2 - 2 -   5
-    # 3 - 1 -   6
-    # 4 - 7 -   7
-    # 5 - 6 -   1
-    # 6 - 5 -   2
-    date + (7 - (date.wday + 3) % 7).days
-  end
-
   def self.log(account, options)
     if options[:food].is_a? Food
       food = options[:food]
