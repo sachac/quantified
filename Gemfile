@@ -100,6 +100,7 @@ group :test do
   gem 'guard-rspec'
   gem 'guard-spork'
   gem 'cucumber'
+  gem 'fakeweb'
   gem 'simplecov', :require => false
   gem 'cucumber-rails', :require => false
   gem 'capybara'

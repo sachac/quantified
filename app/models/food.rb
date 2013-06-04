@@ -3,12 +3,10 @@ class Food < ActiveRecord::Base
   has_many :csa_foods
 
   def self.get_food(account, name)
-    food = account.foods.find_by_name(name)
-    food ||= account.foods.find_by_name(name.singularize)
-    food ||= account.foods.find_by_name(name.pluralize)
-    unless food
-      food = Food.create(:user => account, :name => name)
-    end
+    food = account.foods.where('lower(name) = ?', name.downcase).first
+    food ||= account.foods.where('lower(name) = ?', name.singularize.downcase).first
+    food ||= account.foods.where('lower(name) = ?', name.pluralize.downcase).first
+    food ||= Food.create(:user => account, :name => name)
     food
   end
   

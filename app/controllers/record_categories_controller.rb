@@ -34,10 +34,7 @@ class RecordCategoriesController < ApplicationController
       @summary_start = params && params[:start] ? Time.zone.parse(params[:start]).midnight : (Time.zone.now.to_date - 1.year).midnight
       @summary_end = params && params[:end] ? Time.zone.parse(params[:end]).midnight : (Time.zone.now.midnight + 1.day)
       prepare_filters [:date_range, :order, :filter_string]
-      @records = @record_category.category_records(:order => @order, :start => @summary_start, :end => @summary_end, :filter_string => params[:filter_string])
-      unless managing?
-        @records = @records.public if @records
-      end
+      @records = @record_category.category_records(:order => @order, :start => @summary_start, :end => @summary_end, :filter_string => params[:filter_string], :include_private => managing?)
       @total = @records.sum(:duration)
     end
 
@@ -48,14 +45,14 @@ class RecordCategoriesController < ApplicationController
       format.csv {
         csv_string = FasterCSV.generate do |csv|
           csv << [@record_category.id, @record_category.full_name]
-          csv << ['start_time', 'end_time', 'record_category_name', 'record_category_id', 'duration', 'source', 'source_id', 'data']
+          csv << ['start_time', 'end_time', 'record_category_name', 'record_category_id', 'duration', 'source_name', 'source_id', 'data']
           @records.each do |e|
             row = [e.timestamp ? l(e.timestamp, :format => :long) : '',
                    e.end_timestamp ? l(e.end_timestamp, :format => :long) : '',
                    e.record_category.full_name,
                    e.record_category_id,
                    e.duration,
-                   e.source,
+                   e.source_name,
                    e.source_id]
             if e.data
               row += e.data.map { |k, v| [k, v]}.flatten
@@ -95,14 +92,14 @@ class RecordCategoriesController < ApplicationController
       format.xml { render :xml => @data }
       format.csv {
         csv_string = FasterCSV.generate do |csv|
-          csv << ['start_time', 'end_time', 'record_category_name', 'record_category_id', 'duration', 'source', 'source_id', 'data']
+          csv << ['start_time', 'end_time', 'record_category_name', 'record_category_id', 'duration', 'source_name', 'source_id', 'data']
           @records.each do |e|
             row = [e.timestamp ? l(e.timestamp, :format => :long) : '',
                    e.end_timestamp ? l(e.end_timestamp, :format => :long) : '',
                    e.record_category.full_name,
                    e.record_category_id,
                    e.duration,
-                   e.source,
+                   e.source_name,
                    e.source_id]
             if e.data
               row += e.data.map { |k, v| [k, v]}.flatten
@@ -147,7 +144,7 @@ class RecordCategoriesController < ApplicationController
       add_flash :notice, 'Record category was successfully created.'
     end
     if params[:timestamp]
-      rec = current_account.records.create(:timestamp => Time.zone.parse(params[:timestamp]), :source => 'category creation', :source_id => @record_category.id, :record_category_id => @record_category.id)
+      rec = current_account.records.create(:timestamp => Time.zone.parse(params[:timestamp]), :source_name => 'category creation', :source_id => @record_category.id, :record_category_id => @record_category.id)
       if rec.save
         rec.update_previous
         rec.update_next
@@ -185,7 +182,7 @@ class RecordCategoriesController < ApplicationController
     authorize! :manage_account, current_account
     @record_category = current_account.record_categories.find(params[:id])
     now = Time.zone.now
-    rec = current_account.records.create(:timestamp => now, :source => 'quantified awesome record categories', :source_id => @record_category.id, :record_category_id => @record_category.id)
+    rec = current_account.records.create(:timestamp => now, :source_name => 'quantified awesome record categories', :source_id => @record_category.id, :record_category_id => @record_category.id)
     if rec
       rec.update_previous
       rec.update_next
@@ -241,7 +238,7 @@ class RecordCategoriesController < ApplicationController
       go_to root_path, :error => "Could not find category matching: " + category + ". " + self.class.helpers.link_to("Create?", new_record_category_path(:category => { :name => data[0] }, :first_timestamp => time)).html_safe  and return
     elsif @list.is_a? RecordCategory
       # Just one, so track it directly
-      redirect_to track_time_path(:timestamp => time, :source => params[:source], :destination => params[:destination], :end_timestamp => end_time) and return
+      redirect_to track_time_path(:timestamp => time, :source_name => params[:source], :destination => params[:destination], :end_timestamp => end_time) and return
     end
     # Display the list
     respond_with @list

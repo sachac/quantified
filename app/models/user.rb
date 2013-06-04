@@ -57,20 +57,10 @@ class User < ActiveRecord::Base
     self.adjust_beginning_of_week(Time.zone.today.midnight)
   end
 
-  def today
-    Time.zone.now.to_date
-  end
-
   def this_week
     beginning = self.beginning_of_week
     beginning..(beginning + 1.week)
   end
-
-  # Return a week range as times
-  def week
-    self.this_week
-  end
-
 
   def update_memento_mori
     if birthdate_changed? or life_expectancy_in_years_changed? then

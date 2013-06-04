@@ -82,15 +82,5 @@
             = due.strftime('%a %b %e')
         - if can? :refresh_library, current_account  
           = link_to "refresh", library_refresh_path, :class => 'btn', :style => 'margin-left: 5px'
-  - if managing? and current_account.csa_foods.length > 0      
-    .food.category
-      .category_label
-        %h2 Food
-      .category_detail  
-        - remaining = (current_account.csa_foods.where('disposition = ""').sum(:quantity) / 1000.0)
-        - days = current_account.csa_foods.next_delivery - Time.zone.today
-        = link_to "#{'%0.1f' % remaining}kg of CSA food to go,", csa_foods_path
-        = "#{pluralize days, "day"} until next delivery = "
-        = "#{'%0.1f' % (remaining * 1.0 / days)}kg per day"
 - else
   No accounts yet.

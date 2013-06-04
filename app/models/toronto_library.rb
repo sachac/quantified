@@ -1,5 +1,6 @@
 class TorontoLibrary < ActiveRecord::Base
   belongs_to :user
+  has_many :library_items
   attr_accessor :agent
 #  attr_accessible :card, :pin, :name
   def login
@@ -51,7 +52,7 @@ class TorontoLibrary < ActiveRecord::Base
           checkbox = form.checkbox_with(:name => x.attributes['name'].to_s)
 	  if checkbox
 	    checkbox.check
-            items_checked << row
+            items_checked << checkbox
 	  end  
         end
       end
@@ -108,7 +109,7 @@ class TorontoLibrary < ActiveRecord::Base
   end
 
   def refresh_items
-    stamp = Time.now
+    stamp = Time.zone.now
     self.login 
     self.count_pickups!
     items = list_items

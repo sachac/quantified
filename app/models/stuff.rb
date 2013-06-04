@@ -21,27 +21,14 @@ class Stuff < ActiveRecord::Base
     self.location_histories.group('location_id')
   end
 
-  def set_location(sym, val)
-    if val.is_a? String
-      loc = self.user.get_location(val)
-    else
-      loc = val
-    end
-    send("#{sym}=", loc)
-  end
-
   def hierarchy
     seen = []
     list = []
     loc = self.location
     while loc
       list << loc
-      if loc.is_a? Stuff
-        loc = loc.location
-        loc = nil if seen.include? loc
-      else
-        loc = nil
-      end
+      break if seen.include? loc 
+      loc = loc.location
       seen << loc
     end
     list
@@ -50,26 +37,6 @@ class Stuff < ActiveRecord::Base
   delegate :name, :to => :home_location, :prefix => true
   delegate :name, :to => :location, :prefix => true
   
-  comma do
-    id
-    name
-    long_name
-    in_place
-    location_id
-    location_name
-    home_location_id
-    home_location_name
-    price
-    notes
-  end
-  
-  def to_xml(options = {})
-    super(options.update(:methods => [:home_location_name, :location_name]))
-  end
-  def to_json(options = {})
-    super(options.update(:methods => [:home_location_name, :location_name]))
-  end
-
   # Returns :success => [list of entries], :failure => [list of strings]
   def self.bulk_update(account, location, input)
     success = Array.new
@@ -93,10 +60,31 @@ class Stuff < ActiveRecord::Base
     unless stuff
       stuff = account.stuff.new(:name => name.strip, :status => 'active', :stuff_type => 'stuff', :location => @location)
       stuff.user = account
+      stuff.save!
     end
-    stuff.save!
     stuff
   end
+
+  comma do
+    id
+    name
+    long_name
+    in_place
+    location_id
+    location_name
+    home_location_id
+    home_location_name
+    price
+    notes
+  end
+  
+  def to_xml(options = {})
+    super(options.update(:methods => [:home_location_name, :location_name]))
+  end
+  def to_json(options = {})
+    super(options.update(:methods => [:home_location_name, :location_name]))
+  end
+
   
   fires :new, :on => :create, :actor => :user
 

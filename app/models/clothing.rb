@@ -65,23 +65,16 @@ class Clothing < ActiveRecord::Base
   end
 
   def Clothing.guess_color(filepath, x = nil, y = nil)
-    # http://www.jamievandyke.com/red-and-yellow-and
-#    begin
-      if x =~ /^[0-9]+$/ and y =~ /^[0-9]+$/
-        command = "convert #{filepath.to_s.shellescape} -crop 1x1+#{x}+#{y} -format '%[fx:255*r],%[fx:255*g],%[fx:255*b]' info:-"
-      else
-        command = "convert #{filepath.to_s.shellescape} -scale 1x1\! -format '%[fx:255*r],%[fx:255*g],%[fx:255*b]' info:-"
-      end
-      color = %x[#{command}]
-      if color && $?.exitstatus == 0
-        @red, @green, @blue = color.split(",").collect(&:to_i)
-        logger.info "RED #{@red} GREEN #{@green} BLUE #{@blue}"
-        logger.info("RESULT: %02x%02x%02x" % [ @red, @green, @blue ])
-        "%02x%02x%02x" % [ @red, @green, @blue ]
-      end
-#    rescue
-#      nil
-#    end
+    if x =~ /^[0-9]+$/ and y =~ /^[0-9]+$/
+      command = "convert #{filepath.to_s.shellescape} -crop 1x1+#{x}+#{y} -format '%[fx:255*r],%[fx:255*g],%[fx:255*b]' info:- 2>&1"
+    else
+      command = "convert #{filepath.to_s.shellescape} -scale 1x1\! -format '%[fx:255*r],%[fx:255*g],%[fx:255*b]' info:- 2>&1"
+    end
+    color = %x[#{command}]
+    if color && $?.exitstatus == 0
+      @red, @green, @blue = color.split(",").collect(&:to_i)
+      "%02x%02x%02x" % [ @red, @green, @blue ]
+    end
   end
   scope :active, where("(status IS NULL or status = 'active')")
   
