@@ -9,15 +9,15 @@ class Memory < ActiveRecord::Base
     return nil if s.blank?
     month = 1
     day = 1
-    year = Date.today.year
+    year = Time.zone.now.year
     if match_data = (s.match /^([0-9][0-9][0-9][0-9])\-([0-9][0-9]?)$/) 
       year = match_data[1]
       month = match_data[2]
-      return Date.new(year.to_i, month.to_i, 1)
+      return Time.zone.local(year.to_i, month.to_i, 1)
     end
     if match_data = (s.match /^([0-9][0-9][0-9][0-9])$/) 
       year = match_data[1]
-      return Date.new(year.to_i, 1, 1)
+      return Time.zone.local(year.to_i, 1, 1)
     end
     date = Chronic::parse(s)
     date ||= Chronic::parse("#{year}-#{month}-#{day}")

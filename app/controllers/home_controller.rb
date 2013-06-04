@@ -18,8 +18,9 @@ class HomeController < ApplicationController
     end
   end
   def summary
-    @start = (!params[:start].blank? ? Time.parse(params[:start]) : Date.new(Date.today.year, Date.today.month, 1)).midnight
-    @end = (!params[:end].blank? ? Time.parse(params[:end]) : Date.new(Date.today.year, Date.today.month + 1, 1)).midnight
+    now = Time.zone.now
+    @start = (!params[:start].blank? ? Time.zone.parse(params[:start]) : Time.zone.local(now.year, now.month, 1)).midnight
+    @end = (!params[:end].blank? ? Time.zone.parse(params[:end]) : Time.zone.local(now.year, now.month + 1, 1)).midnight
     @log = TimeTrackerLog.new
     @entries = @log.entries(@start, @end)
     @time_by_day = @log.by_day(@entries)
