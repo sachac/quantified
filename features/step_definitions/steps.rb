@@ -70,7 +70,7 @@ end
 
 Given /^I have the following clothing logs:$/ do |table|
   table.hashes.each do |r|
-    Factory(:clothing_log, :user => @user, :date => Date.parse(r['Date']), :clothing => Clothing.find_by_name(r['Clothing']))
+    Factory(:clothing_log, :user => @user, :date => Time.zone.parse(r['Date']), :clothing => Clothing.find_by_name(r['Clothing']))
   end 
 end
 

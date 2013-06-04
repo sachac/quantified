@@ -3,7 +3,7 @@
     %thead
       %tr
         %th Activity
-        - date = Date.new(summary_start.year, summary_start.month, 1)
+        - date = Time.zone.local(summary_start.year, summary_start.month, 1)
         - while date <= summary_end
           %th{:title => date.strftime('%b %Y')}
             = link_to date.strftime('%b %Y'), time_review_path(params.merge({:action => 'review', :controller => 'time', :start => date, :end => date + 1.month}))
@@ -19,7 +19,7 @@
           %td
             = link_to category.full_name, time_review_path(params.merge(:action => 'review', :controller => 'time', :parent_id => category.id)), :title => category.full_name
             = " > " if category.list?
-          - date = Date.new(summary_start.year, summary_start.month, 1)
+          - date = Time.zone.local(summary_start.year, summary_start.month, 1)
           - total = 0
           - count = 0
           - while date < summary_end
@@ -33,7 +33,7 @@
             %strong{:title => ("Average: " + duration(total / count) if count > 0)}= duration total  
       %tr
         %td Total
-        - date = Date.new(summary_start.year, summary_start.month, 1)
+        - date = Time.zone.local(summary_start.year, summary_start.month, 1)
         - values = summary[:total][:total]
         - total = 0
         - count = 0

@@ -23,8 +23,8 @@ class TimeController < ApplicationController
     params[:end] ||= Time.zone.now.strftime('%Y-%m-%d')
     prepare_filters [:date_range, :category_tree, :parent_id, :display_type]
     @categories = current_account.record_categories.index_by(&:id)
-    @summary_start = Date.parse(params[:start])
-    @summary_end = Date.parse(params[:end])
+    @summary_start = Time.zone.parse(params[:start])
+    @summary_end = Time.zone.parse(params[:end])
     # Pick the appropriate level of review
     @category = params[:parent_id] ? current_account.record_categories.find(params[:parent_id]) : nil
     range = @summary_start..@summary_end
@@ -40,7 +40,7 @@ class TimeController < ApplicationController
     params[:end] ||= params[:url_end]
     params[:end] ||= Time.zone.now.strftime('%Y-%m-%d')
     prepare_filters [:date_range]
-    @range = Date.parse(params[:start])..Date.parse(params[:end])
+    @range = Time.zone.parse(params[:start])..Time.zone.parse(params[:end])
     entries = current_account.records.activities.where(:timestamp => @range).order('timestamp').includes(:record_category)
     @records = Record.prepare_graph(@range, entries)
     unsorted = RecordCategory.summarize(:key => :date, :range => @range, :records => entries, :zoom => :daily, :user => current_account, :tree => :individual)[:rows] 
@@ -54,7 +54,7 @@ class TimeController < ApplicationController
     authorize! :view_time, current_account
     # Display high-level categories this week: average, daily average, weekday, weekend
     @week_beginning = current_account.beginning_of_week
-    @summary = RecordCategory.summarize(:user => current_account, :range => @week_beginning..Date.tomorrow, :zoom => :daily, :tree => :full)
+    @summary = RecordCategory.summarize(:user => current_account, :range => @week_beginning..Time.zone.now.tomorrow.midnight, :zoom => :daily, :tree => :full)
     @current_activity = current_account.records.activities.order('timestamp DESC').first
     @categories = current_account.record_categories.index_by(&:id)
     # Display current activity

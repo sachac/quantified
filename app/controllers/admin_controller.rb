@@ -14,7 +14,7 @@ class AdminController < ApplicationController
   def activity
     authorize! :manage, User
     @totals = Hash.new 
-    threshold = Date.today - 30.days
+    threshold = Time.zone.now.to_date - 30.days
     ['Clothing', 'ClothingLog', 'Record', 'Stuff'].each do |type_name|
       @totals[type_name] = Hash.new
       type = type_name.constantize

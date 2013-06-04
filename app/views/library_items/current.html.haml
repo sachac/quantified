@@ -23,7 +23,7 @@
           %td= item.due.strftime("%Y-%m-%d %a")
           %td
             - if can? :update, item
-              = link_to 'Read', edit_library_item_path(item.id) + '?status=read&read_date=' + Date.today.to_s
+              = link_to 'Read', edit_library_item_path(item.id) + '?status=read&read_date=' + Time.zone.today.to_s
             = 'DONE' if item.read_date
           - if can? :update, item
             %td

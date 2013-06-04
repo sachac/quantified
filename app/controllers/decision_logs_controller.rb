@@ -25,7 +25,7 @@ class DecisionLogsController < ApplicationController
   # GET /decision_logs/new.xml
   def new
     @decision_log = DecisionLog.new
-    @decision_log.date = Date.today
+    @decision_log.date = Time.zone.now.to_date
     if params[:decision_id] then
       @decision_log.decision_id = params[:decision_id]
     end

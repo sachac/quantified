@@ -31,8 +31,8 @@ class RecordCategoriesController < ApplicationController
     if request.format.html? or request.format.csv?
       params[:order] ||= 'newest'
       @order = params[:order]
-      @summary_start = params && params[:start] ? Date.parse(params[:start]).midnight.in_time_zone : (Date.today - 1.year).midnight.in_time_zone
-      @summary_end = params && params[:end] ? Date.parse(params[:end]).midnight.in_time_zone : Date.tomorrow.midnight.in_time_zone
+      @summary_start = params && params[:start] ? Time.zone.parse(params[:start]).midnight : (Time.zone.now.to_date - 1.year).midnight
+      @summary_end = params && params[:end] ? Time.zone.parse(params[:end]).midnight : (Time.zone.now.midnight + 1.day)
       prepare_filters [:date_range, :order, :filter_string]
       @records = @record_category.category_records(:order => @order, :start => @summary_start, :end => @summary_end, :filter_string => params[:filter_string])
       unless managing?
@@ -73,8 +73,8 @@ class RecordCategoriesController < ApplicationController
     @record_category = current_account.record_categories.find(params[:id])
     params[:order] ||= 'newest'
     @order = params[:order]
-    @summary_start = params && params[:start] ? Date.parse(params[:start]).midnight.in_time_zone : (Date.today - 1.year).midnight.in_time_zone
-    @summary_end = params && params[:end] ? Date.parse(params[:end]).midnight.in_time_zone : Date.tomorrow.midnight.in_time_zone
+    @summary_start = params && params[:start] ? Time.zone.parse(params[:start]).midnight : (Time.zone.now.to_date - 1.year).midnight
+    @summary_end = params && params[:end] ? Time.zone.parse(params[:end]).midnight : (Time.zone.now.to_date + 1.day).midnight
     prepare_filters [:date_range, :order, :filter_string]
     @records = @record_category.category_records(:order => @order, :start => @summary_start, :end => @summary_end, :filter_string => params[:filter_string])
     unless managing?

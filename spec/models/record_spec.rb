@@ -86,36 +86,38 @@ END
 
   end
 
+  describe "#split" do
+    it "handles records entirely within a day" do
+      user = FactoryGirl.create(:confirmed_user)
+      record = FactoryGirl.create(:record, :user => user, :timestamp => Time.zone.now.midnight - 1.day + 7.hours, :end_timestamp => Time.zone.now.midnight - 1.day + 10.hours)
+      record.split.should == [[record.timestamp, record.end_timestamp, record]]
+    end
+    it "handles records that cross one date boundary" do
+      user = FactoryGirl.create(:confirmed_user)
+      record = FactoryGirl.create(:record, :user => user, :timestamp => Time.zone.now.midnight - 1.day + 7.hours, :end_timestamp => Time.zone.now.midnight + 10.hours)
+      record.split.should == [[record.timestamp, Time.zone.now.midnight, record], [Time.zone.now.midnight, record.end_timestamp, record]]
+    end
+    it "handles records that cross two date boundaries" do
+      user = FactoryGirl.create(:confirmed_user)
+      record = FactoryGirl.create(:record, :user => user, :timestamp => Time.zone.now.midnight - 1.day + 7.hours, :end_timestamp => Time.zone.now.midnight + 1.day + 10.hours)
+      record.split.should == [[record.timestamp, Time.zone.now.midnight.in_time_zone, record], 
+                              [Time.zone.now.midnight, Time.zone.now.midnight + 1.day, record],
+                              [Time.zone.now.midnight + 1.day, record.end_timestamp, record]]
+    end
+  end
+
   describe '#prepare_graph' do
     it "splits by date" do
       @user = FactoryGirl.create(:confirmed_user)
       @cat = FactoryGirl.create(:record_category, :user => @user)
       @cat2 = FactoryGirl.create(:record_category, :user => @user)
-      FactoryGirl.create(:record, :user => @user, :timestamp => Date.today.midnight.in_time_zone - 2.hours, 
-                         :end_timestamp => Date.today.midnight.in_time_zone + 1.hour, :record_category => @cat) 
+      FactoryGirl.create(:record, :user => @user, :timestamp => Time.zone.now.midnight - 2.hours, 
+                         :end_timestamp => Time.zone.now.midnight + 1.hour, :record_category => @cat) 
       @records = @user.records
-      list = Record.prepare_graph(Date.yesterday..(Date.today + 1.day), @records)
+      range = (Time.zone.now.to_date - 1.day)..(Time.zone.now.to_date + 1.day)
+      list = Record.prepare_graph(range, @records)
       (list[0][0][1] - list[0][0][0]).should == 2.hours
       (list[1][0][1] - list[1][0][0]).should == 1.hour
-    end
-  end
-  describe "#split" do
-    it "handles records entirely within a day" do
-      user = FactoryGirl.create(:confirmed_user)
-      record = FactoryGirl.create(:record, :user => user, :timestamp => Date.yesterday.midnight.in_time_zone + 7.hours, :end_timestamp => Date.yesterday.midnight.in_time_zone + 10.hours)
-      record.split.should == [[record.timestamp, record.end_timestamp, record]]
-    end
-    it "handles records that cross one date boundary" do
-      user = FactoryGirl.create(:confirmed_user)
-      record = FactoryGirl.create(:record, :user => user, :timestamp => Date.yesterday.midnight.in_time_zone + 7.hours, :end_timestamp => Date.today.midnight.in_time_zone + 10.hours)
-      record.split.should == [[record.timestamp, Date.today.midnight.in_time_zone, record], [Date.today.midnight.in_time_zone, record.end_timestamp, record]]
-    end
-    it "handles records that cross two date boundaries" do
-      user = FactoryGirl.create(:confirmed_user)
-      record = FactoryGirl.create(:record, :user => user, :timestamp => Date.yesterday.midnight.in_time_zone + 7.hours, :end_timestamp => Date.tomorrow.midnight.in_time_zone + 10.hours)
-      record.split.should == [[record.timestamp, Date.today.midnight.in_time_zone, record], 
-                              [Date.today.midnight.in_time_zone, Date.tomorrow.midnight.in_time_zone, record],
-                              [Date.tomorrow.midnight.in_time_zone, record.end_timestamp, record]]
     end
   end
 end

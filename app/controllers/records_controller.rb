@@ -116,7 +116,7 @@ class RecordsController < ApplicationController
     authorize! :manage_account, account
     op = params[:commit]
     if params[:batch]
-      @records = Record.confirm_batch(account, params[:batch], :date => params[:date] ? Date.parse(params[:date]) : nil)
+      @records = Record.confirm_batch(account, params[:batch], :date => params[:date] ? Time.zone.parse(params[:date]) : nil)
     end
     if op == "Create records"
       @created = Record.create_batch(account, params[:row].values.map { |r| r.symbolize_keys })

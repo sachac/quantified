@@ -72,9 +72,9 @@
         = "#{pluralize TorontoLibrary.pickup_count(current_account), "item"} to pick up"
         - due = LibraryItem.current_items(current_account).minimum('due')
         - if due
-          - if due == Date.today
+          - if due == Time.zone.today
             - library_class = "label-warning"
-          - elsif due < Date.today
+          - elsif due < Time.zone.today
             - library_class = "label-important"
           - else
             - library_class = "label-success"
@@ -88,7 +88,7 @@
         %h2 Food
       .category_detail  
         - remaining = (current_account.csa_foods.where('disposition = ""').sum(:quantity) / 1000.0)
-        - days = current_account.csa_foods.next_delivery - Date.today
+        - days = current_account.csa_foods.next_delivery - Time.zone.today
         = link_to "#{'%0.1f' % remaining}kg of CSA food to go,", csa_foods_path
         = "#{pluralize days, "day"} until next delivery = "
         = "#{'%0.1f' % (remaining * 1.0 / days)}kg per day"

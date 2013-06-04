@@ -46,7 +46,7 @@ class TorontoLibrary < ActiveRecord::Base
         info = x.attributes['name'].value.split('^')
         due_string = x.parent.parent.inner_html
         match_data = due_string.match(/<!-- Print the date due -->[\r\n\t]*([^\r\n\t<\/]+)\/([^\r\n\t<\/]+)\/([^\r\n\t<\/,]+)/)
-        due = Date.new(match_data[3].to_i, match_data[2].to_i, match_data[1].to_i)
+        due = Time.zone.local(match_data[3].to_i, match_data[2].to_i, match_data[1].to_i)
         if (due <= date)
           checkbox = form.checkbox_with(:name => x.attributes['name'].to_s)
 	  if checkbox
@@ -75,7 +75,7 @@ class TorontoLibrary < ActiveRecord::Base
          :details => x.attributes['name'],
          :toronto_library_id => self.id,
          :status => !status || status[1].blank? || (status[1] == 'overdue') ? 'due' : status[1].strip.downcase,
-         :due => Date.new(match_data[3].to_i, match_data[2].to_i, match_data[1].to_i)}
+         :due => Time.zone.local(match_data[3].to_i, match_data[2].to_i, match_data[1].to_i)}
       end
     end
   end
@@ -121,7 +121,7 @@ class TorontoLibrary < ActiveRecord::Base
         rec.updated_at = stamp
       else
         rec = LibraryItem.create(item.merge(:user => self.user))
-        rec.checkout_date ||= Date.today
+        rec.checkout_date ||= Time.zone.today
       end
       rec.status ||= item[:status]
       rec.save
