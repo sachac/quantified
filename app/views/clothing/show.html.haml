@@ -26,7 +26,7 @@
       Worn #{pluralize @clothing.clothing_logs_count, "time"}, last worn:
       - date = @clothing.last_worn
       = l date
-      - if date == Date.today
+      - if date == Time.zone.today
         (today)
       - else
         = surround '(', ')' do

@@ -7,10 +7,10 @@
         - if @filters[:date_range]
           .control-group
             = label_tag :start, 'Start', class: 'control-label' 
-            .controls= text_field_tag :start, (params[:start] ? Date.parse(params[:start]).strftime("%Y-%m-%d") : ''), :class => 'datepicker' 
+            .controls= text_field_tag :start, (params[:start] ? Time.zone.parse(params[:start]).strftime("%Y-%m-%d") : ''), :class => 'datepicker' 
           .control-group
             = label_tag :end, 'End', class: 'control-label'
-            .controls= text_field_tag :end, (params[:end] ? Date.parse(params[:end]).strftime("%Y-%m-%d") : ''), :class => 'datepicker'
+            .controls= text_field_tag :end, (params[:end] ? Time.zone.parse(params[:end]).strftime("%Y-%m-%d") : ''), :class => 'datepicker'
         - if @filters[:parent_id]
           .control-group
             = label_tag :parent_id, 'Parent', class: 'control-label'

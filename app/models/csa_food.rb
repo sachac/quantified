@@ -3,7 +3,7 @@ class CsaFood < ActiveRecord::Base
   belongs_to :food
   
   def self.next_delivery(date = nil)
-    date ||= Date.today
+    date ||= Time.zone.now.to_date
     d = date.wday
     # 0 - 4 -   3
     # 1 - 3 -   4
@@ -21,7 +21,7 @@ class CsaFood < ActiveRecord::Base
     else
       food = Food.get_food(account, options[:food])
     end
-    past = account.csa_foods.where(:food_id => food.id, :date_received => options[:date_received] || Date.today).first
+    past = account.csa_foods.where(:food_id => food.id, :date_received => options[:date_received] || Time.zone.today).first
     if past
       past.update_attributes(:quantity => past.quantity + options[:quantity])
     else

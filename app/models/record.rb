@@ -163,10 +163,10 @@ class Record < ActiveRecord::Base
       user.adjust_beginning_of_week(timestamp.to_date) + 6.days
     when :monthly
       date = timestamp.to_date
-      Date.new(date.year, date.month, 1)
+      Time.zone.local(date.year, date.month, 1)
     when :yearly
       date = timestamp.to_date
-      Date.new(date.year, 1, 1)
+      Time.zone.local(date.year, 1, 1)
     end
   end
 
@@ -252,7 +252,7 @@ class Record < ActiveRecord::Base
 
     # Have we specified a date, as in batch entry?
     if options[:date] 
-      time = (time || Time.now) - (Date.today - options[:date]).days
+      time = (time || Time.now) - (Time.zone.now.to_date - options[:date]).days
     end
       
     # match -30m or -30min example, always as an offset from now
@@ -299,11 +299,11 @@ class Record < ActiveRecord::Base
     regex = /\b([0-9]?[0-9])[-\/]([0-9]?[0-9])\b */
     matches = new_string.match regex
     if matches
-      d = Date.new(Date.today.year, matches[1].to_i, matches[2].to_i)
-      if d > Date.today
-        d = Date.new(Date.today.year - 1, matches[1].to_i, matches[2].to_i)
+      d = Time.zone.local(Time.zone.now.to_date.year, matches[1].to_i, matches[2].to_i)
+      if d > Time.zone.today
+        d = Time.zone.local(Time.zone.now.to_date.year - 1, matches[1].to_i, matches[2].to_i)
       end
-      time = (time || Time.zone.now) - (Date.today - d).days 
+      time = (time || Time.zone.now) - (Time.zone.now.to_date - d.to_date).days
       new_string.gsub! regex, ''
     end
     [new_string.strip, time, end_time]

@@ -55,13 +55,13 @@ class Goal < ActiveRecord::Base
   def range
     case self.period
     when 'weekly'
-      self.user.week
+      self.user.this_week
     when 'monthly'
-      date = Date.yesterday
-      start = Date.new(date.year, date.month, 1)
-      start.midnight.in_time_zone..Time.now
+      date = Time.zone.today.yesterday
+      start = Time.zone.local(date.year, date.month, 1)
+      start.midnight.in_time_zone..Time.zone.now
     when 'daily'
-      (Time.now - 1.day)..Time.now
+      (Time.zone.now.midnight - 1.day)..Time.zone.now
     end
   end
 

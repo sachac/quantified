@@ -21,7 +21,7 @@ class Ability
     can :view, Memory do |o| o.public? and o.user.demo? end
     [:view_contexts, :view_locations, :view_dashboard, :view_clothing, :view_clothing_logs, :view_time, :view_library_items, :view_memories, :view_tap_log_records].each do |sym|
       can sym, User do |u|
-        u.id == 1 || u.id == user.id
+        u.demo? || u.id == user.id
       end
     end
     can :view, Clothing do |o| o.user.demo? end
