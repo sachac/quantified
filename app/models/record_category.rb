@@ -29,13 +29,24 @@ class RecordCategory < ActiveRecord::Base
     user = options[:user]
     max = Time.now
     zoom = options[:zoom]
+    records ||= user.records
+    records = records.activities.select('records.id, records.record_category_id, records.timestamp, records.end_timestamp')
+    # Limit by range
     if options[:range]
       max = options[:range].end.midnight.in_time_zone
       min = options[:range].begin.midnight.in_time_zone
-      records = records.where(:timestamp => options[:range].begin..(options[:range].end + 1.day))
+      options[:range] = min..max
+      records = records.where('(end_timestamp IS NULL OR end_timestamp >= ?) AND timestamp < ?', options[:range].begin, options[:range].end)
     end
-    records ||= user.records
-    records = records.activities.select('records.id, records.record_category_id, records.timestamp, records.end_timestamp')
+    # Split by midnight if needed, get rid of anything outside the range
+    records = Record.split(records)
+    if options[:range]
+      records = records.map { |x| 
+        x.end_timestamp ||= Time.now
+        x if ((x.end_timestamp >= options[:range].begin) and (x.timestamp < options[:range].end))
+      }.compact
+    end
+    # Filter by categories
     parent = options[:parent]
     categories = user.record_categories.select('color, id, full_name, category_type, dotted_ids').index_by(&:id)
     if parent
@@ -55,7 +66,7 @@ class RecordCategory < ActiveRecord::Base
           end
         when :next_level
           if options[:parent]
-            ids = [rec.record_category.as_child(options[:parent].dotted_ids)].compact.map(&:id)
+            ids = [rec.record_category.as_child(options[:parent])].compact.map(&:id)
           else
             ids = [rec.record_category.as_child(nil)].compact.map(&:id)
           end
@@ -64,20 +75,18 @@ class RecordCategory < ActiveRecord::Base
         end
       end
       if ids and ids.length > 0
-        rec.split(options[:range]).each do |split_record|
-          key = Record.get_zoom_key(options[:user], zoom, split_record[0])
-          ids.each do |cat|
-            cat = cat.to_i
-            case options[:key]
-            when :date
-              summary[:rows][key][cat] += split_record[1] - split_record[0]
-            else
-              summary[:rows][cat][key] += split_record[1] - split_record[0]
-            end
-            summary[:rows][cat][:total] += split_record[1] - split_record[0]
+        key = Record.get_zoom_key(options[:user], zoom, rec.timestamp)
+        ids.each do |cat|
+          cat = cat.to_i
+          case options[:key]
+          when :date
+            summary[:rows][key][cat] += rec.duration
+          else
+            summary[:rows][cat][key] += rec.duration
           end
-          summary[:total][:total][key] += split_record[1] - split_record[0]
+          summary[:rows][cat][:total] += rec.duration
         end
+        summary[:total][:total][key] += rec.duration
       end
     end
     summary
@@ -118,7 +127,7 @@ class RecordCategory < ActiveRecord::Base
     else
       records = self.tree_records
     end
-    RecordCategory.summarize(self.user, :records => records, :parent => self)
+    RecordCategory.summarize(options.merge(user: self.user, records: records, parent: self))
   end
   
   def activity?
@@ -134,7 +143,7 @@ class RecordCategory < ActiveRecord::Base
   end
 
   def tree_records
-    Record.joins(:record_category).where('dotted_ids LIKE ?', self.dotted_ids + '.%')
+    self.user.records.joins(:record_category).where('dotted_ids LIKE ?', self.dotted_ids + '.%')
   end
 
   # Given: 1.2.3, 1.2.3.4.5, return 4 (the next-level child of parent)
@@ -148,22 +157,7 @@ class RecordCategory < ActiveRecord::Base
       child[parent.length + 1, child.length - parent.length].split('.')[0]
     end
   end
-  def as_child_id(parent)
-    # If this category is a descendant of parent, return the next level in the category tree below parent
-    # If the same, return the parent
-    id = Record.as_child_id(parent, self.dotted_ids)
-    if parent.is_a? RecordCategory
-      if id.nil?
-        return nil
-      elsif id == ''
-        return this
-      else
-        return RecordCategory.find_by_id(id)
-      end
-    else
-      return id
-    end
-  end
+
   # Returns this category as a child of parent
   def as_child(parent)
     x = self
@@ -201,44 +195,31 @@ class RecordCategory < ActiveRecord::Base
     return list # More than one - fallthrough
   end
 
-  def data_description
-    if self.data
-      self.data.map { |key, info|
-        "#{key}: #{info[:type]}: #{info[:label]}"
-      }.join "\n"
-    end
-  end
-
-  def data_description=(value)
-    self.data = Hash.new
-    value.split("\n").each do |line|
-      match = line.match(/^([^:]+): *([^:]+): *(.*)/)
-      self.data[match[1].to_sym] = {:type => match[2], :label => match[3]} 
-    end
-  end
-
   def child_records
     self.user.records.joins(:record_category).where('(record_categories.dotted_ids = ? OR record_categories.dotted_ids LIKE ?)', self.dotted_ids, self.dotted_ids + ".%")
   end
 
-  def cumulative_time(range)
+  def cumulative_time(range = nil)
     records = self.child_records.activities
-    filtered = records.where(:timestamp => range)
-    duration = filtered.sum(:duration)
-
+    if range then
+      records = records.where('(end_timestamp IS NULL OR end_timestamp >= ?) AND timestamp < ?', range.begin, range.end)
+    end
+    duration = records.sum(:duration)
+    begin_time = range ? range.begin : records.minimum(:timestamp)
+    end_time = range ? range.end : Time.zone.now
     # Add the duration of any open entries
-    last = filtered.order('timestamp DESC').first
+    last = records.order('timestamp DESC').first
     if last and last.end_timestamp.nil?
-      duration += range.end - last.timestamp
-    elsif last and last.end_timestamp > range.end
+      duration += (range ? range.end : Time.zone.now) - last.timestamp
+    elsif last and last.end_timestamp > end_time
       # Split the last entry
-      duration -= (last.end_timestamp - range.end)
+      duration -= (last.end_timestamp - end_time)
     end
    
     # Split the previous entry if needed
-    previous = records.where('timestamp < ?', range.begin).order('timestamp DESC').first
-    if previous and previous.end_timestamp and previous.end_timestamp > range.begin
-      duration += previous.end_timestamp - range.begin
+    previous = records.order('timestamp ASC').first
+    if previous and previous.timestamp < begin_time
+      duration -= begin_time - previous.timestamp
     end
 
     duration
@@ -254,11 +235,16 @@ class RecordCategory < ActiveRecord::Base
     else
       records = self.records
     end
-    records = records.where("timestamp >= ?", options[:start]).where("timestamp <= ?", options[:end])
+    if options[:start] and options[:end]
+      records = records.where("timestamp >= ?", options[:start]).where("timestamp <= ?", options[:end])
+    end
     if options[:order] == 'oldest'
       records = records.order('timestamp ASC')
     else
       records = records.order('timestamp DESC')
+    end
+    unless options[:include_private]
+      records = records.public
     end
     if options[:filter_string]
       query = "%" + options[:filter_string].downcase + "%"

@@ -103,6 +103,8 @@ GEM
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
       xpath (~> 2.0)
+    childprocess (0.3.9)
+      ffi (~> 1.0, >= 1.0.11)
     chronic (0.9.1)
     chunky_png (1.2.8)
     clbustos-rtf (0.4.2)
@@ -110,6 +112,7 @@ GEM
       activesupport (>= 3.0)
     cocaine (0.5.1)
       climate_control (>= 0.0.3, < 1.0)
+    coderay (1.0.9)
     coffee-rails (3.2.2)
       coffee-script (>= 2.2.0)
       railties (~> 3.2.0)
@@ -160,16 +163,32 @@ GEM
     factory_girl_rails (4.2.1)
       factory_girl (~> 4.2.0)
       railties (>= 3.0.0)
+    fakeweb (1.3.0)
     faraday (0.8.7)
       multipart-post (~> 1.1)
     fastercsv (1.5.5)
+    ffi (1.8.1)
     forgery (0.5.0)
+    formatador (0.2.4)
     formtastic (2.2.1)
       actionpack (>= 3.0)
     fssm (0.2.10)
     gdata_19 (1.1.5)
     gherkin (2.12.0)
       multi_json (~> 1.3)
+    guard (1.8.0)
+      formatador (>= 0.2.4)
+      listen (>= 1.0.0)
+      lumberjack (>= 1.0.2)
+      pry (>= 0.9.10)
+      thor (>= 0.14.6)
+    guard-rspec (3.0.1)
+      guard (>= 1.8)
+      rspec (~> 2.13)
+    guard-spork (1.5.0)
+      childprocess (>= 0.2.3)
+      guard (>= 1.1)
+      spork (>= 0.8.4)
     haml (4.0.3)
       tilt
     haml-rails (0.4)
@@ -193,6 +212,11 @@ GEM
     jwt (0.1.8)
       multi_json (>= 1.5)
     libv8 (3.11.8.17)
+    listen (1.1.5)
+      rb-fsevent (>= 0.9.3)
+      rb-inotify (>= 0.9)
+      rb-kqueue (>= 0.2)
+    lumberjack (1.0.3)
     mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
@@ -205,6 +229,7 @@ GEM
       nokogiri (~> 1.4)
       ntlm-http (~> 0.1, >= 0.1.1)
       webrobots (>= 0.0.9, < 0.2)
+    method_source (0.8.1)
     mime-types (1.23)
     minimization (0.2.1)
       text-table (~> 1.2)
@@ -256,6 +281,10 @@ GEM
     prawn-security (0.8.4)
     prawn-svg (0.9.1.11)
       prawn (>= 0.8.4)
+    pry (0.9.12.2)
+      coderay (~> 1.0.5)
+      method_source (~> 0.8)
+      slop (~> 3.4)
     rack (1.4.5)
     rack-cache (1.2)
       rack (>= 0.4)
@@ -284,6 +313,11 @@ GEM
       rdoc (~> 3.4)
       thor (>= 0.14.6, < 2.0)
     rake (10.0.4)
+    rb-fsevent (0.9.3)
+    rb-inotify (0.9.0)
+      ffi (>= 0.5.0)
+    rb-kqueue (0.2.0)
+      ffi (>= 0.5.0)
     rdoc (3.12.2)
       json (~> 1.4)
     ref (1.0.5)
@@ -323,6 +357,8 @@ GEM
       multi_json (~> 1.0)
       simplecov-html (~> 0.7.1)
     simplecov-html (0.7.1)
+    slop (3.4.5)
+    spork (0.9.2)
     spreadsheet (0.6.9)
       ruby-ole (>= 1.0)
     sprockets (2.2.2)
@@ -392,11 +428,14 @@ DEPENDENCIES
   email_validator
   exception_notification
   factory_girl_rails
+  fakeweb
   fastercsv
   forgery
   formtastic
   formtastic-bootstrap!
   gdata_19 (= 1.1.5)
+  guard-rspec
+  guard-spork
   haml
   haml-rails (= 0.4)
   handles_sortable_columns
@@ -424,6 +463,7 @@ DEPENDENCIES
   ruby_parser
   sass-rails (~> 3.2.6)
   simplecov
+  spork
   sqlite3
   statsample
   subdomain-fu!

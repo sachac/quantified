@@ -21,7 +21,7 @@ class Api::Offline::V1::OfflineController < ApplicationController
           timestamp = (params[:date] =~ /^[0-9]+/) ? Time.at((params[:date].to_i / 1000).to_i).in_time_zone : Time.zone.parse(params[:date]);
           @record = current_account.records.find_by_timestamp(timestamp)
           unless @record
-            @record = Record.create(:user => current_account, :timestamp => timestamp, :record_category => cat, :source => 'offline')
+            @record = Record.create(:user => current_account, :timestamp => timestamp, :record_category => cat, :source_name => 'offline')
             data = cat.data
             @record.data ||= Hash.new
             if params[:data]

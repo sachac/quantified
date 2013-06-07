@@ -11,7 +11,7 @@
     - if s and !s.status.blank?
       = link_to s.status, clothing_by_status_path(s.status)
 
-- today = Date.today.strftime('%Y-%m-%d')
+- today = Time.zone.today.strftime('%Y-%m-%d')
 = render "clothing_log_entry"
 = set_focus_to_id("#clothing")
 
@@ -39,15 +39,15 @@
       %td= clothing.id
       - if user_signed_in?
         %td
-          = link_to 'Yesterday', clothing_logs_path + "?clothing_id=" + clothing.id.to_s + "&date=" + Date.yesterday.to_s, :method => :post
-          = link_to 'Today', clothing_logs_path + "?clothing_id=" + clothing.id.to_s + "&date=" + Date.today.to_s, :method => :post
-          = link_to 'Tomorrow', clothing_logs_path + "?clothing_id=" + clothing.id.to_s + "&date=" + Date.tomorrow.to_s, :method => :post
+          = link_to 'Yesterday', clothing_logs_path + "?clothing_id=" + clothing.id.to_s + "&date=" + Time.zone.today.yesterday.to_s, :method => :post
+          = link_to 'Today', clothing_logs_path + "?clothing_id=" + clothing.id.to_s + "&date=" + Time.zone.today.to_s, :method => :post
+          = link_to 'Tomorrow', clothing_logs_path + "?clothing_id=" + clothing.id.to_s + "&date=" + Time.zone.today.tomorrow.to_s, :method => :post
       %td= link_to clothing.name, clothing
       %td= clothing.clothing_logs_count
       %td
-        - if clothing.last_worn and clothing.last_worn > Date.today then
+        - if clothing.last_worn and clothing.last_worn > Time.zone.today then
           = clothing.last_worn
-        - elsif clothing.last_worn and clothing.last_worn >= Date.today
+        - elsif clothing.last_worn and clothing.last_worn >= Time.zone.today
           today
         - else   
           = (time_ago_in_words(clothing.last_worn) + " ago") if clothing.last_worn

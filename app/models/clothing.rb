@@ -3,8 +3,12 @@ class Clothing < ActiveRecord::Base
   acts_as_taggable_on :tags
   has_many :clothing_logs, :dependent => :destroy
   has_many :clothing_matches, :foreign_key => :clothing_a_id, :dependent => :destroy
+
   Paperclip.interpolates :hashed_path do |attachment, style|
-     secret = 'this is a super secret quantified awesome secret' # well, not so secret since it's in the source
+     secret = 'this is a super secret quantified awesome secret' 
+     # well, not so secret since it's in the source, and not all that
+     # secure, but this is just to prevent casual browsing around
+     # anyway
      hash = Digest::MD5.hexdigest("--#{attachment.class.name}--#{attachment.instance.id}--#{secret}--")
      hash_path = ''
      6.times { hash_path += '/' + hash.slice!(0..2) }
@@ -33,11 +37,7 @@ class Clothing < ActiveRecord::Base
 
   def get_color
     if self.color.blank? and self.image.file?
-      begin 
-        self.color = Clothing.guess_color(self.image) 
-      rescue 
-        nil
-      end
+      self.color = Clothing.guess_color(self.image.path(:large)) 
     end
     return unless self.color
     base = self.color.to_s.split(',')[0]
@@ -58,24 +58,21 @@ class Clothing < ActiveRecord::Base
   end
 
   def previous_by_id
-    self.class.first(:conditions => ['id < ?', self.id], :order => 'id desc')
+    self.user.clothing.first(:conditions => ['id < ?', self.id], :order => 'id desc')
   end
   def next_by_id
-    self.class.first(:conditions => ['id > ?', self.id], :order => 'id asc')
+    self.user.clothing.first(:conditions => ['id > ?', self.id], :order => 'id asc')
   end
 
-  def Clothing.guess_color(file, x = nil, y = nil)
-    # http://www.jamievandyke.com/red-and-yellow-and
+  def Clothing.guess_color(filepath, x = nil, y = nil)
     if x =~ /^[0-9]+$/ and y =~ /^[0-9]+$/
-      command = "convert #{file.path(:large)} -crop 1x1+#{x}+#{y} -format '%[pixel:u]' info:-"
+      command = "convert #{filepath.to_s.shellescape} -crop 1x1+#{x}+#{y} -format '%[fx:255*r],%[fx:255*g],%[fx:255*b]' info:- 2>&1"
     else
-      command = "convert #{file.path(:large)} -scale 1x1\! -format '%[pixel:u]' info:-"
+      command = "convert #{filepath.to_s.shellescape} -scale 1x1\! -format '%[fx:255*r],%[fx:255*g],%[fx:255*b]' info:- 2>&1"
     end
     color = %x[#{command}]
     if color && $?.exitstatus == 0
-      @red, @green, @blue = color[/rgb\((.*)\)/, 1].split(",").collect(&:to_i)
-      logger.info "RED #{@red} GREEN #{@green} BLUE #{@blue}"
-      logger.info("RESULT: %02x%02x%02x" % [ @red, @green, @blue ])
+      @red, @green, @blue = color.split(",").collect(&:to_i)
       "%02x%02x%02x" % [ @red, @green, @blue ]
     end
   end

@@ -4,6 +4,6 @@ FactoryGirl.define do
   factory :tap_log_record do
     timestamp Time.now
     catOne "MyString"
-    user { @user }
+    user 
   end
 end

@@ -1,10 +1,10 @@
 class TimeRecord < ActiveRecord::Base
   belongs_to :user
   def starts_at
-    @start_time
+    self.start_time
   end
   def ends_at
-    @end_time
+    self.end_time
   end
   def category
     if name.match /^A - Work/ 

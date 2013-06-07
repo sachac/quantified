@@ -1,8 +1,8 @@
 # TIME
 
 When /^I look at my time use for the past (\d+) days?$/ do |arg1|
-  @start_time = (Date.today - arg1.to_i.days).midnight.in_time_zone
-  @end_time = Date.today.midnight.in_time_zone
+  @start_time = (Time.zone.today - arg1.to_i.days).midnight
+  @end_time = Time.zone.midnight.in_time_zone
   @log = TimeTrackerLog.new(User.first)
   @entries = @log.entries(@start_time, @end_time)
   @summary = @log.summarize(@start_time, @end_time)
@@ -31,6 +31,6 @@ When /^I check our library items$/ do
 end
 
 Then /^there should be no items that are overdue$/ do
-  assert_equal 0, LibraryItem.where('status = ? AND due < ?', 'due', Date.today).size
+  assert_equal 0, LibraryItem.where('status = ? AND due < ?', 'due', Time.zone.today).size
 end
 

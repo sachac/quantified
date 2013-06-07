@@ -129,7 +129,7 @@ class LibraryItemsController < ApplicationController
           item.save
         when 'Mark read'
           item.status = 'read'
-          item.read_date ||= Date.today
+          item.read_date ||= Time.zone.now.to_date
           item.save
         end
       end

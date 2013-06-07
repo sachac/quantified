@@ -23,7 +23,7 @@ class ClothingLogsController < ApplicationController
     authorize! :manage, current_account
     params[:start] ||= current_account.beginning_of_week.advance(:weeks => -4).strftime('%Y-%m-%d')
     params[:end] ||= Time.zone.now.strftime('%Y-%m-%d')
-    range = Date.parse(params[:start])..Date.parse(params[:end])
+    range = Time.zone.parse(params[:start])..Time.zone.parse(params[:end])
     @clothing_matches = current_account.clothing_matches #.where(:clothing_log_date => range)
     respond_with_data @clothing_matches
   end
@@ -103,7 +103,7 @@ class ClothingLogsController < ApplicationController
 
   def by_date
     authorize! :view_clothing_logs, current_account
-    @date = Date.parse(params[:date])
+    @date = Time.zone.parse(params[:date])
     @clothing_logs = current_account.clothing_logs.where('date = ?', @date).includes(:clothing).order('outfit_id, clothing.clothing_type')
     @previous_date = @date - 1.day
     @next_date = @date + 1.day

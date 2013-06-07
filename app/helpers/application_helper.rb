@@ -50,12 +50,12 @@ module ApplicationHelper
   end
   def date_ago_future(d)
     if d then
-      if d >= Date.tomorrow then
+      if d >= Time.zone.now.tomorrow.midnight then
         d
-      elsif d >= Date.today then
+      elsif d >= Time.zone.now.midnight then
         'today'
       else
-        pluralize((Date.today - d.to_date).to_i, "day") + " ago"
+        pluralize((Time.zone.now.to_date - d.to_date).to_i, "day") + " ago"
       end
     end
   end

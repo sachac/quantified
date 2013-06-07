@@ -48,5 +48,15 @@ module Home
       Devise::SessionsController.layout "sign"
     end
     ENV["RAILS_ASSET_ID"] = "" # disable timestamps at end of asset files for offline browsing
+    ActionDispatch::Callbacks.after do
+      # Reload the factories
+      return unless (Rails.env.development? || Rails.env.test?)
+      
+      unless FactoryGirl.factories.blank? # first init will load factories, this should only run on subsequent reloads
+        FactoryGirl.factories.clear
+        FactoryGirl.sequences.clear
+        FactoryGirl.find_definitions
+      end
+    end
   end
 end

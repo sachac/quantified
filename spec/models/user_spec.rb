@@ -4,8 +4,8 @@ describe User do
     @user = FactoryGirl.create(:user)
   end
   it "adjusts the beginning of the week" do
-    @user.adjust_beginning_of_week(Date.parse("June 3, 2013")).day.should == 1
-    @user.adjust_beginning_of_week(Date.parse("June 1, 2013")).day.should == 1
+    @user.adjust_beginning_of_week(Time.zone.parse("June 3, 2013")).day.should == 1
+    @user.adjust_beginning_of_week(Time.zone.parse("June 1, 2013")).day.should == 1
   end
 
   it "returns the beginning of this week" do
@@ -17,24 +17,19 @@ describe User do
     @user.this_week.end.wday.should == 6
   end
 
-  it "returns this week in terms of time" do
-    @user.week.begin.wday.should == 6
-    @user.week.end.wday.should == Date.today.wday
-  end
-
   describe "#memento_mori" do
     it "updates the memento mori" do
-      @user.birthdate = Date.today
+      @user.birthdate = Time.zone.today
       @user.life_expectancy_in_years = 1
       @user.save!
-      @user.projected_end.should == Date.today + 1.year
+      @user.projected_end.should == Time.zone.today + 1.year
     end
 
     it "can calculate days left" do
-      @user.birthdate = Date.today
+      @user.birthdate = Time.zone.today
       @user.life_expectancy_in_years = 1
       @user.save!
-      @user.memento_mori[:days].should == ((Date.today + 1.year) - Date.today).to_i
+      @user.memento_mori[:days].should == (Time.zone.today + 1.year - Time.zone.today).to_i
     end
   end
 
@@ -69,10 +64,10 @@ describe User do
   end
 
   it "considers the first account as the demo account" do
-    @user.id = 1
-    @user.demo?.should be_true
+    demo_user = FactoryGirl.create(:demo_user)
+    demo_user.should be_demo
     u2 = FactoryGirl.create(:user)
-    u2.demo?.should_not be_true
+    u2.should_not be_demo
   end
 
   it "can find a record by username or email" do
@@ -85,6 +80,17 @@ describe User do
     User.find_for_database_authentication({login: @user.username}).should == @user
     User.find_for_database_authentication({login: @user.email}).should == @user
     User.find_for_database_authentication({login: @user.email + "xx"}).should be_nil
+  end
+
+  describe '#send_reset_password_instructions' do
+    it 'sends mail if the user exists' do
+      User.send_reset_password_instructions(:login => @user.email)
+      ActionMailer::Base.deliveries.last.to.should == [@user.email]
+    end
+    it 'does not send mail if the user does not exist' do
+      User.send_reset_password_instructions(:login => 'foo' + @user.email)
+      ActionMailer::Base.deliveries.last.to[0].should_not == 'foo' + @user.email
+    end
   end
 
   describe '#find_recoverable_or_initialize_with_errors' do
