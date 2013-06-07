@@ -4,7 +4,7 @@
   - summary_end -= 1.day
   -# Display the last two weeks
   - if summary[:rows].size > 0
-    %table.table-condensed.full.table
+    %table.table-condensed.full.table.table-bordered
       %thead
         %tr
           %th{:rowspan => 2} Activity
@@ -35,10 +35,11 @@
             %td
               = link_to((show_full_path ? category.full_name : category.name), time_review_path(params.merge({:action => 'review', :controller => 'time', :parent_id => category.id})), :title => category.full_name)
               = " &raquo; ".html_safe if category.list?
-            - date = summary_start
+            - date = summary_start.to_date
+            - end_date = summary_end.to_date
             - total = 0
             - count_days = 0
-            - while date < summary_end
+            - while date < end_date
               - total_week = 0
               - 1.upto(7) do |count|
                 %td.right{:title => category.full_name + " - " + l(date)}= duration values[date]
@@ -55,8 +56,9 @@
                 = duration(total / count_days) if count_days > 0
         %tr
           %td Total
-          - date = summary_start
-          - while date < summary_end
+          - date = summary_start.to_date
+          - end_date = summary_end.to_date
+          - while date < end_date
             - total = 0
             - count_days = 0
             - 1.upto(7) do |count|

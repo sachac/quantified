@@ -1,5 +1,6 @@
+
 %p
-  %table.table.table-condensed
+  %table.table.table-condensed.table-bordered.full
     %thead
       %tr
         %th Activity
@@ -19,10 +20,11 @@
           %td
             = link_to category.full_name, time_review_path(params.merge(:action => 'review', :controller => 'time', :parent_id => category.id)), :title => category.full_name
             = " > " if category.list?
-          - date = current_account.adjust_beginning_of_week(summary_start)
+          - date = current_account.adjust_beginning_of_week(summary_start).to_date
           - total = 0
+          - end_date = summary_end.to_date
           - count = 0
-          - while date < summary_end
+          - while date < end_date
             %td.right{:title => category.full_name + " - " + l(date + 6.days)}
               = duration values[date + 6.days]
             - if values[date + 6.days]
@@ -33,11 +35,12 @@
             %strong{:title => ("Average: " + duration(total / count) if count > 0)}= duration total  
       %tr
         %td Total
-        - date = current_account.adjust_beginning_of_week(summary_start)
+        - date = current_account.adjust_beginning_of_week(summary_start).to_date
+        - end_date = summary_end.to_date
         - values = summary[:total][:total]
         - total = 0
         - count = 0
-        - while date < summary_end
+        - while date < end_date
           %td.right{:title => l(date)}= duration values[date + 6.days]
           - total += values[date + 6.days]
           - date += 1.week

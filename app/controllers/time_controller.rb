@@ -53,8 +53,9 @@ class TimeController < ApplicationController
   def dashboard
     authorize! :view_time, current_account
     # Display high-level categories this week: average, daily average, weekday, weekend
+    @summary = RecordCategory.summarize(:user => current_account, :range => current_account.this_week, :zoom => :daily, :tree => :full)
     @week_beginning = current_account.beginning_of_week
-    @summary = RecordCategory.summarize(:user => current_account, :range => @week_beginning..Time.zone.now.tomorrow.midnight, :zoom => :daily, :tree => :full)
+
     @current_activity = current_account.records.activities.order('timestamp DESC').first
     @categories = current_account.record_categories.index_by(&:id)
     # Display current activity
