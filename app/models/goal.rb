@@ -60,8 +60,10 @@ class Goal < ActiveRecord::Base
       date = Time.zone.today.yesterday
       start = Time.zone.local(date.year, date.month, 1)
       start.midnight.in_time_zone..Time.zone.now
+    when 'today'
+      (Time.zone.now.midnight)..Time.zone.now
     when 'daily'
-      (Time.zone.now.midnight - 1.day)..Time.zone.now
+      (Time.zone.now.midnight - 1.day)..Time.zone.today.midnight
     end
   end
 
@@ -69,17 +71,21 @@ class Goal < ActiveRecord::Base
     list = user.goals
     goals = Hash.new
     list.each do |g|
-      hash = g.parse_expression
-      logger.info hash.inspect
-      if hash
-        if hash[:success] 
-          hash[:class] = 'good'
-          hash[:performance_color] = '#0c0'
-        else
-          hash[:class] = 'attention'
-          hash[:performance_color] = '#c00'
+      begin
+        hash = g.parse_expression
+        logger.info hash.inspect
+        if hash
+          if hash[:success] 
+            hash[:class] = 'good'
+            hash[:performance_color] = '#0c0'
+          else
+            hash[:class] = 'attention'
+            hash[:performance_color] = '#c00'
+          end
+          goals[hash[:label]] = hash
         end
-        goals[hash[:label]] = hash
+      rescue
+        # Silently omit failing goals
       end
     end
     goals
