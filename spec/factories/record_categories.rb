@@ -3,6 +3,7 @@
 FactoryGirl.define do
   factory :record_category do
     name "MyString"
+    user
     category_type "activity"
   end
 end

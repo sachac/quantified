@@ -40,18 +40,22 @@ class TapLogRecord < ActiveRecord::Base
     if self.entry_type == 'activity'
       self
     else
-      self.user.tap_log_records.where('timestamp < ?', self.timestamp).order('timestamp desc').limit(1).first
+      self.user.tap_log_records.where('timestamp < ? AND entry_type = ?', self.timestamp, 'activity').order('timestamp desc').limit(1).first
     end
   end
 
   def during_this
-    self.user.tap_log_records.where('timestamp >= ? and timestamp < ? and id != ?', self.timestamp, self.end_timestamp, self.id).order('timestamp')
+    if self.end_timestamp
+      self.user.tap_log_records.where('timestamp >= ? and timestamp < ? and id != ?', self.timestamp, self.end_timestamp, self.id).order('timestamp')
+    else
+      self.user.tap_log_records.where('timestamp >= ? and id != ?', self.timestamp, self.id).order('timestamp')
+    end
   end
 
   scope :activity, where('entry_type=?', 'activity')
 
   def previous
-    self.user.tap_log_records.where('timestamp <= ? and id < ?', self.timestamp, self.id).order('timestamp desc, id desc').limit(1) 
+    self.user.tap_log_records.where('timestamp <= ? and id < ?', self.timestamp, self.id).order('timestamp desc, id desc').limit(1)
   end
 
   def next

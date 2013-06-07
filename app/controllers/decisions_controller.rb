@@ -25,7 +25,7 @@ class DecisionsController < ApplicationController
   # GET /decisions/new.xml
   def new
     @decision = Decision.new
-    @decision.date = Date.today
+    @decision.date = Time.zone.now.to_date
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @decision }

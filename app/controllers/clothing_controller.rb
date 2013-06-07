@@ -158,8 +158,8 @@ class ClothingController < ApplicationController
   
   def analyze
     authorize! :view_clothing, current_account
-    @start_date = params[:start] ? Date.parse(params[:start]) : (Date.today - 1.week)
-    @end_date = params[:end] ? Date.parse(params[:end]) : Date.today
+    @start_date = params[:start] ? Date.parse(params[:start]) : (Time.zone.now.to_date - 1.week)
+    @end_date = params[:end] ? Date.parse(params[:end]) : Time.zone.now.to_date
     # Straight chart
     logs = current_account.clothing_logs.where("date >= ? AND date <= ?", @start_date, @end_date).order("date ASC")
     logger.info "CLOTHING LOGS: " + logs.inspect

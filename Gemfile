@@ -96,7 +96,11 @@ group :development, :test do
   gem 'rspec'
 end
 group :test do
+  gem 'spork'
+  gem 'guard-rspec'
+  gem 'guard-spork'
   gem 'cucumber'
+  gem 'fakeweb'
   gem 'simplecov', :require => false
   gem 'cucumber-rails', :require => false
   gem 'capybara'

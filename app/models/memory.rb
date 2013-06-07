@@ -5,23 +5,26 @@ class Memory < ActiveRecord::Base
   belongs_to :user
   before_save :update_sort_time
   
-  def parse_date(s)
+  def self.parse_date(s)
     return nil if s.blank?
     month = 1
     day = 1
-    year = Date.today.year
-    if match_data = (s.match /^([0-9][0-9][0-9][0-9])/) 
+    year = Time.zone.now.year
+    if match_data = (s.match /^([0-9][0-9][0-9][0-9])\-([0-9][0-9]?)$/) 
       year = match_data[1]
+      month = match_data[2]
+      return Time.zone.local(year.to_i, month.to_i, 1)
     end
-    begin
-      date = Chronic::parse(s)
-    rescue
-      date = Chronic::parse("#{year}-#{month}-#{day}")
+    if match_data = (s.match /^([0-9][0-9][0-9][0-9])$/) 
+      year = match_data[1]
+      return Time.zone.local(year.to_i, 1, 1)
     end
+    date = Chronic::parse(s)
+    date ||= Chronic::parse("#{year}-#{month}-#{day}")
   end
 
   def update_sort_time
-    self.sort_time = parse_date(self.date_entry)
+    self.sort_time = Memory.parse_date(self.date_entry)
     return true
   end
   

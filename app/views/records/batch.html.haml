@@ -4,7 +4,7 @@
   %h3 1. Enter data
   .control-group
     = label_tag :date, 'Date', class: 'control-label'
-    .controls= text_field_tag :date, params[:date] || Date.today, :class => 'datepicker'
+    .controls= text_field_tag :date, params[:date] || Time.zone.today, :class => 'datepicker'
   .control-group
     = label_tag 'batch', 'Text', class: 'control-label'
     .controls

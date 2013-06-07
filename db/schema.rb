@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130102150645) do
+ActiveRecord::Schema.define(:version => 20130604162414) do
 
   create_table "clothing", :force => true do |t|
     t.string   "name"
@@ -274,7 +274,7 @@ ActiveRecord::Schema.define(:version => 20130102150645) do
 
   create_table "records", :force => true do |t|
     t.integer  "user_id"
-    t.string   "source"
+    t.string   "source_name"
     t.integer  "source_id"
     t.datetime "timestamp"
     t.integer  "record_category_id"

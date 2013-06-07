@@ -54,19 +54,13 @@ class User < ActiveRecord::Base
   end
 
   def beginning_of_week
-    self.adjust_beginning_of_week(Date.today)
+    self.adjust_beginning_of_week(Time.zone.today.midnight)
   end
 
   def this_week
     beginning = self.beginning_of_week
     beginning..(beginning + 1.week)
   end
-
-  # Return a week range as times
-  def week
-    self.beginning_of_week.midnight.in_time_zone..Time.now
-  end
-
 
   def update_memento_mori
     if birthdate_changed? or life_expectancy_in_years_changed? then
@@ -76,7 +70,7 @@ class User < ActiveRecord::Base
 
   def memento_mori
     if self.projected_end then
-      days = (self.projected_end - Date.today)
+      days = (self.projected_end - Time.zone.today)
       { :days => days.to_i, :months => (days * 1.day / 1.month).to_i, :years => (days * 1.day / 1.year).to_i, :weeks => (days * 1.day / 1.week).to_i }
     end
   end
@@ -110,7 +104,7 @@ class User < ActiveRecord::Base
   # end
 
   def demo?
-    self.id == 1
+    (self.email == 'sacha@sachachua.com') || (self.role == 'demo')
   end
 
   protected
