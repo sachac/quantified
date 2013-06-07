@@ -12,21 +12,21 @@
         .controls= text_field_tag :end, @end ? @end.strftime("%Y-%m-%d") : nil, :class => 'datepicker' 
       .control-group
         = label_tag :order, 'Order', class: 'control-label'
-        .controls
+        .controls.form-inline
           = radio_button_tag :order, 'newest', @order != 'desc', :class => 'inline'
           = label_tag :order_newest, 'Newest on top', :class => 'inline'
           = radio_button_tag :order, 'oldest', @order == 'desc'
           = label_tag :order_oldest, 'Oldest on top', :class => 'inline'
       .control-group
         = label_tag :display_type, 'Display', class: 'control-label'
-        .controls
+        .controls.form-inline
           = radio_button_tag :display_type, 'time', params[:display_type] != 'decimal', :class => 'inline'
           = label_tag :display_type_inline, 'Time', :class => 'inline'
           = radio_button_tag :display_type, 'decimal', params[:display_type] == 'decimal', :class => 'inline'
           = label_tag :display_type_decimal, 'Decimal', :class => 'inline'
       .control-group
         = label_tag :split, 'Split', class: 'control-label'
-        .controls
+        .controls.form-inline
           = radio_button_tag :split, 'keep', params[:split] != 'split', :class => 'inline'
           = label_tag :split_keep, 'Keep original entries', :class => 'inline'
           = radio_button_tag :split, 'split', params[:split] == 'split', :class => 'inline'
