@@ -51,8 +51,7 @@ class CsaFoodsController < ApplicationController
                             :food => params[:csa_food][:food_id], 
                             :quantity => params[:csa_food][:quantity], 
                             :unit => params[:csa_food][:unit],
-                            :date_received => params[:csa_food][:date_received] 
-                            || Time.zone.now.to_date)
+                            :date_received => params[:csa_food][:date_received] || Time.zone.now.to_date)
     if result
       add_flash :notice, 'Logged.'
     end
