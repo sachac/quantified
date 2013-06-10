@@ -451,6 +451,14 @@ class Record < ActiveRecord::Base
     source_name
     source_id
     data 'Data' do |data| data.to_json if data and data.size > 0 end
+    timestamp 'Day' do |t| t.strftime('%Y-%m-%d') end
+    beginning_of_week 'Beginning of week'
+    timestamp 'Beginning of month' do |t| Time.zone.local(t.year, t.month, 1).strftime('%Y-%m-%d') end
+    timestamp 'Beginning of year' do |t| Time.zone.local(t.year, 1, 1).strftime('%Y-%m-%d') end
+  end
+
+  def beginning_of_week
+    self.user.adjust_beginning_of_week(self.timestamp).strftime('%Y-%m-%d')
   end
 
   fires :new, :on => :create, :actor => :user, :secondary_subject => :record_category
