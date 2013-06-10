@@ -17,7 +17,7 @@ Then /^I should see the thank you page$/ do
 end
 
 Given /^I am a new user$/ do
-  @user = Factory(:user)
+  @user = FactoryGirl.create(:user)
 end
 
 Given /^I log in$/ do

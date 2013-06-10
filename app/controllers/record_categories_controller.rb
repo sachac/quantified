@@ -36,6 +36,7 @@ class RecordCategoriesController < ApplicationController
       prepare_filters [:date_range, :order, :filter_string]
       @records = @record_category.category_records(:order => @order, :start => @summary_start, :end => @summary_end, :filter_string => params[:filter_string], :include_private => managing?)
       @total = @records.sum(:duration)
+      @total_entries = @records.count
     end
 
     respond_to do |format|

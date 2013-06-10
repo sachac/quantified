@@ -24,6 +24,8 @@
 
 Total:
 = duration @total
+= surround ' (', ')' do
+  = pluralize @total_entries, 'entry'
 
 - if @record_category.category_type == 'list'
   - if @record_category.children.length > 0
