@@ -113,6 +113,8 @@ class ApplicationController < ActionController::Base
       when :display_type
         @filters[:display_type] = true
         params[:display_type] ||= 'time'
+      when :parent_id
+        @filters[:parent_id] = true
       end
     end
   end

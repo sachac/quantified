@@ -36,11 +36,11 @@ Then /^I should see an error$/ do
 end
 
 Given /^I am a user$/ do
-  @user = Factory(:user)
+  @user = FactoryGirl.create(:confirmed_user)
 end
 
 Given /^I am logged in$/ do
-  @user ||= Factory(:user)
+  @user ||= FactoryGirl.create(:confirmed_user)
   visit root_path(:subdomain => @user.username)
   click_link I18n.t('app.user.login')
   fill_in 'Login', :with => @user.email
@@ -52,7 +52,7 @@ end
 
 Given /^I have the following stuff:$/ do |table|
   table.hashes.each do |o|
-    stuff = Factory(:stuff, :name => o['Name'], :user => @user)
+    stuff = FactoryGirl.create(:stuff, :name => o['Name'], :user => @user)
     stuff.home_location = @user.get_location(o['Home location']) unless o['Home location'].blank?
     stuff.location = @user.get_location(o['Current location']) unless o['Current location'].blank?
     stuff.save
@@ -70,7 +70,7 @@ end
 
 Given /^I have the following clothing logs:$/ do |table|
   table.hashes.each do |r|
-    Factory(:clothing_log, :user => @user, :date => Time.zone.parse(r['Date']), :clothing => Clothing.find_by_name(r['Clothing']))
+    FactoryGirl.create(:clothing_log, :user => @user, :date => Time.zone.parse(r['Date']), :clothing => Clothing.find_by_name(r['Clothing']))
   end 
 end
 
@@ -128,7 +128,7 @@ When /^I edit the "([^"]*)" clothing item$/ do |a|
   visit edit_clothing_path(@clothing)
 end
 When /^I edit a piece of clothing$/ do
-  @clothing = Factory(:clothing, :user => @user)
+  @clothing = FactoryGirl.create(:clothing, :user => @user)
   visit edit_clothing_path(@clothing)
 end
 
@@ -164,16 +164,16 @@ end
 
 Given /^another user has the following clothing items:$/ do |table|
   # table is a Cucumber::Ast::Table
-  @other ||= Factory(:user)
+  @other ||= FactoryGirl.create(:user)
   table.hashes.each do |h|
-    c = Factory(:clothing, :user => @other, :name => h['Name'], :status => h['Status'])
+    c = FactoryGirl.create(:clothing, :user => @other, :name => h['Name'], :status => h['Status'])
     c.tag_list = h['Tags']
     c.save!
   end
 end
 
 When /^I switch to the other user's domain$/ do
-  @other ||= Factory(:user)
+  @other ||= FactoryGirl.create(:user)
   host! "#{@other.username}.example.com"
   Capybara.app_host = "http://#{@other.username}.example.com"
 end
@@ -181,7 +181,7 @@ end
 When /^I log in with my e\-mail address$/ do
   visit root_url
   click_link I18n.t('app.user.login')
-  @user = Factory(:user)
+  @user = FactoryGirl.create(:user)
   fill_in "user[login]", :with => @user.email
   fill_in "user[password]", :with => @user.password
   click_button I18n.t('app.user.login_submit')
@@ -196,16 +196,16 @@ end
 When /^I log in with my username$/ do
   visit root_url
   click_link I18n.t('app.user.login')
-  @user = Factory(:user)
+  @user = FactoryGirl.create(:user)
   fill_in "user[login]", :with => @user.username
   fill_in "user[password]", :with => @user.password
   click_button I18n.t('app.user.login_submit')
 end
 
 Given /^another user has the following memories:$/ do |table|
-  @other ||= Factory(:user)
+  @other ||= FactoryGirl.create(:user)
   table.hashes.each do |x|
-    Factory(:memory, :name => x['Title'], :body => x['Text'], :tag_list => x['Tags'],
+    FactoryGirl.create(:memory, :name => x['Title'], :body => x['Text'], :tag_list => x['Tags'],
             :access => (x['Public'] || 'Yes').downcase == 'no' ? 'private' : 'public', :user => @other)
   end
 end
@@ -272,7 +272,7 @@ end
 
 Given /^I have the following memories:$/ do |table|
   table.hashes.each do |x|
-    Factory(:memory, :name => x['Title'], :body => x['Text'], :tag_list => x['Tags'],
+    FactoryGirl.create(:memory, :name => x['Title'], :body => x['Text'], :tag_list => x['Tags'],
             :access => (x['Public'] || 'Yes').downcase == 'no' ? 'private' : 'public', :user => @user)
   end
 end

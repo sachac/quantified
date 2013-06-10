@@ -17,11 +17,14 @@ Then /^I should see the thank you page$/ do
 end
 
 Given /^I am a new user$/ do
-  @user = FactoryGirl.create(:user)
+  @user = FactoryGirl.create(:confirmed_user)
 end
 
 Given /^I log in$/ do
-  sign_in @user
+  visit new_user_session_path
+  fill_in 'Email', :with => @user.email
+  fill_in 'Password', :with => @user.password
+  click_on 'Sign in'
 end
 
 Then /^I should see a reminder to set my timezone$/ do
