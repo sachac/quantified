@@ -524,17 +524,27 @@ END
   end
   it 'converts to CSV' do 
     user = FactoryGirl.create(:confirmed_user)
-    cat = FactoryGirl.create(:record_category, category_type: 'activity', user: user, data: [{'key' => 'note', 'label' => 'Note', 'type' => 'text'}], name: 'XYZ')
+    parent_cat = FactoryGirl.create(:record_category, category_type: 'list', name: 'ABC', user: user)
+    cat = FactoryGirl.create(:record_category, category_type: 'activity', user: user, data: [{'key' => 'note', 'label' => 'Note', 'type' => 'text'}], name: 'XYZ', parent: parent_cat)
     # 2012-01-02 8:00
-    rec = FactoryGirl.create(:record, record_category: cat, user: user, timestamp: Time.zone.local(2012, 1, 2, 8), end_timestamp: Time.zone.local(2012, 1, 2, 9), source_name: 'ruby', source_id: 1, data: {'note' => 'stuff'})
-    rec.to_comma.should == ['January 02, 2012 08:00',
-                            'January 02, 2012 09:00',
-                            'XYZ',
+    rec = FactoryGirl.create(:record, record_category: cat, user: user, timestamp: Time.zone.local(2012, 2, 2, 8), end_timestamp: Time.zone.local(2012, 2, 2, 9), source_name: 'ruby', source_id: 1, data: {'note' => 'stuff'})
+    rec.to_comma.should == ['February 02, 2012 08:00',
+                            'February 02, 2012 09:00',
+                            'ABC - XYZ',
                             cat.id.to_s,
                             '3600',
                             'ruby',
                             '1',
-                            "{\"note\":\"stuff\"}"]
+                            "{\"note\":\"stuff\"}",
+                            "2012-02-02", # day
+                            "2012-01-28", # beginning of week
+                            "2012-02-01", # beginning of month,
+                            "2012-01-01"
+                            ]
+  end
+  describe '#beginning_of_week' do
+    rec = FactoryGirl.create(:record, timestamp: Time.zone.local(2012, 2, 2, 8), end_timestamp: Time.zone.local(2012, 2, 2, 9), source_name: 'ruby', source_id: 1, data: {'note' => 'stuff'})
+    rec.beginning_of_week.to_date.should == Time.zone.local(2012, 1, 28).to_date
   end
   describe '#prepare_graph' do
     it "splits by date" do

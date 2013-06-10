@@ -94,6 +94,7 @@ group :development, :test do
   gem 'factory_girl_rails'  
   gem 'forgery'
   gem 'rspec'
+  gem 'guard-cucumber'
 end
 group :test do
   gem 'spork'
