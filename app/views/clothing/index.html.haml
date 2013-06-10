@@ -49,9 +49,9 @@ Tags:
           %td= link_to clothing.name, clothing
           - if managing?
             %td
-              = link_to 'Yesterday', clothing_logs_path + "?clothing_id=" + clothing.id.to_s + "&date=" + Time.zone.local.yesterday.to_s, :method => :post
+              = link_to 'Yesterday', clothing_logs_path + "?clothing_id=" + clothing.id.to_s + "&date=" + Time.zone.today.yesterday.to_s, :method => :post
               = link_to 'Today', clothing_logs_path + "?clothing_id=" + clothing.id.to_s + "&date=" + Time.zone.today.to_s, :method => :post
-              = link_to 'Tomorrow', clothing_logs_path + "?clothing_id=" + clothing.id.to_s + "&date=" + Time.zone.local.tomorrow.to_s, :method => :post
+              = link_to 'Tomorrow', clothing_logs_path + "?clothing_id=" + clothing.id.to_s + "&date=" + Time.zone.today.tomorrow.to_s, :method => :post
           %td= clothing.status
           %td= clothing.clothing_logs_count
           %td= date_ago_future(clothing.last_worn)
