@@ -209,9 +209,9 @@ module ApplicationHelper
     display_type = (params && params[:display_type] == 'decimal') ? 'decimal' : 'time'
     if seconds and seconds > 0
       if display_type == 'time' 
-        "%d" % (seconds / 1.hour) + (":%02d" % ((seconds % 1.hour) / 1.minute))
+        "%d" % (seconds.to_f / 1.hour) + (":%02d" % ((seconds.to_f % 1.hour) / 1.minute))
       else
-        "%.1f" % ((seconds / 1.hour).to_f.round(1))
+        "%.1f" % ((seconds.to_f / 1.hour).to_f.round(1))
       end
     end
   end

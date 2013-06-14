@@ -76,6 +76,7 @@
           .color-box{:style => "background: #{tr1.html}"}= tr1.html
           .color-box{:style => "background: #{tr2.html}"}= tr2.html
 
+= puts @clothing.clothing_matches.inspect
 - if @previous_matches.size > 0
   .previous_matches= render :partial => 'clothing_thumbnails', :locals => { :list => @previous_matches }
 - if @matches.size > 0
