@@ -14,9 +14,12 @@
       \-
       = link_to 'Source', 'https://github.com/sachac/quantified'
       - if @account
-        \- Current timezone:
-        = @account.settings.timezone
-        = link_to '(Change?)', edit_user_path(@account)
+        - if @account.settings.timezone
+          \- Current timezone:
+          = @account.settings.timezone
+          = link_to '(Change?)', edit_user_path(@account)
+        - else
+          = link_to '(Set timezone)', edit_user_path(@account)
 - if Rails.env.development?
   .alert.warning This is the development site.
 - else

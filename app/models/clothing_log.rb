@@ -15,7 +15,7 @@ class ClothingLog < ActiveRecord::Base
   validates_presence_of :user_id
 
   def update_matches
-    logger.info "Updating matches..."
+    logger.info "Updating matches for #{self.inspect}"
     # Delete old matches
     ClothingMatch.recreate(self)
     Clothing.reset_counters self.clothing_id, :clothing_logs

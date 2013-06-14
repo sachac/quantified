@@ -14,7 +14,7 @@
         - if @filters[:parent_id]
           .control-group
             = label_tag :parent_id, 'Parent', class: 'control-label'
-            .controls= select_tag :parent_id, options_from_collection_for_select(current_account.record_categories.order(:full_name), 'id', 'full_name', params[:parent_id])
+            .controls= select_tag :parent_id, options_from_collection_for_select(current_account.record_categories.order(:full_name), 'id', 'full_name', params[:parent_id]), include_blank: true
         - if @filters[:category_tree]
           .control-group
             = label_tag :category_tree, 'Detail level', class: 'control-label'

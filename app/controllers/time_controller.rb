@@ -26,7 +26,7 @@ class TimeController < ApplicationController
     @summary_start = Time.zone.parse(params[:start])
     @summary_end = Time.zone.parse(params[:end])
     # Pick the appropriate level of review
-    @category = params[:parent_id] ? current_account.record_categories.find(params[:parent_id]) : nil
+    @category = !params[:parent_id].blank? ? current_account.record_categories.find(params[:parent_id]) : nil
     range = @summary_start..@summary_end
     @zoom = Record.choose_zoom_level(range)
     @summary = RecordCategory.summarize(:user => current_account, :range => range, :zoom => @zoom, :parent => @category, :tree => params[:category_tree] ? params[:category_tree].to_sym : nil, :key => nil)
