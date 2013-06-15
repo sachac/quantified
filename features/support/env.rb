@@ -1,19 +1,33 @@
 require 'simplecov'
 require 'rubygems'
 require 'spork'
+require 'database_cleaner'
+require 'database_cleaner/cucumber'
+require 'factory_girl'
 #uncomment the following line to use spork with the debugger
 #require 'spork/ext/ruby-debug'
 
 Spork.prefork do
-  SimpleCov.start 'rails'
-  SimpleCov.coverage_dir 'coverage/cucumber'
+#  SimpleCov.start 'rails'
+#  SimpleCov.use_merging true
+#  SimpleCov.merge_timeout 60
+#  SimpleCov.coverage_dir 'coverage'
+  World FactoryGirl::Syntax::Methods
   require 'cucumber/rails'
-  Capybara.default_selector = :css
-  ActionController::Base.allow_rescue = false
   begin
     DatabaseCleaner.strategy = :truncation
   rescue NameError
     raise "You need to add database_cleaner to your Gemfile (in the :test group) if you wish to use it."
+  end
+
+  Capybara.default_selector = :css
+  ActionController::Base.allow_rescue = false
+  Before do
+    DatabaseCleaner.start
+  end
+  
+  After do |scenario|
+    DatabaseCleaner.clean
   end
 end
 

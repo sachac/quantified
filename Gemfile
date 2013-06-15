@@ -95,6 +95,7 @@ group :development, :test do
   gem 'forgery'
   gem 'rspec'
   gem 'guard-cucumber'
+  gem 'timecop'
 end
 group :test do
   gem 'spork'

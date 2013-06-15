@@ -1,5 +1,8 @@
 When /^I define the following rules:$/ do |table|
-  fill_in "Rules", :with => table.raw.map { |x| x[0] }.join("\n")
+  table.raw.each_with_index do |x, index|
+    fill_in "context[context_rules_attributes][#{index}][stuff]", :with => x[0]
+    fill_in "context[context_rules_attributes][#{index}][location]", :with => x[1]
+  end
 end
 
 When /^I save the context$/ do

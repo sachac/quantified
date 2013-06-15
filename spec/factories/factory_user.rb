@@ -1,12 +1,11 @@
 FactoryGirl.define do
   sequence(:username) { |n| "test#{n}" }
-  sequence(:email) { |n| "test#{n}@example.org" }
-  factory :user do |f| 
-    f.username { FactoryGirl.generate(:username) }
-    f.email { FactoryGirl.generate(:email) }
-    f.role 'user'
-    f.password { Forgery(:basic).password }
-    f.password_confirmation { password }
+  factory :user do
+    username
+    email { "#{username}@example.org" }
+    role 'user'
+    password { Forgery(:basic).password }
+    password_confirmation { password }
   end
   factory :confirmed_user, :parent => :user do |f|
     f.after(:create) { |user| user.confirm! }

@@ -8,11 +8,12 @@ class ClothingMatch < ActiveRecord::Base
     self.delete_matches(object)
     # Recreate matches for this date
     if (object.is_a? ClothingLog) then
-      object.user.clothing_logs.where('clothing_id != ? AND outfit_id = ? AND date = ?', object.clothing_id, object.outfit_id, object.date).each do |l|
-        ClothingMatch.new(:clothing_a_id => object.clothing_id, :clothing_b_id => l.clothing_id, 
-          :clothing_log_a_id => object.id, :clothing_log_b_id => l.id, :user_id => object.user_id, :clothing_log_date => object.date).save
-        ClothingMatch.new(:clothing_b_id => object.clothing_id, :clothing_a_id => l.clothing_id, 
-          :clothing_log_b_id => object.id, :clothing_log_a_id => l.id, :user_id => object.user_id, :clothing_log_date => object.date).save
+      object.user.reload.clothing_logs.where('clothing_id != ? AND outfit_id = ? AND date = ?', object.clothing_id, object.outfit_id, 
+                                             (object.date.is_a?(Time) ? object.date.in_time_zone.to_date : object.date)).each do |l|
+        ClothingMatch.create!(clothing_a_id: object.clothing_id, clothing_b_id: l.clothing_id, 
+          clothing_log_a_id: object.id, clothing_log_b_id: l.id, user_id: object.user_id, clothing_log_date: object.date)
+        ClothingMatch.create!(clothing_b_id: object.clothing_id, clothing_a_id: l.clothing_id, 
+          clothing_log_b_id: object.id, clothing_log_a_id: l.id, user_id: object.user_id, clothing_log_date: object.date)
       end
     else
       object.clothing_logs.each do |l|
@@ -31,9 +32,10 @@ class ClothingMatch < ActiveRecord::Base
     ClothingMatch.delete_all
     by_date = Hash.new
     ClothingLog.all.each do |l|
-      by_date[l.date] ||= Hash.new
-      by_date[l.date][l.outfit_id || 1] ||= Array.new
-      by_date[l.date][l.outfit_id || 1] << l
+      date = (l.date.is_a?(Time) ? l.date.in_time_zone.to_date : l.date)
+      by_date[date] ||= Hash.new
+      by_date[date][l.outfit_id || 1] ||= Array.new
+      by_date[date][l.outfit_id || 1] << l
     end
     by_date.each do |date, outfits|
       outfits.each do |outfit_id, list|

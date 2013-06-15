@@ -12,11 +12,11 @@ Feature: Stuff
       | lunch bag | kitchen cabinet | kitchen cabinet  |
     When I create a context called "Going to work"
     And I define the following rules:
-      | stuff: laptop, backpack |
-      | stuff: backpack, me    |
-      | stuff: badge, belt bag |
-      | stuff: lunch bag, backpack   |
-      | stuff: belt bag, me |
+      | laptop | backpack |
+      | backpack | me |
+      | badge | belt bag |
+      | lunch bag | backpack   |
+      | belt bag | me |
     And I save the context  
     Then the context should exist
 

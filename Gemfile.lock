@@ -389,6 +389,7 @@ GEM
       ref
     thor (0.18.1)
     tilt (1.4.1)
+    timecop (0.6.1)
     treetop (1.4.12)
       polyglot
       polyglot (>= 0.3.1)
@@ -472,6 +473,7 @@ DEPENDENCIES
   statsample
   subdomain-fu!
   therubyracer (~> 0.11.4)
+  timecop
   timeline_fu!
   uglifier
   will_paginate
