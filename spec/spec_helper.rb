@@ -27,6 +27,7 @@ Spork.prefork do
     config.mock_with :rspec
     config.use_transactional_fixtures = true
     config.infer_base_class_for_anonymous_controllers = false
+    config.include FactoryGirl::Syntax::Methods
     config.include Paperclip::Shoulda::Matchers
     config.include Devise::TestHelpers, :type => :controller
     config.before(:suite) do
@@ -48,8 +49,9 @@ Spork.each_run do
   if ENV['DRB']
     require 'simplecov'
     SimpleCov.start 'rails'
+    SimpleCov.use_merging true
+    SimpleCov.merge_timeout 60
   end
-
 end
 
 # --- Instructions ---

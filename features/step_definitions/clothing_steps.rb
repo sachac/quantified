@@ -26,8 +26,6 @@ Given /^I have the following clothing logs:$/ do |table|
   table.hashes.each do |r|
     FactoryGirl.create(:clothing_log, :user => @user, :date => Time.zone.parse(r['Date']), :clothing => Clothing.find_by_name(r['Clothing']))
   end 
-  puts ClothingLog.all.inspect
-  puts ClothingMatch.all.inspect
 end
 
 When /^I go to the clothing page for "([^"]*)"$/ do |arg1|
@@ -43,7 +41,6 @@ Then /^I should see that I can donate it$/ do
 end
 
 Then /^I should see that I have worn this with "([^"]*)" before$/ do |arg1|
-  puts page.body
   within ".previous_matches" do
     page.find ".clothing_#{Clothing.find_by_name(arg1).id}"
   end
@@ -66,7 +63,6 @@ When /^I create a new piece of clothing$/ do
   fill_in 'clothing[name]', :with => 'red shirt'
   fill_in 'clothing[tag_list]', :with => 'top, casual'
   fill_in 'clothing[clothing_type]', :with => 'top'
-  fill_in 'clothing[color]', :with => '#ff0000'
   fill_in 'clothing[notes]', :with => 'From Value Village'
   fill_in 'clothing[cost]', :with => '2.99'
   click_button I18n.t('app.general.save')
@@ -110,11 +106,9 @@ When /^I go to the clothing status page for "([^"]*)"$/ do |arg1|
   visit clothing_by_status_path(arg1)
 end
 
-Given /^another user has the following clothing items:$/ do |table|
-  # table is a Cucumber::Ast::Table
-  @other ||= FactoryGirl.create(:user)
+Given /^the other user has the following clothing items:$/ do |table|
   table.hashes.each do |h|
-    c = FactoryGirl.create(:clothing, :user => @other, :name => h['Name'], :status => h['Status'])
+    c = FactoryGirl.create(:clothing, user: @other, name: h['Name'], status: h['Status'])
     c.tag_list = h['Tags']
     c.save!
   end

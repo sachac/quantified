@@ -264,6 +264,7 @@ class RecordCategory < ActiveRecord::Base
     dotted_ids
     data 'Data' do |data| data.to_json if data and data.size > 0 end
   end
-  
+
+  scope :lookup, lambda { |x| if x.match(/\A\d+\Z/) then where("id = ?", x.to_i) else where("full_name = ?", x) end }
   scope :active, where(:active => true)
 end

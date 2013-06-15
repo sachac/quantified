@@ -9,12 +9,6 @@ class ApplicationController < ActionController::Base
   helper_method :managing?
   skip_filter :authenticate_user!
 
-  rescue_from NonexistentAccount do |e|
-    logger.info "NONEXISTENT #{current_subdomain}"
-    flash[:error] = I18n.t('app.error.nonexistent_account')
-    redirect_to root_url(:subdomain => false)
-  end
-
   rescue_from CanCan::AccessDenied do |exception|
     if current_user
       flash[:error] = "Sorry! Access denied. If you think you should be able to access that, please send me feedback!"
@@ -45,15 +39,7 @@ class ApplicationController < ActionController::Base
   end
 
   def current_account
-    if (current_subdomain.nil?)
-      current_user || User.first
-    else
-      u = User.find_by_username(current_subdomain)  
-      if u.nil? # nonexistent
-        raise NonexistentAccount
-      end
-      u
-    end
+    current_user || User.first
   end  
 
   def after_sign_in_path_for(resource)

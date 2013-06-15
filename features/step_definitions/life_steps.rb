@@ -1,13 +1,5 @@
 # TIME
 
-When /^I look at my time use for the past (\d+) days?$/ do |arg1|
-  @start_time = (Time.zone.today - arg1.to_i.days).midnight
-  @end_time = Time.zone.midnight.in_time_zone
-  @log = TimeTrackerLog.new(User.first)
-  @entries = @log.entries(@start_time, @end_time)
-  @summary = @log.summarize(@start_time, @end_time)
-end
-
 Then /^I should have time data$/ do
   assert @entries != nil
   assert @entries.size > 0

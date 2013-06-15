@@ -1,4 +1,5 @@
 require 'spec_helper'
+
 describe ClothingLog do
   describe '#update_matches' do
     it "keeps track of clothing" do

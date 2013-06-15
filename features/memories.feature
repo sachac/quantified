@@ -5,7 +5,8 @@ Feature: Memories
       | Title    | Text                         | Tags   | Public |
       | Memory A | Details for memory A go here | family | Yes    |
       | Memory B | Details for memory B go here | life   | No     |
-    And another user has the following memories:
+    And there is another user
+    And the other user has the following memories:
       | Title    | Text                         | Tags   | Public |
       | Memory Z | Details for memory Z go here | family | Yes    |
   Scenario: View a list of memories
