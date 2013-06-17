@@ -210,7 +210,7 @@ class RecordCategory < ActiveRecord::Base
     # Add the duration of any open entries
     last = records.order('timestamp DESC').first
     if last and last.end_timestamp.nil?
-      duration += (range ? range.end : Time.zone.now) - last.timestamp
+      duration += [range.end, Time.zone.now].min - last.timestamp
     elsif last and last.end_timestamp > end_time
       # Split the last entry
       duration -= (last.end_timestamp - end_time)
