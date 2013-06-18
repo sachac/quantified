@@ -106,5 +106,4 @@ describe Clothing do
                           '',
                           '']
   end
-
 end

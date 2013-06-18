@@ -6,6 +6,9 @@ FactoryGirl.define do
     role 'user'
     password { Forgery(:basic).password }
     password_confirmation { password }
+    trait(:confirmed) do |f|
+      f.after(:create) { |user| user.confirm! }
+    end
   end
   factory :confirmed_user, :parent => :user do |f|
     f.after(:create) { |user| user.confirm! }

@@ -4,9 +4,10 @@ Home::Application.routes.draw do
   match 'auth/:service/callback' => 'services#create'
   match 'auth/:service' => 'sessions#setup', :as => :oauth
   resources :services, :only => [:index, :create, :destroy]
-  match 'signups' => 'signups#index'
+
   match 'admin' => 'admin#index'
   match 'admin/activity' => 'admin#activity'
+  match 'admin/signups' => 'admin#signups'
   match 'admin/become/:id' => 'admin#become', :as => :become_user, :via => :post
   match 'feedback' => 'home#send_feedback', :via => :post
   match 'feedback' => 'home#feedback', :as => :feedback
@@ -20,10 +21,10 @@ Home::Application.routes.draw do
     cache "assets/offline.css"
     network "/"
   end
-  match '/offline.manifest' => offline
+  #match '/offline.manifest' => offline
 
   match 'records/batch' => 'records#batch', :as => :batch_records, :via => [:post, :get]
-  resources :timeline_events
+  resources :timeline_events, :except => [:create, :update]
   resources :records do
     collection do
       get :help
@@ -132,7 +133,7 @@ Home::Application.routes.draw do
       get :graph
     end
     member do
-      get :logs
+      get :clothing_logs
     end
   end
 

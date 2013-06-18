@@ -12,3 +12,5 @@
   .control-group
     .controls
       = f.submit 'Save', :class => 'btn btn-primary'
+      - if !@clothing_log.new_record? and can? :delete, @clothing_log
+        = link_to I18n.t('app.general.delete'), clothing_log_path(@clothing_log), :method => :delete, :confirm => I18n.t('general.are_you_sure'), :class => 'btn'

@@ -42,40 +42,6 @@ class TimelineEventsController < ApplicationController
     @timeline_event = TimelineEvent.find(params[:id])
   end
 
-  # POST /timeline_events
-  # POST /timeline_events.json
-  def create
-    authorize! :manage, User
-    @timeline_event = TimelineEvent.new(params[:timeline_event])
-
-    respond_to do |format|
-      if @timeline_event.save
-        format.html { redirect_to @timeline_event, :notice => 'Timeline event was successfully created.' }
-        format.json { render :json => @timeline_event, :status => :created, :location => @timeline_event }
-      else
-        format.html { render :action => "new" }
-        format.json { render :json => @timeline_event.errors, :status => :unprocessable_entity }
-      end
-    end
-  end
-
-  # PUT /timeline_events/1
-  # PUT /timeline_events/1.json
-  def update
-    authorize! :manage, User
-    @timeline_event = TimelineEvent.find(params[:id])
-
-    respond_to do |format|
-      if @timeline_event.update_attributes(params[:timeline_event])
-        format.html { redirect_to @timeline_event, :notice => 'Timeline event was successfully updated.' }
-        format.json { head :ok }
-      else
-        format.html { render :action => "edit" }
-        format.json { render :json => @timeline_event.errors, :status => :unprocessable_entity }
-      end
-    end
-  end
-
   # DELETE /timeline_events/1
   # DELETE /timeline_events/1.json
   def destroy

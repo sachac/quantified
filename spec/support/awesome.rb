@@ -3,7 +3,6 @@ def login(user = nil, options = {})
   @user = user
   options[:with] ||= :email
   get root_path(:subdomain => false)
-  puts page.body
   click_link I18n.t('app.user.login')
   fill_in 'user[login]', :with => (options[:with] == :username? ? user.username : user.email)
   fill_in 'user[password]', :with => user.password

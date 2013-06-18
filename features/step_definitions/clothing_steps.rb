@@ -1,4 +1,4 @@
-Given /^I have the following clothing items:$/ do |table|
+Given /^I have the following clothing items:?$/ do |table|
   table.hashes.each do |h|
     c = FactoryGirl.create(:clothing, :user => @user, :name => h['Name'], :status => h['Status'])
     c.tag_list = h['Tags']
@@ -24,8 +24,17 @@ end
 
 Given /^I have the following clothing logs:$/ do |table|
   table.hashes.each do |r|
-    FactoryGirl.create(:clothing_log, :user => @user, :date => Time.zone.parse(r['Date']), :clothing => Clothing.find_by_name(r['Clothing']))
+    c = Clothing.find_by_name(r['Clothing']) || create(:clothing, user: @user, name: r['Clothing'], clothing_type: r['Type'])
+    FactoryGirl.create(:clothing_log, user: @user, date: Time.zone.parse(r['Date']), clothing: c)
   end 
+end
+
+When /^I go to the clothing logs page$/ do
+  visit clothing_logs_path
+end
+
+When /^I go to the clothing logs page for "([^"]*)"$/ do |arg1|
+  visit clothing_logs_clothing_path(Clothing.find_by_name(arg1))
 end
 
 When /^I go to the clothing page for "([^"]*)"$/ do |arg1|

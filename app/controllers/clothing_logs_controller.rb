@@ -20,11 +20,13 @@ class ClothingLogsController < ApplicationController
   end
 
   def matches
-    authorize! :manage, current_account
-    params[:start] ||= current_account.beginning_of_week.advance(:weeks => -4).strftime('%Y-%m-%d')
-    params[:end] ||= Time.zone.now.strftime('%Y-%m-%d')
+    authorize! :manage_account, current_account
+    prepare_filters :date_range
+    params[:start] ||= current_account.clothing_matches.minimum(:date)
+    params[:end] ||= Time.zone.now.tomorrow.strftime('%Y-%m-%d')
     range = Time.zone.parse(params[:start])..Time.zone.parse(params[:end])
-    @clothing_matches = current_account.clothing_matches #.where(:clothing_log_date => range)
+    @clothing_matches = current_account.clothing_matches.range(range).includes(:clothing_a, :clothing_b).order('clothing_log_date DESC')
+    @clothing_matches = @clothing_matches.paginate(page: params[:page]) unless request.format.csv?
     respond_with_data @clothing_matches
   end
   # GET /clothing_logs/1
@@ -59,17 +61,20 @@ class ClothingLogsController < ApplicationController
         @clothing = Clothing.where(:id => params[:clothing]).first
         params[:clothing_id] = @clothing.id
       else
-        @clothing = Clothing.new(:name => params[:clothing])
-        @clothing.user_id = current_account.id
-        @clothing.save
-        flash[:notice] = "Saved new clothing ID #{@clothing.id}."
+        @clothing = current_account.clothing.where(name: params[:clothing]).first
+        unless @clothing
+          @clothing ||= current_account.clothing.new(name: params[:clothing])
+          @clothing.save
+          add_flash :notice, "Saved new clothing ID #{@clothing.id}."
+        end
         params[:clothing_id] = @clothing.id
       end
     end
     if (params[:date] && params[:clothing_id]) then
-      @clothing_log = current_account.clothing_logs.new(:date => params[:date], :clothing_id => params[:clothing_id])
+      @clothing_log = current_account.clothing_logs.new(date: params[:date], clothing_id: params[:clothing_id])
     else
       @clothing_log = current_account.clothing_logs.new(params[:clothing_log])
+      @clothing_log.clothing = @clothing if @clothing
     end
     @clothing_log.user_id = current_account.id
     params[:outfit_id] ||= 1
@@ -104,7 +109,7 @@ class ClothingLogsController < ApplicationController
   def by_date
     authorize! :view_clothing_logs, current_account
     @date = Time.zone.parse(params[:date])
-    @clothing_logs = current_account.clothing_logs.where('date = ?', @date.to_date).includes(:clothing).order('outfit_id, clothing.clothing_type')
+    @clothing_logs = current_account.clothing_logs.where('date >= ? AND date < ?', @date.to_date, @date.to_date + 1.day).includes(:clothing).order('outfit_id, clothing.clothing_type')
     @previous_date = @date - 1.day
     @next_date = @date + 1.day
     respond_with @clothing_logs

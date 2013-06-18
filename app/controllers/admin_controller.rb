@@ -1,18 +1,30 @@
 class AdminController < ApplicationController
+  before_filter :authenticate_user!
+  before_filter do
+    redirect_to :new_user_session_path unless current_user && current_user.admin?
+  end
   def index
-    authorize! :manage, User
     @signups = Signup.order('created_at DESC')
     @users = User.order('created_at DESC')
   end
 
+  def index
+    @list = Signup.order('created_at DESC')
+    respond_with @list
+  end
+
   def become
-    authorize! :manage, User
     sign_in User.find(params[:id]), :bypass => true
     redirect_to root_url
   end
-  
-  def activity
+
+  def signups
     authorize! :manage, User
+    @list = Signup.order('created_at DESC')
+    respond_with @list
+  end
+
+  def activity
     @totals = Hash.new 
     threshold = Time.zone.now.to_date - 30.days
     ['Clothing', 'ClothingLog', 'Record', 'Stuff'].each do |type_name|
