@@ -71,7 +71,7 @@ class ClothingController < ApplicationController
     respond_with @clothing
   end
 
-  def logs
+  def clothing_logs
     @clothing = current_account.clothing.find(params[:id])
     authorize! :view, @clothing
     if request.format.html?
@@ -209,12 +209,9 @@ class ClothingController < ApplicationController
 
   def graph
     authorize! :view_clothing, current_account
-    # Create a bipartite graph of tops and bottoms
-    @tops = current_account.clothing.tagged_with('top')
-    @bottoms = current_account.clothing.tagged_with('bottom')
     @start = params[:start] || current_account.clothing_logs.minimum(:date)
     @end = params[:end] || current_account.clothing_logs.maximum(:date)
-    @matches = current_account.clothing_matches.joins('INNER JOIN clothing_logs ON clothing_log_a_id = clothing_logs.id').where('clothing_a_id < clothing_b_id AND clothing_logs.date >= ? AND clothing_logs.date <= ?', @start, @end).count(:group => ['clothing_a_id', 'clothing_b_id'])
+    @matches = ClothingMatch.prepare_graph(current_account, @start..@end)
   end
 
   def bulk

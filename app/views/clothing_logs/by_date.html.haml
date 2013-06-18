@@ -13,5 +13,9 @@
   .clothes
     .entry
       - @clothing_logs.each do |item|
-        .item= clothing_thumbnail(item.clothing, :size => :large)
+        .item
+          = clothing_thumbnail(item.clothing, :size => :large)
+          %br
+          = link_to(item.clothing.name, item)
+          
   .clear-both

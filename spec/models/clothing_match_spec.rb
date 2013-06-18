@@ -1,3 +1,5 @@
+require 'spec_helper'
+
 describe ClothingMatch do
   before(:each) do
     clothing = FactoryGirl.create(:clothing)
@@ -46,6 +48,47 @@ describe ClothingMatch do
                               match.clothing_log_b_id.to_s,
                               match.clothing_b.id.to_s,
                               match.clothing_b.name.to_s]
+  end
+
+  describe '.prepare_graph' do
+    before do
+      @u = create(:user, :confirmed)
+      @clothes = Array.new
+      6.times do 
+        @clothes << create(:clothing, user: @u)
+      end
+      create(:clothing, user: create(:user, :confirmed)) # should not be included
+      create(:clothing_log, user: @u, date: Date.new(2013, 1, 1), clothing: @clothes[0])
+      create(:clothing_log, user: @u, date: Date.new(2013, 1, 1), clothing: @clothes[1])
+      create(:clothing_log, user: @u, date: Date.new(2013, 1, 1), clothing: @clothes[2], outfit_id: 2)
+      create(:clothing_log, user: @u, date: Date.new(2013, 1, 1), clothing: @clothes[3], outfit_id: 2)
+      create(:clothing_log, user: @u, date: Date.new(2013, 1, 2), clothing: @clothes[0])
+      create(:clothing_log, user: @u, date: Date.new(2013, 1, 2), clothing: @clothes[4])
+      create(:clothing_log, user: @u, date: Date.new(2013, 1, 3), clothing: @clothes[0])
+      create(:clothing_log, user: @u, date: Date.new(2013, 1, 3), clothing: @clothes[4])
+      create(:clothing_log, user: @u, date: Date.new(2013, 1, 5), clothing: @clothes[5])
+    end
+    context "when given a time range" do
+      subject { ClothingMatch.prepare_graph(@u, Date.new(2013, 1, 1)..Date.new(2013, 1, 2)) }
+      it "contains only clothing nodes for the given time range" do
+        subject[:clothing].size.should == 4
+      end
+      it "contains only clothing matches for the given time range" do
+        subject[:matches].size.should == 2
+      end
+    end
+    context "when analyzing all time" do
+      subject { ClothingMatch.prepare_graph(@u) }
+      it "contains all the clothing nodes" do
+        subject[:clothing].size.should == 5
+      end
+      it "summarizes the clothing matches" do
+        subject[:matches].size.should == 3   # unidirectional: 0 <-> 1, 2 <-> 3, 0 <-> 4, 5 is by itself so no match
+      end
+      it "has weighted edges" do
+        subject[:matches].should include({source: @clothes[0].id, target: @clothes[4].id, count: 2})
+      end
+    end
   end
 
 end

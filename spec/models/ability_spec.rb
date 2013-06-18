@@ -40,6 +40,7 @@ describe Ability do
       @user = FactoryGirl.create(:confirmed_user)
     end
     subject { Ability.new(@user) }
+    it { should be_able_to(:manage_account, @user) }
     it { should_not be_able_to(:manage, User) }
     it { should be_able_to(:create, Stuff) }
     it "can access own info" do

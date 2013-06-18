@@ -98,4 +98,5 @@ class Clothing < ActiveRecord::Base
   end
 
   fires :new, :on => :create, :actor => :user
+
 end

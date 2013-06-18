@@ -32,7 +32,6 @@ describe TimelineEventsController do
     it "assigns all timeline_events as @timeline_events" do
       timeline_event = TimelineEvent.create! valid_attributes
       get :index
-      puts response.body
       assigns(:timeline_events).should include(timeline_event)
     end
   end

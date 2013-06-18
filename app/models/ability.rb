@@ -7,13 +7,13 @@ class Ability
       can :manage, :all
     elsif !user.id.blank?
       [Clothing, ClothingLog, Context, ClothingMatch, CsaFood, Day, DecisionLog, Decision, Food, LibraryItem, LocationHistory, Location, MeasurementLog, Measurement, Stuff, TimeRecord, TorontoLibrary, Memory, TapLogRecord, RecordCategory].each do |item|
-        can :manage, item, :user_id => user.id
+        can :manage, item, user_id: user.id
         can :create, item
       end
-      can :view_food, User, :id => user.id
-      can :manage_account, User, :id => user.id
-      can :delete, User, :id => user.id
-      can :view_tap_log_records, User, :id => user.id
+      can :view_food, User, id: user.id
+      can :manage_account, User, id: user.id
+      can :delete, User, id: user.id
+      can :view_tap_log_records, User, id: user.id
       can :view_time, User
       can :send_feedback, User
     end

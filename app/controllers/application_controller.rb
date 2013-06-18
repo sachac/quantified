@@ -87,6 +87,7 @@ class ApplicationController < ActionController::Base
 
   def prepare_filters(symbols)
     @filters = Hash.new
+    symbols = [symbols] unless symbols.is_a? Array
     symbols.each do |s|
       case s
       when :date_range
@@ -130,12 +131,11 @@ class ApplicationController < ActionController::Base
   protected
   def respond_with_data(data)
     if !request.format.csv?
-      temp_data = data.paginate :page => params[:page]
       data = {
-        :current_page => temp_data.current_page,
-        :per_page => temp_data.per_page,
-        :total_entries => temp_data.total_entries,
-        :entries => temp_data
+        :current_page => data.current_page,
+        :per_page => data.per_page,
+        :total_entries => data.total_entries,
+        :entries => data
       }
     end
     respond_with(data)

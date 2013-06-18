@@ -77,6 +77,9 @@ When /^I save it$/ do
 end
 
 When /^I delete it$/ do
+  unless page.has_link?(I18n.t('app.general.delete'))
+    click_link I18n.t('app.general.edit')
+  end
   click_link I18n.t('app.general.delete')
 end
 
@@ -237,4 +240,20 @@ end
 
 Given /^there is another user$/ do
   @other = FactoryGirl.create(:confirmed_user, username: 'other')
+end
+
+Given /^the date is ([\-0-9]+)$/ do |date|
+  Timecop.travel(Time.zone.parse(date))
+end
+
+When(/^I edit it$/) do
+  click_link('Edit')
+end
+
+Then(/^the page should contain "(.*?)"$/) do |arg1|
+  page.body.should match(arg1)
+end
+
+Then(/^the page should not contain "(.*?)"$/) do |arg1|
+  page.body.should_not match(arg1)
 end
