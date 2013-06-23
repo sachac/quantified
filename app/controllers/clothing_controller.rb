@@ -183,7 +183,7 @@ class ClothingController < ApplicationController
         @tops[l.clothing_id] ||= @clothes[l.clothing_id] 
       end
     end
-    
+
     # Match tops and bottoms
     bottoms.each do |date, outfit|
       outfit.each do |id, clothing_id|
@@ -210,8 +210,9 @@ class ClothingController < ApplicationController
   def graph
     authorize! :view_clothing, current_account
     @start = params[:start] || current_account.clothing_logs.minimum(:date)
-    @end = params[:end] || current_account.clothing_logs.maximum(:date)
+    @end = params[:end] || (current_account.clothing_logs.maximum(:date) + 1.day)
     @matches = ClothingMatch.prepare_graph(current_account, @start..@end)
+    respond_with @matches
   end
 
   def bulk
@@ -292,7 +293,6 @@ class ClothingController < ApplicationController
     # logger.info response.headers.inspect
     # # #Make sure we don't render anything
     # render :nothing => true 
-    logger.info @clothing.image.path(params[:style])
     send_file @clothing.image.path(params[:style]), :type => @clothing.image_content_type, :disposition => 'inline' 
   end
 

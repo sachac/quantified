@@ -1,3 +1,12 @@
+
+Then /^display the page$/ do
+  puts page.body
+end
+
+Then /^display the page text$/ do
+  puts page.text
+end
+
 When /^I go to the dashboard$/ do
   visit root_path
 end
@@ -242,6 +251,10 @@ Given /^there is another user$/ do
   @other = FactoryGirl.create(:confirmed_user, username: 'other')
 end
 
+Given /^there is a demo user$/ do
+  @demo = FactoryGirl.create(:user, :demo, username: 'demo')
+end
+
 Given /^the date is ([\-0-9]+)$/ do |date|
   Timecop.travel(Time.zone.parse(date))
 end
@@ -256,4 +269,33 @@ end
 
 Then(/^the page should not contain "(.*?)"$/) do |arg1|
   page.body.should_not match(arg1)
+end
+
+
+Given(/^I go to the menu$/) do
+  visit menu_path
+end
+
+When(/^I sign up as a new user$/) do
+  visit new_user_path
+  fill_in 'user[email]', with: 'signup@example.com'
+  click_button('Sign up')
+end
+
+When(/^I sign up as a new user when I already have an account$/) do
+  u = create(:user)
+  visit new_user_path
+  fill_in 'user[email]', with: u.email
+  click_button('Sign up')
+end
+
+When(/^I send feedback$/) do
+  visit feedback_path
+  fill_in 'email', with: 'test@example.com'
+  fill_in 'message', with: 'Feedback message goes here'
+  click_button('Send feedback')
+end
+
+Then /^the administrator should receive a feedback email$/ do 
+  unread_emails_for(ApplicationMailer::ADMIN_ADDRESS).select { |m| m.subject =~ /Feedback/ }.size.should >= 1
 end

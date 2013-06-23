@@ -103,6 +103,7 @@ group :test do
   gem 'spork'
   gem 'guard-rspec'
   gem 'guard-spork'
+  gem 'guard-spring'
   gem 'cucumber'
   gem 'fakeweb'
   gem 'simplecov', :require => false

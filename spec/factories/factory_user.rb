@@ -9,6 +9,10 @@ FactoryGirl.define do
     trait(:confirmed) do |f|
       f.after(:create) { |user| user.confirm! }
     end
+    trait(:demo) do
+      role 'demo'
+      after(:create) { |user| user.confirm! }
+    end
   end
   factory :confirmed_user, :parent => :user do |f|
     f.after(:create) { |user| user.confirm! }

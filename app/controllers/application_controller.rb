@@ -19,7 +19,7 @@ class ApplicationController < ActionController::Base
   end
 
   def current_account
-    current_user || User.first
+    current_user || User.where('role=?', 'demo').first || User.where('email=?', 'sacha@sachachua.com').first 
   end  
 
   protected

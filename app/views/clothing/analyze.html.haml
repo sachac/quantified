@@ -26,7 +26,7 @@ A/B/etc. distinguish multiple outfits worn on the same day.
       - date = date + 1.day
     %th Total
   - @clothes.each do |id,item|
-    %tr
+    %tr{id: "log_row_#{id}"}
       %th.left= link_to item.name, item
       - date = @start_date
       - row_total = 0
@@ -51,7 +51,7 @@ A/B/etc. distinguish multiple outfits worn on the same day.
 %h2 Matches
 
 %table.table.table-bordered
-  %tr 
+  %tr
     %th Bottoms \ Tops
     - @tops.each do |id, clothing|
       - if clothing
@@ -59,11 +59,11 @@ A/B/etc. distinguish multiple outfits worn on the same day.
       - else
         %th &nbsp;
   - @sorted_matches.each do |id, top_list|
-    %tr 
+    %tr{id: "match_row_#{id}"}
       %th= id == 0 ? "By itself" : clothing_thumbnail(@clothes[id])
       - @tops.each do |top_id, t|
         - if top_list[top_id] then
-          %td= (top_list[top_id].sort.join "<br>").html_safe
+          %td{id: "match_#{id}_#{top_id}"}= "(#{top_list[top_id].size}): ".html_safe + (top_list[top_id].sort.join ",").html_safe
         - else
           %td &nbsp;
    

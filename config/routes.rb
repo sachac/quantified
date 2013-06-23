@@ -126,11 +126,14 @@ Home::Application.routes.draw do
   match 'clothing/missing_info' => 'clothing#missing_info', :as => :missing_clothing_information
   match 'clothing/:id/save_color' => 'clothing#save_color', :as => :save_clothing_color, :via => :post
   match 'clothing/:id/:color' => 'clothing#delete_color', :as => :delete_clothing_color, :via => :delete
+  match 'clothing_logs/by_date/:date' => 'clothing_logs#by_date', :as => :clothing_logs_by_date
+  match 'clothing/tag/:id' => 'clothing#tag', :as => :clothing_by_tag
+  match 'clothing/status/:status' => 'clothing#by_status', :as => :clothing_by_status
+  match 'clothing/analyze(/:start(/:end))' => 'clothing#analyze', :as => :analyze_clothing
+  match 'clothing/graph(/:start(/:end))' => 'clothing#graph', :as => :graph_clothing
   resources :clothing do
     collection do
       get :autocomplete_clothing_name
-      get :analyze
-      get :graph
     end
     member do
       get :clothing_logs
@@ -142,10 +145,6 @@ Home::Application.routes.draw do
       get :matches
     end
   end
-  match 'clothing_logs/by_date/:date' => 'clothing_logs#by_date', :as => :clothing_logs_by_date
-  match 'clothing/tag/:id' => 'clothing#tag', :as => :clothing_by_tag
-  match 'clothing/status/:status' => 'clothing#by_status', :as => :clothing_by_status
-  match 'clothing/analyze(/:start(/:end))' => 'clothing#analyze', :as => :clothing_analyze
   match 'library/update' => 'library#update', :as => :library_refresh
   # The priority is based upon order of creation:
   # first created -> highest priority.

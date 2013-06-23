@@ -1,8 +1,9 @@
 class ApplicationMailer < ActionMailer::Base
-  default :from => 'sacha@quantifiedawesome.com'
+  ADMIN_ADDRESS = 'sacha@quantifiedawesome.com'
+  default :from => ApplicationMailer::ADMIN_ADDRESS
   def feedback(info)
     @info = info
-    mail(:to => 'sacha@quantifiedawesome.com',
+    mail(:to => ApplicationMailer::ADMIN_ADDRESS,
          :from => info[:email],
          :subject => 'Quantified Awesome: Feedback')
   end

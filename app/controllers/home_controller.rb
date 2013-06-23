@@ -37,11 +37,11 @@ class HomeController < ApplicationController
   end
 
   def feedback
-    authorize! :send_feedback, current_account
+    authorize! :send_feedback, User
   end
 
   def send_feedback
-    authorize! :send_feedback, current_account
+    authorize! :send_feedback, User
     info = params
     if !params[:message].blank?
       if current_account && current_account.id != 1
@@ -49,7 +49,8 @@ class HomeController < ApplicationController
         info[:email] = current_account.email
       end
       ApplicationMailer.feedback(info).deliver
-      go_to root_path, :notice => "Your feedback has been sent. Thank you!"
+      add_flash notice: "Your feedback has been sent. Thank you!"
+      go_to root_path
     else
       add_flash :error, "Please fill in your feedback message."
       render 'feedback'

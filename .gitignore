@@ -16,3 +16,4 @@ public/assets/*
 config/newrelic.yml
 coverage
 public/coverage
+public/f/
