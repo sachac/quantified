@@ -97,6 +97,7 @@ group :development, :test do
   gem 'guard-cucumber'
   gem 'timecop'
   gem 'spring'
+  gem 'email_spec'
 end
 group :test do
   gem 'spork'

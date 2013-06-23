@@ -5,7 +5,7 @@ Home::Application.routes.draw do
   match 'auth/:service' => 'sessions#setup', :as => :oauth
   resources :services, :only => [:index, :create, :destroy]
 
-  match 'admin' => 'admin#index'
+  match 'admin' => 'admin#index', :as => 'admin'
   match 'admin/activity' => 'admin#activity'
   match 'admin/signups' => 'admin#signups'
   match 'admin/become/:id' => 'admin#become', :as => :become_user, :via => :post

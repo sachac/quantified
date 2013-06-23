@@ -63,23 +63,24 @@ class ContextsController < ApplicationController
   def update
     @context = current_account.contexts.find(params[:id])
     authorize! :update, @context
-    rules = params[:context][:context_rules_attributes] if params[:context] 
+    rules = params[:context][:context_rules_attributes] if params[:context]
     if rules
       rules.each do |k, v|
-        if v['stuff'].blank? or v['location'].blank?
-          params[:context][:context_rules_attributes][k]['_destroy'] = 1
+        if v[:stuff].blank? or v[:location].blank?
+          params[:context][:context_rules_attributes][k][:stuff] = nil
+          params[:context][:context_rules_attributes][k][:location] = nil
+          params[:context][:context_rules_attributes][k][:_destroy] = 1
         else
-          location = @account.get_location(v['location'])
-          stuff = @account.stuff.find_by_name(v['stuff'])
+          location = @account.get_location(v[:location])
+          stuff = @account.stuff.find_by_name(v[:stuff])
           if stuff.nil?
-            stuff = @account.stuff.create(:name => v['stuff'], :location => location, :home_location => location, :status => 'active', :stuff_type => 'stuff')
+            stuff = @account.stuff.create(:name => v[:stuff], :location => location, :home_location => location, :status => 'active', :stuff_type => 'stuff')
           end
-          params[:context][:context_rules_attributes][k]['stuff'] = stuff
-          params[:context][:context_rules_attributes][k]['location'] = location
+          params[:context][:context_rules_attributes][k][:stuff] = stuff
+          params[:context][:context_rules_attributes][k][:location] = location
         end
       end
     end
-    logger.info "New context rules attributes " + params[:context][:context_rules_attributes].inspect
     if @context.update_attributes(params[:context])
       add_flash :notice, 'Context was successfully updated.'
     end
@@ -92,7 +93,7 @@ class ContextsController < ApplicationController
     @context = current_account.contexts.find(params[:id])
     authorize! :delete, @context
     @context.destroy
-    respond_with @context, :location => contexts_url
+    respond_with @context, :location => contexts_path
   end
 
   def start
@@ -101,7 +102,7 @@ class ContextsController < ApplicationController
     authorize! :start, @context
     @in_place = @context.context_rules.in_place
     @out_of_place = @context.context_rules.out_of_place
-    respond_with({ :in_place => @in_place, :out_of_place => @out_of_place })
+    respond_with({ in_place: @in_place, out_of_place: @out_of_place })
   end
 
   def complete

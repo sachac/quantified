@@ -3,6 +3,9 @@ require 'rubygems'
 require 'database_cleaner'
 require 'database_cleaner/cucumber'
 require 'factory_girl'
+require 'action_mailer'
+require 'email_spec'
+require 'email_spec/cucumber'
 #uncomment the following line to use spork with the debugger
 #require 'spork/ext/ruby-debug'
 
