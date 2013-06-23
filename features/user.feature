@@ -20,15 +20,9 @@ Feature: Users
   Scenario: Sign up
     When I sign up as a new user
     Then I should see "Thank you for your interest!"
-  Scenario: Try to sign up as someone who already has an account
-    When I sign up as a new user when I already have an account
-    Then I should see a message to contact the admin
   Scenario: Send feedback
     When I send feedback
     Then the system should e-mail the administrator
     And I should see "Thank you!"
-  Scenario: Send blank feedback
-    When I send blank feedback
-    Then I should see "Please fill in your feedback message."
 
 
