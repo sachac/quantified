@@ -155,7 +155,7 @@ Feature: Clothing
     And the page should not contain "blue jeans"
   Scenario: Analyze clothing
     Given I have the following clothing logs:
-      |       Date | Clothing    | Type   |
+      |       Date | Clothing    | Tags   |
       | 2011-11-01 | red shirt   | top    |
       | 2011-11-01 | black pants | bottom |
       | 2011-11-02 | blue jeans  | bottom |
@@ -165,26 +165,27 @@ Feature: Clothing
       | 2011-11-03 | red shirt   | top    |
       | 2011-11-03 | blue jeans  | bottom |
       | 2011-11-03 | black sweater | sweater |
+    And the date is 2011-11-04
     When I analyze my clothes
     Then I should see that "red shirt" was worn 2 times with "black pants"
     And I should see that "white shirt" was worn 1 time with "blue jeans"
     And I should see that "red shirt" was worn 1 time with "blue jeans"
-    And I should not see "black sweater"
   Scenario: Graph clothing choices
     Given I have the following clothing logs:
-      |       Date | Clothing    | Type   |
-      | 2011-11-01 | red shirt   | top    |
-      | 2011-11-01 | black pants | bottom |
-      | 2011-11-02 | blue jeans  | bottom |
-      | 2011-11-02 | white shirt | top    |
-      | 2011-11-03 | red shirt   | top    |
-      | 2011-11-03 | black pants | bottom |
-      | 2011-11-03 | red shirt   | top    |
-      | 2011-11-03 | blue jeans  | bottom |
-      | 2011-11-03 | black sweater | sweater |
+      |       Date | Clothing      | Tags    |
+      | 2011-11-01 | red shirt     | top     |
+      | 2011-11-01 | black pants   | bottom  |
+      | 2011-11-02 | blue jeans    | bottom  |
+      | 2011-11-02 | white shirt   | top     |
+      | 2011-11-03 | red shirt     | top     |
+      | 2011-11-03 | black pants   | bottom  |
+      | 2011-11-04 | red shirt     | top     |
+      | 2011-11-04 | blue jeans    | bottom  |
+      | 2011-11-05 | black sweater | sweater |
+    And the date is 2011-11-06
     When I graph my clothes
-    Then I should see that "red shirt" was worn 2 times with "black pants"
-    And I should see that "white shirt" was worn 1 time with "blue jeans"
-    And I should see that "red shirt" was worn 1 time with "blue jeans"
+    Then I should see that "red shirt" and "black pants" are connected with weight 2
+    And I should see that "white shirt" and "blue jeans" are connected with weight 1
+    And I should see that "red shirt" and "blue jeans" are connected with weight 1
 
    

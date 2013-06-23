@@ -196,6 +196,9 @@ GEM
       childprocess (>= 0.2.3)
       guard (>= 1.1)
       spork (>= 0.8.4)
+    guard-spring (0.0.3)
+      guard
+      spring
     haml (4.0.3)
       tilt
     haml-rails (0.4)
@@ -449,6 +452,7 @@ DEPENDENCIES
   guard-cucumber
   guard-rspec
   guard-spork
+  guard-spring
   haml
   haml-rails (= 0.4)
   handles_sortable_columns

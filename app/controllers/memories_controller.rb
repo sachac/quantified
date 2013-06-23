@@ -23,7 +23,7 @@ class MemoriesController < ApplicationController
   # GET /memories/1
   # GET /memories/1.xml
   def show
-    @memory = Memory.find(params[:id])
+    @memory = current_account.memories.find(params[:id])
     authorize! :view, @memory
     respond_with @memory
   end
@@ -32,21 +32,21 @@ class MemoriesController < ApplicationController
   # GET /memories/new.xml
   def new
     authorize! :create, Memory
-    @memory = Memory.new
+    @memory = current_account.memories.new
     @memory.access = 'public'
     respond_with @memory
   end
 
   # GET /memories/1/edit
   def edit
-    @memory = Memory.find(params[:id])
+    @memory = current_account.memories.find(params[:id])
     authorize! :update, @memory
   end
 
   # POST /memories
   # POST /memories.xml
   def create
-    @memory = Memory.new(params[:memory])
+    @memory = current_account.memories.new(params[:memory])
     authorize! :create, Memory
     @memory.user = current_account
     if @memory.save
@@ -60,7 +60,7 @@ class MemoriesController < ApplicationController
   # PUT /memories/1
   # PUT /memories/1.xml
   def update
-    @memory = Memory.find(params[:id])
+    @memory = current_account.memories.find(params[:id])
     authorize! :update, @memory
     if @memory.update_attributes(params[:memory])
       add_flash :notice, 'Memory was successfully updated.'
@@ -73,13 +73,13 @@ class MemoriesController < ApplicationController
   # DELETE /memories/1
   # DELETE /memories/1.xml
   def destroy
-    @memory = Memory.find(params[:id])
+    @memory = current_account.memories.find(params[:id])
     authorize! :delete, @memory
     @memory.destroy
 
     respond_to do |format|
-      format.html { redirect_to(memories_url) }
-      format.xml  { head :ok }
+      format.html { go_to(memories_url) }
+      format.any  { head :ok }
     end
   end
 end
