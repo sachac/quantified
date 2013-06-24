@@ -110,4 +110,14 @@ class TorontoLibrariesController < ApplicationController
     end
     redirect_to toronto_library_path(@toronto_library)
   end
+
+  def refresh_all
+    authorize! :manage_account, current_account
+    current_account.toronto_libraries.each do |l|
+      l.refresh_items
+    end
+    redirect_to(root_path, :notice => "Library books refreshed.") and return
+  end
+
+
 end

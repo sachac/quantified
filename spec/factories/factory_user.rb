@@ -6,6 +6,10 @@ FactoryGirl.define do
     role 'user'
     password { Forgery(:basic).password }
     password_confirmation { password }
+    trait :admin do
+      role 'admin'
+      after(:create) { |user| user.confirm! }
+    end
     trait(:confirmed) do |f|
       f.after(:create) { |user| user.confirm! }
     end

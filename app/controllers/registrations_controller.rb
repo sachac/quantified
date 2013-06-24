@@ -9,8 +9,4 @@ class RegistrationsController < Devise::RegistrationsController
       respond_with resource
     end
   end
-  protected
-  def after_inactive_sign_up_path_for(resource)
-    thanks_for_signing_up_path
-  end        
 end

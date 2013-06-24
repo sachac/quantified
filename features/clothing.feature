@@ -155,16 +155,17 @@ Feature: Clothing
     And the page should not contain "blue jeans"
   Scenario: Analyze clothing
     Given I have the following clothing logs:
-      |       Date | Clothing    | Tags   |
-      | 2011-11-01 | red shirt   | top    |
-      | 2011-11-01 | black pants | bottom |
-      | 2011-11-02 | blue jeans  | bottom |
-      | 2011-11-02 | white shirt | top    |
-      | 2011-11-03 | red shirt   | top    |
-      | 2011-11-03 | black pants | bottom |
-      | 2011-11-03 | red shirt   | top    |
-      | 2011-11-03 | blue jeans  | bottom |
-      | 2011-11-03 | black sweater | sweater |
+      |       Date | Clothing      | Tags    |
+      | 2011-10-31 | red dress     | dress   |
+      | 2011-11-01 | red shirt     | top     |
+      | 2011-11-01 | black pants   | bottom  |
+      | 2011-11-02 | blue jeans    | bottom  |
+      | 2011-11-02 | white shirt   | top     |
+      | 2011-11-03 | red shirt     | top     |
+      | 2011-11-03 | black pants   | bottom  |
+      | 2011-11-04 | red shirt     | top     |
+      | 2011-11-04 | blue jeans    | bottom  |
+      | 2011-11-04 | black sweater | sweater |
     And the date is 2011-11-04
     When I analyze my clothes
     Then I should see that "red shirt" was worn 2 times with "black pants"
@@ -181,6 +182,7 @@ Feature: Clothing
       | 2011-11-03 | black pants   | bottom  |
       | 2011-11-04 | red shirt     | top     |
       | 2011-11-04 | blue jeans    | bottom  |
+      | 2011-10-31 | red dress     | dress   |
       | 2011-11-05 | black sweater | sweater |
     And the date is 2011-11-06
     When I graph my clothes
