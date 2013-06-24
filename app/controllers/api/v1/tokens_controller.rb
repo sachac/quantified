@@ -34,11 +34,11 @@ class Api::V1::TokensController  < ApplicationController
       status = 400; message = "Invalid token"
     else
       @user.reset_authentication_token!
-      status = 200; message = {:token => params[:token]}
+      status = 200; message = {:token => @user.authentication_token}
     end
     respond_to do |format|
-      format.json { render(:status => status, :json => {:message=> message}) and return }
-      format.xml { render(:status => status, :xml => {:message=> message}) and return }
+      format.json { render status: status, json: {message: message} }
+      format.xml { render status: status, xml: {message: message} }
     end
     return
   end  

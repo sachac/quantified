@@ -16,6 +16,13 @@ describe LocationHistoriesController do
       assigns(:data).last.location.should == @stuff.location
     end
   end
+  describe 'GET /location_histories' do
+    it "returns the data" do
+      get :index
+      assigns(:data)[:entries].last.stuff.should == @stuff
+      assigns(:data)[:entries].last.location.should == @stuff.location
+    end
+  end
   describe 'GET /location_histories/1' do
     it "shows the location history" do
       x = LocationHistory.last

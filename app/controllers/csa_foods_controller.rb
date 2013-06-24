@@ -52,8 +52,8 @@ class CsaFoodsController < ApplicationController
                             :quantity => params[:csa_food][:quantity], 
                             :unit => params[:csa_food][:unit],
                             :date_received => params[:csa_food][:date_received] || Time.zone.now.to_date)
-    if result
-      add_flash :notice, 'Logged.'
+    if @csa_food
+      add_flash :notice, I18n.t('csa_food.logged')
     end
     respond_with @csa_food, :location => new_csa_food_path
   end
@@ -64,7 +64,7 @@ class CsaFoodsController < ApplicationController
     authorize! :manage_account, current_account
     @csa_food = current_account.csa_foods.find(params[:id])
     if @csa_food.update_attributes(params[:csa_food])
-      add_flash :notice, 'CSA food successfully updated.'
+      add_flash :notice, I18n.t('csa_food.updated')
     end
     respond_with @csa_food, :location => csa_foods_path
   end
@@ -84,9 +84,9 @@ class CsaFoodsController < ApplicationController
                        :food => params[:food], 
                        :quantity => params[:quantity].to_f, 
                        :unit => params[:unit],
-                       :date_received => Time.zone.parse(params[:date]))
+                       :date_received => params[:date] ? Time.zone.parse(params[:date]) : Time.zone.now)
     if @log
-      add_flash :notice, 'Food successfully logged.'
+      add_flash :notice, I18n.t('csa_food.logged')
       respond_with @log, :location => csa_foods_path(:date => params[:date])
     else
       respond_with :error, :location => csa_foods_path(:date => params[:date])

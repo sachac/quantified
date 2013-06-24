@@ -15,6 +15,11 @@ class Record < ActiveRecord::Base
     end
   end
 
+  def set_data(name, value)
+    self.data ||= Hash.new
+    self.data[name] = value
+  end
+  
   def end_timestamp_must_be_after_start
     if !end_timestamp.blank? and end_timestamp < timestamp
       errors.add(:end_timestamp, 'must be after beginning of record')

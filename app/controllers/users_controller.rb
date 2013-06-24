@@ -1,14 +1,11 @@
 class UsersController < ApplicationController
+  respond_to :html, :xml, :json
   # GET /users
   # GET /users.xml
   def index
     authorize! :manage, User
     @users = User.all
-
-    respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @users }
-    end
+    respond_with @users
   end
 
   # GET /users/1
@@ -16,10 +13,7 @@ class UsersController < ApplicationController
   def show
     @user = User.find(params[:id])
     authorize! :view, @user
-    respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @user }
-    end
+    respond_with @user
   end
 
   # GET /users/new
@@ -27,33 +21,25 @@ class UsersController < ApplicationController
   def new
     @user = User.new
     authorize! :create, User
-    respond_to do |format|
-      format.html # new.html.erb
-      format.xml  { render :xml => @user }
-    end
+    respond_with @user
   end
 
   # GET /users/1/edit
   def edit
     @user = User.find(params[:id])
     authorize! :manage_account, @user
+    respond_with @user
   end
 
   # POST /users
   # POST /users.xml
   def create
-    authorize! :create, User
+    authorize! :manage, User
     @user = User.new(params[:user])
-
-    respond_to do |format|
-      if @user.save
-        format.html { redirect_to(@user, :notice => 'User was successfully created.') }
-        format.xml  { render :xml => @user, :status => :created, :location => @user }
-      else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @user.errors, :status => :unprocessable_entity }
-      end
+    if @user.save
+      add_flash :notice, I18n.t('user.created')
     end
+    respond_with(@user)
   end
 
   # PUT /users/1
@@ -71,29 +57,21 @@ class UsersController < ApplicationController
       logger.info "Trying to set timezone? " + @user.settings.timezone
       params[:user].delete(:settings)
     end
-    respond_to do |format|
-      if @user.update_attributes(params[:user])
-        format.html { 
-          redirect_to(root_path, :notice => 'User was successfully updated.') 
-        }
-        format.xml  { head :ok }
-      else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @user.errors, :status => :unprocessable_entity }
-      end
+    if @user.update_attributes(params[:user])
+      add_flash :notice, I18n.t('user.updated')
     end
+    respond_with(@user)
   end
 
   # DELETE /users/1
   # DELETE /users/1.xml
   def destroy
     @user = User.find(params[:id])
-    authorize! :delete, @user
+    authorize! :manage, User
     @user.destroy
-
     respond_to do |format|
       format.html { redirect_to(users_url) }
-      format.xml  { head :ok }
+      format.any  { head :ok }
     end
   end
 
