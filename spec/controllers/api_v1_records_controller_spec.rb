@@ -35,6 +35,12 @@ describe Api::V1::RecordsController do
         response.body.should match 'Please disambiguate'
         response.body.should match '>ABCD<'
       end
+      it "keeps the time if specified" do
+        time = Time.zone.now - 1.hour
+        post :create, category: 'ABC', timestamp: time, format: :json
+        response.body.should match 'Please disambiguate'
+        Time.zone.parse(JSON.parse(response.body)['time']).should be_within(1.minute).of time
+      end
     end
   end
 end

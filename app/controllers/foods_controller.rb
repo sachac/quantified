@@ -47,8 +47,7 @@ class FoodsController < ApplicationController
   def create
     authorize! :manage_account, current_account
     @food = current_account.foods.new(params[:food])
-    @food.user_id = current_account.id
-    add_flash :notice, 'Food was successfully created.' if @food.save
+    add_flash :notice, I18n.t('food.created') if @food.save
     respond_with @food
   end
 
@@ -57,7 +56,7 @@ class FoodsController < ApplicationController
   def update
     authorize! :manage_account, current_account
     @food = current_account.foods.find(params[:id])
-    add_flash :notice, 'Food was successfully updated.' if @food.update_attributes(params[:food])
+    add_flash :notice, I18n.t('food.updated') if @food.update_attributes(params[:food])
     respond_with @food
   end
 

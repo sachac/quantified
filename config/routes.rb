@@ -83,7 +83,6 @@ Home::Application.routes.draw do
   resources :location_histories, only: [:index, :show, :destroy]
   match 'stuff/log', :via => :post, :as => :log_stuff
   match 'menu' => 'home#menu', :as => :menu
-  resources :days
 
   match 'csa_foods/bulk_update', :as => :bulk_update_csa_foods, :via => :post
   resources :csa_foods do
@@ -196,7 +195,8 @@ Home::Application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      resources :tokens, :only => [:create, :destroy]
+      match 'create' => 'tokens#create', via: :post
+      match 'destroy' => 'tokens#destroy', via: :delete
       resources :records
     end
     namespace :offline do

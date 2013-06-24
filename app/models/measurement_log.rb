@@ -3,6 +3,7 @@ class MeasurementLog < ActiveRecord::Base
   after_save :update_measurement
   after_destroy :update_measurement
   delegate :user, :to => :measurement, :allow_nil => false
+  delegate :user_id, :to => :measurement, :allow_nil => false
   def update_measurement
     x = self.measurement
     x.average = x.measurement_logs.average('value')

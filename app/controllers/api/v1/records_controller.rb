@@ -22,7 +22,7 @@ class Api::V1::RecordsController  < ApplicationController
         unless params[:timestamp].blank?
           time ||= params[:timestamp]
         end
-        time ||= Time.now
+        time ||= Time.zone.now
         status = 302
         message = {:message => 'Please disambiguate', :list => @list, :time => time}
       end

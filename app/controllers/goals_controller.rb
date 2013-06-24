@@ -6,10 +6,10 @@ class GoalsController < ApplicationController
   def index
     authorize! :manage_account, current_account
     @goals = current_account.goals
-    @goal_summary = Goal.check_goals(current_account)
     if request.format.csv?
       respond_with @goals
     else
+      @goal_summary = Goal.check_goals(current_account)
       respond_with({ :goals => @goals, :goal_summary => @goal_summary.values })
     end
   end
@@ -42,7 +42,7 @@ class GoalsController < ApplicationController
   def create
     authorize! :manage_account, current_account
     @goal = current_account.goals.new(params[:goal])
-    add_flash :notice, 'Goal was successfully created.' if @goal.save 
+    add_flash :notice, I18n.t('goals.created') if @goal.save 
     respond_with @goal
   end
 
@@ -51,7 +51,7 @@ class GoalsController < ApplicationController
   def update
     authorize! :manage_account, current_account
     @goal = current_account.goals.find(params[:id])
-    add_flash :notice, 'Goal was successfully updated.' if @goal.update_attributes(params[:goal])
+    add_flash :notice, I18n.t('goals.updated') if @goal.update_attributes(params[:goal])
     respond_with @goal
   end
 

@@ -11,4 +11,6 @@
 
 ActiveSupport::Inflector.inflections do |inflect|
   inflect.uncountable %w{ clothing stuff }
+  inflect.plural('potato', 'potatoes')
+  inflect.plural('tomato', 'tomatoes')
 end
