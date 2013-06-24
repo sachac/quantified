@@ -1,5 +1,5 @@
 class HomeController < ApplicationController
-  skip_authorization_check :only => [:sign_up, :feedback, :send_feedback]
+  skip_authorization_check :only => [:feedback, :send_feedback]
   def index
     authorize! :view_dashboard, current_account
     flash.keep
@@ -22,37 +22,20 @@ class HomeController < ApplicationController
     authorize! :view_dashboard, current_account
   end
 
-  def sign_up
-    if !params[:email].blank?
-      @new_user = Signup.create(:email => params[:email])
-      if @new_user.save!
-        logger.info "NEW USER #{@new_user.inspect}"
-        flash[:notice] = "Thank you for your interest!"
-        redirect_to root_path and return
-      else
-        flash[:error] = "Could not save information. Sorry! Could you please get in touch with me at sacha@sachachua.com instead?"
-      end
-    end
-    redirect_to new_user_session_path and return
-  end
-
   def feedback
     authorize! :send_feedback, User
+    @email = current_user ? current_user.email : ''
   end
 
   def send_feedback
     authorize! :send_feedback, User
-    info = params
     if !params[:message].blank?
-      if current_account && current_account.id != 1
-        info[:user_id] = current_account.id
-        info[:email] = current_account.email
-      end
-      ApplicationMailer.feedback(info).deliver
+      ApplicationMailer.feedback(params).deliver
       add_flash notice: "Your feedback has been sent. Thank you!"
       go_to root_path
     else
       add_flash :error, "Please fill in your feedback message."
+      @email = params[:email].blank? ? (current_user ? current_user.email : '') : params[:email]
       render 'feedback'
     end
   end

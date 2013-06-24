@@ -1,6 +1,6 @@
 class SessionsController < Devise::SessionsController
   def setup
-    render :status => 404
+    render json: {}, status: :not_found
   end
 
   def create

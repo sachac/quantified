@@ -7,17 +7,17 @@ describe Clothing do
   end
   describe '#update_hsl' do
     it "handles a color" do
-      o = build_stubbed(:clothing, name: 'foo', color: '112233')
+      o = create(:clothing, name: 'foo', color: '112233')
       o.hue.should be_within(0.01).of 0.583
       o.saturation.should be_within(0.01).of 0.5
       o.brightness.should be_within(0.01).of 13.3/100
     end
     it "handles black" do
-      o = build_stubbed(:clothing, name: 'foo', color: '000000')
+      o = create(:clothing, name: 'foo', color: '000000')
       o.brightness.should be_within(0.01).of 0
     end
     it "handles white" do
-      o = build_stubbed(:clothing, name: 'foo', color: 'ffffff')
+      o = create(:clothing, name: 'foo', color: 'ffffff')
       o.brightness.should be_within(0.01).of 1
     end
   end
@@ -31,13 +31,6 @@ describe Clothing do
         color.red.should be_within(0.01).of 255
         color.green.should be_within(0.01).of 25
         color.blue.should be_within(0.01).of 25
-      end
-    end
-    context "when the file does not exist" do
-      it "handles it gracefully" do
-        o = create(:clothing)
-        o.image = File.new('spec/fixtures/files/sample-color-ff0000.png')
-        o.get_color.should be_nil
       end
     end
     context "when multiple colors are specified" do
@@ -79,15 +72,26 @@ describe Clothing do
 
   describe ".guess_color" do
     context "when the position is specified" do
-      path = Rails.root.join('spec/fixtures/files/sample-color-ff0000.png')
-      Clothing.guess_color(path, '1', '1').should == 'ffffff'
+      it "guesses the color" do
+        path = Rails.root.join('spec/fixtures/files/sample-color-ff0000.png')
+        Clothing.guess_color(path, '1', '1').should == 'ffffff'
+      end
     end
     context "when the position is not specified" do
-      path = Rails.root.join('spec/fixtures/files/sample-color-ff0000.png')
-      Clothing.guess_color(path).should == 'ff1919'
+      it "averages the color" do
+        path = Rails.root.join('spec/fixtures/files/sample-color-ff0000.png')
+        Clothing.guess_color(path).should == 'ff1919'
+      end
     end
   end
 
+  describe '#add_color' do
+    it "replaces the color if blank" do
+      c = build_stubbed(:clothing)
+      c.add_color('ffffff')
+      c.color.should == 'ffffff'
+    end
+  end
   it "can be converted to XML" do
     o = create(:clothing, name: 'T-shirt')
     o.to_xml.should match 'T-shirt'

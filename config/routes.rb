@@ -6,8 +6,6 @@ Home::Application.routes.draw do
   resources :services, :only => [:index, :create, :destroy]
 
   match 'admin' => 'admin#index', :as => 'admin'
-  match 'admin/activity' => 'admin#activity'
-  match 'admin/signups' => 'admin#signups'
   match 'admin/become/:id' => 'admin#become', :as => :become_user, :via => :post
   match 'feedback' => 'home#send_feedback', :via => :post
   match 'feedback' => 'home#feedback', :as => :feedback
@@ -33,6 +31,7 @@ Home::Application.routes.draw do
       post :clone
     end
   end
+  match 'toronto_libraries/refresh_all' => 'toronto_libraries#refresh_all', :as => :library_refresh, :via => [:get, :post]
   match 'toronto_libraries/:id/request' => 'toronto_libraries#request_items', :as => :request_library_items, :via => :post
 
   match 'record_categories/autocomplete' => 'record_categories#autocomplete_record_category_full_name', :as => :autocomplete_record_category
@@ -81,7 +80,7 @@ Home::Application.routes.draw do
     end
   end
   
-  resources :location_histories
+  resources :location_histories, only: [:index, :show, :destroy]
   match 'stuff/log', :via => :post, :as => :log_stuff
   match 'menu' => 'home#menu', :as => :menu
   resources :days
@@ -97,7 +96,6 @@ Home::Application.routes.draw do
 
   devise_for :users, :path_prefix => 'd', :controllers => { :sessions => 'sessions', :registrations => 'registrations' }
   resources :users
-  match 'sign_up' => 'home#sign_up', :via => :post
 
   resources :decision_logs
 
@@ -109,7 +107,6 @@ Home::Application.routes.draw do
     get :current, :on => :collection
   end
 
-  match 'clothing/bulk', :as => :clothing_bulk, :via => :post
   match 'library_items/bulk', :as => :library_item_bulk, :via => :post
 
   match 'time/graph(/:url_start(/:url_end))' => 'time#graph', :as => :time_graph
@@ -122,6 +119,7 @@ Home::Application.routes.draw do
 
   match 'time/track' => 'time#dashboard'
   match 'time' => 'time#dashboard'
+  match 'clothing/bulk' => 'clothing#bulk', :as => :clothing_bulk, :via => :post
   match 'clothing/missing_info' => 'clothing#update_missing_info', :as => :update_missing_clothing_information, :via => :post
   match 'clothing/missing_info' => 'clothing#missing_info', :as => :missing_clothing_information
   match 'clothing/:id/save_color' => 'clothing#save_color', :as => :save_clothing_color, :via => :post
@@ -145,7 +143,6 @@ Home::Application.routes.draw do
       get :matches
     end
   end
-  match 'library/update' => 'library#update', :as => :library_refresh
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

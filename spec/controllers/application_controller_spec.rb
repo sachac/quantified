@@ -49,9 +49,16 @@ describe ApplicationController do
       end
     end
   end
-  describe "#prepare_filters" do
-    context "when given a category tree"
-    context "when given a display type"
-    context "when given a parent_id"
+  describe "#after_sign_in_path_for" do
+    context "when a destination is specified" do
+      it "returns the destination" do
+        subject.stub!(:params).and_return({destination: 'home'})
+        subject.send(:after_sign_in_path_for, create(:user, :confirmed)).should == 'home'
+      end
+      it "returns the root path if no destination is specified" do
+        subject.stub!(:params).and_return({})
+        subject.send(:after_sign_in_path_for, create(:user, :confirmed)).should == root_path
+      end
+    end
   end
 end
