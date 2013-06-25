@@ -135,4 +135,6 @@ en:
   csa_food:
     logged: Logged.
     updated: CSA food successfully updated.
-
+  stuff:
+    created: Stuff created.
+    updated: Stuff updated.

@@ -15,7 +15,7 @@ class StuffController < ApplicationController
       when "created_at", "updated_at", "location_id", "in_place"
         "#{column} #{direction}, name ASC"
       else
-        "name DESC"
+        "lower(name) ASC"
       end
     end
     @stuff = current_account.stuff.order(order).includes(:location).where(:stuff_type => 'stuff')
@@ -98,7 +98,7 @@ class StuffController < ApplicationController
     @stuff.home_location = loc
     @stuff.location = @stuff.home_location
     @stuff.user = current_account
-    add_flash :notice => 'Stuff was successfully created.' if @stuff.save
+    add_flash :notice => I18n.t('stuff.created') if @stuff.save
     respond_with @stuff
   end
 
@@ -117,7 +117,7 @@ class StuffController < ApplicationController
       @stuff.home_location = loc
       result = @stuff.save
     end
-    add_flash :notice => 'Stuff was successfully updated.' if result
+    add_flash :notice => I18n.t('stuff.updated') if result
     respond_with @stuff, :location => params[:destination] || stuff_path(@stuff)
   end
 
@@ -130,6 +130,7 @@ class StuffController < ApplicationController
   end
 
   def get_autocomplete_items(parameters)
+    puts parameters.inspect
     super(parameters).where(:user_id => current_account.id)
   end
 
