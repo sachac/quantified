@@ -1,123 +1,91 @@
 class TorontoLibrariesController < ApplicationController
-  # GET /toronto_libraries
-  # GET /toronto_libraries.xml
+  respond_to :html, :json, :xml, :csv
   def index
     @toronto_libraries = current_account.toronto_libraries
     authorize! :manage_account, current_account
-
-    respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @toronto_libraries }
-    end
+    respond_with @toronto_libraries
   end
 
-  # GET /toronto_libraries/1
-  # GET /toronto_libraries/1.xml
   def show
-    @toronto_library = TorontoLibrary.find(params[:id])
+    @toronto_library = current_account.toronto_libraries.find(params[:id])
     authorize! :manage_account, current_account
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @toronto_library }
-    end
+    respond_with @toronto_library
   end
 
-  # GET /toronto_libraries/new
-  # GET /toronto_libraries/new.xml
   def new
-    @toronto_library = TorontoLibrary.new
+    @toronto_library = current_account.toronto_libraries.new
     authorize! :manage_account, current_account
-
-    respond_to do |format|
-      format.html # new.html.erb
-      format.xml  { render :xml => @toronto_library }
-    end
+    respond_with @toronto_library
   end
 
-  # GET /toronto_libraries/1/edit
   def edit
-    @toronto_library = TorontoLibrary.find(params[:id])
+    @toronto_library = current_account.toronto_libraries.find(params[:id])
     authorize! :manage_account, current_account
+    respond_with @toronto_library
   end
 
-  # POST /toronto_libraries
-  # POST /toronto_libraries.xml
   def create
-    @toronto_library = TorontoLibrary.new(params[:toronto_library])
+    @toronto_library = current_account.toronto_libraries.new(params[:toronto_library])
     authorize! :manage_account, current_account
     @toronto_library.user = current_account
-    respond_to do |format|
-      if @toronto_library.save
-        format.html { redirect_to(toronto_libraries_path, :notice => 'Library card was successfully created.') }
-        format.xml  { render :xml => @toronto_library, :status => :created, :location => @toronto_library }
-      else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @toronto_library.errors, :status => :unprocessable_entity }
-      end
+    if @toronto_library.save
+      add_flash :notice, I18n.t('toronto_library.created')
+      location = toronto_libraries_path
     end
+    respond_with @toronto_library, location: location
   end
 
   # PUT /toronto_libraries/1
   # PUT /toronto_libraries/1.xml
   def update
-    @toronto_library = TorontoLibrary.find(params[:id])
+    @toronto_library = current_account.toronto_libraries.find(params[:id])
     authorize! :manage_account, current_account
-
-    respond_to do |format|
-      if @toronto_library.update_attributes(params[:toronto_library])
-        format.html { redirect_to(@toronto_library, :notice => 'Library card was successfully updated.') }
-        format.xml  { head :ok }
-      else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @toronto_library.errors, :status => :unprocessable_entity }
-      end
+    if @toronto_library.update_attributes(params[:toronto_library])
+      add_flash :notice, I18n.t('toronto_library.updated')
     end
+    respond_with @toronto_library
   end
 
-  # DELETE /toronto_libraries/1
-  # DELETE /toronto_libraries/1.xml
   def destroy
-    @toronto_library = TorontoLibrary.find(params[:id])
+    @toronto_library = current_account.toronto_libraries.find(params[:id])
     authorize! :manage_account, current_account
     @toronto_library.destroy
-
-    respond_to do |format|
-      format.html { redirect_to(toronto_libraries_url) }
-      format.xml  { head :ok }
-    end
+    add_flash :notice, I18n.t('toronto_library.deleted')
+    respond_with(@toronto_library, location: toronto_libraries_path)
   end
 
   def request_items
-    @toronto_library = TorontoLibrary.find(params[:id])
+    @toronto_library = current_account.toronto_libraries.find(params[:id])
     @toronto_library.login
     authorize! :manage_account, current_account
     params[:items] ||= ''
-    success = Array.new
-    error = Array.new
+    successes = Array.new
+    errors = Array.new
     params[:items].scan(/[0-9]{14}/).each do |item|
-      if @toronto_library.request_item(item)
-         success << item
+      status = @toronto_library.request_item(item)
+      if status
+        successes << item
       else
-         error << item
+        errors << item
       end
     end
-    if success.size > 0
-      add_flash :notice, "Success: #{success.join(', ')}"
+    if successes.size > 0
+      add_flash :notice, "Success: #{successes.join(', ')}"
     end
-    if error.size > 0
-      add_flash :error, "Error: #{error.join(', ')}"
+    if errors.size > 0
+      add_flash :error, "Error: #{errors.join(', ')}"
     end
-    redirect_to toronto_library_path(@toronto_library)
+    @result = {success: successes, error: errors}
+    respond_with @result, location: toronto_library_path(@toronto_library)
   end
 
   def refresh_all
     authorize! :manage_account, current_account
+    result = Hash.new
     current_account.toronto_libraries.each do |l|
-      l.refresh_items
+      result[l] = l.refresh_items
     end
-    redirect_to(root_path, :notice => "Library books refreshed.") and return
+    add_flash :notice, I18n.t('toronto_library.refresh')
+    respond_with result, location: params[:destination] || request.env['HTTP_REFERER'] || root_path
   end
-
-
 end

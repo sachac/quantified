@@ -195,11 +195,10 @@ class Record < ActiveRecord::Base
 
   def self.refresh_from_tap_log(user, file)
     start = nil
-    entries = Array.new
-    unrecognized = Array.new
     entry = Hash.new
     min = nil
     max = nil
+    list = Array.new
     CSV.foreach(file, :headers => true) do |row|
       x = Record.where('user_id=? AND source_id=? AND source_name=?', user.id, row['_id'], 'tap_log').first
       time = Time.zone.parse row['timestamp']
@@ -217,8 +216,10 @@ class Record < ActiveRecord::Base
         max ||= time
         max = [max, time].max
       end
+      list << x
     end
     Record.recalculate_durations(user, min - 1.day, max)
+    list
   end
 
   # Return an array of [date => [[start time, end time, category], [start time, end time, category]]]
@@ -328,7 +329,7 @@ class Record < ActiveRecord::Base
     [new_string.strip, time, end_time]
   end
 
-  # Turn LINES into an array of { :time => Date, :category => RecordCategory or list, :text => input text }
+  # Turn LINES into an array of { :timetamp => Date, :category => RecordCategory or list, :text => input text }
   def self.confirm_batch(account, lines, options = {})
     if lines.is_a? String
       lines = lines.split /[\r\n]+/
@@ -372,6 +373,7 @@ class Record < ActiveRecord::Base
       list.first.update_previous
       list.last.update_next
     end
+    list
   end
 
   def self.parse(account, attributes)
