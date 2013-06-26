@@ -6,10 +6,10 @@ class TimeController < ApplicationController
   def refresh_from_csv
     authorize! :manage_account, current_account
     if params[:tap_file]
-      Record.refresh_from_tap_log(current_account, params[:tap_file].tempfile.path)
+      @result = Record.refresh_from_tap_log(current_account, params[:tap_file].tempfile.path)
       add_flash :notice, t('time.refreshed')
     end
-    redirect_to :action => "graph"
+    respond_with @result, location: records_path
   end 
 
   def refresh

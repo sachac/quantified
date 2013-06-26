@@ -9,6 +9,7 @@ class RecordsController < ApplicationController
     @end = (!params[:end].blank? ? Time.zone.parse(params[:end]) : ((current_account.records.maximum('timestamp') || Time.now) + 1.day)).in_time_zone.midnight
     
     if params[:commit] == t('records.index.recalculate_durations')
+      authorize! :manage_account, current_account
       Record.recalculate_durations(current_account, @start - 1.day, @end + 1.day)
       add_flash :notice, t('records.index.recalculated_durations')
     end
@@ -20,16 +21,16 @@ class RecordsController < ApplicationController
       end
       @data = @records
     else
-      @records = @records.paginate :page => params[:page] 
-      list = @records
+      @records = @records.paginate :page => params[:page]
+      base = @records
       if params[:split] and params[:split] == 'split'
-        list = Record.split(@records)
+        @records = Record.split(@records)
       end
       @data = { 
-        :current_page => @records.current_page,
-        :per_page => @records.per_page,
-        :total_entries => @records.total_entries,
-        :entries => list
+        :current_page => base.current_page,
+        :per_page => base.per_page,
+        :total_entries => base.total_entries,
+        :entries => @records
       }
     end
     respond_with @data
@@ -41,10 +42,11 @@ class RecordsController < ApplicationController
     authorize! :view_time, current_account
     @record = current_account.records.find(params[:id])
     @context = @record.context
-    if html?
-      @during_this = @record.during_this
-    elsif @record.private?
+    if @record.private?
       authorize! :manage_account, current_account
+    end
+    if request.format.html?
+      @during_this = @record.during_this
     end
     respond_with({ :record => @record, :context => @context })
   end
@@ -67,14 +69,15 @@ class RecordsController < ApplicationController
   # POST /records.xml
   def create
     authorize! :manage_account, current_account
-    if params[:record][:timestamp].match /^[0-9]+/  # probably a timestamp
+    if !params[:record][:timestamp].blank? and params[:record][:timestamp].match /^[0-9]+/  # probably a timestamp
        params[:record][:timestamp] = Time.at(params[:record][:timestamp].to_f)
     end
+    params[:record].delete(:user_id)
     @record = current_account.records.new(params[:record])
     if @record.save
       @record.update_previous
       @record.update_next
-      add_flash :notice, 'Record was successfully created.'
+      add_flash :notice, t('record.created')
     end
     respond_with @record
   end
@@ -85,12 +88,13 @@ class RecordsController < ApplicationController
     authorize! :manage_account, current_account
     @record = current_account.records.find(params[:id])
     if params[:record][:end_timestamp].blank?
-      params[:record][:end_timestamp] = nil
+      params[:record].delete(:end_timestamp)
     end
+    params[:record].delete(:user_id)
     if @record.update_attributes(params[:record])
       @record.update_previous
       @record.update_next
-      add_flash :notice, 'Record was successfully updated.'
+      add_flash :notice, t('record.updated')
     end
     respond_with @record
   end
@@ -118,9 +122,9 @@ class RecordsController < ApplicationController
     if params[:batch]
       @records = Record.confirm_batch(account, params[:batch], :date => params[:date] ? Time.zone.parse(params[:date]) : nil)
     end
-    if op == "Create records"
+    if op == t('record.create')
       @created = Record.create_batch(account, params[:row].values.map { |r| r.symbolize_keys })
-      add_flash :notice, 'Records created.'
+      add_flash :notice, t('record.batch')
       respond_with @created, :location => records_path
     else
       respond_with @records

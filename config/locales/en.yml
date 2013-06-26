@@ -138,3 +138,17 @@ en:
   stuff:
     created: Stuff created.
     updated: Stuff updated.
+  toronto_library:
+    created: Library card created.
+    updated: Library card updated.
+    destroyed: Library card deleted.
+    refresh: Library books refreshed.
+  record:
+    created: Record created.
+    updated: Record updated.
+    create: Create records
+    batch: Records created
+  library_item:
+    created: Library item created.
+    updated: Library item updated.
+    
