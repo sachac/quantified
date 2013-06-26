@@ -32,7 +32,7 @@ describe TapLogRecord do
   end
   describe '#private?' do
     it 'recognizes private notes' do
-      record = FactoryGirl.create(:tap_log_record, catOne: 'Unpaid work', catTwo: 'Cooking', note: 'blah blah private blah')
+      record = FactoryGirl.create(:tap_log_record, catOne: 'Unpaid work', catTwo: 'Cooking', note: 'blah blah !private blah')
       record.should be_private 
     end
     it 'recognizes public notes' do

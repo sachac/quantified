@@ -93,6 +93,7 @@ class ClothingLogsController < ApplicationController
   def update
     @clothing_log = current_account.clothing_logs.find(params[:id])
     authorize! :update, @clothing_log
+    params[:clothing_log].delete(:user_id)
     @clothing_log.update_attributes(params[:clothing_log])
     respond_with @clothing_log
   end

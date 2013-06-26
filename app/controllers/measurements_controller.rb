@@ -42,6 +42,8 @@ class MeasurementsController < ApplicationController
   # PUT /measurements/1.xml
   def update
     @measurement = current_account.measurements.find(params[:id])
+    params[:measurement].delete(:user_id)
+
     if @measurement.update_attributes(params[:measurement])
       add_flash :notice, I18n.t('measurement.updated')
     end

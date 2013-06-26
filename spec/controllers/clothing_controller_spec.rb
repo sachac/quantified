@@ -52,7 +52,7 @@ describe ClothingController do
     it "lets you bulk-update images" do
       c1 = create(:clothing, user: @user)
       c2 = create(:clothing, user: @user)
-      post :update_missing_info, image: { c1.id => fixture_file_upload('spec/fixtures/files/sample-color-ff0000.png') }
+      post :update_missing_info, image: { c1.id => fixture_file_upload('/files/sample-color-ff0000.png') }
       assigns(:clothing).should include(c2)
       assigns(:clothing).should_not include(c1)
       c1.reload.image.should_not be_nil

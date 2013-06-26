@@ -63,6 +63,7 @@ class ContextsController < ApplicationController
   def update
     @context = current_account.contexts.find(params[:id])
     authorize! :update, @context
+    params[:context].delete(:user_id)
     rules = params[:context][:context_rules_attributes] if params[:context]
     if rules
       rules.each do |k, v|

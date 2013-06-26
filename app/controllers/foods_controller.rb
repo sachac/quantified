@@ -56,6 +56,7 @@ class FoodsController < ApplicationController
   def update
     authorize! :manage_account, current_account
     @food = current_account.foods.find(params[:id])
+    params[:food].delete(:user_id)
     add_flash :notice, I18n.t('food.updated') if @food.update_attributes(params[:food])
     respond_with @food
   end

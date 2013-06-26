@@ -17,7 +17,7 @@ describe Ability do
     end
     it "can't view private notes" do
       user = FactoryGirl.create(:demo_user)
-      record = FactoryGirl.create(:tap_log_record, user: user, note: 'blah blah private blah')
+      record = FactoryGirl.create(:tap_log_record, user: user, note: 'blah blah !private blah')
       subject.should_not be_able_to(:view_note, record)
     end
     it "can view public demo notes" do
@@ -52,7 +52,7 @@ describe Ability do
     end
     it "can't view private demo notes" do
       user = FactoryGirl.create(:demo_user)
-      record = FactoryGirl.create(:tap_log_record, user: user, note: 'blah blah private blah')
+      record = FactoryGirl.create(:tap_log_record, user: user, note: 'blah blah !private blah')
       subject.should_not be_able_to(:view_note, record)
     end
     it "can view public demo notes" do

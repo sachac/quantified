@@ -78,9 +78,10 @@ class TimeController < ApplicationController
       time ||= Time.zone.parse(params[:timestamp])
     end
     time ||= Time.now
+    @time = time
     if rec.nil?
       # Could not find matching category. Offer to create?
-      go_to new_record_category_path(:timestamp => time), :notice => 'Could not find matching category. Create?' and return
+      go_to new_record_category_path(:timestamp => time), notice: t('record_category.not_found_create') and return
     elsif rec.is_a? Record
       redirect_to edit_record_path(rec, :destination => params[:destination]) and return
     else
