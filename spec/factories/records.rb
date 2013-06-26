@@ -8,5 +8,8 @@ FactoryGirl.define do
     record_category
     user { record_category ? record_category.user : FactoryGirl.create(:confirmed_user) }
     end_timestamp nil
+    trait :private do
+      data { {note: '!private'}.to_json }
+    end
   end
 end
