@@ -114,6 +114,8 @@ class ClothingController < ApplicationController
   def update
     @clothing = current_account.clothing.find(params[:id])
     authorize! :update, @clothing
+    params[:clothing].delete(:user_id)
+
     if @clothing.update_attributes(params[:clothing])
       add_flash :notice, 'Clothing was successfully updated.'
     end

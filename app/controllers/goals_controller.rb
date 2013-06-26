@@ -51,6 +51,7 @@ class GoalsController < ApplicationController
   def update
     authorize! :manage_account, current_account
     @goal = current_account.goals.find(params[:id])
+    params[:goal].delete(:user_id)
     add_flash :notice, I18n.t('goals.updated') if @goal.update_attributes(params[:goal])
     respond_with @goal
   end

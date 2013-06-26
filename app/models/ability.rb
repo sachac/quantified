@@ -25,7 +25,7 @@ class Ability
       end
     end
     can :view, Clothing do |o| o.user.demo? end
-    can :view, TapLogRecord do |o| o.user.demo? end
+    can :view, TapLogRecord do |o| o.user.demo? and o.public? end
     can :view_note, TapLogRecord do |o|
       (!o.private? and o.user.demo?) || (o.user_id == user.id)
     end

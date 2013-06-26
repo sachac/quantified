@@ -34,8 +34,17 @@ class RecordCategoriesController < ApplicationController
       @summary_start = params && params[:start] ? Time.zone.parse(params[:start]).midnight : (Time.zone.now.to_date - 1.year).midnight
       @summary_end = params && params[:end] ? Time.zone.parse(params[:end]).midnight : (Time.zone.now.midnight + 1.day)
       prepare_filters [:date_range, :order, :filter_string]
-      @records = @record_category.category_records(:order => @order, :start => @summary_start, :end => @summary_end, :filter_string => params[:filter_string], :include_private => managing?)
+      @records = @record_category.category_records(:start => @summary_start, :end => @summary_end, :filter_string => params[:filter_string], :include_private => managing?)
+      last = @records.last
+      if params[:order] == 'oldest'
+        @records = @records.order('timestamp ASC')
+      else
+        @records = @records.order('timestamp DESC')
+      end
       @total = @records.sum(:duration)
+      if last and last.end_timestamp.nil?
+        @total = @total + ([Time.zone.now, @summary_end].min - last.timestamp)
+      end
       @total_entries = @records.count
     end
 
@@ -44,7 +53,7 @@ class RecordCategoriesController < ApplicationController
       format.json { render :json => @record_category }
       format.xml { render :xml => @record_category }
       format.csv {
-        csv_string = FasterCSV.generate do |csv|
+        csv_string = CSV.generate do |csv|
           csv << [@record_category.id, @record_category.full_name]
           csv << ['start_time', 'end_time', 'record_category_name', 'record_category_id', 'duration', 'source_name', 'source_id', 'data']
           @records.each do |e|
@@ -92,7 +101,7 @@ class RecordCategoriesController < ApplicationController
       format.json { render :json => @data }
       format.xml { render :xml => @data }
       format.csv {
-        csv_string = FasterCSV.generate do |csv|
+        csv_string = CSV.generate do |csv|
           csv << ['start_time', 'end_time', 'record_category_name', 'record_category_id', 'duration', 'source_name', 'source_id', 'data']
           @records.each do |e|
             row = [e.timestamp ? l(e.timestamp, :format => :long) : '',
@@ -142,7 +151,7 @@ class RecordCategoriesController < ApplicationController
     params[:record_category][:data].reject! { |x| x['key'].blank? } if params[:record_category][:data]
     @record_category.data ||= Array.new
     if @record_category.save
-      add_flash :notice, 'Record category was successfully created.'
+      add_flash :notice, t('record_category.created')
     end
     if params[:timestamp]
       rec = current_account.records.create(:timestamp => Time.zone.parse(params[:timestamp]), :source_name => 'category creation', :source_id => @record_category.id, :record_category_id => @record_category.id)
@@ -150,9 +159,7 @@ class RecordCategoriesController < ApplicationController
         rec.update_previous
         rec.update_next
       end
-      respond_with rec do |format|
-        format.html { redirect_to(edit_record_path(rec)) }
-      end
+      respond_with rec, location: edit_record_path(rec)
     else
       respond_with @record_category
     end
@@ -164,8 +171,9 @@ class RecordCategoriesController < ApplicationController
     authorize! :manage_account, current_account
     @record_category = current_account.record_categories.find(params[:id])
     params[:record_category][:data].reject! { |x| x['key'].blank? } if params[:record_category][:data]
+    params[:record_category].delete(:user_id)
     if @record_category.update_attributes(params[:record_category])
-      add_flash :notice, 'Record category was successfully updated.'
+      add_flash :notice, t('record_category.updated')
     end
     respond_with @record_category
   end
@@ -188,28 +196,26 @@ class RecordCategoriesController < ApplicationController
       rec.update_previous
       rec.update_next
     end
-    respond_with rec do |format|
-      format.html { redirect_to(edit_record_path(rec)) }
-    end
+    @record = rec
+    respond_with rec, location: edit_record_path(rec)
   end
 
   def bulk_update
     authorize! :manage_account, current_account
-    params[:category_type].each do |k,v|
-      cat = current_account.record_categories.find(k)
-      cat.category_type = v
-      cat.save!
+    @list = Array.new
+    if params[:category_type]
+      params[:category_type].each do |k,v|
+        cat = current_account.record_categories.find(k)
+        cat.category_type = v
+        cat.save!
+        @list << cat
+      end
     end
     if params[:commit] == t('records.index.recalculate_durations')
       Record.recalculate_durations(current_account)
       add_flash :notice, t('records.index.recalculated_durations')
     end
-    respond_to do |format|
-      format.html { go_to record_categories_path and return }
-      format.json { head(:ok) and return }
-      format.xml { head(:ok) and return }
-      format.csv { head(:ok) and return }
-    end
+    respond_with @list, location: params[:destination] || record_categories_path
   end
 
   def tree
@@ -234,7 +240,7 @@ class RecordCategoriesController < ApplicationController
     end
     time ||= Time.now
     @list = RecordCategory.search(current_account, data[0])
-    if @list.nil? || @list.size == 0
+    if @list.nil? || (!@list.is_a?(RecordCategory) && @list.size == 0)
       # No match
       go_to root_path, :error => "Could not find category matching: " + category + ". " + self.class.helpers.link_to("Create?", new_record_category_path(:category => { :name => data[0] }, :first_timestamp => time)).html_safe  and return
     elsif @list.is_a? RecordCategory

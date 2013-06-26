@@ -51,6 +51,7 @@ class UsersController < ApplicationController
       params[:user].delete(:password)
       params[:user].delete(:password_confirmation)
     end
+    params[:user].delete(:user_id)
     if params[:user][:settings]
       settings = params[:user][:settings]
       @user.settings.timezone = settings['time_zone']

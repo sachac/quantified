@@ -151,4 +151,10 @@ en:
   library_item:
     created: Library item created.
     updated: Library item updated.
-    
+  tap_log_record:
+    created: Tap Log record created.
+    updated: Tap Log record updated.
+  record_category:
+    created: Record category created.
+    updated: Record category updated.
+    not_found_create: Could not find matching category. Create?

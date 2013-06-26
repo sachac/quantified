@@ -33,6 +33,7 @@ class DecisionsController < ApplicationController
   # PUT /decisions/1
   # PUT /decisions/1.xml
   def update
+    params[:decision].delete(:user_id)
     if @decision.update_attributes(params[:decision])
       add_flash :notice, I18n.t('decision.updated')
     end

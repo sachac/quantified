@@ -46,6 +46,8 @@ class MeasurementLogsController < ApplicationController
   # PUT /measurement_logs/1.xml
   def update
     authorize! :manage, @measurement_log.measurement
+    params[:measurement_log].delete(:user_id)
+
     if @measurement_log.update_attributes(params[:measurement_log])
       add_flash :notice, I18n.t('measurement_log.updated')
     end

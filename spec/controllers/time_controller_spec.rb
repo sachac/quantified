@@ -16,8 +16,9 @@ describe TimeController do
                          timestamp: Time.zone.local(2013, 1, 1, 4),
                          end_timestamp: Time.zone.local(2013, 1, 1, 5))
       @records << create(:record, user: @user, record_category: @cat,
-                         timestamp: Time.zone.now - 1.day,
-                         end_timestamp: Time.zone.now - 1.day + 1.hour)
+                         timestamp: Time.zone.now - 2.days,
+                         end_timestamp: Time.zone.now - 2.day + 1.hour)
+      @records << create(:record, user: @user, record_category: @cat, timestamp: Time.zone.now - 1.hour)
       sign_in @user
     end
     describe 'POST refresh_from_csv' do
@@ -41,17 +42,51 @@ describe TimeController do
     end
     describe 'GET review' do
       it "displays records" do
-        get :review, start: Time.zone.now - 1.week, end: Time.zone.now
+        get :review, start: Time.zone.now - 1.week, end: Time.zone.now - 1.day
         assigns(:zoom).should == :daily
         assigns(:summary)['rows'][@cat.id]['total'].should == 3600
       end
     end
     describe 'GET graph' do
       it "displays records" do
-        get :graph, start: Time.zone.now - 1.week, end: Time.zone.now
+        get :graph, start: Time.zone.now - 1.week, end: Time.zone.now - 1.day
         assigns(:categories).values.should include(@cat)
         assigns(:totals)[1][0].should == @cat.id
         assigns(:totals)[1][1].should == [[:total, 3600]]
+      end
+    end
+    describe 'GET dashboard' do
+      it "shows the dashboard" do
+        get :dashboard
+        assigns(:categories).values.should include(@cat)
+        assigns(:current_activity).should == @records[3]
+      end
+    end
+    describe 'POST track' do
+      it "requires a category or category ID" do
+        post :track
+        response.should redirect_to time_dashboard_path
+      end
+      it "handles timestamp if given" do
+        time = Time.zone.local(2013, 1, 1, 3)
+        post :track, timestamp: time, category_id: @cat.id
+        assigns(:time).should be_within(1.minute).of(time)
+      end
+      it "offers to create a category if necessary" do
+        post :track, category: "Does not exist"
+        flash[:notice].should == I18n.t('record_category.not_found_create')
+      end
+      it "creates the entry if unambiguous" do
+        last = Record.last
+        post :track, category: @cat.name
+        Record.last.should_not == last
+      end
+      it "redirects if ambiguous" do
+        create(:record_category, user: @user, name: @cat.name + "X")
+        last = Record.last
+        post :track, category: @cat.name
+        Record.last.should == last
+        response.should be_redirect
       end
     end
   end

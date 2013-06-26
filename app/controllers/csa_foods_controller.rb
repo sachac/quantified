@@ -63,6 +63,7 @@ class CsaFoodsController < ApplicationController
   def update
     authorize! :manage_account, current_account
     @csa_food = current_account.csa_foods.find(params[:id])
+    params[:csa_food].delete(:user_id)
     if @csa_food.update_attributes(params[:csa_food])
       add_flash :notice, I18n.t('csa_food.updated')
     end

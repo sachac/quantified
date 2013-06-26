@@ -62,6 +62,7 @@ class MemoriesController < ApplicationController
   def update
     @memory = current_account.memories.find(params[:id])
     authorize! :update, @memory
+    params[:memory].delete(:user_id)
     if @memory.update_attributes(params[:memory])
       add_flash :notice, 'Memory was successfully updated.'
       respond_with @memory, :location => memories_path

@@ -40,6 +40,7 @@ class TorontoLibrariesController < ApplicationController
   def update
     @toronto_library = current_account.toronto_libraries.find(params[:id])
     authorize! :manage_account, current_account
+    params[:toronto_library].delete(:user_id)
     if @toronto_library.update_attributes(params[:toronto_library])
       add_flash :notice, I18n.t('toronto_library.updated')
     end

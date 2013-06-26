@@ -47,6 +47,7 @@ class DecisionLogsController < ApplicationController
   # PUT /decision_logs/1.xml
   def update
     @decision_log = current_account.decision_logs.find(params[:id])
+    params[:decision_log].delete(:user_id)
     if @decision_log.update_attributes(params[:decision_log])
       add_flash :notice, I18n.t('decision_log.updated')
     end

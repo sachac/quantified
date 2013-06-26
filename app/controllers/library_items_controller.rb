@@ -70,6 +70,7 @@ class LibraryItemsController < ApplicationController
   def update
     @library_item = current_account.library_items.find(params[:id])
     authorize! :update, @library_item
+    params[:library_item].delete(:user_id)
     if @library_item.update_attributes(params[:library_item])
       add_flash :notice, t('library_item.updated')
     end
