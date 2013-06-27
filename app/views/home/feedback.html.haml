@@ -2,10 +2,7 @@
   .control-group
     = label_tag :email, "E-mail", class: 'control-label'
     .controls
-      - if current_account && current_account.id != 1
-        .uneditable-input= current_account.email
-      - else
-        = text_field_tag :email
+      = text_field_tag :email, @email
   .control-group
     = label_tag :message, "Message", class: 'control-label'
     .controls

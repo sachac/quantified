@@ -6,10 +6,10 @@ class TimeController < ApplicationController
   def refresh_from_csv
     authorize! :manage_account, current_account
     if params[:tap_file]
-      Record.refresh_from_tap_log(current_account, params[:tap_file].tempfile.path)
+      @result = Record.refresh_from_tap_log(current_account, params[:tap_file].tempfile.path)
       add_flash :notice, t('time.refreshed')
     end
-    redirect_to :action => "graph"
+    respond_with @result, location: records_path
   end 
 
   def refresh
@@ -44,7 +44,7 @@ class TimeController < ApplicationController
     entries = current_account.records.activities.where('end_timestamp >= ? AND timestamp < ?', @range.begin, @range.end).order('timestamp').includes(:record_category)
     @records = Record.prepare_graph(@range, entries)
     unsorted = RecordCategory.summarize(:key => :date, :range => @range, :records => entries, :zoom => :daily, :user => current_account, :tree => :individual)[:rows] 
-    
+
     @categories = current_account.record_categories.index_by(&:id)
     @totals = unsorted.map { |k,v| [k, v.sort { |a,b| b[1] <=> a[1] }] }
     respond_with({:categories => @categories, :totals => @totals})
@@ -78,9 +78,10 @@ class TimeController < ApplicationController
       time ||= Time.zone.parse(params[:timestamp])
     end
     time ||= Time.now
+    @time = time
     if rec.nil?
       # Could not find matching category. Offer to create?
-      go_to new_record_category_path(:timestamp => time), :notice => 'Could not find matching category. Create?' and return
+      go_to new_record_category_path(:timestamp => time), notice: t('record_category.not_found_create') and return
     elsif rec.is_a? Record
       redirect_to edit_record_path(rec, :destination => params[:destination]) and return
     else

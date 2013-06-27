@@ -97,11 +97,13 @@ group :development, :test do
   gem 'guard-cucumber'
   gem 'timecop'
   gem 'spring'
+  gem 'email_spec'
 end
 group :test do
   gem 'spork'
   gem 'guard-rspec'
   gem 'guard-spork'
+  gem 'guard-spring'
   gem 'cucumber'
   gem 'fakeweb'
   gem 'simplecov', :require => false

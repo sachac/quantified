@@ -1,11 +1,12 @@
 class TapLogRecordsController < ApplicationController
+  respond_to :html, :json, :xml, :csv
   # GET /tap_log_records
   # GET /tap_log_records.xml
   def index
     authorize! :view_tap_log_records, current_account
     @tap_log_records = current_account.tap_log_records.order('timestamp desc')
-    @start = (!params[:start].blank? ? Time.zone.parse(params[:start]) : ((current_account.tap_log_records.minimum('timestamp') || (Time.now - 1.week)))).in_time_zone.midnight
-    @end = (!params[:end].blank? ? Time.zone.parse(params[:end]) : ((current_account.tap_log_records.maximum('timestamp') || Time.now) + 1.day)).in_time_zone.midnight
+    @start = (!params[:start].blank? ? Time.zone.parse(params[:start]) : ((current_account.tap_log_records.minimum('timestamp') || (Time.zone.now - 1.week)))).in_time_zone.midnight
+    @end = (!params[:end].blank? ? Time.zone.parse(params[:end]) : ((current_account.tap_log_records.maximum('timestamp') || Time.zone.now) + 1.day)).in_time_zone.midnight
     [:catOne, :catTwo, :catThree, :status].each do |sym|
       unless params[sym].blank? 
         @tap_log_records = @tap_log_records.where("#{sym}=?", params[sym])
@@ -34,11 +35,7 @@ class TapLogRecordsController < ApplicationController
       @average = @tap_log_records.where('duration > 0').average('duration')
     end
     @tap_log_records = @tap_log_records.paginate :per_page => 50, :page => params[:page]
-
-    respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @tap_log_records }
-    end
+    respond_with @tap_log_records
   end
 
   # GET /tap_log_records/1
@@ -52,11 +49,7 @@ class TapLogRecordsController < ApplicationController
     @previous_entry = @tap_log_record.previous.first
     @next_activity = @tap_log_record.next.activity.first
     @next_entry = @tap_log_record.next.first
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @tap_log_record }
-    end
+    respond_with @tap_log_record
   end
 
   # GET /tap_log_records/new
@@ -64,17 +57,14 @@ class TapLogRecordsController < ApplicationController
   def new
     @tap_log_record = current_account.tap_log_records.new
     authorize! :create, @tap_log_record
-
-    respond_to do |format|
-      format.html # new.html.erb
-      format.xml  { render :xml => @tap_log_record }
-    end
+    respond_with @tap_log_record
   end
 
   # GET /tap_log_records/1/edit
   def edit
     @tap_log_record = current_account.tap_log_records.find(params[:id])
     authorize! :update, @tap_log_record
+    respond_with @tap_log_record
   end
 
   # POST /tap_log_records
@@ -82,22 +72,15 @@ class TapLogRecordsController < ApplicationController
   def create
     @tap_log_record = current_account.tap_log_records.new(params[:tap_log_record])
     authorize! :create, @tap_log_record
-
-    respond_to do |format|
-      if @tap_log_record.save
-        format.html { redirect_to(@tap_log_record, :notice => 'Tap log record was successfully created.') }
-        format.xml  { render :xml => @tap_log_record, :status => :created, :location => @tap_log_record }
-      else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @tap_log_record.errors, :status => :unprocessable_entity }
-      end
+    if @tap_log_record.save
+      add_flash :notice, t('tap_log_record.created')
     end
+    respond_with @tap_log_record
   end
 
   def copy_to_memory
     @tap_log_record = current_account.tap_log_records.find(params[:id])
     @tap_log_record.update_attributes(:status => 'done')
-
     authorize! :manage_account, current_account
     @memory = current_account.memories.new(:body => @tap_log_record.note.gsub(/ *!memory */i, ''), :access => @tap_log_record.note =~ /!private/i ? 'private' : 'public')
     render :template => 'memories/new' and return
@@ -108,16 +91,11 @@ class TapLogRecordsController < ApplicationController
   def update
     @tap_log_record = current_account.tap_log_records.find(params[:id])
     authorize! :update, @tap_log_record
-
-    respond_to do |format|
-      if @tap_log_record.update_attributes(params[:tap_log_record])
-        format.html { redirect_to(@tap_log_record, :notice => 'Tap log record was successfully updated.') }
-        format.xml  { head :ok }
-      else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @tap_log_record.errors, :status => :unprocessable_entity }
-      end
+    params[:tap_log_record].delete(:user_id)
+    if @tap_log_record.update_attributes(params[:tap_log_record])
+      add_flash :notice, t('tap_log_record.updated')
     end
+    respond_with @tap_log_record
   end
 
   # DELETE /tap_log_records/1
@@ -126,10 +104,6 @@ class TapLogRecordsController < ApplicationController
     @tap_log_record = current_account.tap_log_records.find(params[:id])
     authorize! :delete, @tap_log_record
     @tap_log_record.destroy
-
-    respond_to do |format|
-      format.html { redirect_to(tap_log_records_url) }
-      format.xml  { head :ok }
-    end
+    respond_with @tap_log_record, location: tap_log_records_url
   end
 end

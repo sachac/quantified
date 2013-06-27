@@ -7,7 +7,6 @@
     %th Location
     %th
     %th
-    %th
 
   - @location_histories.each do |location_history|
     %tr
@@ -15,11 +14,7 @@
       %td= link_to location_history.stuff.name, location_history.stuff
       %td= link_to location_history.location.name, location_history.location
       %td= link_to 'Show', location_history
-      %td= link_to 'Edit', edit_location_history_path(location_history)
       %td= link_to 'Destroy', location_history, :confirm => 'Are you sure?', :method => :delete
 
 %br
 = will_paginate @location_histories, :renderer => PaginationListLinkRenderer
-
-  
-= link_to 'New Location history', new_location_history_path

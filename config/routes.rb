@@ -5,9 +5,7 @@ Home::Application.routes.draw do
   match 'auth/:service' => 'sessions#setup', :as => :oauth
   resources :services, :only => [:index, :create, :destroy]
 
-  match 'admin' => 'admin#index'
-  match 'admin/activity' => 'admin#activity'
-  match 'admin/signups' => 'admin#signups'
+  match 'admin' => 'admin#index', :as => 'admin'
   match 'admin/become/:id' => 'admin#become', :as => :become_user, :via => :post
   match 'feedback' => 'home#send_feedback', :via => :post
   match 'feedback' => 'home#feedback', :as => :feedback
@@ -33,6 +31,7 @@ Home::Application.routes.draw do
       post :clone
     end
   end
+  match 'toronto_libraries/refresh_all' => 'toronto_libraries#refresh_all', :as => :library_refresh, :via => [:get, :post]
   match 'toronto_libraries/:id/request' => 'toronto_libraries#request_items', :as => :request_library_items, :via => :post
 
   match 'record_categories/autocomplete' => 'record_categories#autocomplete_record_category_full_name', :as => :autocomplete_record_category
@@ -81,10 +80,9 @@ Home::Application.routes.draw do
     end
   end
   
-  resources :location_histories
+  resources :location_histories, only: [:index, :show, :destroy]
   match 'stuff/log', :via => :post, :as => :log_stuff
   match 'menu' => 'home#menu', :as => :menu
-  resources :days
 
   match 'csa_foods/bulk_update', :as => :bulk_update_csa_foods, :via => :post
   resources :csa_foods do
@@ -97,7 +95,6 @@ Home::Application.routes.draw do
 
   devise_for :users, :path_prefix => 'd', :controllers => { :sessions => 'sessions', :registrations => 'registrations' }
   resources :users
-  match 'sign_up' => 'home#sign_up', :via => :post
 
   resources :decision_logs
 
@@ -109,7 +106,6 @@ Home::Application.routes.draw do
     get :current, :on => :collection
   end
 
-  match 'clothing/bulk', :as => :clothing_bulk, :via => :post
   match 'library_items/bulk', :as => :library_item_bulk, :via => :post
 
   match 'time/graph(/:url_start(/:url_end))' => 'time#graph', :as => :time_graph
@@ -122,15 +118,19 @@ Home::Application.routes.draw do
 
   match 'time/track' => 'time#dashboard'
   match 'time' => 'time#dashboard'
+  match 'clothing/bulk' => 'clothing#bulk', :as => :clothing_bulk, :via => :post
   match 'clothing/missing_info' => 'clothing#update_missing_info', :as => :update_missing_clothing_information, :via => :post
   match 'clothing/missing_info' => 'clothing#missing_info', :as => :missing_clothing_information
   match 'clothing/:id/save_color' => 'clothing#save_color', :as => :save_clothing_color, :via => :post
   match 'clothing/:id/:color' => 'clothing#delete_color', :as => :delete_clothing_color, :via => :delete
+  match 'clothing_logs/by_date/:date' => 'clothing_logs#by_date', :as => :clothing_logs_by_date
+  match 'clothing/tag/:id' => 'clothing#tag', :as => :clothing_by_tag
+  match 'clothing/status/:status' => 'clothing#by_status', :as => :clothing_by_status
+  match 'clothing/analyze(/:start(/:end))' => 'clothing#analyze', :as => :analyze_clothing
+  match 'clothing/graph(/:start(/:end))' => 'clothing#graph', :as => :graph_clothing
   resources :clothing do
     collection do
       get :autocomplete_clothing_name
-      get :analyze
-      get :graph
     end
     member do
       get :clothing_logs
@@ -142,11 +142,6 @@ Home::Application.routes.draw do
       get :matches
     end
   end
-  match 'clothing_logs/by_date/:date' => 'clothing_logs#by_date', :as => :clothing_logs_by_date
-  match 'clothing/tag/:id' => 'clothing#tag', :as => :clothing_by_tag
-  match 'clothing/status/:status' => 'clothing#by_status', :as => :clothing_by_status
-  match 'clothing/analyze(/:start(/:end))' => 'clothing#analyze', :as => :clothing_analyze
-  match 'library/update' => 'library#update', :as => :library_refresh
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
@@ -200,7 +195,8 @@ Home::Application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      resources :tokens, :only => [:create, :destroy]
+      match 'create' => 'tokens#create', via: :post
+      match 'destroy' => 'tokens#destroy', via: :delete
       resources :records
     end
     namespace :offline do

@@ -133,6 +133,7 @@ class TorontoLibrary < ActiveRecord::Base
       item.save
     end
     self.save
+    items
   end
 
   def self.pickup_count(account)

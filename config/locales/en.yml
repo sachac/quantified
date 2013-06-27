@@ -4,8 +4,10 @@
 en:
   user:
     invited: "%{email} invited."
+    created: "User created."
     username: Username
-    sign_up: Sign up 
+    sign_up: Sign up
+    updated: User updated.
   general:
     download_as_spreadsheet: Download as spreadsheet
     save: Save
@@ -43,6 +45,8 @@ en:
       next:
         activity: Next activity
         entry: Next entry
+  error:
+    access_denied_logged_in: "Sorry! Access denied. If you think you should be able to access that, please send me feedback!"
   app:
     tap_log_record:
       number: "Number: %{number}"
@@ -108,3 +112,49 @@ en:
         clothing_type: "Handy for sorting clothes and analyzing matches. \"top\" and \"bottom\" are used when suggesting matches and analyzing use. You can use other keywords if you like."
         image: "Upload a picture of the item to make it easier for you to choose it when reviewing. (No objectionable images, please!)"
         cost: "Handy for calculating cost per use, although we don't do that yet"
+  goals:
+    created: Goal was successfully created.
+    updated: Goal was successfully updated.
+  food:
+    created: Food was successfully created.
+    updated: Food was successfully updated.
+  measurement:
+    created: Measurement was successfully created.
+    updated: Measurement was successfully updated.
+  decision:
+    created: Decision was successfully created.
+    updated: Decision was successfully updated.
+  measurement_log:
+    created: Measurement log was successfully created.
+    updated: Measurement log was successfully updated.
+  decision_log:
+    created: Decision log was successfully created.
+    updated: Decision log was successfully updated.
+  offline:
+    category_not_found: Could not find category.
+  csa_food:
+    logged: Logged.
+    updated: CSA food successfully updated.
+  stuff:
+    created: Stuff created.
+    updated: Stuff updated.
+  toronto_library:
+    created: Library card created.
+    updated: Library card updated.
+    destroyed: Library card deleted.
+    refresh: Library books refreshed.
+  record:
+    created: Record created.
+    updated: Record updated.
+    create: Create records
+    batch: Records created
+  library_item:
+    created: Library item created.
+    updated: Library item updated.
+  tap_log_record:
+    created: Tap Log record created.
+    updated: Tap Log record updated.
+  record_category:
+    created: Record category created.
+    updated: Record category updated.
+    not_found_create: Could not find matching category. Create?

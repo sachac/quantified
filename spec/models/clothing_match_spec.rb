@@ -69,12 +69,15 @@ describe ClothingMatch do
       create(:clothing_log, user: @u, date: Date.new(2013, 1, 5), clothing: @clothes[5])
     end
     context "when given a time range" do
-      subject { ClothingMatch.prepare_graph(@u, Date.new(2013, 1, 1)..Date.new(2013, 1, 2)) }
+      subject { ClothingMatch.prepare_graph(@u, Date.new(2013, 1, 1)..Date.new(2013, 1, 4)) }
       it "contains only clothing nodes for the given time range" do
-        subject[:clothing].size.should == 4
+        subject[:clothing].size.should == 5
       end
       it "contains only clothing matches for the given time range" do
-        subject[:matches].size.should == 2
+        subject[:matches].size.should == 3
+      end
+      it "includes the clothing" do
+        subject[:clothing].should include(@clothes[3])
       end
     end
     context "when analyzing all time" do
@@ -86,7 +89,7 @@ describe ClothingMatch do
         subject[:matches].size.should == 3   # unidirectional: 0 <-> 1, 2 <-> 3, 0 <-> 4, 5 is by itself so no match
       end
       it "has weighted edges" do
-        subject[:matches].should include({source: @clothes[0].id, target: @clothes[4].id, count: 2})
+        subject[:matches].should include({source: @clothes[0].id, target: @clothes[4].id, count_matches: 2})
       end
     end
   end
