@@ -17,7 +17,7 @@ describe TimeController do
                          end_timestamp: Time.zone.local(2013, 1, 1, 5))
       @records << create(:record, user: @user, record_category: @cat,
                          timestamp: Time.zone.now - 2.days,
-                         end_timestamp: Time.zone.now - 2.day + 1.hour)
+                         end_timestamp: Time.zone.now - 2.days + 1.hour)
       @records << create(:record, user: @user, record_category: @cat, timestamp: Time.zone.now - 1.hour)
       sign_in @user
     end
@@ -49,7 +49,7 @@ describe TimeController do
     end
     describe 'GET graph' do
       it "displays records" do
-        get :graph, start: Time.zone.now - 1.week, end: Time.zone.now - 1.day
+        get :graph, start: Time.zone.now - 1.week, end: Time.zone.now.midnight
         assigns(:categories).values.should include(@cat)
         assigns(:totals)[1][0].should == @cat.id
         assigns(:totals)[1][1].should == [[:total, 3600]]

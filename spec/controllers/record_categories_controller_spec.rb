@@ -47,6 +47,12 @@ describe RecordCategoriesController do
         assigns(:total).should >= 3600
         assigns(:total_entries).should == 1
       end
+      it "returns CSV" do
+        @record = create(:record, record_category: @cat, timestamp: Time.zone.now - 1.hour, data: { note: 'Hello' })
+        get :show, id: @cat.id, format: :csv
+        assigns(:record_category).should == @cat
+        assigns(:records).all.should include @record
+      end
       it "returns JSON" do
         get :show, id: @cat.id, format: :json
         JSON.parse(response.body).should == JSON.parse(@cat.to_json)
@@ -137,7 +143,7 @@ describe RecordCategoriesController do
     end
     describe 'GET disambiguate' do
       it "returns a list if needed" do
-        get :disambiguate, category: 'GHI'
+        get :disambiguate, category: 'GHI', timestamp: Time.zone.now - 1.hour
         assigns(:list).should include @record_category
         assigns(:list).should include @ambig
       end

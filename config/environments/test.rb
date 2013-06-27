@@ -43,5 +43,4 @@ Home::Application.configure do
   config.assets.allow_debugging = true
 
   OmniAuth.config.test_mode = true
-  OmniAuth.config.mock_auth[:google] = {:provider => 'google', :uid => 'test@example.com'}
 end

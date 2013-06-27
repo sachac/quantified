@@ -8,8 +8,4 @@ class ApplicationMailer < ActionMailer::Base
          :subject => 'Quantified Awesome: Feedback')
   end
 
-  def welcome(user)
-    mail(:to => user.email,
-         :subject => 'Quantified Awesome: Welcome! Please activate your account')
-  end
 end
