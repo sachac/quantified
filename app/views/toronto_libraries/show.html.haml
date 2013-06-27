@@ -12,7 +12,7 @@
       %strong PIN
     %td= @toronto_library.pin
 
-= form_tag request_library_items_path(@toronto_library), method: post, class: 'form' do
+= form_tag request_library_items_path(@toronto_library), method: :post, class: 'form' do
   Paste item IDs below
   %br
   %textarea{:name => 'items'}
