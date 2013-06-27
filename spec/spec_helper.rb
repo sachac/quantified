@@ -41,3 +41,4 @@ RSpec.configure do |config|
   end
 end
 
+OmniAuth.config.test_mode = true

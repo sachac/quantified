@@ -44,7 +44,7 @@ class TimeController < ApplicationController
     entries = current_account.records.activities.where('end_timestamp >= ? AND timestamp < ?', @range.begin, @range.end).order('timestamp').includes(:record_category)
     @records = Record.prepare_graph(@range, entries)
     unsorted = RecordCategory.summarize(:key => :date, :range => @range, :records => entries, :zoom => :daily, :user => current_account, :tree => :individual)[:rows] 
-    
+
     @categories = current_account.record_categories.index_by(&:id)
     @totals = unsorted.map { |k,v| [k, v.sort { |a,b| b[1] <=> a[1] }] }
     respond_with({:categories => @categories, :totals => @totals})

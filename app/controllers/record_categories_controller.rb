@@ -20,9 +20,6 @@ class RecordCategoriesController < ApplicationController
   def show
     authorize! :view_time, current_account
     @record_category = current_account.record_categories.find(params[:id])
-    unless @record_category
-      raise ActionController::RoutingError.new('Not Found')
-    end
     if @record_category.active
       @title = @record_category.name
     else
