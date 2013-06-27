@@ -30,7 +30,7 @@ class TimeController < ApplicationController
     range = @summary_start..@summary_end
     @zoom = Record.choose_zoom_level(range)
     @summary = RecordCategory.summarize(:user => current_account, :range => range, :zoom => @zoom, :parent => @category, :tree => params[:category_tree] ? params[:category_tree].to_sym : nil, :key => nil)
-    respond_with({:categories => @category_list, :summary => @summary})
+    respond_with({:categories => @categories, :summary => @summary})
   end
 
   def graph
