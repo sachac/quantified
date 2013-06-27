@@ -10,9 +10,11 @@ class CsaFood < ActiveRecord::Base
     past = account.csa_foods.where(:food_id => food.id, :date_received => options[:date_received] || Time.zone.today).first
     if past
       past.update_attributes(:quantity => past.quantity + options[:quantity])
+      rec = past
     else
-      account.csa_foods.create(:quantity => options[:quantity], :food => food, :unit => options[:unit], :date_received => options[:date_received])
+      rec = account.csa_foods.create(:quantity => options[:quantity], :food => food, :unit => options[:unit], :date_received => options[:date_received])
     end
+    rec
   end
   
   delegate :name, :to => :food

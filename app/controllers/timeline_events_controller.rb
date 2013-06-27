@@ -1,5 +1,4 @@
 class TimelineEventsController < ApplicationController
-  include TimelineEventsHelper
   # GET /timeline_events
   # GET /timeline_events.json
   def index

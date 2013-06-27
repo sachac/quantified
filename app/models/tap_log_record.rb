@@ -32,9 +32,11 @@ class TapLogRecord < ActiveRecord::Base
     [self.catOne, self.catTwo, self.catThree].compact.join ' > '
   end
   def private?
-    (self.note || '').downcase =~ /private/
+    (self.note || '').downcase =~ /!private/
   end
-
+  def public?
+    !private?
+  end
   # Return the Tap Log Record representing an activity during which this record occurred
   def current_activity
     if self.entry_type == 'activity'

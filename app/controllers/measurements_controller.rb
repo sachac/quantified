@@ -1,72 +1,53 @@
 class MeasurementsController < ApplicationController
+  respond_to :html, :json, :xml, :csv
+  load_and_authorize_resource
   # GET /measurements
   # GET /measurements.xml
   def index
     @measurements = current_account.measurements.all
-
-    respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @measurements }
-    end
+    respond_with @measurements
   end
 
   # GET /measurements/1
   # GET /measurements/1.xml
   def show
     @measurement = current_account.measurements.find(params[:id])
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @measurement }
-    end
+    respond_with @measurement
   end
 
   # GET /measurements/new
   # GET /measurements/new.xml
   def new
-    @measurement = Measurement.new
-
-    respond_to do |format|
-      format.html # new.html.erb
-      format.xml  { render :xml => @measurement }
-    end
+    @measurement = current_account.measurements.new
+    respond_with @measurement
   end
 
   # GET /measurements/1/edit
   def edit
     @measurement = current_account.measurements.find(params[:id])
+    respond_with @measurement
   end
 
   # POST /measurements
   # POST /measurements.xml
   def create
-    @measurement = Measurement.new(params[:measurement])
-    @measurement.user = current_account
-    respond_to do |format|
-      if @measurement.save
-        format.html { redirect_to(@measurement, :notice => 'Measurement was successfully created.') }
-        format.xml  { render :xml => @measurement, :status => :created, :location => @measurement }
-      else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @measurement.errors, :status => :unprocessable_entity }
-      end
+    @measurement = current_account.measurements.new(params[:measurement])
+    if @measurement.save
+      add_flash :notice, I18n.t('measurement.created')
     end
+    respond_with @measurement
   end
 
   # PUT /measurements/1
   # PUT /measurements/1.xml
   def update
     @measurement = current_account.measurements.find(params[:id])
+    params[:measurement].delete(:user_id)
 
-    respond_to do |format|
-      if @measurement.update_attributes(params[:measurement])
-        format.html { redirect_to(@measurement, :notice => 'Measurement was successfully updated.') }
-        format.xml  { head :ok }
-      else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @measurement.errors, :status => :unprocessable_entity }
-      end
+    if @measurement.update_attributes(params[:measurement])
+      add_flash :notice, I18n.t('measurement.updated')
     end
+    respond_with @measurement
   end
 
   # DELETE /measurements/1
@@ -74,10 +55,9 @@ class MeasurementsController < ApplicationController
   def destroy
     @measurement = current_account.measurements.find(params[:id])
     @measurement.destroy
-
     respond_to do |format|
       format.html { redirect_to(measurements_url) }
-      format.xml  { head :ok }
+      format.any  { head :ok }
     end
   end
 end

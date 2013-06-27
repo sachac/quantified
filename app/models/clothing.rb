@@ -46,6 +46,21 @@ class Clothing < ActiveRecord::Base
     end
   end
 
+  def add_color(color_to_add)
+    if self.color.blank? or color_to_add.blank?
+      self.color = color_to_add
+    else
+      self.color = self.color + "," + color_to_add
+    end
+  end
+  
+  def delete_color(color_to_remove)
+    colors = (self.color || '').split(',')
+    result = colors.delete(color_to_remove)
+    self.color = colors.join(',')
+    result
+  end
+  
   def update_stats!
     last = self.clothing_logs.order('date DESC').first
     if last then

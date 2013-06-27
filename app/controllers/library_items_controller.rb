@@ -26,7 +26,7 @@ class LibraryItemsController < ApplicationController
         :entries => @library_items
       }
     end
-    respond_with @library_items
+    respond_with @data
   end
 
   # GET /library_items/1
@@ -61,7 +61,7 @@ class LibraryItemsController < ApplicationController
     authorize! :create, LibraryItem
     @library_item = current_account.library_items.new(params[:library_item])
     @library_item.user_id = current_account.id
-    add_flash :notice => 'Library item was successfully created.' if @library_item.save
+    add_flash :notice => I18n.t('library_item.created') if @library_item.save
     respond_with @library_item
   end
 
@@ -70,16 +70,11 @@ class LibraryItemsController < ApplicationController
   def update
     @library_item = current_account.library_items.find(params[:id])
     authorize! :update, @library_item
-
-    respond_to do |format|
-      if @library_item.update_attributes(params[:library_item])
-        format.html { redirect_to(:back, :notice => 'Library item was successfully updated.') }
-        format.xml  { head :ok }
-      else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @library_item.errors, :status => :unprocessable_entity }
-      end
+    params[:library_item].delete(:user_id)
+    if @library_item.update_attributes(params[:library_item])
+      add_flash :notice, t('library_item.updated')
     end
+    respond_with @library_item, location: params[:destination] || request.env['HTTP_REFERER'] || library_items_path
   end
 
   # DELETE /library_items/1
@@ -88,11 +83,7 @@ class LibraryItemsController < ApplicationController
     @library_item = current_account.library_items.find(params[:id])
     authorize! :delete, @library_item
     @library_item.destroy
-
-    respond_to do |format|
-      format.html { redirect_to(library_items_url) }
-      format.xml  { head :ok }
-    end
+    respond_with @library_item, location: library_items_path
   end
 
   def tag
@@ -124,13 +115,16 @@ class LibraryItemsController < ApplicationController
         when 'Make public'
           item.public = true
           item.save
+          list[item.id] = item
         when 'Make private'
           item.public = false
           item.save
+          list[item.id] = item
         when 'Mark read'
           item.status = 'read'
           item.read_date ||= Time.zone.now.to_date
           item.save
+          list[item.id] = item
         end
       end
     end
@@ -141,7 +135,8 @@ class LibraryItemsController < ApplicationController
         card.refresh_items
       end
     end
-    redirect_to :back and return
+    @list = list
+    respond_with @list, location: params[:destination] || request.env['HTTP_REFERER'] || library_items_path
   end
 
   def current

@@ -63,7 +63,7 @@ class ClothingMatch < ActiveRecord::Base
 
   def self.prepare_graph(user, range = nil)
     if range
-      clothing = user.clothing.joins(:clothing_matches).where('clothing_log_date >= ? AND clothing_log_date < ?', range.begin, range.end)
+      clothing = user.clothing.joins(:clothing_matches).where('clothing_log_date >= ? AND clothing_log_date < ?', range.begin, range.end).group('clothing.id')
     else
       clothing = user.clothing.joins(:clothing_matches).select('distinct(clothing.id)')
     end
@@ -71,8 +71,8 @@ class ClothingMatch < ActiveRecord::Base
     matches = user.clothing_matches.range(range).where('clothing_a_id < clothing_b_id')
       .find(:all,
             select: 'clothing_a_id, clothing_b_id, count(clothing_b_id) AS count_matches',
-            group: 'clothing_a_id, clothing_b_id').map { |x| {source: x.clothing_a_id, target: x.clothing_b_id, count: x.count_matches} }
-    {clothing: clothing, matches: matches}
+            group: 'clothing_a_id, clothing_b_id').map { |x| {source: x.clothing_a_id, target: x.clothing_b_id, count_matches: x.count_matches} }
+    {clothing: clothing.all, matches: matches}
   end
 
   def as_json(options = {})

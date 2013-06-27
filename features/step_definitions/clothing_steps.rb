@@ -24,8 +24,8 @@ end
 
 Given /^I have the following clothing logs:$/ do |table|
   table.hashes.each do |r|
-    c = Clothing.find_by_name(r['Clothing']) || create(:clothing, user: @user, name: r['Clothing'], clothing_type: r['Type'])
-    FactoryGirl.create(:clothing_log, user: @user, date: Time.zone.parse(r['Date']), clothing: c)
+    c = Clothing.find_by_name(r['Clothing']) || create(:clothing, user: @user, name: r['Clothing'], clothing_type: r['Type'], tag_list: r['Tags'])
+    create(:clothing_log, user: @user, date: Time.zone.parse(r['Date']), clothing: c)
   end 
 end
 
@@ -123,5 +123,27 @@ Given /^the other user has the following clothing items:$/ do |table|
   end
 end
 
+When(/^I analyze my clothes$/) do
+  visit analyze_clothing_path
+end
 
+Then(/^I should see that "(.*?)" was worn (\d+) times? with "(.*?)"$/) do |arg1, arg2, arg3|
+  clothing = Clothing.find_by_name(arg1)
+  count = arg2
+  clothing2 = Clothing.find_by_name(arg3)
+  page.find("td#match_#{clothing2.id}_#{clothing.id}").text.should match("(#{count})")
+end
+
+When(/^I graph my clothes$/) do
+  visit graph_clothing_path
+end
+
+Then(/^I should see that "(.*?)" and "(.*?)" are connected with weight (\d+)$/) do |arg1, arg2, arg3|
+  clothing = Clothing.find_by_name(arg1)
+  clothing2 = Clothing.find_by_name(arg2)
+  count = arg3
+  ids = [clothing.id, clothing2.id].sort
+  page.find("tr#match_#{ids[0]}_#{ids[1]} td.count").text.should match(count)
+  
+end
 

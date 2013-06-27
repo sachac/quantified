@@ -2,6 +2,7 @@ require './lib/exceptions'
 class ApplicationController < ActionController::Base
   include Exceptions
   check_authorization :unless => :devise_controller?
+  handles_sortable_columns
   protect_from_forgery
   before_filter :before_awesome
   helper_method :current_account  
@@ -9,9 +10,28 @@ class ApplicationController < ActionController::Base
   helper_method :managing?
   skip_filter :authenticate_user!
 
+  def mobile?
+    session[:layout] == 'mobile'
+  end
+
+  def managing?
+    can? :manage_account, current_account
+  end
+
+  def current_account
+    current_user || User.where('role=?', 'demo').first || User.where('email=?', 'sacha@sachachua.com').first 
+  end  
+
+  protected
+
+  def authenticate_admin!
+    authenticate_user!
+    raise CanCan::AccessDenied unless current_user and current_user.admin?
+  end
+
   rescue_from CanCan::AccessDenied do |exception|
     if current_user
-      flash[:error] = "Sorry! Access denied. If you think you should be able to access that, please send me feedback!"
+      flash[:error] = I18n.t('error.access_denied_logged_in')
       if request.env['HTTP_REFERER']
         redirect_to :back
       else
@@ -28,7 +48,6 @@ class ApplicationController < ActionController::Base
     @account = current_account
     # Set the timezone
     Time.zone = @account.settings.timezone if @account and @account.settings.timezone 
-
     true
   end
   def notice_layout!
@@ -38,10 +57,6 @@ class ApplicationController < ActionController::Base
     true
   end
 
-  def current_account
-    current_user || User.first
-  end  
-
   def after_sign_in_path_for(resource)
     if !params[:destination].blank?
       params[:destination]
@@ -50,14 +65,14 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def filter_sortable_column_order(list)
-    result = list.first
+  def filter_sortable_column_order(list, default_sort = nil)
+    result = default_sort || list.first
     sortable_column_order do |column, direction|
       if list.map(&:to_s).include? column.to_s
         result = "#{column} #{direction}"
       end
     end
-#     sortable_column_order
+    result
   end
 
   def go_to(url, options = {})
@@ -107,28 +122,6 @@ class ApplicationController < ActionController::Base
   end
 
 
-  def mobile?
-    session[:layout] == 'mobile'
-  end
-
-  def managing?
-    can? :manage_account, current_account
-  end
-
-  def html?
-    params[:format].blank? or params[:format] == 'html'
-  end
-
-  def json_paginate(entries)
-    {
-      :current_page => entries.current_page,
-      :per_page => entries.per_page,
-      :total_entries => entries.total_entries,
-      :entries => entries
-    }
-  end
-  
-  protected
   def respond_with_data(data)
     if !request.format.csv?
       data = {

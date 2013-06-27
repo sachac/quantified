@@ -2,6 +2,7 @@ require 'simplecov'
 SimpleCov.start 'rails' do
   use_merging true
   SimpleCov.merge_timeout 3600
+  SimpleCov.command_name 'RSpec'
   coverage_dir 'coverage'
 end
 require 'rubygems'
@@ -22,6 +23,7 @@ RSpec.configure do |config|
   config.infer_base_class_for_anonymous_controllers = false
   config.include FactoryGirl::Syntax::Methods
   config.include Paperclip::Shoulda::Matchers
+  config.fixture_path = "#{::Rails.root}/spec/fixtures"
   config.include Devise::TestHelpers, :type => :controller
   config.extend ControllerMacros, :type => :controller
   config.before(:suite) do
@@ -34,5 +36,9 @@ RSpec.configure do |config|
   config.after(:each) do
     DatabaseCleaner.clean
   end
+  def (ActionDispatch::Integration::Session).fixture_path
+    RSpec.configuration.fixture_path
+  end
 end
 
+OmniAuth.config.test_mode = true

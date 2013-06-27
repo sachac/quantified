@@ -114,6 +114,8 @@ class ClothingController < ApplicationController
   def update
     @clothing = current_account.clothing.find(params[:id])
     authorize! :update, @clothing
+    params[:clothing].delete(:user_id)
+
     if @clothing.update_attributes(params[:clothing])
       add_flash :notice, 'Clothing was successfully updated.'
     end
@@ -183,7 +185,7 @@ class ClothingController < ApplicationController
         @tops[l.clothing_id] ||= @clothes[l.clothing_id] 
       end
     end
-    
+
     # Match tops and bottoms
     bottoms.each do |date, outfit|
       outfit.each do |id, clothing_id|
@@ -210,12 +212,13 @@ class ClothingController < ApplicationController
   def graph
     authorize! :view_clothing, current_account
     @start = params[:start] || current_account.clothing_logs.minimum(:date)
-    @end = params[:end] || current_account.clothing_logs.maximum(:date)
+    @end = params[:end] || (current_account.clothing_logs.maximum(:date) + 1.day)
     @matches = ClothingMatch.prepare_graph(current_account, @start..@end)
+    respond_with @matches
   end
 
   def bulk
-    authorize! :manage, current_account
+    authorize! :manage_account, current_account
     if params[:bulk] and params[:op] then
       params[:bulk].compact.each do |i|
         clothing = current_account.clothing.find(i)
@@ -259,12 +262,11 @@ class ClothingController < ApplicationController
   def delete_color
     authorize! :manage_account, current_account
     @clothing = current_account.clothing.find_by_id(params[:id])
-    colors = (@clothing.color || '').split /,/
-    result = colors.delete(params[:color])
-    if result and @clothing.update_attributes(:color => colors.join(','))
-      go_to clothing_path(@clothing), :notice => 'Colour removed.'
+    result = @clothing.delete_color(params[:color])
+    if result and @clothing.save
+      go_to clothing_path(@clothing), notice: 'Color removed.'
     else
-      go_to clothing_path(@clothing), :error => 'Could not remove colour.'
+      go_to clothing_path(@clothing), error: 'Could not remove color.'
     end
   end
 
@@ -272,28 +274,10 @@ class ClothingController < ApplicationController
     authorize! :manage_account, current_account
     @clothing = current_account.clothing.find_by_id(params[:id])
     if @clothing and params[:x] and params[:y]
-      if @clothing.color.blank?
-        @clothing.color = Clothing.guess_color(@clothing.image, params[:x], params[:y])
-      else
-        @clothing.color += ',' + Clothing.guess_color(@clothing.image, params[:x], params[:y])
-      end
+      @clothing.add_color(Clothing.guess_color(@clothing.image.path, params[:x], params[:y]))
       @clothing.save!
     end
     redirect_to @clothing
-  end
-
-  
-  def download_thumbnail
-    @clothing = current_account.clothing.find(params[:id])
-    authorize! :view, @clothing
-    # response.headers['X-Accel-Redirect'] = 'files' + @clothing.image.url
-    # response.headers['Content-Type'] = @clothing.image_content_type
-    # response.headers['Content-Disposition'] = "inline; filename=#{@clothing.image_file_name}"
-    # logger.info response.headers.inspect
-    # # #Make sure we don't render anything
-    # render :nothing => true 
-    logger.info @clothing.image.path(params[:style])
-    send_file @clothing.image.path(params[:style]), :type => @clothing.image_content_type, :disposition => 'inline' 
   end
 
 end

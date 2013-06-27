@@ -5,13 +5,25 @@
   End: <%= text_field_tag :end, @end.strftime("%Y-%m-%d") %>
   <%= submit_tag "Go", class: 'btn' %>
 <% end %>
-<div id="canvas" style="width: <%= @width %>px; height: <%= @height %>px"></div>
-<script type="text/javascript">
-  var sets = new Array();
-  window.onload = function() {
-    var p = Raphael("canvas");
-  }
-</script>
-<% @matches.each do |m| %>
-  <%= "#{m[0][0]} - #{m[0][1]} (#{m[1]})" %><br/>
+
+<table><tr><th>ID</th><th>Name</th><th>Type</th></tr>
+<% @matches[:clothing].each do |c| %>
+  <tr id="clothing_<%=c.id%>">
+    <td class="id"><%= c.id %></td>
+    <td class="name"><%= c.name %></td>
+    <td class="type"><%= c.clothing_type %></td>
+  </tr>
 <% end %>
+</table>
+
+<table><tr><th>Source</th><th>Target</th><th>Count</th></tr>
+<% @matches[:matches].each do |m| %>
+<tr id="match_<%=m[:source]%>_<%=m[:target]%>">
+  <td class="source"><%= m[:source] %></td>
+  <td class="target"><%= m[:target] %></td>
+  <td class="count"><%= m[:count_matches] %></td>
+</tr>
+<% end %>
+</table>
+
+<%= @matches.to_json %>

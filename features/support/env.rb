@@ -3,13 +3,18 @@ require 'rubygems'
 require 'database_cleaner'
 require 'database_cleaner/cucumber'
 require 'factory_girl'
+require 'action_mailer'
+require 'email_spec'
+require 'email_spec/cucumber'
 #uncomment the following line to use spork with the debugger
 #require 'spork/ext/ruby-debug'
 
-SimpleCov.use_merging true
-SimpleCov.merge_timeout 3600
-SimpleCov.coverage_dir 'coverage'
-SimpleCov.start 'rails'
+SimpleCov.start 'rails' do
+  SimpleCov.command_name 'Cucumber'
+  SimpleCov.use_merging true
+  SimpleCov.merge_timeout 3600
+  SimpleCov.coverage_dir 'coverage'
+end
 World FactoryGirl::Syntax::Methods
 require 'cucumber/rails'
 begin
