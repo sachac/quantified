@@ -6,6 +6,7 @@ class GoalsController < ApplicationController
   def index
     authorize! :manage_account, current_account
     @goals = current_account.goals
+    @goals.each { |x| x.parse }
     if request.format.csv?
       respond_with @goals
     else
@@ -19,6 +20,7 @@ class GoalsController < ApplicationController
   def show
     authorize! :manage_account, current_account
     @goal = current_account.goals.find(params[:id])
+    @goal.parse
     respond_with @goal
   end
 
@@ -27,6 +29,9 @@ class GoalsController < ApplicationController
   def new
     authorize! :manage_account, current_account
     @goal = current_account.goals.new
+    if params[:record_category_id] then
+      @goal.record_category = current_account.record_categories.find_by_id(params[:record_category_id])
+    end
     respond_with @goal
   end
 
@@ -34,6 +39,7 @@ class GoalsController < ApplicationController
   def edit
     authorize! :manage_account, current_account
     @goal = current_account.goals.find(params[:id])
+    @goal.parse
     respond_with @goal
   end
 
@@ -42,8 +48,10 @@ class GoalsController < ApplicationController
   def create
     authorize! :manage_account, current_account
     @goal = current_account.goals.new(params[:goal])
-    add_flash :notice, I18n.t('goals.created') if @goal.save 
-    respond_with @goal
+    params[:goal].delete(:user_id)
+    @goal.set_from_form(params)
+    add_flash :notice, I18n.t('goals.created') if @goal.save
+    respond_with @goal, location: goals_path
   end
 
   # PUT /goals/1
@@ -52,8 +60,10 @@ class GoalsController < ApplicationController
     authorize! :manage_account, current_account
     @goal = current_account.goals.find(params[:id])
     params[:goal].delete(:user_id)
-    add_flash :notice, I18n.t('goals.updated') if @goal.update_attributes(params[:goal])
-    respond_with @goal
+    result = @goal.update_attributes(params[:goal])
+    @goal.set_from_form(params)
+    add_flash :notice, I18n.t('goals.updated') if @goal.save
+    respond_with @goal, location: goals_path
   end
 
   # DELETE /goals/1

@@ -532,6 +532,7 @@ END
                             'February 02, 2012 09:00',
                             'ABC - XYZ',
                             cat.id.to_s,
+                            'activity',
                             '3600',
                             'ruby',
                             '1',

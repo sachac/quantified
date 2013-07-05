@@ -270,4 +270,18 @@ describe ApplicationHelper do
       it { should match 'another' }
     end
   end
+  describe '#explain_op(op)' do
+    it "turns operators into English" do
+      list = {'>' => 'should be greater than',
+        '>=' => 'should be greater than or equal to',
+        '<=' => 'should be less than or equal to',
+        '<' => 'should be less than',
+        '=' => 'should be equal to',
+        '!=' => 'should not be equal to'}
+      list.each do |k,v|
+        helper.explain_op(k).should == v
+      end
+    end
+  end
+
 end

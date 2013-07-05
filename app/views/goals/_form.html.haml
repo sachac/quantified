@@ -1,7 +1,40 @@
 = semantic_form_for @goal, html: {class: 'form-horizontal'} do |f|
   = f.inputs do
+    - list = current_account.record_categories.order('full_name').where('category_type != ?', 'record')
+    - all_ops = ['>', '>=', '=', '<=', '<', '!=']
+    - range_ops = ['<', '<=']
     = f.input :label
-    = f.input :expression
-    = f.input :period, :as => :select, :collection => ["weekly", "monthly", "daily"]
+    = f.input :period, :as => :select, :collection => {'Past 24 hours' => "daily" , 'Today' => "today", 'This week' => "weekly", 'This month' => "monthly"}
+    .control-group
+      = label_tag(:expression_type, 'Goal type', class: 'control-label')
+      .controls
+        = f.semantic_errors :expression
+        = label_tag 'expression_type_direct', class: 'choice radio' do
+          = radio_button_tag 'expression_type', 'direct', @goal.expression_type == :direct
+          Compare with target hours
+        %fieldset.direct
+          = select_tag(:direct_record_category_id, options_from_collection_for_select(list, 'id', 'full_name', @goal.record_category.is_a?(RecordCategory) ? @goal.record_category.id : ''))
+          = select_tag(:direct_op, options_for_select(all_ops, @goal.op), class: 'op')
+          = text_field_tag(:direct_record_target, '%.2f' % (@goal.target.is_a?(Fixnum) ? @goal.target : 0), style: 'width: 100px')
+          hour(s)
+      .controls
+        = label_tag 'expression_type_categories', class: 'choice radio' do
+          = radio_button_tag 'expression_type', 'categories', @goal.expression_type == :categories
+          Compare with another category
+        %fieldset.categories
+          = select_tag(:categories_record_category_id, options_from_collection_for_select(list, 'id', 'full_name', @goal.record_category ? @goal.record_category.id : ''))
+          = select_tag(:categories_op, options_for_select(all_ops, @goal.op), class: 'op')
+          = select_tag(:categories_target_id, options_from_collection_for_select(list, 'id', 'full_name', @goal.target.is_a?(RecordCategory) ? @goal.target.id : ''))
+      .controls
+        = label_tag 'expression_type_range', class: 'choice radio' do
+          = radio_button_tag 'expression_type', 'range', @goal.expression_type == :range
+          Compare with a range
+        %fieldset.range
+          = text_field_tag(:range_target, '%.2f' % (@goal.val1 || 0), style: 'width: 100px')
+          = select_tag(:range_target, options_for_select(range_ops, @goal.op1), class: 'op')
+          = select_tag(:range_record_category_id, options_from_collection_for_select(list, 'id', 'full_name', @goal.record_category ? @goal.record_category.id : ''))
+          = select_tag(:range_target, options_for_select(range_ops, @goal.op2), class: 'op')
+          = text_field_tag(:range_target, '%.2f' % (@goal.val2 || 0), style: 'width: 100px')
+          hour(s)
   .control-group
     .controls= f.submit 'Save', class: 'btn'

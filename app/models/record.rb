@@ -454,6 +454,7 @@ class Record < ActiveRecord::Base
     end_timestamp { |timestamp| I18n.l(timestamp, :format => :long) if timestamp }
     record_category :full_name => 'Record category'
     record_category :id => 'Record category ID'
+    record_category :category_type => 'Record category type'
     duration
     source_name
     source_id

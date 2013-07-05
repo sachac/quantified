@@ -1,14 +1,6 @@
-%p#notice= notice
+= setup_page 'show', @goal.label, nil
 
-%p
-  %b Label:
-  = @goal.label
-%p
-  %b Expression:
-  = @goal.expression
-%p
-  %b Period:
-  = @goal.period
+%p= render 'explain_goal', goal: @goal
 
 = link_to 'Edit', edit_goal_path(@goal)
 \|
