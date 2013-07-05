@@ -97,6 +97,11 @@ module ApplicationHelper
         actions << delete_icon(record_path(o, :destination => request.fullpath))
         actions << link_to('Clone', clone_record_path(o, :destination => request.fullpath), :method => :post)
       end
+    elsif o.is_a? Goal
+      if can? :manage_account, current_account
+        actions << edit_icon(edit_goal_path(o, :destination => request.fullpath))
+        actions << delete_icon(goal_path(o, :destination => request.fullpath))
+      end
     elsif o.is_a? Context
       if managing?
         actions << edit_icon(edit_context_path(o))
@@ -130,7 +135,9 @@ module ApplicationHelper
   end
   def setup_page(active, title = nil, nav_file = 'nav')
     title(title) if title
-    content_for(:nav) { render nav_file, :active => active }
+    if nav_file
+      content_for(:nav) { render nav_file, :active => active }
+    end
   end
 
   def active_class(variable, value)
@@ -270,5 +277,16 @@ module ApplicationHelper
     if colors
       colors.map { |x| '<div class="color-box" style="' + x + '">' }.join.html_safe
     end    
+  end
+
+  def explain_op(op)
+    case op
+    when '>' then 'should be greater than' 
+    when '>=' then 'should be greater than or equal to' 
+    when '<=' then 'should be less than or equal to'
+    when '<' then 'should be less than'
+    when '=' then 'should be equal to'
+    when '!=' then 'should not be equal to'
+    end
   end
 end

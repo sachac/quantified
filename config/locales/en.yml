@@ -115,6 +115,8 @@ en:
   goals:
     created: Goal was successfully created.
     updated: Goal was successfully updated.
+  goal:
+    set: Set goal
   food:
     created: Food was successfully created.
     updated: Food was successfully updated.

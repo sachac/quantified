@@ -1,76 +1,136 @@
 class Goal < ActiveRecord::Base
   belongs_to :user
   validates_presence_of :period, :label, :expression
+  attr_accessor :parsed, :expression_type, :target, :op, :op1, :op2, :val1, :val2, :record_category, :parsed
 
-  def parse_expression
-    range = self.range
-    
+  def parse
+    return self.parsed if self.parsed
+    return unless self.expression
     if matches = self.expression.match(/^\[(.*)\] *(>|<|<=|>=|=) *([0-9\.]+)/)
-      cat = self.user.record_categories.lookup(matches[1]).first
-      if cat
-        performance = cat.cumulative_time(range) / 3600.0
-        target = matches[3].to_f
-        success = performance.send(matches[2], target)
-      else
-        Rails.logger.info "Could not find #{matches[1]}"
-      end
-      {:label => self.label, :performance => performance, :target => target, :success => success, :text => performance ? '%.1f' % performance : ''}
+      self.expression_type = :direct
+      self.record_category = self.user.record_categories.lookup(matches[1]).first
+      self.op = matches[2]
+      self.target = matches[3].to_f
     elsif matches = self.expression.match(/\[(.*)\] *(>|<|<=|>=|=|!=) *\[(.*)\]/)
-      operator = matches[2]
-      cat1 = self.user.record_categories.lookup(matches[1]).first
-      cat2 = self.user.record_categories.lookup(matches[3]).first
-      time1 = cat1.cumulative_time(range) / 3600.0 if cat1
-      time2 = cat2.cumulative_time(range) / 3600.0 if cat2
-      time1 ||= 0
-      time2 ||= 0
-      performance = 0
-      target = 0
-      if (time1 == 0 and time2 == 0)
-        success = (operator == "=") || (operator == ">=") || (operator == "<=")
-      elsif time2 == 0
-        success = (operator == ">=") || (operator == ">") || (operator == "!=")
-      else  
-        percentage = time1 / time2
-        delta = (percentage - 1) # if A < B, this is a negative percentage
-        epsilon = 0.05
-        performance = percentage
-        target = 1
-        case matches[2]
-        when '<'
-          success = delta < -epsilon
-        when '='
-          success = delta.abs < epsilon
-        when '>'
-          success = delta > epsilon
-        when '<='
-          success = delta <= epsilon
-        when '>='
-          success = delta >= -epsilon
-        when '!='
-          success = delta.abs > epsilon
-        end
-      end
-      {:label => self.label, :performance => performance, :target => target, :success => success, :text => "#{matches[1]}: #{"%0.1f" % time1} - #{matches[3]}: #{"%0.1f" % time2}"}
+      self.expression_type = :categories
+      self.record_category = self.user.record_categories.lookup(matches[1]).first
+      self.op = matches[2]
+      self.target = self.user.record_categories.lookup(matches[3]).first 
     elsif matches = self.expression.match(/^([\.0-9]+) *(<=?) *\[([^\]]+)\] *(<=?) *([\.0-9]+)/)
-      cat = self.user.record_categories.lookup(matches[3]).first
-      val1 = matches[1].to_f
-      val2 = matches[5].to_f
-      op1 = matches[2]
-      op2 = matches[4]
-      target = val1
-      performance = cat.cumulative_time(range) / 3600.0 if cat
-      performance ||= 0
-      success = val1.send(op1, performance) && performance.send(op2, val2)
-      {:label => self.label, :performance => performance, :target => target, :success => success, :text => performance ? '%.1f' % performance : ''}
+      self.expression_type = :range
+      self.val1 = matches[1].to_f
+      self.op1 = matches[2]
+      self.record_category = self.user.record_categories.lookup(matches[3]).first
+      self.op2 = matches[4]
+      self.val2 = matches[5].to_f
+    end
+    self.parsed = true
+    return self.parsed
+  end
+
+  def recreate_from_parsed
+    case expression_type
+    when :direct
+      self.expression = "[#{self.record_category.id}] #{self.op} #{'%.2f' % self.target}"
+    when :categories
+      self.expression = "[#{self.record_category.id}] #{self.op} [#{self.target.id}]"
+    when :range
+      self.expression = "#{'%.2f' % self.val1} #{self.op1} [#{self.record_category.id}] #{self.op2} #{'%.2f' % self.val2}"
+    end
+  end
+  
+  def evaluate_direct
+    return { label: 'Does not exist', performance: nil, target: nil, success: nil, text: '' } unless self.record_category
+    performance = self.record_category.cumulative_time(range) / 3600.0
+    target = self.target
+    success = performance.send(self.op, target)
+    {:label => self.label, :performance => performance, :target => target, :success => success, :text => performance ? '%.1f' % performance : ''}
+  end
+
+  def evaluate_categories
+    return { label: 'Does not exist', performance: nil, target: nil, success: nil, text: '' } unless self.record_category and self.target
+    operator = self.op
+    time1 = (self.record_category.cumulative_time(range) / 3600.0) || 0
+    time2 = (self.target.cumulative_time(range) / 3600.0) || 0
+    performance = 0
+    target = 0
+    if (time1 == 0 and time2 == 0)
+      success = (operator == "=") || (operator == ">=") || (operator == "<=")
+    elsif time2 == 0
+      success = (operator == ">=") || (operator == ">") || (operator == "!=")
+    else  
+      percentage = time1 / time2
+      delta = (percentage - 1) # if A < B, this is a negative percentage
+      epsilon = 0.05
+      performance = percentage
+      target = 1
+      case operator
+      when '='
+        success = delta.abs < epsilon
+      when '!='
+        success = delta.abs > epsilon
+      when '<'
+        success = delta < -epsilon
+      when '>'
+        success = delta > epsilon
+      when '<='
+        success = delta <= epsilon
+      when '>='
+        success = delta >= -epsilon
+      end
+    end
+    { label: self.label, performance: performance, target: target, success: success, text: "#{self.record_category.full_name}: #{"%0.1f" % time1} - #{self.target.full_name}: #{"%0.1f" % time2}" }
+  end
+  
+  def evaluate_range
+    return { label: 'Does not exist', performance: nil, target: nil, success: nil, text: '' } unless self.record_category
+    target = self.val1
+    performance = (self.record_category.cumulative_time(range) / 3600.0) || 0
+    performance ||= 0
+    success = self.val1.send(self.op1, performance) && performance.send(self.op2, self.val2)
+    {:label => self.label, :performance => performance, :target => target, :success => success, :text => performance ? '%.1f' % performance : ''}
+  end
+  
+  def parse_expression
+    p = self.parse
+    case self.expression_type
+    when :direct then evaluate_direct
+    when :categories then evaluate_categories
+    when :range then evaluate_range
     end
   end
 
+  def set_from_form(p)
+    p = HashWithIndifferentAccess.new(p)
+    operators = ['<', '<=', '=', '>=', '>', '!=']
+    case p[:expression_type]
+    when 'direct', :direct
+      self.expression_type = :direct
+      self.record_category = self.user.record_categories.find_by_id(p[:direct_record_category_id])
+      self.op = p[:direct_op] if operators.include?(p[:direct_op])
+      self.target = p[:direct_target].to_f
+    when 'categories', :categories
+      self.expression_type = :categories
+      self.record_category = self.user.record_categories.find_by_id(p[:categories_record_category_id])
+      self.op = p[:categories_op] if operators.include?(p[:categories_op])
+      self.target = self.user.record_categories.find_by_id(p[:categories_target_id])
+    when 'range', :range
+      self.expression_type = :range
+      self.record_category = self.user.record_categories.find_by_id(p[:range_record_category_id])
+      self.op1 = p[:range_op1] if operators.include?(p[:range_op1])
+      self.op2 = p[:range_op2] if operators.include?(p[:range_op2])
+      self.val1 = p[:range_val1].to_f
+      self.val2 = p[:range_val2].to_f
+    end
+    recreate_from_parsed
+  end
+  
   def range
     case self.period
     when 'weekly'
       self.user.this_week
     when 'monthly'
-      date = Time.zone.today.yesterday
+      date = Time.zone.today
       start = Time.zone.local(date.year, date.month, 1)
       start.midnight.in_time_zone..Time.zone.now
     when 'today'

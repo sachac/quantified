@@ -1,24 +1,16 @@
-- puts @goals.inspect
+= setup_page 'index', 'Goals', nil
 = render 'summary', :goal_summary => @goal_summary
 %table.table
   %tr
-    %th User
     %th Label
     %th Expression
-    %th Period
-    %th
-    %th
     %th
 
   - @goals.each do |goal|
     %tr
-      %td= goal.user_id
       %td= goal.label
-      %td= goal.expression
-      %td= goal.period
-      %td= link_to 'Show', goal
-      %td= link_to 'Edit', edit_goal_path(goal)
-      %td= link_to 'Destroy', goal, :confirm => 'Are you sure?', :method => :delete
+      %td= render 'explain_goal', goal: goal
+      %td= action_list goal
 
 %br
 

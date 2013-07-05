@@ -1,0 +1,39 @@
+= succeed ':' do
+  = goal.period
+- if goal.expression_type == :direct
+  - if goal.record_category
+    = link_to goal.record_category.full_name, goal.record_category
+  - else
+    (Couldn't find category - please edit this goal) 
+  = explain_op goal.op
+  = goal.target
+  hour(s)
+- elsif goal.expression_type == :categories
+  - if goal.record_category
+    = link_to goal.record_category.full_name, goal.record_category
+  - else
+    (Couldn't find category - please edit this goal) 
+  = explain_op goal.op
+  - if goal.target
+    = link_to goal.target.full_name, goal.target
+  - else
+    (Couldn't find target category - please edit this goal) 
+- elsif goal.expression_type == :range
+  - if goal.record_category
+    = link_to goal.record_category.full_name, goal.record_category
+  - else
+    (Couldn't find category - please edit this goal)
+  should be within
+  = goal.val1
+  hour(s)
+  - if goal.op1 == '<='
+    (inclusive)
+  - else
+    (exclusive)
+  and
+  = goal.val2
+  hour(s)
+  - if goal.op2 == '<='
+    (inclusive)
+  - else
+    (exclusive)

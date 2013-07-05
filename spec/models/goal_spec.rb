@@ -11,11 +11,41 @@ describe Goal do
   after do
     Timecop.return
   end
+  describe '#recreate_from_parsed' do
+    it "reconstructs direct comparisons" do
+      g = Goal.new(expression_type: :direct, record_category: @cat, target: 5, op: '>=')
+      g.recreate_from_parsed.should == "[#{@cat.id}] >= 5.00"
+    end
+    it "reconstructs category comparisons" do
+      g = Goal.new(expression_type: :categories, record_category: @cat, target: @cat2, op: '>=')
+      g.recreate_from_parsed.should == "[#{@cat.id}] >= [#{@cat2.id}]"
+    end
+    it "reconstructs range comparisons" do
+      g = Goal.new(expression_type: :range, record_category: @cat, val1: '1', op1: '<=', val2: '2', op2: '<')
+      g.recreate_from_parsed.should == "1.00 <= [#{@cat.id}] < 2.00"
+    end
+  end
+  describe '#set_from_form' do
+    it "reconstructs direct comparisons" do
+      g = Goal.new(user: @u)
+      g.set_from_form({expression_type: :direct, direct_record_category_id: @cat.id, direct_target: 5, direct_op: '>='})
+      g.recreate_from_parsed.should == "[#{@cat.id}] >= 5.00"
+    end
+    it "reconstructs category comparisons" do
+      g = Goal.new(user: @u)
+      g.set_from_form({expression_type: :categories, categories_record_category_id: @cat.id, categories_target_id: @cat2.id, categories_op: '>='})
+      g.recreate_from_parsed.should == "[#{@cat.id}] >= [#{@cat2.id}]"
+    end
+    it "reconstructs range comparisons" do
+      g = Goal.new(user: @u)
+      g.set_from_form({expression_type: :range, range_record_category_id: @cat.id, range_val1: '1', range_op1: '<=', range_val2: '2', range_op2: '<'})
+      g.recreate_from_parsed.should == "1.00 <= [#{@cat.id}] < 2.00"
+    end
+  end
   describe '#parse_expression' do
     context "when the category does not exist" do
       it "returns blank and logs the error" do
         goal = create(:goal, :daily, expression: "[XYZ]<5", user: @u, label: 'Does not exist')
-        Rails.logger.should_receive(:info)
         goal.parse_expression.should == {label: 'Does not exist', performance: nil, target: nil, success: nil, text: ''}
       end
     end
@@ -286,7 +316,7 @@ describe Goal do
     it {
       should == {'Goal 1' => {class: 'good', performance_color: Goal::GOOD_COLOR, performance: 1.0, target: 5.0, success: true, text: '1.0', label: 'Goal 1'},
         'Goal 2' => {class: 'attention', performance_color: Goal::ATTENTION_COLOR, performance: 1.1, target: 5.0, success: false, text: '1.1', label: 'Goal 2'},
-        'Goal 3' => {class: 'attention', performance_color: Goal::ATTENTION_COLOR, performance: nil, target: nil, success: nil, text: '', label: 'Goal 3'}}
+        'Does not exist' => {class: 'attention', performance_color: Goal::ATTENTION_COLOR, performance: nil, target: nil, success: nil, text: '', label: 'Does not exist'}}
     }
   end
   describe '#to_comma' do

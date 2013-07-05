@@ -50,9 +50,9 @@ describe TapLogRecord do
     context 'when this is a record' do
       it "detects the current activity" do
         user = FactoryGirl.create(:confirmed_user)
-        old = FactoryGirl.create(:tap_log_record, user: user, entry_type: 'activity', timestamp: Time.now - 1.day, catOne: 'Work', catTwo: 'Office')
-        activity = FactoryGirl.create(:tap_log_record, user: user, entry_type: 'activity', catOne: 'Sleep', timestamp: Time.now - 1.hour)
-        record = FactoryGirl.create(:tap_log_record, user: user, entry_type: 'record', catOne: 'Text', timestamp: Time.now)
+        old = FactoryGirl.create(:tap_log_record, user: user, entry_type: 'activity', timestamp: Time.zone.now - 1.day, catOne: 'Work', catTwo: 'Office')
+        activity = FactoryGirl.create(:tap_log_record, user: user, entry_type: 'activity', catOne: 'Sleep', timestamp: Time.zone.now - 1.hour)
+        record = FactoryGirl.create(:tap_log_record, user: user, entry_type: 'record', catOne: 'Text', timestamp: Time.zone.now)
         record.current_activity.should == activity
       end
     end
@@ -60,22 +60,22 @@ describe TapLogRecord do
   describe '#during_this' do
     it "identifies records inside an activity with no ending timestamp" do
       user = FactoryGirl.create(:confirmed_user)
-      activity = FactoryGirl.create(:tap_log_record, user: user, entry_type: 'activity', catOne: 'Sleep', timestamp: Time.now - 1.hour)
-      record = FactoryGirl.create(:tap_log_record, user: user, entry_type: 'record', catOne: 'Text', timestamp: Time.now)
+      activity = FactoryGirl.create(:tap_log_record, user: user, entry_type: 'activity', catOne: 'Sleep', timestamp: Time.zone.now - 1.hour)
+      record = FactoryGirl.create(:tap_log_record, user: user, entry_type: 'record', catOne: 'Text', timestamp: Time.zone.now)
       activity.during_this.should == [record]
     end
     it "identifies records inside an activity with an ending timestamp" do
       user = FactoryGirl.create(:confirmed_user)
-      activity = FactoryGirl.create(:tap_log_record, user: user, entry_type: 'activity', catOne: 'Sleep', timestamp: Time.now - 1.hour, end_timestamp: Time.now - 30.minutes)
-      record = FactoryGirl.create(:tap_log_record, user: user, entry_type: 'record', catOne: 'Text', timestamp: Time.now - 45.minutes)
-      record2 = FactoryGirl.create(:tap_log_record, user: user, entry_type: 'record', catOne: 'Text', timestamp: Time.now)
+      activity = FactoryGirl.create(:tap_log_record, user: user, entry_type: 'activity', catOne: 'Sleep', timestamp: Time.zone.now - 1.hour, end_timestamp: Time.zone.now - 30.minutes)
+      record = FactoryGirl.create(:tap_log_record, user: user, entry_type: 'record', catOne: 'Text', timestamp: Time.zone.now - 45.minutes)
+      record2 = FactoryGirl.create(:tap_log_record, user: user, entry_type: 'record', catOne: 'Text', timestamp: Time.zone.now)
       activity.during_this.should == [record]
     end
   end
   describe '#previous' do 
     it 'knows when there is a previous activity' do
       user = FactoryGirl.create(:confirmed_user)
-      old = FactoryGirl.create(:tap_log_record, user: user, entry_type: 'activity', timestamp: Time.now - 1.day, catOne: 'Work', catTwo: 'Office')
+      old = FactoryGirl.create(:tap_log_record, user: user, entry_type: 'activity', timestamp: Time.zone.now - 1.day, catOne: 'Work', catTwo: 'Office')
       activity = FactoryGirl.create(:tap_log_record, user: user, entry_type: 'activity', catOne: 'Sleep')
       activity.previous.should == [old]
     end
@@ -87,7 +87,7 @@ describe TapLogRecord do
   describe '#next' do 
     it 'knows when there is a next activity' do
       user = FactoryGirl.create(:confirmed_user)
-      old = FactoryGirl.create(:tap_log_record, user: user, entry_type: 'activity', timestamp: Time.now - 1.day, catOne: 'Work', catTwo: 'Office')
+      old = FactoryGirl.create(:tap_log_record, user: user, entry_type: 'activity', timestamp: Time.zone.now - 1.day, catOne: 'Work', catTwo: 'Office')
       activity = FactoryGirl.create(:tap_log_record, user: user, entry_type: 'activity', catOne: 'Sleep')
       old.next.should == [activity]
     end

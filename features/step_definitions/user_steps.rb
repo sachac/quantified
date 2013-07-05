@@ -211,15 +211,7 @@ end
 When /^I create a record category named "([^"]*)" which is a "([^"]*)"$/ do |arg1, arg2|
   visit new_record_category_path
   fill_in 'record_category[name]', :with => arg1
-  select arg2, :from => 'record_category[category_type]'
-  click_button I18n.t('app.general.save')
-end
-
-When /^I create a record category named "([^"]*)" which is an "([^"]*)" under "([^"]*)"$/ do |arg1, arg2, arg3|
-  visit new_record_category_path
-  fill_in 'record_category[name]', :with => arg1
-  choose arg2, :from => 'record_category[category_type]'
-  fill_in 'record_category[parent]', :with => arg3
+  choose 'record_category_category_type_' + arg2
   click_button I18n.t('app.general.save')
 end
 
@@ -298,4 +290,8 @@ end
 
 Then /^the administrator should receive a feedback email$/ do 
   unread_emails_for(ApplicationMailer::ADMIN_ADDRESS).select { |m| m.subject =~ /Feedback/ }.size.should >= 1
+end
+
+When(/^I view my dashboard$/) do
+  visit root_path
 end
