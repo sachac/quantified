@@ -87,6 +87,10 @@ class TorontoLibrariesController < ApplicationController
       result[l] = l.refresh_items
     end
     add_flash :notice, I18n.t('toronto_library.refresh')
-    respond_with result, location: params[:destination] || request.env['HTTP_REFERER'] || root_path
+    if request.format.html?
+      go_to root_path
+    else 
+      respond_with result, location: params[:destination] || request.env['HTTP_REFERER'] || root_path
+    end
   end
 end
