@@ -41,7 +41,10 @@
     - if @context[:previous] and @context[:previous][:activity] and @context[:previous][:activity] != @context[:current]
       %tr
         %td.h= t('.previous.activity')
-        %td= link_to @context[:previous][:activity].full_name, @context[:previous][:activity]
+        %td
+          = link_to @context[:previous][:activity].full_name, @context[:previous][:activity]
+          = surround '(', ')' do
+            = duration @context[:previous][:activity].duration
     - if @context[:previous] and @context[:previous][:entry] and @context[:previous][:entry] != @context[:previous][:activity]
       %tr
         %td.h= t('.previous.entry')

@@ -21,14 +21,19 @@ class TimeController < ApplicationController
     params[:start] ||= current_account.beginning_of_week.advance(:weeks => -1).strftime('%Y-%m-%d')
     params[:category_tree] ||= 'full'
     params[:end] ||= Time.zone.now.strftime('%Y-%m-%d')
-    prepare_filters [:date_range, :category_tree, :parent_id, :display_type]
+    prepare_filters [:date_range, :category_tree, :parent_id, :display_type, :zoom_level]
     @categories = current_account.record_categories.index_by(&:id)
     @summary_start = Time.zone.parse(params[:start])
     @summary_end = Time.zone.parse(params[:end])
-    # Pick the appropriate level of review
     @category = !params[:parent_id].blank? ? current_account.record_categories.find(params[:parent_id]) : nil
     range = @summary_start..@summary_end
-    @zoom = Record.choose_zoom_level(range)
+    # Pick the appropriate level of review
+    zoom_level = params[:zoom_level] || ''
+    if !zoom_level.blank? and [:daily, :weekly, :monthly].include?(zoom_level.to_sym)
+      @zoom = zoom_level.to_sym
+    else
+      @zoom = Record.choose_zoom_level(range)
+    end
     @summary = RecordCategory.summarize(:user => current_account, :range => range, :zoom => @zoom, :parent => @category, :tree => params[:category_tree] ? params[:category_tree].to_sym : nil, :key => nil)
     respond_with({:categories => @categories, :summary => @summary})
   end

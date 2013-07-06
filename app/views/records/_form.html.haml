@@ -14,9 +14,9 @@
     - if @record.record_category.category_type == 'activity'
       - if previous_activity
         - if previous_activity.manual?
-          - previous_hint = "Changing this will not affect the previous activity (#{link_to previous_activity.record_category.full_name, previous_activity})".html_safe
+          - previous_hint = "Changing this will not affect the previous activity (#{link_to previous_activity.record_category.full_name, previous_activity}, #{duration previous_activity.duration})".html_safe
         - else
-          - previous_hint = "Changing this will also update the previous activity (#{link_to previous_activity.record_category.full_name, previous_activity}). Change the previous activity to a manual end time if you don't want that activity to be updated".html_safe
+          - previous_hint = "Changing this will also update the previous activity (#{link_to previous_activity.record_category.full_name, previous_activity}, #{duration previous_activity.duration}). Change the previous activity to a manual end time if you don't want that activity to be updated".html_safe
     = f.input :timestamp, :as => :string, :input_html => { :value => l(f.object.timestamp, :format => :long) }, :hint => previous_hint
     - if @record.record_category.category_type == 'activity'
       - next_activity = @record.next_activity

@@ -44,5 +44,9 @@
               = label_tag :display_type_inline, 'Time', :class => 'inline'
               = radio_button_tag :display_type, 'decimal', params[:display_type] == 'decimal', :class => 'inline'
               = label_tag :display_type_decimal, 'Decimal', :class => 'inline'
+        - if @filters[:zoom_level]
+          .control-group
+            = label_tag :zoom_level, 'Zoom level', class: 'control-label'
+            .controls= select_tag :zoom_level, options_for_select({'Automatic' => '', 'Daily' => 'daily', 'Weekly' => 'weekly', 'Monthly' => 'monthly'}, params[:zoom_level])
         .control-group
           .controls= submit_tag t('app.general.filter'), :class => 'btn btn-primary'
