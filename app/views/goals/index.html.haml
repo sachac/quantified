@@ -1,4 +1,4 @@
-= setup_page 'index', 'Goals', nil
+= setup_page 'goals', 'Goals', 'time/nav'
 = render 'summary', :goal_summary => @goal_summary
 %table.table
   %tr
@@ -14,4 +14,5 @@
 
 %br
 
-= link_to 'New Goal', new_goal_path
+- if managing?
+  = link_to 'New Goal', new_goal_path
