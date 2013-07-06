@@ -11,7 +11,7 @@
         %li{:class => active_menu(['/library', '/toronto_library'])}= link_to 'library', library_items_path
       %li{:class => active_menu(['/food', '/csa_food'])}= link_to 'food', csa_foods_path
       %li{:class => active_menu('/memories')}= link_to 'memories', memories_path
-      %li{:class => active_menu(['/time', '/tap_log_records', '/records', '/record_categories'])}= link_to 'time', time_path
+      %li{:class => active_menu(['/time', '/tap_log_records', '/records', '/record_categories', '/goals'])}= link_to 'time', time_path
       - if user_signed_in?
         %li{:class => active_menu('/user')}= link_to 'account', edit_user_path(current_account.id)
         %li= link_to t("web-app-theme.logout", :default => "log out"), destroy_user_session_path, :method => "delete"

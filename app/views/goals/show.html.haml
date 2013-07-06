@@ -1,7 +1,8 @@
-= setup_page 'show', @goal.label, nil
+= setup_page 'goals', @goal.label, 'time/nav'
 
 %p= render 'explain_goal', goal: @goal
 
-= link_to 'Edit', edit_goal_path(@goal)
-\|
+- if managing?
+  = link_to 'Edit', edit_goal_path(@goal)
+  \|
 = link_to 'Back', goals_path
