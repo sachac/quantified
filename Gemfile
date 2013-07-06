@@ -87,6 +87,7 @@ gem 'rails-settings-cached', '~> 0.2.4'
 gem 'subdomain-fu', :git => "git://github.com/nhowell/subdomain-fu.git"
 gem 'fastercsv'
 group :development, :test do
+  gem 'rails-dev-tweaks'
   #gem 'hpricot'
   #gem 'rcov'
   gem 'database_cleaner'

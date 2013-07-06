@@ -7,7 +7,7 @@
         - date = current_account.adjust_beginning_of_week(summary_start)
         - while date <= summary_end
           %th{:title => "Week ending #{l date + 6.days, :format => :long}"}
-            = link_to l(date + 6.days, :format => :short), time_review_path(params.merge({:action => 'review', :controller => 'time', :start => date, :end => date + 1.week}))
+            = link_to l(date.to_date + 6.days, :format => :short), time_review_path(params.merge({:action => 'review', :controller => 'time', :start => date, :end => date + 1.week}))
           - date += 1.week
         %th.right Total  
     %tbody

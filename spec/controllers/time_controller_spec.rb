@@ -46,6 +46,19 @@ describe TimeController do
         assigns(:zoom).should == :daily
         assigns(:summary)['rows'][@cat.id]['total'].should == 3600
       end
+      it "lets me set the zoom to weekly" do
+        get :review, zoom_level: 'weekly'
+        assigns(:zoom).should == :weekly
+      end
+      it "lets me set the zoom to monthly" do
+        get :review, zoom_level: 'monthly'
+        assigns(:zoom).should == :monthly
+      end
+      it "lets me set the zoom to automatic" do
+        get :review, zoom_level: '', start: Time.zone.now - 1.week, end: Time.zone.now - 1.day
+        assigns(:zoom).should == :daily
+      end
+      
     end
     describe 'GET graph' do
       it "displays records" do

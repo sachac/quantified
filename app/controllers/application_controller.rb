@@ -117,6 +117,9 @@ class ApplicationController < ActionController::Base
         params[:display_type] ||= 'time'
       when :parent_id
         @filters[:parent_id] = true
+      when :zoom_level
+        @filters[:zoom_level] = true
+        params[:zoom_level] ||= ''
       end
     end
   end
