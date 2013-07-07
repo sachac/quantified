@@ -1,0 +1,39 @@
+%p#notice= notice
+
+%p
+  %b Filename:
+  = @receipt_item.filename
+%p
+  %b Source:
+  = @receipt_item.source_id
+%p
+  %b Source name:
+  = @receipt_item.source_name
+%p
+  %b Store:
+  = @receipt_item.store
+%p
+  %b Date:
+  = @receipt_item.date
+%p
+  %b Name:
+  = @receipt_item.name
+%p
+  %b Quantity:
+  = @receipt_item.quantity
+%p
+  %b Unit:
+  = @receipt_item.unit
+%p
+  %b Unit price:
+  = @receipt_item.unit_price
+%p
+  %b Total:
+  = @receipt_item.total
+%p
+  %b Notes:
+  = @receipt_item.notes
+
+= link_to 'Edit', edit_receipt_item_path(@receipt_item)
+\|
+= link_to 'Back', receipt_items_path

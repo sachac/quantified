@@ -1,0 +1,61 @@
+= setup_page 'batch', 'Batch entry'
+
+= form_tag batch_entry_receipt_items_path, class: 'form-horizontal' do
+  Example:
+  %table.table.table-bordered
+    %tr
+      %th ID
+      %th File
+      %th Store
+      %th Date
+      %th Name
+      %th Quantity or net weight
+      %th Unit
+      %th Unit price
+      %th Total
+      %th Notes
+    %tr
+      %td 2
+      %td 4115240.jpg
+      %td Nofrills Lower Food Prices
+      %td 2012-03-18
+      %td Strawberries 1LB
+      %td 1.000
+      %td
+      %td 2.49
+      %td 2.49
+      %td
+  %h3 1. Enter data
+  = text_area_tag 'batch', params[:batch], required: true, style: 'width: 100%; margin-bottom: 10px', rows: @result ? 5 : 10
+  = submit_tag 'Update', :class => params[:batch] ? 'btn' : 'btn btn-primary'
+  - if @result
+    %h3 2. Confirm data
+    = submit_tag 'Confirm batch creation', name: 'confirm_data', class: 'btn btn-primary'
+    %table.table.table-bordered{style: 'margin-top: 10px'}
+      %tr
+        %th ID
+        %th File
+        %th Store
+        %th Date
+        %th Name
+        %th Quantity or net weight
+        %th Unit
+        %th Unit price
+        %th Total
+        %th Notes
+      - @result.each do |row|
+        %tr
+          %td= row['ID']
+          %td= row['File']
+          %td= row['Store']
+          %td= row['Date']
+          %td= row['Name']
+          %td= row['Quantity or net weight']
+          %td= row['Unit']
+          %td= row['Unit price']
+          %td= row['Total']
+          %td= row['Notes']
+    = submit_tag 'Confirm batch creation', name: 'confirm_data', class: 'btn btn-primary'
+
+          
+ 

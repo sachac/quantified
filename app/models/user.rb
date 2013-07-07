@@ -1,5 +1,6 @@
 class User < ActiveRecord::Base
   has_many :clothing_logs
+  has_many :receipt_items
   has_many :clothing_matches
   has_many :goals
   has_many :clothing
