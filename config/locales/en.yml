@@ -160,3 +160,6 @@ en:
     created: Record category created.
     updated: Record category updated.
     not_found_create: Could not find matching category. Create?
+  receipt_item:
+    created: Receipt item created.
+    updated: Receipt item updated.

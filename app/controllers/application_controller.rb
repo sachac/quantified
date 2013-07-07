@@ -10,6 +10,10 @@ class ApplicationController < ActionController::Base
   helper_method :managing?
   skip_filter :authenticate_user!
 
+  def authenticate_managing!
+    authorize! :manage_account, current_account
+  end
+  
   def mobile?
     session[:layout] == 'mobile'
   end

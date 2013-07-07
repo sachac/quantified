@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130617200651) do
+ActiveRecord::Schema.define(:version => 20130706235901) do
 
   create_table "clothing", :force => true do |t|
     t.string   "name"
@@ -254,6 +254,23 @@ ActiveRecord::Schema.define(:version => 20130617200651) do
 
   add_index "memories", ["name"], :name => "index_memories_on_name"
   add_index "memories", ["user_id"], :name => "index_memories_on_user_id"
+
+  create_table "receipt_items", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "filename"
+    t.string   "source_id"
+    t.string   "source_name"
+    t.string   "store"
+    t.date     "date"
+    t.string   "name"
+    t.decimal  "quantity",    :precision => 10, :scale => 3
+    t.string   "unit"
+    t.decimal  "unit_price",  :precision => 10, :scale => 3
+    t.decimal  "total",       :precision => 10, :scale => 2
+    t.string   "notes"
+    t.datetime "created_at",                                 :null => false
+    t.datetime "updated_at",                                 :null => false
+  end
 
   create_table "record_categories", :force => true do |t|
     t.integer  "user_id"

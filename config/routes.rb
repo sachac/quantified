@@ -1,4 +1,12 @@
 Home::Application.routes.draw do
+  resources :receipt_items do
+    collection do
+      get :batch_entry
+      post :batch_entry
+    end
+  end
+
+
   resources :goals
   resources :pages
   match 'auth/:service/callback' => 'services#create'
