@@ -121,22 +121,25 @@ describe RecordCategory do
       end
       context 'when requesting reverse-chronological order' do
         it "returns newest entries first" do
-          @cat2_child.category_records(include_private: true).first.timestamp.hour.should == 10
+          @cat2_child.category_records(include_private: true, order: 'newest').first.timestamp.hour.should == 10
         end
       end
       context 'when requesting a tree' do
         it "returns child categories' records" do
-          @cat2.category_records(include_private: true).first.timestamp.hour.should == 10
+          @cat2.category_records(include_private: true, order: 'newest').first.timestamp.hour.should == 10
         end
       end
       context 'when filtering' do
         it "shows only filtered items" do
-          @cat2.category_records(filter_string: 'search').size.should == 1
+          @cat2.category_records(filter_string: 'search', order: 'newest').size.should == 1
+        end
+        it "matches category full names" do
+          @cat2.category_records(filter_string: 'Child', order: 'newest').size.should == 1
         end
       end
       context 'when including private' do
         it "includes private entries" do
-          @cat2.category_records(include_private: true).size.should == 2
+          @cat2.category_records(include_private: true, order: 'newest').size.should == 2
         end
       end
     end

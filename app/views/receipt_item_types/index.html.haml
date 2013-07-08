@@ -1,0 +1,15 @@
+= setup_page 'index', 'Receipt item types', 'receipt_items/nav'
+
+%table.table.table-bordered
+  %tr
+    %th Friendly name
+    %th Receipt name
+    %th
+  - @receipt_item_types.each do |receipt_item_type|
+    %tr
+      %td= link_to receipt_item_type.friendly_name, receipt_item_type
+      %td= receipt_item_type.receipt_name
+      %td= action_list receipt_item_type
+%br
+
+= link_to 'New receipt item type', new_receipt_item_type_path

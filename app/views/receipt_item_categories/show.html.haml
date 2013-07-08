@@ -1,0 +1,16 @@
+= setup_page 'receipt_item_categories', @receipt_item_category.name, 'receipt_items/nav'
+
+%table.table.table-bordered
+  %tr
+    %th Type
+    %th Total
+    %th
+  - @receipt_item_types.each do |x|
+    %tr
+      %td= link_to x.friendly_name, x
+      %td= x.total
+      %td= action_list x
+
+= link_to 'Edit', edit_receipt_item_category_path(@receipt_item_category)
+\|
+= link_to 'Back', receipt_item_categories_path

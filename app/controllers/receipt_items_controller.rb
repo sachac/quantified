@@ -5,8 +5,14 @@ class ReceiptItemsController < ApplicationController
   # GET /receipt_items
   # GET /receipt_items.json
   def index
-    @receipt_items = current_account.receipt_items
-    respond_with @receipt_items
+    @receipt_items = current_account.receipt_items.order('date DESC').joins('LEFT JOIN receipt_item_types ON receipt_items.receipt_item_type_id=receipt_item_types.id').select('receipt_items.*, receipt_item_types.friendly_name')
+    prepare_filters :filter_string
+    if !params[:filter_string].blank?
+      filter = '%' + params[:filter_string].downcase + '%'
+      @receipt_items = @receipt_items.where('LOWER(name) LIKE ? OR LOWER(friendly_name) LIKE ?', filter, filter)
+    end
+    @receipt_items = @receipt_items.paginate(page: params[:page]) unless request.format.csv?
+    respond_with_data @receipt_items
   end
 
   # GET /receipt_items/1

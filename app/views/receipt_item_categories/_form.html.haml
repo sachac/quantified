@@ -1,0 +1,9 @@
+= semantic_form_for @receipt_item_category do |f|
+  = f.semantic_errors
+  = f.inputs do
+    = f.input :name
+    .control-group
+      .controls
+        = f.submit t('general.save'), class: 'btn btn-primary'
+        - if !@receipt_item_category.new_record?
+          = link_to t('general.delete'), @receipt_item_category, class: 'btn', method: :delete, confirm: t('general.are_you_sure')

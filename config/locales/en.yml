@@ -163,3 +163,9 @@ en:
   receipt_item:
     created: Receipt item created.
     updated: Receipt item updated.
+  receipt_item_type:
+    created: Receipt item type created.
+    updated: Receipt item type updated.
+  receipt_item_category:
+    created: Receipt item category created.
+    updated: Receipt item category updated.

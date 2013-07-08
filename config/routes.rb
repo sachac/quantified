@@ -1,4 +1,13 @@
 Home::Application.routes.draw do
+  resources :receipt_item_types do
+    collection do
+      get :batch_entry
+      post :batch_entry
+    end
+  end
+
+  resources :receipt_item_categories
+
   resources :receipt_items do
     collection do
       get :batch_entry

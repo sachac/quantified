@@ -7,7 +7,7 @@ FactoryGirl.define do
     source_id 1
     source_name "factory"
     store "Supermarket"
-    date "2013-07-06"
+    date { Time.zone.now.to_date }
     name { FactoryGirl.generate(:receipt_item_name) }
     quantity "2"
     unit "pc"
@@ -15,5 +15,6 @@ FactoryGirl.define do
     total "5.00"
     notes ""
     user
+    receipt_item_type nil
   end
 end

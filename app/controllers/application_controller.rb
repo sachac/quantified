@@ -112,7 +112,7 @@ class ApplicationController < ActionController::Base
       when :date_range
         @filters[:date_range] = true
         params[:start] ||= current_account.beginning_of_week.strftime('%Y-%m-%d')
-        params[:end] ||= Time.zone.now.strftime('%Y-%m-%d')
+        params[:end] ||= (Time.zone.now + 1.day).strftime('%Y-%m-%d')
       when :category_tree
         @filters[:category_tree] = true
         params[:category_tree] ||= 'tree'
@@ -124,6 +124,9 @@ class ApplicationController < ActionController::Base
       when :zoom_level
         @filters[:zoom_level] = true
         params[:zoom_level] ||= ''
+      when :filter_string
+        @filters[:filter_string] = true
+        params[:filter_string] ||= ''
       end
     end
   end
