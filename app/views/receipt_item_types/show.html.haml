@@ -1,0 +1,37 @@
+= setup_page 'receipt_item_types', @receipt_item_type.friendly_name, 'receipt_items/nav'
+- if @receipt_item_type.receipt_item_category
+  %p
+    Category:
+    = link_to @receipt_item_type.receipt_item_category.name, @receipt_item_type.receipt_item_category
+
+= render 'filters'
+
+%p
+  Total:
+  = @items.sum(:total)
+ 
+%table.table.table-bordered
+  %tr
+    %th Date
+    %th Store
+    %th Quantity
+    %th Unit
+    %th Unit price
+    %th Total
+  - @same_name.each do |o|
+    %tr
+      %th{colspan: 6}= link_to o.receipt_name, edit_receipt_item_type_path(o)
+    - list = o.receipt_items.order('date DESC').where('date >= ? AND date < ?', @start, @end)
+    - list.each do |item|
+      %tr
+        %td= item.date
+        %td= item.store
+        %td= item.quantity
+        %td= item.unit
+        %td= item.unit_price
+        %td= item.total
+  
+  
+= link_to 'Edit', edit_receipt_item_type_path(@receipt_item_type)
+\|
+= link_to 'Back', receipt_item_types_path

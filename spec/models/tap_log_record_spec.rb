@@ -76,7 +76,7 @@ describe TapLogRecord do
     it 'knows when there is a previous activity' do
       user = FactoryGirl.create(:confirmed_user)
       old = FactoryGirl.create(:tap_log_record, user: user, entry_type: 'activity', timestamp: Time.zone.now - 1.day, catOne: 'Work', catTwo: 'Office')
-      activity = FactoryGirl.create(:tap_log_record, user: user, entry_type: 'activity', catOne: 'Sleep')
+      activity = FactoryGirl.create(:tap_log_record, user: user, entry_type: 'activity', catOne: 'Sleep', timestamp: Time.zone.now)
       activity.previous.should == [old]
     end
     it 'knows when there is no previous activity' do
@@ -88,7 +88,7 @@ describe TapLogRecord do
     it 'knows when there is a next activity' do
       user = FactoryGirl.create(:confirmed_user)
       old = FactoryGirl.create(:tap_log_record, user: user, entry_type: 'activity', timestamp: Time.zone.now - 1.day, catOne: 'Work', catTwo: 'Office')
-      activity = FactoryGirl.create(:tap_log_record, user: user, entry_type: 'activity', catOne: 'Sleep')
+      activity = FactoryGirl.create(:tap_log_record, user: user, entry_type: 'activity', catOne: 'Sleep', timestamp: Time.zone.now)
       old.next.should == [activity]
     end
     it 'knows when there is no next activity' do

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130706235901) do
+ActiveRecord::Schema.define(:version => 20130708210423) do
 
   create_table "clothing", :force => true do |t|
     t.string   "name"
@@ -255,6 +255,22 @@ ActiveRecord::Schema.define(:version => 20130706235901) do
   add_index "memories", ["name"], :name => "index_memories_on_name"
   add_index "memories", ["user_id"], :name => "index_memories_on_user_id"
 
+  create_table "receipt_item_categories", :force => true do |t|
+    t.string   "name"
+    t.integer  "user_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "receipt_item_types", :force => true do |t|
+    t.string   "receipt_name"
+    t.string   "friendly_name"
+    t.integer  "user_id"
+    t.datetime "created_at",               :null => false
+    t.datetime "updated_at",               :null => false
+    t.integer  "receipt_item_category_id"
+  end
+
   create_table "receipt_items", :force => true do |t|
     t.integer  "user_id"
     t.string   "filename"
@@ -263,13 +279,14 @@ ActiveRecord::Schema.define(:version => 20130706235901) do
     t.string   "store"
     t.date     "date"
     t.string   "name"
-    t.decimal  "quantity",    :precision => 10, :scale => 3
+    t.decimal  "quantity",             :precision => 10, :scale => 3
     t.string   "unit"
-    t.decimal  "unit_price",  :precision => 10, :scale => 3
-    t.decimal  "total",       :precision => 10, :scale => 2
+    t.decimal  "unit_price",           :precision => 10, :scale => 3
+    t.decimal  "total",                :precision => 10, :scale => 2
     t.string   "notes"
-    t.datetime "created_at",                                 :null => false
-    t.datetime "updated_at",                                 :null => false
+    t.datetime "created_at",                                          :null => false
+    t.datetime "updated_at",                                          :null => false
+    t.integer  "receipt_item_type_id"
   end
 
   create_table "record_categories", :force => true do |t|

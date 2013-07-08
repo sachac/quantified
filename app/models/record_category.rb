@@ -240,15 +240,15 @@ class RecordCategory < ActiveRecord::Base
     end
     if options[:order] == 'oldest'
       records = records.order('timestamp ASC')
-    else
+    elsif options[:order] == 'newest'
       records = records.order('timestamp DESC')
     end
     unless options[:include_private]
       records = records.public
     end
-    if options[:filter_string]
+    if !options[:filter_string].blank?
       query = "%" + options[:filter_string].downcase + "%"
-      records = records.where('LOWER(records.data) LIKE ?', query) 
+      records = records.joins(:record_category).where('LOWER(records.data) LIKE ? OR LOWER(record_categories.full_name) LIKE ?', query, query) 
     end
     records
   end

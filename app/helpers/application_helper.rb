@@ -73,6 +73,7 @@ module ApplicationHelper
     labels.join('').html_safe
   end
   def actions(o)
+    model_name = o.class.to_s.underscore
     actions = Array.new
     if o.is_a? Memory
       if can? :update, o
@@ -86,26 +87,31 @@ module ApplicationHelper
         actions << edit_icon(edit_record_category_path(o))
         case o.category_type
         when 'activity'
-          actions << link_to(t('record_categories.show.start_activity'), track_time_path(:category_id => o.id), :method => :post)
+          actions << link_to(t('record_categories.show.start_activity'), track_time_path(category_id: o.id), method: :post)
         when 'record'
-          actions << link_to(t('record_categories.show.record'), track_time_path(:category_id => o.id), :method => :post)
+          actions << link_to(t('record_categories.show.record'), track_time_path(category_id: o.id), method: :post)
         end
       end
     elsif o.is_a? Record
       if can? :manage_account, current_account
-        actions << edit_icon(edit_record_path(o, :destination => request.fullpath))
-        actions << delete_icon(record_path(o, :destination => request.fullpath))
-        actions << link_to('Clone', clone_record_path(o, :destination => request.fullpath), :method => :post)
+        actions << edit_icon(edit_record_path(o, destination: request.fullpath))
+        actions << delete_icon(record_path(o, destination: request.fullpath))
+        actions << link_to('Clone', clone_record_path(o, destination: request.fullpath), method: :post)
       end
     elsif o.is_a? Goal
       if can? :manage_account, current_account
-        actions << edit_icon(edit_goal_path(o, :destination => request.fullpath))
-        actions << delete_icon(goal_path(o, :destination => request.fullpath))
+        actions << edit_icon(edit_goal_path(o, destination: request.fullpath))
+        actions << delete_icon(goal_path(o, destination: request.fullpath))
       end
     elsif o.is_a? Context
       if managing?
         actions << edit_icon(edit_context_path(o))
         actions << link_to('Start', start_context_path(o))
+      end
+    elsif o.is_a? ReceiptItem or o.is_a? ReceiptItemType or o.is_a? ReceiptItemCategory
+      if managing?
+        actions << edit_icon(o, destination: request.fullpath)
+        actions << delete_icon(o, destination: request.fullpath)
       end
     end
     actions
@@ -262,11 +268,17 @@ module ApplicationHelper
     # link_to 'Help', url
   end
 
-  def delete_icon(path)
+  def delete_icon(path, options = nil)
+    if !path.is_a? String
+      path = send("#{path.class.to_s.underscore}_path", path, options)
+    end
     link_to image_tag('trash.png', :alt => t('general.delete'), :title => t('general.delete')), path, :method => :delete, :class => 'icon delete', :confirm => I18n.t('general.are_you_sure')
   end
 
-  def edit_icon(path)
+  def edit_icon(path, options = nil)
+    if !path.is_a? String
+      path = send("edit_#{path.class.to_s.underscore}_path", path, options)
+    end
     link_to image_tag('edit.png', :alt => t('general.edit'), :title => t('general.edit')), path, :class => 'icon edit'
   end
 

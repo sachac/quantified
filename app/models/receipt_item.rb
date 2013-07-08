@@ -1,6 +1,9 @@
 class ReceiptItem < ActiveRecord::Base
   attr_accessible :date, :filename, :name, :notes, :quantity, :source_id, :source_name, :store, :total, :unit, :unit_price
   belongs_to :user
+  belongs_to :receipt_item_type
+  delegate :friendly_name, to: :receipt_item_type, allow_nil: true
+
 
   def self.parse_batch(text)
     text = text.strip
@@ -50,5 +53,19 @@ class ReceiptItem < ActiveRecord::Base
     end
     result
   end
-  
+
+  comma do
+    filename
+    source_id
+    source_name
+    store
+    date
+    name
+    friendly_name
+    quantity
+    unit
+    unit_price
+    total
+    notes
+  end
 end

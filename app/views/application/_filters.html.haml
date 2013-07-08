@@ -1,6 +1,7 @@
 - legend ||= "Filters [+]"
+- expanded ||= nil
 - if @filters
-  .filters.collapsible.collapsed
+  .filters.collapsible{class: expanded ? '' : 'collapsed'}
     %legend= legend
     .details
       = form_tag request.url, method: :get, class: 'form-horizontal' do
@@ -33,7 +34,7 @@
               = label_tag :order_oldest, 'Oldest on top', :class => 'inline'
         - if @filters[:filter_string]
           .control-group
-            = label_tag :filter, t('app.general.filter'), class: 'control-label'
+            = label_tag :filter_string, t('app.general.filter'), class: 'control-label'
             .controls
               = text_field_tag :filter_string, params ? params[:filter_string] : ''
         - if @filters[:display_type]

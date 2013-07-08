@@ -35,10 +35,17 @@ describe RecordCategoriesController do
         get :show, id: @inactive.id
         assigns(:title).should match I18n.t('general.inactive')
       end
-      it "sorts in ascending order if requested" do
+      it "sorts in chronological order if requested" do
         @record = create(:record, record_category: @cat, timestamp: Time.zone.now - 1.hour)
+        @record2 = create(:record, record_category: @cat, timestamp: Time.zone.now - 2.hour)
         get :show, id: @cat.id, order: 'oldest'
-        assigns(:records).all.should include @record
+        assigns(:records)[0].should == @record2
+      end
+      it "sorts in reverse chronological order if requested" do
+        @record = create(:record, record_category: @cat, timestamp: Time.zone.now - 1.hour)
+        @record2 = create(:record, record_category: @cat, timestamp: Time.zone.now - 2.hour)
+        get :show, id: @cat.id, order: 'newest'
+        assigns(:records)[0].should == @record
       end
       it "includes a summary of records for HTML/CSV" do
         @record = create(:record, record_category: @cat, timestamp: Time.zone.now - 1.hour)

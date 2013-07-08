@@ -1,43 +1,20 @@
-= form_for @receipt_item do |f|
-  - if @receipt_item.errors.any?
-    #error_explanation
-      %h2= "#{pluralize(@receipt_item.errors.count, "error")} prohibited this receipt_item from being saved:"
-      %ul
-        - @receipt_item.errors.full_messages.each do |msg|
-          %li= msg
-
-  .field
-    = f.label :filename
-    = f.text_field :filename
-  .field
-    = f.label :source_id
-    = f.number_field :source_id
-  .field
-    = f.label :source_name
-    = f.text_field :source_name
-  .field
-    = f.label :store
-    = f.text_field :store
-  .field
-    = f.label :date
-    = f.date_select :date
-  .field
-    = f.label :name
-    = f.text_field :name
-  .field
-    = f.label :quantity
-    = f.text_field :quantity
-  .field
-    = f.label :unit
-    = f.text_field :unit
-  .field
-    = f.label :unit_price
-    = f.text_field :unit_price
-  .field
-    = f.label :total
-    = f.text_field :total
-  .field
-    = f.label :notes
-    = f.text_field :notes
-  .actions
-    = f.submit 'Save'
+= semantic_form_for @receipt_item, html: { class: 'form-horizontal' } do |f|
+  = f.semantic_errors
+  = f.inputs do
+    = f.input :name
+    = f.input :friendly_name
+    = f.input :store
+    = f.input :date, as: :string
+    = f.input :quantity
+    = f.input :unit
+    = f.input :unit_price
+    = f.input :total
+    = f.input :notes
+    = f.input :filename
+    = f.input :source_id
+    = f.input :source_name
+    .control-group
+      .controls
+        = f.submit t('general.save'), class: 'btn btn-primary'
+        - if @receipt_item
+          = link_to t('general.delete'), @receipt_item, class: 'btn', method: :delete, confirm: t('general.are_you_sure')

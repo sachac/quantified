@@ -2,36 +2,34 @@
 
 = link_to 'New receipt item', new_receipt_item_path
 
+= render 'filters', expanded: true
+
+= download_as_spreadsheet
 %table.table.table-bordered.full
   %tr
-    %th Filename
     %th Store
     %th Date
     %th Name
+    %th Friendly name
     %th Quantity
     %th Unit
     %th Unit price
     %th Total
     %th Notes
     %th
-    %th
-    %th
-
   - @receipt_items.each do |receipt_item|
     %tr
-      %td= receipt_item.filename
       %td= receipt_item.store
       %td= receipt_item.date
-      %td= receipt_item.name
+      %td= link_to receipt_item.name, receipt_items_path(params.merge(filter_string: receipt_item.name))
+      %td= link_to receipt_item.friendly_name, receipt_item.receipt_item_type if receipt_item.receipt_item_type
       %td= '%0.3f' % receipt_item.quantity
       %td= receipt_item.unit
       %td= '%0.3f' % receipt_item.unit_price
       %td= '%0.2f' % receipt_item.total
       %td= receipt_item.notes
-      %td= link_to 'Show', receipt_item
-      %td= link_to 'Edit', edit_receipt_item_path(receipt_item)
-      %td= link_to 'Destroy', receipt_item, :method => :delete, :data => { :confirm => 'Are you sure?' }
-
+      %td= action_list receipt_item
 %br
+= will_paginate @receipt_items, :renderer => PaginationListLinkRenderer
 
 
