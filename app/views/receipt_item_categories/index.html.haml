@@ -1,14 +1,14 @@
 = setup_page 'receipt_item_categories', 'Receipt item categories', 'receipt_items/nav'
 
 = link_to 'New receipt item category', new_receipt_item_category_path
-
-%table.table.table-bordered
+%table.table.table-bordered.table-striped
   %tr
-    %th Name
+    %th.number= sortable_column 'Total'
+    %th= sortable_column 'Name'
     %th
-
   - @receipt_item_categories.each do |receipt_item_category|
     %tr
+      %td.number= receipt_item_category.total
       %td= link_to receipt_item_category.name, receipt_item_category
       %td= action_list receipt_item_category
 
