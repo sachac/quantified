@@ -12,6 +12,7 @@ Home::Application.routes.draw do
     collection do
       get :batch_entry
       post :batch_entry
+      get :graph
     end
   end
 

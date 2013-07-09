@@ -2,13 +2,13 @@
 
 %table.table.table-bordered
   %tr
-    %th Friendly name
-    %th Receipt name
+    %th.number= sortable_column 'Total'
+    %th= sortable_column 'Friendly name'
     %th
   - @receipt_item_types.each do |receipt_item_type|
     %tr
+      %td= '%.2f' % receipt_item_type.total if receipt_item_type.total
       %td= link_to receipt_item_type.friendly_name, receipt_item_type
-      %td= receipt_item_type.receipt_name
       %td= action_list receipt_item_type
 %br
 

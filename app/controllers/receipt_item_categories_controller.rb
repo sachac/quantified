@@ -1,10 +1,12 @@
 class ReceiptItemCategoriesController < ApplicationController
   before_filter :authenticate_managing!
   respond_to :html, :csv, :json, :xml
+  handles_sortable_columns
   # GET /receipt_item_categories
   # GET /receipt_item_categories.json
   def index
-    @receipt_item_categories = current_account.receipt_item_categories.all
+    order = filter_sortable_column_order %w{name total}
+    @receipt_item_categories = current_account.receipt_item_categories.joins('LEFT JOIN receipt_item_types j ON (receipt_item_categories.id=j.receipt_item_category_id) LEFT JOIN receipt_items i ON (j.id=i.receipt_item_type_id)').select('receipt_item_categories.id, receipt_item_categories.name, SUM(i.total) AS total').group('receipt_item_categories.id, receipt_item_categories.name').order(order)
     respond_with @receipt_item_categories
   end
 

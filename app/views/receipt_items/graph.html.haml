@@ -1,0 +1,39 @@
+= setup_page 'graph', 'Graph'
+
+%svg#output{width: 500, height: 500}
+.tooltip{style: 'opacity: 0'}
+  
+:css
+  div.tooltip {
+  position: absolute;
+  text-align: center;
+  padding: 2px;
+  font: 12px sans-serif;
+  background: white;
+  border: 0px;
+  border-radius: 8px;
+  pointer-events: none;
+  }
+  path.active { border: 2px solid black }
+:javascript
+  data = #{@data.to_json};
+  var total = #{@total.to_json};
+  r = 200;
+  color = d3.scale.category20c();
+  var vis = d3.select("#output").data([data]).append("svg:g").attr("transform", "translate(" + r + "," + r + ")")
+  var arc = d3.svg.arc().outerRadius(r);
+  var pie = d3.layout.pie().value(function(d) { return d.value; });
+  var arcs = vis.selectAll("g.slice").data(pie).enter().append("svg:g").attr("class", "slice");
+  var div = d3.select("div.tooltip")
+  arcs.append("svg:path").attr("fill", function(d, i) { return color(i); }).attr("d", arc).attr('stroke', 'black').attr('stroke-width', 0)
+    .on("mouseover", function(d) {
+      d3.select(this).attr('stroke-width', 2);
+      div.transition().duration(200).style("opacity", .9);
+      div.html(d.data.label + " - " + d.data.value + " (" + (d.data.value * 100.0 / total).toFixed(0) + "%)" )
+      .style("left", d3.event.pageX + "px").style("top", (d3.event.pageY - 28) + "px"); })
+    .on("mouseout", function(d) {
+      d3.select(this).attr('stroke-width', 0);
+      div.transition().duration(500).style("opacity", 0);
+      });
+
+

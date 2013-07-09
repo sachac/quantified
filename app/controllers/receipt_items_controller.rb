@@ -6,7 +6,9 @@ class ReceiptItemsController < ApplicationController
   # GET /receipt_items.json
   def index
     @receipt_items = current_account.receipt_items.order('date DESC').joins('LEFT JOIN receipt_item_types ON receipt_items.receipt_item_type_id=receipt_item_types.id').select('receipt_items.*, receipt_item_types.friendly_name')
-    prepare_filters :filter_string
+    params[:start] ||= (Time.zone.now - 1.month).to_date.to_s
+    prepare_filters [:filter_string, :date_range]
+    @receipt_items = @receipt_items.where(date: Time.zone.parse(params[:start])..Time.zone.parse(params[:end]))
     if !params[:filter_string].blank?
       filter = '%' + params[:filter_string].downcase + '%'
       @receipt_items = @receipt_items.where('LOWER(name) LIKE ? OR LOWER(friendly_name) LIKE ?', filter, filter)
@@ -85,6 +87,15 @@ class ReceiptItemsController < ApplicationController
       respond_with(@outcome, location: loc)
     else
       respond_with @result
+    end
+  end
+
+  def graph
+    base = current_account.receipt_item_categories.joins('LEFT JOIN receipt_item_types j ON (receipt_item_categories.id=j.receipt_item_category_id) LEFT JOIN receipt_items i ON (j.id=i.receipt_item_type_id)').select('receipt_item_categories.id, receipt_item_categories.name, SUM(i.total) AS total')
+    @receipt_item_categories = base.group('receipt_item_categories.id, receipt_item_categories.name').order('total DESC')
+    @total = base.sum('total')
+    @data = @receipt_item_categories.map do |x|
+      {label: x.name, value: x.total}
     end
   end
 end
