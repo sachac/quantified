@@ -91,11 +91,24 @@ class ReceiptItemsController < ApplicationController
   end
 
   def graph
-    base = current_account.receipt_item_categories.joins('LEFT JOIN receipt_item_types j ON (receipt_item_categories.id=j.receipt_item_category_id) LEFT JOIN receipt_items i ON (j.id=i.receipt_item_type_id)').select('receipt_item_categories.id, receipt_item_categories.name, SUM(i.total) AS total')
-    @receipt_item_categories = base.group('receipt_item_categories.id, receipt_item_categories.name').order('total DESC')
+    params[:start] ||= (Time.zone.now - 1.month).to_date.to_s
+    prepare_filters :date_range
+    base = current_account.receipt_item_types.joins('INNER JOIN receipt_items ON receipt_item_types.id=receipt_items.receipt_item_type_id INNER JOIN receipt_item_categories ON receipt_item_types.receipt_item_category_id=receipt_item_categories.id').select('receipt_item_types.friendly_name, receipt_item_categories.name, SUM(total) AS total').where('NOT(receipt_item_categories.name IN (?))', ['Non-grocery', 'Gifts', 'Gardening supplies', 'Pet care']).where('date >= ? AND date < ?', Time.zone.parse(params[:start]).to_date, Time.zone.parse(params[:end]).to_date)
+    @receipt_item_types = base.group('receipt_item_types.friendly_name').order("total DESC")
     @total = base.sum('total')
-    @data = @receipt_item_categories.map do |x|
-      {label: x.name, value: x.total}
+    list = Hash.new
+    @receipt_item_types.each do |x|
+      if !list[x[:name]]
+        list[x[:name]] = {name: x[:name], children: Array.new, total: 0}
+      end
+      list[x[:name]][:children] << {name: x[:friendly_name], total: x[:total], size: x[:total].to_f,
+        label: "#{x[:friendly_name]} - #{'%.2f' % (x[:total] || 0)} (#{((@total > 0) ? ("%d%%" % (x[:total] * 100.0 / @total)) : "-")})"
+      }
+      list[x[:name]][:total] += x[:total] || 0
     end
+    list.each do |k, v|
+      list[k][:label] = "#{v[:name]} - #{'%.2f' % (v[:total] || 0)} (#{((@total > 0) ? ("%d%%" % (v[:total] * 100.0 / @total)) : "-")})"
+    end
+    @data = { name: 'Receipts', children: list.values.sort_by { |v| -(v[:total] || 0) } }
   end
 end
