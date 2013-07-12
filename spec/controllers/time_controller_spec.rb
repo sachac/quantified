@@ -68,8 +68,6 @@ describe TimeController do
       it "displays records" do
         get :graph, start: Time.zone.now - 1.week, end: Time.zone.now.midnight
         assigns(:categories).values.should include(@cat)
-        assigns(:totals)[1][0].should == @cat.id
-        assigns(:totals)[1][1].should == [[:total, 3600]]
       end
     end
     describe 'GET dashboard' do
