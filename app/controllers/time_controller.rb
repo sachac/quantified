@@ -1,6 +1,7 @@
 # Challenges: 
 # I have to manually create my time graphs
 class TimeController < ApplicationController
+  include ApplicationHelper
   respond_to :html, :xml, :json, :csv
   # POST
   def refresh_from_csv
@@ -47,11 +48,49 @@ class TimeController < ApplicationController
     prepare_filters [:date_range]
     @range = Time.zone.parse(params[:start]).to_date..Time.zone.parse(params[:end]).to_date
     entries = current_account.records.activities.where('end_timestamp >= ? AND timestamp < ?', @range.begin, @range.end).order('timestamp').includes(:record_category)
+    # Adjust the last entry and the first entry as needed
+    entries.first.timestamp = [@range.begin, entries.first.timestamp].max
+    entries.first.duration = entries.first.end_timestamp - entries.first.timestamp
+    entries.last.end_timestamp = [@range.end, entries.last.timestamp || Time.zone.now, Time.zone.now].min
+    entries.last.duration = entries.last.end_timestamp - entries.last.timestamp
+    
     @records = Record.prepare_graph(@range, entries)
     unsorted = RecordCategory.summarize(:key => :date, :range => @range, :records => entries, :zoom => :daily, :user => current_account, :tree => :individual)[:rows] 
 
     @categories = current_account.record_categories.index_by(&:id)
     @totals = unsorted.map { |k,v| [k, v.sort { |a,b| b[1] <=> a[1] }] }
+    @data = {name: 'Time', children: Hash.new }
+
+    # Calculate the totals needed for hierarchical display
+    @category_totals = Hash.new { |h,k| h[k] = 0 }
+    @total = 0
+    entries.each do |x|
+      @category_totals[x.record_category_id] += x.duration
+      @total += x.duration
+    end
+    @data = {name: 'Time', children: Hash.new}
+    @cumulative_totals = Hash.new { |h,k| h[k] = 0 }
+    # Reconstruct the category tree
+    # Goal: parent -> { label: c{ children { ... } }
+    @categories.values.sort_by(&:dotted_ids).reverse.each do |x|
+      start = @data
+      x.dotted_ids.split(".").each do |id|
+        @cumulative_totals[id.to_i] += @category_totals[x.id]
+        start[:children] ||= Hash.new
+        start[:total] ||= 0
+        start[:total] += @category_totals[x.id]
+        start[:children][id.to_i] ||= Hash.new
+        start = start[:children][id.to_i]
+      end
+      start[:name] = x.name
+      start[:label] = "#{x.name} - #{duration @cumulative_totals[x.id]} (#{'%d' % ((@cumulative_totals[x.id] * 100.0) / @total)}%) "
+      start[:total] = @category_totals[x.id]
+      start[:color] = x.get_color || '#ccc'
+      start[:children] = start[:children].values if start[:children]
+    end
+    @total = duration(@total)
+    @data[:label] = "Time - #{@total}"
+    @data[:children] = @data[:children].values
     respond_with({:categories => @categories, :totals => @totals})
   end
 

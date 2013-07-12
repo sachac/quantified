@@ -353,15 +353,15 @@ describe Record do
       x = Time.zone.now
       o = Record.guess_time("test -3h -2h")
       o[0].should == "test"
-      o[1].hour.should == x.hour - 3
-      o[2].hour.should == x.hour - 2
+      o[1].hour.should == (x - 3.hours).hour
+      o[2].hour.should == (x - 2.hours).hour
     end
     it "recognizes -3h -20min" do
       x = Time.zone.now
       offset = x - 20.minutes
       o = Record.guess_time("test -3h -20min")
       o[0].should == "test"
-      o[1].hour.should == x.hour - 3
+      o[1].hour.should == (x - 3.hours).hour
       o[2].hour.should == offset.hour
       o[2].min.should == offset.min
     end
