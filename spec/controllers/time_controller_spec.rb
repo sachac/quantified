@@ -3,6 +3,10 @@ require 'spec_helper'
 describe TimeController do
   before do
     @request.env["devise.mapping"] = Devise.mappings[:user]
+    Timecop.freeze(Time.zone.now.midnight)
+  end
+  after do
+    Timecop.return
   end
   context "when logged in" do
     before do
