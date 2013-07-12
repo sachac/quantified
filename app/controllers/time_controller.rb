@@ -55,10 +55,15 @@ class TimeController < ApplicationController
     entries.last.duration = entries.last.end_timestamp - entries.last.timestamp
     
     @records = Record.prepare_graph(@range, entries)
-    unsorted = RecordCategory.summarize(:key => :date, :range => @range, :records => entries, :zoom => :daily, :user => current_account, :tree => :individual)[:rows] 
-
+    unsorted = RecordCategory.summarize(:key => :date, :range => @range, :records => entries, :zoom => :daily, :user => current_account, :tree => :individual)[:rows]
     @categories = current_account.record_categories.index_by(&:id)
-    @totals = unsorted.map { |k,v| [k, v.sort { |a,b| b[1] <=> a[1] }] }
+    @totals = unsorted.map { |k,v|
+      if k.is_a? Date
+        [k, v.sort { |a,b| (a[0].is_numeric? && b[0].is_numeric?) ? @categories[a[0]].full_name <=> @categories[b[0]].full_name : 1 }]
+      else
+        [k, v]
+      end
+    }
     @data = {name: 'Time', children: Hash.new }
 
     # Calculate the totals needed for hierarchical display
