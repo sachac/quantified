@@ -59,7 +59,7 @@ class TimeController < ApplicationController
     @categories = current_account.record_categories.index_by(&:id)
     @totals = unsorted.map { |k,v|
       if k.is_a? Date
-        [k, v.sort { |a,b| (a[0].is_numeric? && b[0].is_numeric?) ? @categories[a[0]].full_name <=> @categories[b[0]].full_name : 1 }]
+        [k, v.sort { |a,b| (a[0].is_a?(Integer)&& b[0].is_a?(Integer)) ? @categories[a[0]].full_name <=> @categories[b[0]].full_name : 1 }]
       else
         [k, v]
       end
