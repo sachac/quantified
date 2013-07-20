@@ -23,6 +23,7 @@ class RecordsController < ApplicationController
     else
       @records = @records.paginate :page => params[:page]
       base = @records
+      @pre_split = @records
       if params[:split] and params[:split] == 'split'
         @records = Record.split(@records)
       end
