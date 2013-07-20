@@ -63,6 +63,7 @@ class RecordCategoriesController < ApplicationController
             @min_duration = d
           end
         }
+        @min_duration ||= 0
         @step = (@max_duration - @min_duration) / 3
         @count_domain = (((@summary_end - @summary_start).to_i / 1.day) / 30) + 1
       end
