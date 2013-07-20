@@ -35,11 +35,12 @@ class RecordCategoriesController < ApplicationController
       @summary_end = Time.zone.parse(params[:end])
       @records = @record_category.category_records(:start => @summary_start, :end => @summary_end, :filter_string => params[:filter_string], :include_private => managing?)
       @oldest = @records.order('timestamp ASC').first
+      @total_entries = @records.count
+      @count_activities = @records.activities.count
       split = Record.split(@records)
       if params[:split] and params[:split] == 'split'
         @records = split
       end
-      @count_activities = @records.activities.count
       if request.format.html?
         @max_duration = 0
         @min_duration = nil
@@ -71,7 +72,6 @@ class RecordCategoriesController < ApplicationController
       else
         @records = @records.order('timestamp DESC')
       end
-      @total_entries = @records.count
     end
 
     respond_to do |format|
