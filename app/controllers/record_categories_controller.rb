@@ -28,10 +28,35 @@ class RecordCategoriesController < ApplicationController
     if request.format.html? or request.format.csv?
       params[:order] ||= 'newest'
       @order = params[:order]
-      @summary_start = params && params[:start] ? Time.zone.parse(params[:start]).midnight : (Time.zone.now.to_date - 1.year).midnight
-      @summary_end = params && params[:end] ? Time.zone.parse(params[:end]).midnight : (Time.zone.now.midnight + 1.day)
-      prepare_filters [:date_range, :order, :filter_string]
+      params[:start] ||= (Time.zone.now.to_date - 1.year).midnight.to_s
+      params[:end] ||= (Time.zone.now + 1.day).midnight.to_s
+      prepare_filters [:date_range, :order, :filter_string, :split]
+      @summary_start = Time.zone.parse(params[:start])
+      @summary_end = Time.zone.parse(params[:end])
       @records = @record_category.category_records(:start => @summary_start, :end => @summary_end, :filter_string => params[:filter_string], :include_private => managing?)
+      @oldest = @records.order('timestamp ASC').first
+      split = Record.split(@records)
+      if params[:split] and params[:split] == 'split'
+        @records = split
+      end
+      if request.format.html?
+        @max_duration = 0
+        @min_duration = nil
+        @heatmap = Hash.new
+        split.each { |x|
+          d = ((x.duration / 3600.0) * 10.0).to_i / 10.0
+          @heatmap[x.timestamp.to_i] = d
+          if x.duration > @max_duration
+            @max_duration = d
+          end
+          if @min_duration.nil? || @min_duration > d && d > 0
+            @min_duration = d
+          end
+        }
+        @step = (@max_duration - @min_duration) / 3
+        @count_domain = (((@summary_end - @summary_start).to_i / 1.day) / 30) + 1
+      end
+      
       last = @records.last
       if params[:order] == 'oldest'
         @records = @records.order('timestamp ASC')

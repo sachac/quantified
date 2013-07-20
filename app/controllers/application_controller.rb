@@ -127,6 +127,9 @@ class ApplicationController < ActionController::Base
       when :filter_string
         @filters[:filter_string] = true
         params[:filter_string] ||= ''
+      when :split
+        @filters[:split] = true
+        params[:split] ||= 'keep'
       end
     end
   end

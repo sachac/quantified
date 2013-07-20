@@ -9,7 +9,6 @@
   - if @record_category.record?
     - after_title link_to(t('.record'), track_record_category_path(:id => @record_category.id), :class => 'btn', :style => 'margin-left: 5px', :method => :post)
   
-
 %p
   = record_category_breadcrumbs(@record_category)
   - if managing?
@@ -29,6 +28,7 @@ Total:
 = surround ' (', ')' do
   = pluralize @total_entries, 'entry'
 
+#cal-heatmap
 - if @record_category.category_type == 'list'
   - if @record_category.children.length > 0
     = render 'list', :list => @record_category.children
@@ -37,3 +37,11 @@ Total:
   = render 'records/summary', :records => @records, :show_duration => !@record_category.record?
   = will_paginate @records, :renderer => PaginationListLinkRenderer
   
+:javascript
+  var calHeatmapData = #{@heatmap.to_json};
+  var cal = new CalHeatMap();
+  cal.init({data: calHeatmapData, domain: 'month', subDomain: 'day',
+     start: new Date(#{@summary_start.to_i * 1000}),
+     itemName: ["hour", "hours"],
+     scale: [0, #{@min_duration}, #{@min_duration + @step}, #{@min_duration + @step * 2}],
+     range: #{@count_domain}});
