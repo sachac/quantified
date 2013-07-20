@@ -3,9 +3,6 @@
 = after_title object_labels(@record)
 = record_category_breadcrumbs(@record.record_category)
 - if can? :manage_account, current_account
-  - if @record.record_category.category_type == 'activity'
-    = after_title link_to("Start activity", track_record_category_path(:id => @record.record_category.id), :class => 'btn', :style => 'margin-left: 5px', :method => :post)
-  \|
   = link_to t('app.general.edit'), edit_record_path(@record)
 \|
 = link_to "View category", record_category_path(@record.record_category)
