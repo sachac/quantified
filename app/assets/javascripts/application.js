@@ -11,4 +11,5 @@
 //= require jquery.qtip.min
 //= require jquery.sparkline.min
 //= require jquery.timeago
+//= require cal-heatmap.min
 //= require quantified
