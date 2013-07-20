@@ -40,4 +40,4 @@
           = submit_tag t('app.general.filter'), :class => 'btn btn-primary'
           = submit_tag t('.recalculate_durations'), :class => 'btn'
 = render 'summary', :records => @data[:entries], :show_duration => true
-= will_paginate @records, :renderer => PaginationListLinkRenderer
+= will_paginate @pre_split, :renderer => PaginationListLinkRenderer
