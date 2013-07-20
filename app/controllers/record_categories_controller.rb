@@ -44,6 +44,7 @@ class RecordCategoriesController < ApplicationController
         @min_duration = nil
         @heatmap = Hash.new
         split.each { |x|
+          next unless x.record_category.category_type == 'activity' 
           d = ((x.duration / 3600.0) * 10.0).to_i / 10.0
           @heatmap[x.timestamp.to_i] = d
           if x.duration > @max_duration
