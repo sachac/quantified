@@ -7,14 +7,14 @@ class RecordsController < ApplicationController
     authorize! :view_time, current_account
     @start = (!params[:start].blank? ? Time.zone.parse(params[:start]) : ((current_account.records.minimum('timestamp') || (Time.now - 1.week)))).in_time_zone.midnight
     @end = (!params[:end].blank? ? Time.zone.parse(params[:end]) : ((current_account.records.maximum('timestamp') || Time.now) + 1.day)).in_time_zone.midnight
-    
+    @filter_string = (params && params[:filter_string])
     if params[:commit] == t('records.index.recalculate_durations')
       authorize! :manage_account, current_account
       Record.recalculate_durations(current_account, @start - 1.day, @end + 1.day)
       add_flash :notice, t('records.index.recalculated_durations')
     end
     @order = params[:order]
-    @records = Record.get_records(current_account, :order => @order, :include_private => managing?, :start => @start, :end => @end)
+    @records = Record.get_records(current_account, :order => @order, :include_private => managing?, :start => @start, :end => @end, :filter_string => @filter_string)
     if request.format.csv?
       if params[:split] and params[:split] == 'split'
         @records = Record.split(@records)
