@@ -39,12 +39,20 @@ class RecordCategoriesController < ApplicationController
       if params[:split] and params[:split] == 'split'
         @records = split
       end
+      @count_activities = @records.activities.count
       if request.format.html?
         @max_duration = 0
         @min_duration = nil
         @heatmap = Hash.new
+        @total = 0
         split.each { |x|
-          next unless x.record_category.category_type == 'activity' 
+          next unless x.record_category.category_type == 'activity'
+          if x.end_timestamp
+            @total = @total + x.duration
+          else
+            @total = @total + ([Time.zone.now, x.end_timestamp].min - x.timestamp).to_i
+          end
+
           d = ((x.duration / 3600.0) * 10.0).to_i / 10.0
           @heatmap[x.timestamp.to_i] = d
           if x.duration > @max_duration
@@ -58,15 +66,10 @@ class RecordCategoriesController < ApplicationController
         @count_domain = (((@summary_end - @summary_start).to_i / 1.day) / 30) + 1
       end
       
-      last = @records.last
       if params[:order] == 'oldest'
         @records = @records.order('timestamp ASC')
       else
         @records = @records.order('timestamp DESC')
-      end
-      @total = @records.sum(:duration)
-      if last and last.end_timestamp.nil?
-        @total = @total + ([Time.zone.now, @summary_end].min - last.timestamp)
       end
       @total_entries = @records.count
     end
