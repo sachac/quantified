@@ -15,7 +15,7 @@
         %fieldset.direct
           = select_tag(:direct_record_category_id, options_from_collection_for_select(list, 'id', 'full_name', @goal.record_category.is_a?(RecordCategory) ? @goal.record_category.id : ''))
           = select_tag(:direct_op, options_for_select(all_ops, @goal.op), class: 'op')
-          = text_field_tag(:direct_record_target, '%.2f' % (@goal.target.is_a?(Fixnum) ? @goal.target : 0), style: 'width: 100px')
+          = text_field_tag(:direct_target, '%.2f' % (@goal.target.is_a?(Numeric) ? @goal.target : 0), style: 'width: 100px')
           hour(s)
       .controls
         = label_tag 'expression_type_categories', class: 'choice radio' do
@@ -36,5 +36,10 @@
           = select_tag(:range_target, options_for_select(range_ops, @goal.op2), class: 'op')
           = text_field_tag(:range_target, '%.2f' % (@goal.val2 || 0), style: 'width: 100px')
           hour(s)
+    .control-group
+      .controls
+        %label
+          = check_box_tag 'active', 1, @goal.active?, class: 'checkbox'
+          Active
   .control-group
     .controls= f.submit 'Save', class: 'btn'

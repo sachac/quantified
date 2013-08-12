@@ -6,12 +6,12 @@ class Goal < ActiveRecord::Base
   def parse
     return self.parsed if self.parsed
     return unless self.expression
-    if matches = self.expression.match(/^\[(.*)\] *(>|<|<=|>=|=) *([0-9\.]+)/)
+    if matches = self.expression.match(/^\[(.*?)\] *(>|<|<=|>=|=) *([0-9\.]+)/)
       self.expression_type = :direct
       self.record_category = self.user.record_categories.lookup(matches[1]).first
       self.op = matches[2]
       self.target = matches[3].to_f
-    elsif matches = self.expression.match(/\[(.*)\] *(>|<|<=|>=|=|!=) *\[(.*)\]/)
+    elsif matches = self.expression.match(/\[(.*?)\] *(>|<|<=|>=|=|!=) *\[(.*)\]/)
       self.expression_type = :categories
       self.record_category = self.user.record_categories.lookup(matches[1]).first
       self.op = matches[2]
@@ -122,6 +122,11 @@ class Goal < ActiveRecord::Base
       self.val1 = p[:range_val1].to_f
       self.val2 = p[:range_val2].to_f
     end
+    if p[:active]
+      self.status = Goal::ACTIVE
+    else
+      self.status = Goal::INACTIVE
+    end
     recreate_from_parsed
   end
   
@@ -141,7 +146,7 @@ class Goal < ActiveRecord::Base
   end
 
   def self.check_goals(user)
-    list = user.goals
+    list = user.goals.where('status IS NULL or status != ?', Goal::INACTIVE)
     goals = Hash.new
     list.each do |g|
       begin
@@ -154,6 +159,7 @@ class Goal < ActiveRecord::Base
             hash[:class] = 'attention'
             hash[:performance_color] = Goal::ATTENTION_COLOR
           end
+          hash[:goal] = g
           goals[hash[:label]] = hash
         end
       rescue
@@ -163,6 +169,20 @@ class Goal < ActiveRecord::Base
     goals
   end
 
+  def active?
+    self.status.nil? || self.status != Goal::INACTIVE
+  end
+
+  def active=(val)
+    if val
+      self.status = Goal::ACTIVE
+    else
+      self.status = Goal::INACTIVE
+    end
+  end
+
+  ACTIVE = 'active'
+  INACTIVE = 'inactive'
   GOOD_COLOR = '#0c0'
   ATTENTION_COLOR = '#c00'
   
