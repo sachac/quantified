@@ -8,7 +8,7 @@ class RecordCategoriesController < ApplicationController
   def index
     authorize! :view_time, current_account
     if params and params[:all]
-      @record_categories = current_account.record_categories.order('name')
+      @record_categories = current_account.record_categories.order('full_name')
     else
       @record_categories = current_account.record_categories.where('parent_id IS NULL').order('name')
     end
