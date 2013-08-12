@@ -8,7 +8,7 @@
               - if c.activity? or c.record?
                 = link_to("Track", track_time_path(:category_id => c.id), :class => 'btn', :method => :post)
             %td
-              = link_to c.name, c
+              = link_to (show_all ? c.full_name : c.name), c
               - if c.list?
                 &raquo;
     
@@ -25,7 +25,7 @@
               %td
                 = action_list(c)
               %td
-                = link_to c.name, c
+                = link_to (show_all ? c.full_name : c.name), c
                 - if !c.active?
                   = surround ' (', ')' do
                     = t('general.inactive')
@@ -36,6 +36,6 @@
     %ul
       - list.each do |c|
         %li
-          = link_to c.name, c
+          = link_to (show_all ? c.full_name : c.name), c
           - if c.list?
             &raquo;
