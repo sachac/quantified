@@ -8,7 +8,10 @@
 
   - @goals.each do |goal|
     %tr
-      %td= goal.label
+      %td
+        = goal.label
+        - if !goal.active?
+          %span{class: 'label'} Inactive
       %td= render 'explain_goal', goal: goal
       %td= action_list goal
 

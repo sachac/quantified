@@ -94,21 +94,16 @@ module ApplicationHelper
       end
     elsif o.is_a? Record
       if can? :manage_account, current_account
-        actions << edit_icon(edit_record_path(o, destination: request.fullpath))
+        actions << edit_icon(o, destination: request.fullpath)
         actions << delete_icon(record_path(o, destination: request.fullpath))
         actions << link_to('Clone', clone_record_path(o, destination: request.fullpath), method: :post)
-      end
-    elsif o.is_a? Goal
-      if can? :manage_account, current_account
-        actions << edit_icon(edit_goal_path(o, destination: request.fullpath))
-        actions << delete_icon(goal_path(o, destination: request.fullpath))
       end
     elsif o.is_a? Context
       if managing?
         actions << edit_icon(edit_context_path(o))
         actions << link_to('Start', start_context_path(o))
       end
-    elsif o.is_a? ReceiptItem or o.is_a? ReceiptItemType or o.is_a? ReceiptItemCategory
+    elsif o.is_a? ReceiptItem or o.is_a? ReceiptItemType or o.is_a? ReceiptItemCategory or o.is_a? Goal
       if managing?
         actions << edit_icon(o, destination: request.fullpath)
         actions << delete_icon(o, destination: request.fullpath)

@@ -1,8 +1,14 @@
 %table.table
   - goal_summary.each do |k, g|
     %tr
-      %td.h= g[:label]
+      %td.h
+        - if managing?
+          = link_to g[:label], g
+        - else
+          = g[:label]
       %td
         .sparkline{'sparkType' => 'bullet', :class => g[:class], :sparkPerformanceColor => g[:performance_color], :title => "Value: #{g[:performance]}, target: #{g[:target]}"}
           = ([g[:target] || 0, g[:performance] || 0] + (g[:range] || [])).join(',')
       %td= g[:text]
+      - if managing?
+        %td= action_list g[:goal]

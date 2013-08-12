@@ -7,5 +7,6 @@ FactoryGirl.define do
     trait :daily do period "daily" end
     trait :weekly do period "weekly" end
     trait :monthly do period "monthly" end
+    trait :inactive do status "inactive" end
   end
 end

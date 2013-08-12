@@ -311,13 +311,33 @@ describe Goal do
       create(:goal, :daily, user: @u, expression: '[ABC] < 5', label: 'Goal 1')
       create(:goal, :daily, user: @u, expression: '[DEF] > 5', label: 'Goal 2')
       create(:goal, :daily, user: @u, expression: '[Does not exist] > 5', label: 'Goal 3')
+      create(:goal, :daily, user: @u, expression: '[ABC] > 0', label: 'Inactive', status: 'inactive')
     end
     subject { Goal.check_goals(@u) }
-    it {
-      should == {'Goal 1' => {class: 'good', performance_color: Goal::GOOD_COLOR, performance: 1.0, target: 5.0, success: true, text: '1.0', label: 'Goal 1'},
-        'Goal 2' => {class: 'attention', performance_color: Goal::ATTENTION_COLOR, performance: 1.1, target: 5.0, success: false, text: '1.1', label: 'Goal 2'},
-        'Does not exist' => {class: 'attention', performance_color: Goal::ATTENTION_COLOR, performance: nil, target: nil, success: nil, text: '', label: 'Does not exist'}}
-    }
+    it "should have the results we expect" do
+      subject.size.should == 3
+      {'Goal 1' => {class: 'good', performance_color: Goal::GOOD_COLOR, performance: 1.0, target: 5.0, success: true, text: '1.0', label: 'Goal 1', status: nil},
+        'Goal 2' => {class: 'attention', performance_color: Goal::ATTENTION_COLOR, performance: 1.1, target: 5.0, success: false, text: '1.1', label: 'Goal 2', status: nil},
+        'Does not exist' => {class: 'attention', performance_color: Goal::ATTENTION_COLOR, performance: nil, target: nil, success: nil, text: '', label: 'Does not exist', status: nil}}.each do |k, v|
+        v.each do |k2, expected|
+          subject[k][k2].should == expected
+        end
+      end
+    end
+    it "should include only active goals" do
+      subject.size.should == 3
+    end
+  end
+  describe '#active?' do
+    it "should detect inactive goals" do
+      g = create(:goal, :inactive, :weekly, expression: '[ABC] > 0', user: @u)
+      g.should_not be_active
+    end
+    it "should detect active goals" do
+      g = create(:goal, :weekly, expression: '[ABC] > 0', user: @u)
+      g.should be_active
+    end
+    
   end
   describe '#to_comma' do
     it "should convert to CSV" do
