@@ -30,11 +30,11 @@
           = radio_button_tag 'expression_type', 'range', @goal.expression_type == :range
           Compare with a range
         %fieldset.range
-          = text_field_tag(:range_target, '%.2f' % (@goal.val1 || 0), style: 'width: 100px')
-          = select_tag(:range_target, options_for_select(range_ops, @goal.op1), class: 'op')
+          = text_field_tag(:range_val1, '%.2f' % (@goal.val1 || 0), style: 'width: 100px')
+          = select_tag(:range_op1, options_for_select(range_ops, @goal.op1), class: 'op')
           = select_tag(:range_record_category_id, options_from_collection_for_select(list, 'id', 'full_name', @goal.record_category ? @goal.record_category.id : ''))
-          = select_tag(:range_target, options_for_select(range_ops, @goal.op2), class: 'op')
-          = text_field_tag(:range_target, '%.2f' % (@goal.val2 || 0), style: 'width: 100px')
+          = select_tag(:range_op2, options_for_select(range_ops, @goal.op2), class: 'op')
+          = text_field_tag(:range_val2, '%.2f' % (@goal.val2 || 0), style: 'width: 100px')
           hour(s)
     .control-group
       .controls
