@@ -6,5 +6,7 @@
 #   cities = City.create([{ :name => 'Chicago' }, { :name => 'Copenhagen' }])
 #   Mayor.create(:name => 'Daley', :city => cities.first)
 password = 'testpasswordgoeshere'
-user = User.create(:username => 'sacha', :email => 'sacha@sachachua.com', :password => password, :password_confirmation => password)
+user = User.create(:username => 'admin', :email => 'admin@example.com', :password => password, :password_confirmation => password)
 user.confirm!
+
+load "./db/load-dewey.rb"
