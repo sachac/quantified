@@ -410,12 +410,20 @@ class Record < ActiveRecord::Base
       end
     end
     if cat.is_a? RecordCategory 
-      if cat.data and record_data
-        record_key = cat.data.first['key']
-        if record_key
-          new_record[:data] = {record_key => record_data.strip}
+      if cat.data
+        if record_data
+          record_key = cat.data.first['key']
+          if record_key
+            new_record[:data] = {record_key => record_data.strip}
+          end
+        end
+        # Get it from the parameters, too
+        if attributes[:data]
+          new_record[:data] ||= Hash.new
+          new_record[:data].merge!(attributes[:data])
         end
       end
+      
       rec = Record.create(new_record)
       if rec
         rec.update_previous
