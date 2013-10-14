@@ -215,6 +215,7 @@ Home::Application.routes.draw do
     namespace :v1 do
       match 'create' => 'tokens#create', via: :post
       match 'destroy' => 'tokens#destroy', via: :delete
+      match 'tokens' => 'tokens#create', via: :post
       resources :records
     end
     namespace :offline do
