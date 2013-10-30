@@ -7,8 +7,8 @@ class ClothingController < ApplicationController
   def index
     authorize! :view_clothing, current_account
     @tags = current_account.clothing.tag_counts_on(:tags).sort_by(&:name)
-    order = filter_sortable_column_order %w{clothing_type name status clothing_logs_count last_worn hue}
-    order ||= 'last_worn'
+    order = filter_sortable_column_order %w{clothing_type name status clothing_logs_count last_worn hue}, 'name'
+    logger.info order
     @clothing = current_account.clothing
     @clothing = @clothing.find(:all, 
                                :conditions => ["status='active' OR status IS NULL OR status=''"],

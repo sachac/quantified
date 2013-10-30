@@ -29,7 +29,7 @@ Tags:
     - if managing?
       = select_tag 'op', options_for_select(['Store', 'Donate', 'Activate'])
       = submit_tag 'Save changes', :class => 'btn'
-    %table.lined
+    %table.table.table-bordered.table-condensed.table-responsive
       %tr
         - if can? :update, Clothing
           %th
