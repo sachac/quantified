@@ -27,7 +27,7 @@ class ApplicationController < ActionController::Base
   end  
 
   protected
-
+  
   def authenticate_admin!
     authenticate_user!
     raise CanCan::AccessDenied unless current_user and current_user.admin?
@@ -49,9 +49,16 @@ class ApplicationController < ActionController::Base
 
   def before_awesome
     notice_layout!
+    # Detect the user if the username and password are specified
+    if params[:username] and params[:password]
+      u = User.find_record(params[:username])
+      if u and u.valid_password?(params[:password])
+        sign_in(User, u)
+      end
+    end
     @account = current_account
     # Set the timezone
-    Time.zone = @account.settings.timezone if @account and @account.settings.timezone 
+    Time.zone = @account.settings.timezone if @account and @account.settings.timezone
     true
   end
   def notice_layout!
