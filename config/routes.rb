@@ -112,7 +112,11 @@ Home::Application.routes.draw do
   resources :foods
 
   devise_for :users, :path_prefix => 'd', :controllers => { :sessions => 'sessions', :registrations => 'registrations' }
-  resources :users
+  resources :users do
+    member do
+      post :generate_token
+    end
+  end
 
   resources :decision_logs
 

@@ -62,7 +62,7 @@ en:
       duration: Duration
     
     user:
-      login: track your life
+      login: log in
       login_submit: Log in
       logout: log out
     clothing:
