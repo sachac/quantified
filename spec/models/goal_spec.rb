@@ -297,8 +297,8 @@ describe Goal do
     it 'spans a month' do
       create(:goal, :monthly, expression: '[ABC] < 5').range.should == (Time.zone.local(2013, 1, 1)..Time.zone.now)
     end
-    it 'spans yesterday' do
-      create(:goal, :daily, expression: '[ABC] < 5').range.should == (Time.zone.local(2013, 1, 1)..Time.zone.local(2013, 1, 2))
+    it 'spans the last 24 hours' do
+      create(:goal, :daily, expression: '[ABC] < 5').range.should == (Time.zone.local(2013, 1, 1, 8)..Time.zone.local(2013, 1, 2, 8))
     end
     it 'spans today' do
       create(:goal, :today, expression: '[ABC] < 5').range.should == (Time.zone.local(2013, 1, 2)..Time.zone.now)

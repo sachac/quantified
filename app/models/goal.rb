@@ -141,7 +141,7 @@ class Goal < ActiveRecord::Base
     when 'today'
       (Time.zone.now.midnight)..Time.zone.now
     when 'daily'
-      (Time.zone.now.midnight - 1.day)..Time.zone.today.midnight
+      (Time.zone.now - 1.day)..Time.zone.now
     end
   end
 
