@@ -470,6 +470,16 @@ END
         x.timestamp.hour.should == 8
       end
     end
+    context 'when we add a note to a category that has no data' do
+      it "adds a note field" do
+        cat = FactoryGirl.create(:record_category, user: @user, name: 'DEF', category_type: 'activity')
+        x = Record.parse(@user, category: 'DEF | Test')
+        cat = cat.reload
+        cat.data.should_not be_nil
+        cat.data.length.should == 1
+        x.data['note'].should == 'Test'
+      end
+    end
     context 'when the timestamp is specified' do
       it "uses that timestamp" do
         x = Record.parse(@user, category_id: @cat.id, timestamp: Time.zone.local(2013, 1, 2, 8, 0))
