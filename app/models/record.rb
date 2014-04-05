@@ -409,7 +409,11 @@ class Record < ActiveRecord::Base
         rec = cat
       end
     end
-    if cat.is_a? RecordCategory 
+    if cat.is_a? RecordCategory
+      if (record_data or attributes[:data]) and (!cat.data or cat.data.length == 0)
+        cat.data = [{'key' => 'note', 'label' => 'Note', 'type' => 'string'}]
+        cat.save!
+      end
       if cat.data
         if record_data
           record_key = cat.data.first['key']
@@ -423,7 +427,6 @@ class Record < ActiveRecord::Base
           new_record[:data].merge!(attributes[:data])
         end
       end
-      
       rec = Record.create(new_record)
       if rec
         rec.update_previous
