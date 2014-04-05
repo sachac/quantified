@@ -61,13 +61,17 @@
           - while date < end_date
             - total = 0
             - count_days = 0
+            - total_week = 0 
             - 1.upto(7) do |count|
               %td.right{:title => l(date)}= duration summary[:total][:total][date]
               - total += summary[:total][:total][date]
+              - total_week += summary[:total][:total][date]
               - count_days +=1 if summary[:total][:total][date] > 0
               - date += 1.day
-            %td.right
-              %strong{:title => ("Average: " + duration(total / count_days) if count_days > 0)}= duration total  
+            %td.right{:title => "Total for week ending #{l date - 1.day }"}
+              %strong= duration total_week
+          %td.right
+            %strong{:title => ("Average: " + duration(total / count_days) if count_days > 0)}= duration total  
             - if show_averages
               %td.right
                 = duration(total / count_days) if count_days > 0
