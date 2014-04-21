@@ -162,19 +162,40 @@ class ClothingController < ApplicationController
     authorize! :view_clothing, current_account
     @start_date = params[:start] ? Date.parse(params[:start]) : (Time.zone.now.to_date - 1.week)
     @end_date = params[:end] ? Date.parse(params[:end]) : Time.zone.now.to_date
+    @zoom = params[:zoom] || 'weekly'
+
+    case @zoom
+    when 'weekly'
+      @step = lambda { |date| date + 7.days }
+      @start_display = current_account.adjust_end_of_week(@start_date)
+      @end_display = current_account.adjust_end_of_week(@end_date)
+    when 'monthly'
+      @step = lambda { |date| current_account.adjust_end_of_month(date + 1.day) }
+      @start_display = current_account.adjust_end_of_month(@start_date)
+      @end_display = current_account.adjust_end_of_month(@end_date)
+    when 'yearly'
+      @step = lambda { |date| current_account.adjust_end_of_year(date + 1.day) }
+      @start_display = current_account.adjust_end_of_year(@start_date)
+      @end_display = current_account.adjust_end_of_year(@end_date)
+    else
+      @step = lambda { |date| date + 1.day }
+      @start_display = @start_date
+      @end_display = @end_date
+    end
+
     # Straight chart
     logs = current_account.clothing_logs.where("date >= ? AND date <= ?", @start_date, @end_date).order("date ASC")
-    logger.info "CLOTHING LOGS: " + logs.inspect
     @clothes = Hash.new
     @logs = Hash.new
     @matches = Hash.new
     @tops = Hash.new
     bottoms = Hash.new
     tops = Hash.new
+
+    @result = ClothingLog.summarize(records: logs, zoom: @zoom, user: current_account)
+
     logs.each do |l|
       @clothes[l.clothing_id] ||= current_account.clothing.find(l.clothing_id)
-      @logs[l.clothing_id] ||= Hash.new
-      @logs[l.clothing_id][l.date] = l
       tags = l.clothing.tag_list
       if (tags.include? "bottom") then
         bottoms[l.date] ||= Hash.new

@@ -147,3 +147,11 @@ Then(/^I should see that "(.*?)" and "(.*?)" are connected with weight (\d+)$/) 
   
 end
 
+When(/^I analyze my clothes by week from (\d+-\d+-\d+) to (\d+-\d+-\d+)$/) do |from, to|
+  visit analyze_clothing_path(:zoom => 'weekly', :start => from, :end => to)
+end
+
+Then(/^I should see that "(.*?)" was worn (\d+) times in the week ending (\d+-\d+-\d+)$/) do |name, count, date|
+  clothing = Clothing.find_by_name(name)
+  page.find("td#match_#{clothing.id}_#{date}").text.should == count
+end

@@ -56,8 +56,28 @@ class User < ActiveRecord::Base
     end
   end
 
+  def adjust_end_of_week(date)
+    if date.wday == 6
+      date
+    else
+      date - date.wday.days + 5.days
+    end
+  end
+
+  def adjust_end_of_month(date)
+    date.end_of_month
+  end
+
+  def adjust_end_of_year(date)
+    Date.new(date.year, 12, 31)
+  end
+
   def beginning_of_week
     self.adjust_beginning_of_week(Time.zone.today.midnight)
+  end
+
+  def end_of_week
+    self.adjust_beginning_of_week(Time.zone.today.midnight + 6.days)
   end
 
   def this_week

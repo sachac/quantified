@@ -36,7 +36,7 @@ Feature: Clothing
       | blue pants | active | office, bottom |
       | green pants | active | casual, bottom |
     And I have the following clothing logs:
-      |       Date | Clothing |
+      |       Date | Clothing    |
       | 2011-11-01 | red shirt   |
       | 2011-11-01 | black pants |
     When I go to the clothing page for "red shirt"
@@ -189,5 +189,19 @@ Feature: Clothing
     Then I should see that "red shirt" and "black pants" are connected with weight 2
     And I should see that "white shirt" and "blue jeans" are connected with weight 1
     And I should see that "red shirt" and "blue jeans" are connected with weight 1
+  Scenario: Summarize clothing use by week
+    Given I have the following clothing logs:
+      |       Date | Clothing      | Tags    |
+      | 2014-04-01 | red shirt     | top     |
+      | 2014-04-01 | black pants   | bottom  |
+      | 2014-04-02 | blue jeans    | bottom  |
+      | 2014-04-02 | white shirt   | top     |
+      | 2014-04-03 | red shirt     | top     |
+      | 2014-04-03 | black pants   | bottom  |
+      | 2014-04-05 | red shirt     | top     |
+      | 2014-04-05 | blue jeans    | bottom  |
+      | 2014-04-31 | red dress     | dress   |
+      | 2014-04-05 | black sweater | sweater |
+    When I analyze my clothes by week from 2014-04-01 to 2014-04-05
+    Then I should see that "red shirt" was worn 2 times in the week ending 2014-04-04
 
-   
