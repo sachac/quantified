@@ -3,49 +3,62 @@
 - if managing?
   For best effect, make sure clothing items like skirts or pants are tagged as 'bottom' as well.
 
-= form_tag(nil, method: :get, class: 'form-inline') do 
-  Start: 
-  = text_field_tag :start, @start_date.strftime("%Y-%m-%d"), {:class => "datepicker"}
-  End: 
-  = text_field_tag :end, @end_date.strftime("%Y-%m-%d"), {:class => "datepicker"}
-  = submit_tag "Go", class: 'btn'
+= form_tag(nil, method: :get, class: 'form-horizontal') do 
+  .control-group
+    = label_tag :start, 'Start', class: 'control-label' 
+    .controls= text_field_tag :start, @start_date.strftime("%Y-%m-%d"), {:class => "datepicker"}
+  .control-group
+    = label_tag :end, 'End', class: 'control-label'
+    .controls= text_field_tag :end, @end_date.strftime("%Y-%m-%d"), {:class => "datepicker"}
+  .control-group
+    = label_tag :zoom, 'Zoom', class: 'control-label'
+    .controls.form-inline
+      - ['Daily', 'Weekly', 'Monthly', 'Yearly'].each do |x|
+        = radio_button_tag :zoom, x.downcase, @zoom == x.downcase, class: 'inline'
+        = label_tag "zoom_#{x.downcase}".to_sym, x, class: 'inline'
+  .control-group
+    .controls= submit_tag "Go", class: 'btn btn-primary'
 
 %h2 Logs
 
 A/B/etc. distinguish multiple outfits worn on the same day.
 - if managing?
   To change the outfit number, click on its entry and edit the clothing log entry.
-- col_total = Hash.new
+- col_total = Hash.new { |h,k| h[k] = 0 }
 %table.table.table-bordered
   %tr
     %th Clothing item
-    - date = @start_date
-    - new_end = @end_date + 1.day
-    - while date < new_end
-      %th{:title => l(date, :format => :short)}= date.strftime("%d")
-      - date = date + 1.day
+    - date = @start_display
+    - while date <= @end_display
+      %th{:title => l(date, :format => :long)}
+        - case @zoom
+          - when "daily" 
+            = date.strftime("%m-%d")
+          - when "weekly" 
+            = date.strftime("%m-%d")
+          - when "monthly" 
+            = date.strftime("%Y-%m")
+          - when "yearly" 
+            = date.strftime("%Y")
+      - date = @step.call(date)
     %th Total
   - @clothes.each do |id,item|
     %tr{id: "log_row_#{id}"}
       %th.left= link_to item.name, item
-      - date = @start_date
-      - row_total = 0
-      - while date < new_end
-        - if @logs[id][date] then
-          %td= link_to "ABCDEFGHIJKLMNOPQRSTUVWXYZ"[(@logs[id][date].outfit_id || 1) - 1,1], current_user ? edit_clothing_log_path(@logs[id][date], :destination => request.fullpath) : clothing_log_path(@logs[id][date])
-          - row_total += 1
-          - col_total[date] ||= 0
-          - col_total[date] += 1
-        - else
-          %td &nbsp;
-        - date = date + 1.day
-      %td= row_total 
+      - date = @start_display
+      - while date <= @end_display
+        %td{id: "match_#{id}_#{date.strftime('%Y-%m-%d')}"}
+          - if @result[id] and @result[id][:sums][date] and @result[id][:sums][date] > 0
+            = @result[id][:sums][date]
+            - col_total[date] += @result[id][:sums][date]
+        - date = @step.call(date)
+      %td= @result[id][:total]
   %tr
     %th Total
-    - date = @start_date
-    - while date < new_end
+    - date = @start_display
+    - while date <= @end_display
       %td= col_total[date]
-      - date = date + 1.day
+      - date = @step.call(date)
     %td &nbsp;
 
 %h2 Matches

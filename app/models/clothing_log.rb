@@ -46,6 +46,32 @@ class ClothingLog < ActiveRecord::Base
     by_date
   end
 
+  # Accepts records, zoom
+  def self.summarize(options = {})
+    result = Hash.new { |h,k| h[k] = {sums: {}, total: 0} } 
+    user = options[:user]
+    options[:records].each do |r|
+      id = r.clothing_id
+      date = r.date
+      case options[:zoom]
+      when 'weekly'
+        date = user.adjust_end_of_week(r.date).to_date
+      when 'monthly'
+        date = user.adjust_end_of_month(r.date)
+      when 'yearly'
+        date = user.adjust_end_of_year(r.date)
+      end
+      date = date.to_date
+      if result[id][:sums][date] 
+        result[id][:sums][date] += 1
+      else
+        result[id][:sums][date] = 1
+      end
+      result[id][:total] += 1
+    end
+    result
+  end
+
   delegate :name, :to => :clothing, :prefix => true
   def to_xml(options = {})
     super(options.update(:methods => [:clothing_name]))
@@ -55,11 +81,23 @@ class ClothingLog < ActiveRecord::Base
     super(options.update(:methods => [:clothing_name]))
   end
   
+  def end_of_month
+    self.user.adjust_end_of_month(date)
+  end
+  def end_of_week
+    self.user.adjust_end_of_week(date)
+  end
+  def end_of_year
+    self.user.adjust_end_of_year(date)
+  end
   comma do
     clothing_id
     date
     outfit_id
     clothing :name
+    end_of_week
+    end_of_month
+    end_of_year
   end
 
   fires :new, :on => :create, :actor => :user, :secondary_subject => :clothing
