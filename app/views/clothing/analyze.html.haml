@@ -28,6 +28,7 @@ A/B/etc. distinguish multiple outfits worn on the same day.
 %table.table.table-bordered
   %tr
     %th Clothing item
+    %th Status
     - date = @start_display
     - while date <= @end_display
       %th{:title => l(date, :format => :long)}
@@ -45,6 +46,7 @@ A/B/etc. distinguish multiple outfits worn on the same day.
   - @clothes.each do |id,item|
     %tr{id: "log_row_#{id}"}
       %th.left= link_to item.name, item
+      %td= item.status
       - date = @start_display
       - while date <= @end_display
         %td{id: "match_#{id}_#{date.strftime('%Y-%m-%d')}"}
@@ -55,6 +57,7 @@ A/B/etc. distinguish multiple outfits worn on the same day.
       %td= @result[id][:total]
   %tr
     %th Total
+    %td
     - date = @start_display
     - while date <= @end_display
       %td= col_total[date]
