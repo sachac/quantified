@@ -155,7 +155,7 @@ module ApplicationHelper
       end
     elsif crumb.is_a? Regexp and crumb.match request.fullpath
       active = true
-    elsif request.fullpath.start_with? crumb
+    elsif crumb.is_a? String and request.fullpath.start_with? crumb
       active = true
     end
     active ? 'active' : 'inactive'

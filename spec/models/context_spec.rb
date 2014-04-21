@@ -2,14 +2,14 @@ require 'spec_helper'
 
 describe Context do
   it "can be converted to XML" do
-    context = FactoryGirl.create(:context)
-    FactoryGirl.create(:context_rule, context: context)
+    context = FactoryGirl.build_stubbed(:context)
+    FactoryGirl.build_stubbed(:context_rule, context: context)
     xml = context.to_xml
     xml.should match 'context-rules'
   end
   it "can be converted to JSON" do
-    context = FactoryGirl.create(:context)
-    FactoryGirl.create(:context_rule, context: context)
+    context = FactoryGirl.build_stubbed(:context)
+    FactoryGirl.build_stubbed(:context_rule, context: context)
     s = context.to_json
     s.should match 'context_rules'
   end

@@ -45,14 +45,14 @@ describe Goal do
   describe '#parse_expression' do
     context "when the category does not exist" do
       it "returns blank and logs the error" do
-        goal = create(:goal, :daily, expression: "[XYZ]<5", user: @u, label: 'Does not exist')
+        goal = build_stubbed(:goal, :daily, expression: "[XYZ]<5", user: @u, label: 'Does not exist')
         goal.parse_expression.should == {label: 'Does not exist', performance: nil, target: nil, success: nil, text: ''}
       end
     end
     context "when doing a comparison by number" do
       it "looks up the right category" do
         create(:record, user: @u, record_category: @cat, manual: true, timestamp: @time, end_timestamp: @time + 1.hour)
-        goal = create(:goal, :daily, expression: "[#{@cat.id}]<5", user: @u)
+        goal = build_stubbed(:goal, :daily, expression: "[#{@cat.id}]<5", user: @u)
         goal.parse_expression[:success].should be_true
       end
     end
@@ -61,7 +61,7 @@ describe Goal do
         create(:record, user: @u, record_category: @cat, manual: true, timestamp: @time, end_timestamp: @time + 1.hour)
       end
       it "knows how far we are in terms of the goal" do
-        goal = create(:goal, :daily, expression: "[ABC]<5", user: @u)
+        goal = build_stubbed(:goal, :daily, expression: "[ABC]<5", user: @u)
         goal.parse_expression.should == {
           label: goal.label,
           performance: 1,
@@ -71,7 +71,7 @@ describe Goal do
         }
       end
       it "can detect goals in progress" do
-        goal = create(:goal, :daily, expression: "[ABC]>5", user: @u)
+        goal = build_stubbed(:goal, :daily, expression: "[ABC]>5", user: @u)
         goal.parse_expression.should == {
           label: goal.label,
           performance: 1,
@@ -210,7 +210,7 @@ describe Goal do
       end
       
       context "when A and B are 0" do
-        subject { create(:goal, :daily, expression: expression, user: @u).parse_expression[:success] }
+        subject { build_stubbed(:goal, :daily, expression: expression, user: @u).parse_expression[:success] }
         include_context "when A and B are roughly equal"
       end
 
@@ -218,14 +218,14 @@ describe Goal do
         before do
           create(:record, user: @u, record_category: @cat, manual: true, timestamp: @time, end_timestamp: @time + 1.hour)
         end
-        subject { create(:goal, :daily, expression: expression, user: @u).parse_expression[:success] }
+        subject { build_stubbed(:goal, :daily, expression: expression, user: @u).parse_expression[:success] }
         include_context "when A is significantly greater than B"
       end
       context "when B is something and A is 0" do
         before do
           create(:record, user: @u, record_category: @cat2, manual: true, timestamp: @time + 1.hour, end_timestamp: @time + 2.hours + 5.minutes)
         end
-        subject { create(:goal, :daily, expression: expression, user: @u).parse_expression[:success] }
+        subject { build_stubbed(:goal, :daily, expression: expression, user: @u).parse_expression[:success] }
         include_context "when A is significantly less than B"
       end
       context "when A is significantly different from B" do
@@ -233,7 +233,7 @@ describe Goal do
           create(:record, user: @u, record_category: @cat, manual: true, timestamp: @time, end_timestamp: @time + 1.hour)
           create(:record, user: @u, record_category: @cat2, manual: true, timestamp: @time + 1.hour, end_timestamp: @time + 2.hours + 5.minutes)
         end
-        subject { create(:goal, :daily, expression: expression, user: @u).parse_expression[:success] }
+        subject { build_stubbed(:goal, :daily, expression: expression, user: @u).parse_expression[:success] }
         include_context "when A is significantly less than B"        
       end
       context "when A is approximately equal to B" do
@@ -241,17 +241,17 @@ describe Goal do
           create(:record, user: @u, record_category: @cat, manual: true, timestamp: @time, end_timestamp: @time + 1.hour)
           create(:record, user: @u, record_category: @cat2, manual: true, timestamp: @time + 1.hour, end_timestamp: @time + 2.hours + 1.second)
         end
-        subject { create(:goal, :daily, expression: expression, user: @u).parse_expression[:success] }
+        subject { build_stubbed(:goal, :daily, expression: expression, user: @u).parse_expression[:success] }
         include_context "when A and B are roughly equal"
       end
     end
     context "when comparing a range" do
       context "when A is 0" do
         it "handles 0 < A < X" do
-          create(:goal, :daily, expression: "0 < [ABC] < 1", user: @u).parse_expression[:success].should be_false
+          build_stubbed(:goal, :daily, expression: "0 < [ABC] < 1", user: @u).parse_expression[:success].should be_false
         end
         it "handles 0 <= A < X" do
-          create(:goal, :daily, expression: "0 <= [ABC] < 1", user: @u).parse_expression[:success].should be_true
+          build_stubbed(:goal, :daily, expression: "0 <= [ABC] < 1", user: @u).parse_expression[:success].should be_true
         end
       end
       context "when there is time tracked" do
@@ -292,16 +292,16 @@ describe Goal do
   end
   describe '#range' do
     it 'spans a week' do
-      create(:goal, :weekly, expression: '[ABC] < 5').range.should == (Time.zone.local(2012, 12, 29)..Time.zone.local(2013, 1, 5))
+      build_stubbed(:goal, :weekly, expression: '[ABC] < 5').range.should == (Time.zone.local(2012, 12, 29)..Time.zone.local(2013, 1, 5))
     end
     it 'spans a month' do
-      create(:goal, :monthly, expression: '[ABC] < 5').range.should == (Time.zone.local(2013, 1, 1)..Time.zone.now)
+      build_stubbed(:goal, :monthly, expression: '[ABC] < 5').range.should == (Time.zone.local(2013, 1, 1)..Time.zone.now)
     end
     it 'spans the last 24 hours' do
-      create(:goal, :daily, expression: '[ABC] < 5').range.should == (Time.zone.local(2013, 1, 1, 8)..Time.zone.local(2013, 1, 2, 8))
+      build_stubbed(:goal, :daily, expression: '[ABC] < 5').range.should == (Time.zone.local(2013, 1, 1, 8)..Time.zone.local(2013, 1, 2, 8))
     end
     it 'spans today' do
-      create(:goal, :today, expression: '[ABC] < 5').range.should == (Time.zone.local(2013, 1, 2)..Time.zone.now)
+      build_stubbed(:goal, :today, expression: '[ABC] < 5').range.should == (Time.zone.local(2013, 1, 2)..Time.zone.now)
     end
   end
   describe '#check_goals' do
@@ -330,18 +330,18 @@ describe Goal do
   end
   describe '#active?' do
     it "should detect inactive goals" do
-      g = create(:goal, :inactive, :weekly, expression: '[ABC] > 0', user: @u)
+      g = build_stubbed(:goal, :inactive, :weekly, expression: '[ABC] > 0', user: @u)
       g.should_not be_active
     end
     it "should detect active goals" do
-      g = create(:goal, :weekly, expression: '[ABC] > 0', user: @u)
+      g = build_stubbed(:goal, :weekly, expression: '[ABC] > 0', user: @u)
       g.should be_active
     end
     
   end
   describe '#to_comma' do
     it "should convert to CSV" do
-      g = create(:goal, :daily, user: @u, expression: '[ABC] < 5', label: 'Goal 1')
+      g = build_stubbed(:goal, :daily, user: @u, expression: '[ABC] < 5', label: 'Goal 1')
       g.to_comma.should == [g.id.to_s, 'Goal 1', '[ABC] < 5', 'daily']
     end
   end
