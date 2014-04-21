@@ -9,7 +9,6 @@ describe ClothingLog do
       c3 = FactoryGirl.create(:clothing, user: @user)
       FactoryGirl.create(:clothing_log, clothing: c1, user: @user, date: Time.zone.today)
       FactoryGirl.create(:clothing_log, clothing: c2, user: @user, date: Time.zone.today)  
-      c1.reload
       c1.clothing_matches.size.should == 1
     end
     context "when the clothing ID changes" do
