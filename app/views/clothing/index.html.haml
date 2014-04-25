@@ -27,7 +27,7 @@ Tags:
 - if @clothing.count > 0
   = form_tag clothing_bulk_path, class: 'form-inline' do
     - if managing?
-      = select_tag 'op', options_for_select(['Store', 'Donate', 'Activate'])
+      = select_tag 'op', options_for_select(['Store', 'Donate', 'Activate', 'Yesterday', 'Today', 'Tomorrow'])
       = submit_tag 'Save changes', :class => 'btn'
     %table.table.table-bordered.table-condensed.table-responsive
       %tr

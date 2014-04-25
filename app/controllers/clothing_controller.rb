@@ -246,12 +246,20 @@ class ClothingController < ApplicationController
         case params[:op]
           when I18n.t('app.clothing.actions.store')
             clothing.status = 'stored'
+            clothing.save
           when I18n.t('app.clothing.actions.activate')
             clothing.status = 'active'
+            clothing.save
           when I18n.t('app.clothing.actions.donate')
             clothing.status = 'donated'
+            clothing.save
+          when I18n.t('app.clothing.today')
+            ClothingLog.create(user: clothing.user, clothing: clothing, date: Time.zone.today).save!
+          when I18n.t('app.clothing.yesterday')
+            ClothingLog.create(user: clothing.user, clothing: clothing, date: Time.zone.today.yesterday).save!
+          when I18n.t('app.clothing.tomorrow')
+            ClothingLog.create(user: clothing.user, clothing: clothing, date: Time.zone.today.tomorrow).save!
         end
-        clothing.save
       end
     end
     redirect_to params[:destination] || clothing_index_path
