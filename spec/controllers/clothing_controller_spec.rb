@@ -38,6 +38,21 @@ describe ClothingController do
       @clothing[0].reload.status.should == 'donated'
       @clothing[2].reload.status.should == 'active'
     end
+    it "marks items for today" do
+      post :bulk, bulk: @ids, op: I18n.t('app.clothing.today')
+      ClothingLog.where(clothing_id: @ids[0]).first.date.should == Time.zone.today
+      ClothingLog.where(clothing_id: @ids[1]).first.date.should == Time.zone.today
+    end
+    it "marks items for yesterday" do
+      post :bulk, bulk: @ids, op: I18n.t('app.clothing.yesterday')
+      ClothingLog.where(clothing_id: @ids[0]).first.date.should == Time.zone.today.yesterday
+      ClothingLog.where(clothing_id: @ids[1]).first.date.should == Time.zone.today.yesterday
+    end
+    it "marks items for tomorrow" do
+      post :bulk, bulk: @ids, op: I18n.t('app.clothing.tomorrow')
+      ClothingLog.where(clothing_id: @ids[0]).first.date.should == Time.zone.today.tomorrow
+      ClothingLog.where(clothing_id: @ids[1]).first.date.should == Time.zone.today.tomorrow
+    end
   end
   describe 'GET /clothing/missing_info' do
     it "shows items missing images" do

@@ -70,6 +70,9 @@ en:
         activate: Activate
         store: Store
         donate: Donate
+      today: Today
+      yesterday: Yesterday
+      tomorrow: Tomorrow
     layout:
       full: Full
       mobile: Mobile
