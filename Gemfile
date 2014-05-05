@@ -28,7 +28,7 @@ gem 'handles_sortable_columns'
 gem 'gdata_19', '1.1.5'
 gem 'cancan'
 #gem 'n_gram'
-gem 'statsample'
+#gem 'statsample'
 gem 'exception_notification', :require => 'exception_notifier'
 
 # Use unicorn as the web server
