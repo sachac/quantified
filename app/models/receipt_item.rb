@@ -7,7 +7,7 @@ class ReceiptItem < ActiveRecord::Base
 
   def self.parse_batch(text)
     text = text.strip
-    h = ['ID', 'File', 'Store', 'Date', 'Name', 'Quantity or net weight', 'Unit', 'Unit price', 'Total', 'Notes']
+    h = ['ID', 'File', 'Store', 'Date', 'Time', 'Name', 'Quantity or net weight', 'Unit', 'Unit price', 'Total', 'Notes']
     csv = CSV::parse(text, headers: h, col_sep: "\t")
     csv = CSV::parse(text, headers: true, col_sep: "\t") if csv[0]['ID'] == 'ID'
     csv

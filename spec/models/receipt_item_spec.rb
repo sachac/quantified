@@ -2,12 +2,12 @@ require 'spec_helper'
 
 describe ReceiptItem do
   before do
-    @text = 'ID	File	Store	Date	Name	Quantity or net weight	Unit	Unit price	Total	Notes
+    @text = 'ID	File	Store	Date	Time	Name	Quantity or net weight	Unit	Unit price	Total	Notes
 2	2131936.jpg	Nofrills Lower Food Prices	2012-02-23	RN Dried Apricot M	1		4	4	'
   end
   describe ".parse_batch" do
     it "converts to CSV with headers" do
-      text = '2	2131936.jpg	Nofrills Lower Food Prices	2012-02-23	RN Dried Apricot M	1		4	4	'
+      text = '2	2131936.jpg	Nofrills Lower Food Prices	2012-02-23	11:00	RN Dried Apricot M	1		4	4	'
       r = ReceiptItem.parse_batch(text)
       r[0]['ID'].should == '2'
       r[0]['File'].should == '2131936.jpg'
