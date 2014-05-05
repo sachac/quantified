@@ -1,4 +1,5 @@
 Home::Application.routes.draw do
+  match 'receipt_item_types/autocomplete' => 'receipt_item_types#autocomplete_receipt_item_type_friendly_name', :as => :autocomplete_receipt_item_type
   resources :receipt_item_types do
     collection do
       get :batch_entry

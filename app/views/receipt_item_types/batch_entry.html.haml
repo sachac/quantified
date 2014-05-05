@@ -15,7 +15,7 @@
         %td= x.name_count
         %td
           = hidden_field_tag "batch[#{i}][receipt_name]", x.name
-          = text_field_tag "batch[#{i}][friendly_name]"
+          = autocomplete_field_tag "batch[#{i}][friendly_name]", nil, autocomplete_receipt_item_type_path, :placeholder => "Friendly name"
         %td
           = select_tag "batch[#{i}][receipt_item_category_id]", list
   = submit_tag t('general.save'), class: 'btn btn-primary'
