@@ -1,5 +1,6 @@
 class ReceiptItemTypesController < ApplicationController
   before_filter :authenticate_managing!
+  autocomplete :receipt_item_type, :friendly_name, :full => true
   respond_to :html, :xml, :json, :csv
   handles_sortable_columns
   # GET /receipt_item_types
@@ -15,7 +16,7 @@ class ReceiptItemTypesController < ApplicationController
   def show
     @receipt_item_type = current_account.receipt_item_types.find(params[:id])
     @same_name = current_account.receipt_item_types.where(friendly_name: @receipt_item_type.friendly_name)
-    params[:start] ||= (Time.zone.now - 1.month).to_date.to_s
+    params[:start] = current_account.receipt_items.minimum(:date).to_s if params[:start].blank?
     params[:end] ||= (Time.zone.now + 1.day).to_date.to_s
     prepare_filters :date_range
     @start = Time.zone.parse(params[:start])
