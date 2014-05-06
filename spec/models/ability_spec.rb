@@ -32,6 +32,7 @@ describe Ability do
     it "can access other users' info" do
       user = FactoryGirl.build_stubbed(:user)
       subject.should be_able_to(:view_dashboard, user)
+      subject.should be_able_to(:manage, :all)
     end
   end
   context "when a confirmed user" do

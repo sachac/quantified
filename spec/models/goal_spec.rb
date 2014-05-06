@@ -41,6 +41,23 @@ describe Goal do
       g.set_from_form({expression_type: :range, range_record_category_id: @cat.id, range_val1: '1', range_op1: '<=', range_val2: '2', range_op2: '<'})
       g.recreate_from_parsed.should == "1.00 <= [#{@cat.id}] < 2.00"
     end
+    it "reconstructs active goals" do
+      g = Goal.new(user: @u)
+      g.set_from_form({expression_type: :range, range_record_category_id: @cat.id, range_val1: '1', range_op1: '<=', range_val2: '2', range_op2: '<', active: true})
+      g.should be_active
+    end
+  end
+  describe '#active=' do
+    it "sets active if non-nil" do
+      g = FactoryGirl.build_stubbed(:goal)
+      g.active = true
+      g.should be_active
+    end
+    it "sets active if non-nil" do
+      g = FactoryGirl.build_stubbed(:goal)
+      g.active = nil
+      g.should_not be_active
+    end
   end
   describe '#parse_expression' do
     context "when the category does not exist" do

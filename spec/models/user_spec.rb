@@ -8,6 +8,18 @@ describe User do
     @user.adjust_beginning_of_week(Time.zone.parse("June 1, 2013")).day.should == 1
   end
 
+  it "adjusts the end of the week" do
+    @user.adjust_end_of_week(Time.zone.parse("May 1, 2014")).day.should == 2
+    @user.adjust_end_of_week(Time.zone.parse("May 2, 2014")).day.should == 2
+    @user.adjust_end_of_week(Time.zone.parse("May 3, 2014")).day.should == 9
+  end
+
+  it "adjusts the end of the week" do
+    Timecop.freeze(Time.zone.parse("May 1, 2014"))
+    @user.end_of_week.day.should == 2
+    Timecop.return
+  end
+
   it "returns the beginning of this week" do
     @user.beginning_of_week.wday.should == 6
   end
