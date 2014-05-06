@@ -48,6 +48,7 @@ class User < ActiveRecord::Base
   
   include RailsSettings::Extend 
 
+  # Weeks begin on Saturday
   def adjust_beginning_of_week(date)
     if date.wday == 6
       date
@@ -56,9 +57,11 @@ class User < ActiveRecord::Base
     end
   end
 
+  # Weeks end on Friday, so we return Friday for display purposes (add one day for a proper limit)
+  # On Friday, we still return Friday. On Saturday, we return the following Friday.
   def adjust_end_of_week(date)
     if date.wday == 6
-      date
+      date + 6.days
     else
       date - date.wday.days + 5.days
     end
@@ -76,8 +79,9 @@ class User < ActiveRecord::Base
     self.adjust_beginning_of_week(Time.zone.today.midnight)
   end
 
+  # Returns the end of this week. 
   def end_of_week
-    self.adjust_beginning_of_week(Time.zone.today.midnight + 6.days)
+    self.adjust_end_of_week(Time.zone.today.midnight)
   end
 
   def this_week

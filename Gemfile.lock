@@ -145,7 +145,7 @@ GEM
       orm_adapter (~> 0.1)
       railties (~> 3.1)
       warden (~> 1.2.1)
-    diff-lcs (1.2.4)
+    diff-lcs (1.2.5)
     domain_name (0.5.11)
       unf (>= 0.0.5, < 1.0.0)
     email_spec (1.4.0)
