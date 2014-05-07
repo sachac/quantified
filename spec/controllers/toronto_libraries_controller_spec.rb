@@ -57,6 +57,10 @@ describe TorontoLibrariesController do
       TorontoLibrary.any_instance.should_receive(:refresh_items)
       post :refresh_all
     end
+    it "refreshes the list and returns a CSV" do
+      TorontoLibrary.any_instance.should_receive(:refresh_items)
+      post :refresh_all, format: :json
+    end
   end
 
   describe 'POST request_items' do

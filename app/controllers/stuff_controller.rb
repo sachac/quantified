@@ -131,7 +131,6 @@ class StuffController < ApplicationController
   end
 
   def get_autocomplete_items(parameters)
-    puts parameters.inspect
     super(parameters).where(:user_id => current_account.id)
   end
 

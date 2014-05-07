@@ -30,7 +30,6 @@
       - if user_signed_in?
         %th Edit
         %th Delete
-      %th Colour
     - @clothing_logs.each do |clothing_log|
       - row_class = (clothing_log.date != last_date) ? "date-change" : ""
       - last_date = clothing_log.date
@@ -44,8 +43,6 @@
           - if can? :update, clothing_log
             %td= link_to 'Edit', edit_clothing_log_path(clothing_log)
             %td= link_to 'Delete', clothing_log, :confirm => 'Are you sure?', :method => :delete
-          %td
-            = colors(clothing_log.clothing.color)
 - else
   No records found.
 %br

@@ -23,6 +23,6 @@
       %td= m.clothing_b_id
       %td= m.clothing_b.name if m.clothing_b
 %br
-= will_paginate @clothing_matches, renderer: PaginationListLinkRenderer
+= will_paginate @clothing_matches
 - if can? :create, ClothingLog
   = link_to 'New log entry', new_clothing_log_path
