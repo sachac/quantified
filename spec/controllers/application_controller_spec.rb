@@ -22,6 +22,21 @@ describe ApplicationController do
       x.should == 'count'
     end
   end
+  describe '#before_awesome' do
+    controller do
+      skip_authorization_check :only => [:index]
+      skip_filter :authenticate_user!
+      def index
+        @user = current_account
+        render :text => params.inspect
+      end
+    end
+    it "authenticates with username and password" do
+      user = create(:user, :confirmed)
+      get :index, :username => user.username, password: user.password
+      assigns(:user).username.should == user.username
+    end
+  end
   describe "#go_to" do
     it "redirects to a destination if specified" do
       subject.stub!(:params).and_return({destination: time_dashboard_path})

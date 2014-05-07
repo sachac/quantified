@@ -24,6 +24,18 @@ describe ServicesController do
         flash[:error].should_not be_nil
         response.should redirect_to(new_user_session_path)
       end
+      it "requires a uid" do
+        OmniAuth.config.add_mock(:facebook, {uid: nil})
+        request.env['omniauth.auth'] =
+          {'provider' => 'facebook',
+           'uid' => '',
+           'extra' => { 'raw_info' => { 'email' => 'example@example.com',
+                                        'name' => 'example',
+                                        'id' => ''} } }
+        post :create, service: 'facebook'
+        flash[:error].should_not be_nil
+        response.should redirect_to(new_user_session_path)
+      end
       it "authenticates Facebook" do
         post :create, service: 'facebook'
         flash[:notice].should match 'Sign in via Facebook has been added to'

@@ -1,7 +1,7 @@
 require 'simplecov'
 SimpleCov.start 'rails' do
   use_merging true
-#  SimpleCov.merge_timeout 3600
+  SimpleCov.merge_timeout 3600
   SimpleCov.command_name 'RSpec'
   coverage_dir 'coverage'
 end

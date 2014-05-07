@@ -92,7 +92,7 @@ class ReceiptItemsController < ApplicationController
   end
 
   def graph
-    params[:start] ||= (Time.zone.now - 1.month).to_date.to_s
+    params[:start] ||= (current_account.receipt_items.minimum(:date) - 1.day).to_s if params[:start].blank? and current_account.receipt_items.size > 0
     prepare_filters :date_range
     base = current_account.receipt_item_types.joins('INNER JOIN receipt_items ON receipt_item_types.id=receipt_items.receipt_item_type_id INNER JOIN receipt_item_categories ON receipt_item_types.receipt_item_category_id=receipt_item_categories.id').select('receipt_item_types.friendly_name, receipt_item_categories.name, SUM(total) AS total').where('NOT(receipt_item_categories.name IN (?))', ['Non-grocery', 'Gifts', 'Gardening supplies', 'Pet care']).where('date >= ? AND date < ?', Time.zone.parse(params[:start]).to_date, Time.zone.parse(params[:end]).to_date)
     @receipt_item_types = base.group('receipt_item_types.friendly_name').order("total DESC")

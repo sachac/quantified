@@ -137,4 +137,30 @@ describe ReceiptItemTypesController do
     end
   end
 
+  describe 'POST batch_entry' do
+    before(:each) do
+      poultry = create(:receipt_item_category, name: 'Poultry', user: @user)
+      chicken = create(:receipt_item_type, receipt_name: 'CHKN', friendly_name: 'Chicken', receipt_item_category: poultry, user: @user)
+      chicken_item = create(:receipt_item, name: 'CHKN', receipt_item_type: chicken, user: @user)
+      unmapped_item = create(:receipt_item, name: 'CHKN BRST', user: @user)
+      @poultry = poultry
+    end
+    it "displays only unmapped items" do
+      get :batch_entry
+      assigns(:unmapped).length.should == 1
+    end
+    it "confirms the data and creates records" do
+      post :batch_entry, batch: {0 => {friendly_name: 'Chicken breast', receipt_name: 'CHKN BRST', receipt_item_category_id: @poultry.id}}
+      assigns(:result).keys.first.should == 'CHKN BRST'
+    end
+  end
+
+  describe 'autocomplete' do
+    it "limits it to the user" do
+      chicken = create(:receipt_item_type, receipt_name: 'CHKN', friendly_name: 'Chicken', receipt_item_category: @poultry, user: @user)
+      chicken2 = create(:receipt_item_type, receipt_name: 'CHKN2', friendly_name: 'Chicken')
+      get :autocomplete_receipt_item_type_friendly_name, term: 'Chick'
+      JSON.parse(response.body).length.should == 1
+    end
+  end
 end

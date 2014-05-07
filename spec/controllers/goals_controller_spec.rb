@@ -18,6 +18,12 @@ describe GoalsController do
       assigns(:goals).should include(@goal)
     end
   end
+  describe 'GET /new' do
+    it "fills in the record category if specified" do
+      get :new, record_category_id: @record.record_category_id
+      assigns(:goal).record_category.id == @record.record_category_id
+    end
+  end
   describe 'GET /goals/1' do
     it "displays the goal" do
       get :show, id: @goal.id

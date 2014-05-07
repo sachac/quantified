@@ -37,22 +37,30 @@ class RecordCategoriesController < ApplicationController
       @oldest = @records.order('timestamp ASC').first
       @total_entries = @records.count
       @count_activities = @records.activities.count
-      split = Record.split(@records)
-      if params[:split] and params[:split] == 'split'
-        @records = split
+      if params[:order] == 'oldest'
+        @records = @records.order('timestamp ASC')
+      else
+        @records = @records.order('timestamp DESC')
       end
+      if request.format.html?
+        if @records then @records = @records.paginate :page => params[:page], :per_page => 20 end
+      end
+      if params[:split] and params[:split] == 'split'
+        split = Record.split(@records)
+        @records = split
+      end 
       if request.format.html?
         @max_duration = 0
         @min_duration = nil
         @heatmap = Hash.new
         @total = 0
-        split.each { |x|
+        
+        @records.each { |x|
           next unless x.record_category.category_type == 'activity'
-          if x.end_timestamp
-            @total = @total + x.duration
-          else
-            @total = @total + ([Time.zone.now, x.end_timestamp].min - x.timestamp).to_i
+          if !x.end_timestamp
+            x.duration = ([Time.zone.now, @summary_end].min - x.timestamp).to_i
           end
+          @total = @total + x.duration
 
           d = ((x.duration / 3600.0) * 10.0).to_i / 10.0
           @heatmap[x.timestamp.to_i] = d
@@ -68,15 +76,10 @@ class RecordCategoriesController < ApplicationController
         @count_domain = (((@summary_end - @summary_start).to_i / 1.day) / 30) + 1
       end
       
-      if params[:order] == 'oldest'
-        @records = @records.order('timestamp ASC')
-      else
-        @records = @records.order('timestamp DESC')
-      end
     end
 
     respond_to do |format|
-      format.html { if @records then @records = @records.paginate :page => params[:page], :per_page => 20 end }
+      format.html {  }
       format.json { render :json => @record_category }
       format.xml { render :xml => @record_category }
       format.csv {

@@ -98,6 +98,8 @@ group :development, :test do
   gem 'guard-cucumber'
   gem 'timecop'
   gem 'spring'
+  gem 'spring-commands-rspec'
+  gem 'spring-commands-cucumber'
   gem 'email_spec'
 end
 group :test do
@@ -107,7 +109,7 @@ group :test do
   gem 'guard-spring'
   gem 'cucumber'
   gem 'fakeweb'
-  gem 'simplecov', :require => false
+  gem 'simplecov', '>= 0.8', :require => false
   gem 'cucumber-rails', :require => false
   gem 'capybara'
   gem 'cucumber_factory', :git => 'https://github.com/makandra/cucumber_factory.git'

@@ -32,4 +32,4 @@
   = "#{I18n.t('app.general.average_per_day')}: #{duration @average_per_day}"
         
 = render 'summary', :list => @tap_log_records, :show_duration => true
-= will_paginate @tap_log_records, :renderer => PaginationListLinkRenderer
+= will_paginate @tap_log_records
