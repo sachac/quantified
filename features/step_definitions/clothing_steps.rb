@@ -147,11 +147,29 @@ Then(/^I should see that "(.*?)" and "(.*?)" are connected with weight (\d+)$/) 
   
 end
 
-When(/^I analyze my clothes by week from (\d+-\d+-\d+) to (\d+-\d+-\d+)$/) do |from, to|
-  visit analyze_clothing_path(:zoom => 'weekly', :start => from, :end => to)
+When(/^I analyze my clothes by (day|week|month|year) from (\d+-\d+-\d+) to (\d+-\d+-\d+)$/) do |zoom, from, to|
+  zooms = {'day' => 'daily', 'week' => 'weekly', 'month' => 'monthly', 'year' => 'yearly'}
+  visit analyze_clothing_path(:zoom => zooms[zoom], :start => from, :end => to)
 end
 
-Then(/^I should see that "(.*?)" was worn (\d+) times in the week ending (\d+-\d+-\d+)$/) do |name, count, date|
+Then(/^I should see that "(.*?)" was worn (\d+) times? in the (?:week|month|year|period) ending (\d+-\d+-\d+)$/) do |name, count, date|
+  clothing = Clothing.find_by_name(name)
+  page.find("td#match_#{clothing.id}_#{date}").text.should == count
+end
+
+When(/^I analyze my clothes by year$/) do
+  visit analyze_clothing_path(:zoom => 'yearly')
+end
+
+When(/^I analyze my clothes by month$/) do
+  visit analyze_clothing_path(:zoom => 'monthly')
+end
+
+When(/^I analyze my clothes by day$/) do
+  visit analyze_clothing_path(:zoom => 'daily')
+end
+
+Then(/^I should see that "(.*?)" was worn (\d+) times? on "(.*?)"$/) do |name, count, date|
   clothing = Clothing.find_by_name(name)
   page.find("td#match_#{clothing.id}_#{date}").text.should == count
 end

@@ -37,7 +37,7 @@ Total:
 
 - if @records
   = render 'records/summary', :records => @records, :show_duration => !@record_category.record?
-  = will_paginate @records, :renderer => PaginationListLinkRenderer
+  = will_paginate @records
   
 :javascript
   var calHeatmapData = #{@heatmap.to_json};
