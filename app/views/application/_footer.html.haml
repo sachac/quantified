@@ -19,8 +19,9 @@
         - if @account.settings.timezone
           \- Current timezone:
           = @account.settings.timezone
-          = link_to '(Change?)', edit_user_path(@account)
-        - else
+          - if can? :manage_account, @account
+            = link_to '(Change?)', edit_user_path(@account)
+        - elsif can? :manage_account, @account
           = link_to '(Set timezone)', edit_user_path(@account)
 - if Rails.env.development?
   .alert.warning This is the development site.

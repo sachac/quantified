@@ -1,4 +1,6 @@
 = semantic_form_for(resource, :as => resource_name, :url => registration_path(resource_name)) do |f|
+  = f.semantic_errors :base
+  = devise_error_messages!
   = f.inputs do
     %legend= t('user.sign_up')
     .inner
@@ -9,6 +11,14 @@
             = link_to image_tag('google_32.png', :size => "32x32", :alt => "Google"), oauth_url(:google, :subdomain => false), :class => 'service'
             = link_to image_tag('facebook_32.png', :size => "32x32", :alt => "Facebook"), oauth_url(:facebook, :subdomain => false), :class => 'service'
             or fill in the form below
-      = f.input :email, :autocomplete => 'off'
+      .clear-fix
+        %label E-mail
+        .input= f.email_field :email
+      .clear-fix
+        %label Password
+        .input= f.password_field :password
+      .clear-fix
+        %label Password confirmation
+        .input= f.password_field :password_confirmation
   .actions  
     = f.submit t('user.sign_up'), :class => 'btn btn-primary'

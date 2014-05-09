@@ -52,9 +52,11 @@ Given /^I am logged in|I log in$/ do
   @user = FactoryGirl.create(:confirmed_user)
   visit root_path(:subdomain => @user.username)
   click_link I18n.t('app.user.login')
-  fill_in 'user[login]', :with => @user.email
-  fill_in 'user[password]', :with => @user.password
-  click_button "Log in"
+  within '.login' do
+    fill_in 'user[login]', :with => @user.email
+    fill_in 'user[password]', :with => @user.password
+    click_button "Log in"
+  end
   page.body.should_not include 'Log in'
   page.body.should include "#{@user.username}"
 end
@@ -96,9 +98,11 @@ When /^I log in with my e\-mail address$/ do
   visit root_url
   click_link I18n.t('app.user.login')
   @user = FactoryGirl.create(:confirmed_user)
-  fill_in "user[login]", :with => @user.email
-  fill_in "user[password]", :with => @user.password
-  click_button I18n.t('app.user.login_submit')
+  within '.login' do
+    fill_in "user[login]", :with => @user.email
+    fill_in "user[password]", :with => @user.password
+    click_button I18n.t('app.user.login_submit')
+  end
 end
 
 Then /^I should be logged in$/ do
@@ -111,9 +115,11 @@ When /^I log in with my username$/ do
   visit root_url
   click_link I18n.t('app.user.login')
   @user = FactoryGirl.create(:confirmed_user)
-  fill_in "user[login]", :with => @user.username
-  fill_in "user[password]", :with => @user.password
-  click_button I18n.t('app.user.login_submit')
+  within ".login" do
+    fill_in "user[login]", :with => @user.username
+    fill_in "user[password]", :with => @user.password
+    click_button I18n.t('app.user.login_submit')
+  end
 end
 
 Given /^the other user has the following memories:$/ do |table|
@@ -231,6 +237,8 @@ When /^I register$/ do
   visit new_user_session_path
   within ".sign_up" do
     fill_in "user[email]", :with => "test@sachachua.com"
+    fill_in "user[password]", :with => "PasswordX"
+    fill_in "user[password_confirmation]", :with => "PasswordX"
     click_button I18n.t('user.sign_up')
   end
 end
@@ -270,8 +278,12 @@ end
 
 When(/^I sign up as a new user$/) do
   visit new_user_path
-  fill_in 'user[email]', with: 'signup@example.com'
-  click_button('Sign up')
+  within '.sign_up' do
+    fill_in 'user[email]', with: 'signup@example.com'
+    fill_in 'user[password]', with: 'signup@example.com password'
+    fill_in 'user[password_confirmation]', with: 'signup@example.com password'
+    click_button('Sign up')
+  end
 end
 
 When(/^I sign up as a new user when I already have an account$/) do
