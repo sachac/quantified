@@ -37,6 +37,11 @@ class RecordCategoriesController < ApplicationController
       @oldest = @records.order('timestamp ASC').first
       @total_entries = @records.count
       @count_activities = @records.activities.count
+      if params[:order] == 'oldest'
+        @records = @records.order('timestamp ASC')
+      else
+        @records = @records.order('timestamp DESC')
+      end
       split = Record.split(@records)
       if params[:split] and params[:split] == 'split'
         @records = split
@@ -68,11 +73,6 @@ class RecordCategoriesController < ApplicationController
         @count_domain = (((@summary_end - @summary_start).to_i / 1.day) / 30) + 1
       end
       
-      if params[:order] == 'oldest'
-        @records = @records.order('timestamp ASC')
-      else
-        @records = @records.order('timestamp DESC')
-      end
     end
 
     respond_to do |format|
