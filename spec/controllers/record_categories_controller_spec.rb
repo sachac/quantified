@@ -9,7 +9,7 @@ describe RecordCategoriesController do
       @user = create(:user, :confirmed)
       @cat = create(:record_category, user: @user, name: 'ABC')
       @subcat = create(:record_category, user: @user, parent: @cat, name: 'DEF')
-      @record_category = create(:record_category, user: @user, name: 'GHI')
+      @record_category = create(:record_category, user: @user, name: 'GHI', full_name: 'GHI')
       @inactive = create(:record_category, user: @user, active: false, name: 'GHIJ')
       @ambig = create(:record_category, user: @user, active: true, name: 'GHIJK')
       sign_in @user
@@ -31,9 +31,28 @@ describe RecordCategoriesController do
         get :show, id: @record_category.id
         assigns(:record_category).should == @record_category
       end
+      it "splits by midnight" do
+        record = create(:record,
+                        record_category: @record_category,
+                        user: @user,
+                        timestamp: Date.today.midnight - 2.days + 16.hours,
+                        end_timestamp: Date.today.midnight - 1.day + 4.hours)
+        get :show, :split => 'split', id: @record_category.id, :format => 'html'
+        assigns(:records).length.should == 2
+      end
       it "handles inactive items" do
         get :show, id: @inactive.id
         assigns(:title).should match I18n.t('general.inactive')
+      end
+      it "handles open-ended items" do
+        Timecop.freeze(Date.new(2014, 1, 3) + 3.hours)
+        record = create(:record,
+                        record_category: @record_category,
+                        user: @user,
+                        timestamp: Date.new(2014, 1, 3) + 2.hours)
+        get :show, id: @record_category.id
+        assigns(:total).should == 3600
+        Timecop.return
       end
       it "sorts in chronological order if requested" do
         @record = create(:record, record_category: @cat, timestamp: Time.zone.now - 1.hour)
@@ -55,7 +74,8 @@ describe RecordCategoriesController do
         assigns(:total_entries).should == 1
       end
       it "returns CSV" do
-        @record = create(:record, record_category: @cat, timestamp: Time.zone.now - 1.hour, data: { note: 'Hello' })
+        @record = create(:record, user: @user, record_category: @cat, timestamp: Time.zone.now - 1.hour, data: { note: 'Hello' })
+        @record2 = create(:record, user: @user, record_category: @cat, timestamp: Time.zone.now - 2.hours, end_timestamp: Time.zone.now, data: { note: 'Hello', label: 'world' })
         get :show, id: @cat.id, format: :csv
         assigns(:record_category).should == @cat
         assigns(:records).all.should include @record
@@ -74,8 +94,18 @@ describe RecordCategoriesController do
         @record = create(:record, record_category: @cat, timestamp: Time.zone.now - 1.hour)
         get :records, id: @cat.id
       end
-      it "returns everything if CSV" do
+      it "returns associated records if CSV" do
+        @record = create(:record, user: @user, record_category: @cat, timestamp: Time.zone.now - 1.hour, data: { note: 'Hello' })
+        @record2 = create(:record, user: @user, record_category: @cat, timestamp: Time.zone.now - 2.hours, end_timestamp: Time.zone.now, data: { note: 'Hello', label: 'world' })
+        @record3 = create(:record, user: @user, record_category: @ambig, timestamp: Time.zone.now - 2.hours, end_timestamp: Time.zone.now, data: { note: 'Hello', label: 'world' })
         get :records, id: @cat.id, format: :csv
+        assigns(:records).length.should == 2
+      end
+      it "flattens CSV data" do
+        @record = create(:record, user: @user, record_category: @cat, timestamp: Time.zone.now - 1.hour, data: { note: 'Hello' })
+        @record2 = create(:record, user: @user, record_category: @cat, timestamp: Time.zone.now - 2.hours, end_timestamp: Time.zone.now, data: { note: 'Hello', label: 'world' })
+        get :records, id: @cat.id, format: :csv, start: Date.yesterday.midnight.to_s, end: Date.tomorrow.midnight.to_s
+        response.body.should match /note,Hello,label,world/
       end
     end
     
@@ -175,6 +205,14 @@ describe RecordCategoriesController do
         response.should redirect_to(record_categories_url)
       end
     end
+    describe 'autocomplete' do
+      it "limits it to the user" do
+        category2 = create(:record_category, name: 'JK', full_name: 'JK', user: create(:user, :confirmed))
+        get :autocomplete_record_category_full_name, term: 'JK'
+        JSON.parse(response.body).length.should == 1
+      end
+    end
+
   end
   context "when viewing a demo account" do
     before do
@@ -208,4 +246,5 @@ describe RecordCategoriesController do
       end
     end
   end
+
 end

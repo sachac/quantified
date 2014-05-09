@@ -16,6 +16,12 @@ describe ReceiptItemsController do
       get :index
       assigns(:receipt_items).should eq([receipt_item])
     end
+    it "filters by name" do
+      receipt_item = create(:receipt_item, user: @user, name: "ABC")
+      receipt_item2 = create(:receipt_item, user: @user, name: "DEF")
+      get :index, :filter_string => "D"
+      assigns(:receipt_items).should eq([receipt_item2])
+    end
   end
 
   describe "GET show" do
@@ -142,6 +148,7 @@ describe ReceiptItemsController do
       get :batch_entry
     end
   end
+
   describe 'POST batch_entry' do
     let(:text) {
       'ID	File	Store	Date	Name	Quantity or net weight	Unit	Unit price	Total	Notes
@@ -164,6 +171,29 @@ describe ReceiptItemsController do
       ReceiptItem.any_instance.stub(:save).and_return(false)
       post :batch_entry, batch: text, confirm_data: 'confirmed'
       assigns(:outcome)[:failed].size.should == 1
+    end
+  end
+
+  describe 'GET graph' do
+    before :each do
+      poultry = create(:receipt_item_category, name: 'Poultry', user: @user)
+      chicken = create(:receipt_item_type, friendly_name: 'Chicken', receipt_item_category: poultry, user: @user)
+      chicken_breast = create(:receipt_item_type, friendly_name: 'Chicken breast', receipt_item_category: poultry, user: @user)
+      fruit = create(:receipt_item_category, name: 'Fruit', user: @user)
+      grapefruit = create(:receipt_item_type, friendly_name: 'Grapefruit', receipt_item_category: fruit, user: @user)
+      x = create(:receipt_item, user: @user, name: 'CHKN', receipt_item_type: chicken, total: 4, user: @user)
+      y = create(:receipt_item, user: @user, name: 'CHKN', receipt_item_type: chicken, total: 5, user: @user)
+      y = create(:receipt_item, user: @user, name: 'CHKN BREAST', receipt_item_type: chicken_breast, total: 6, user: @user)
+      z = create(:receipt_item, user: @user, name: 'Grapefruit', receipt_item_type: grapefruit, total: 7, user: @user)
+    end
+    it "sums up the total" do
+      get :graph
+      assigns(:total).should == 4 + 5 + 6 + 7
+    end
+    it "sums up category totals" do
+      get :graph
+      assigns(:data)['children'][0]['name'].should == 'Poultry'
+      assigns(:data)['children'][0]['total'].should == 4 + 5 + 6
     end
   end
 end

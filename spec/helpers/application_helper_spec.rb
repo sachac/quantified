@@ -105,6 +105,11 @@ describe ApplicationHelper do
         it { should match 'edit' }
         it { should match 'Start' }
       end
+      context "when given a goal" do
+        subject { helper.actions(build_stubbed(:goal, user: @user)).join('') }
+        it { should match 'edit' }
+        it { should match 'delete' }
+      end
     end
     context "when not logged in" do
       before do
@@ -189,6 +194,11 @@ describe ApplicationHelper do
       helper.record_category_breadcrumbs(@c2).should_not match 'CD'
     end
   end
+  describe '#delete_icon' do
+    it "gets the path when passed an object" do
+      helper.delete_icon(create(:user, :confirmed)).should match /user/
+    end
+  end
   describe "#record_category_full" do
     it "requires a category" do
       helper.record_category_full(nil).should == '(deleted?)'
@@ -208,6 +218,10 @@ describe ApplicationHelper do
     end
     it "returns blank if there is no data" do
       @record_blank = create(:record, user: @u, record_category: @c1)
+      helper.record_data(@record_blank.data).should == ''
+    end
+    it "returns blank if there is zero data" do
+      @record_blank = create(:record, user: @u, record_category: @c1, data: {})
       helper.record_data(@record_blank.data).should == ''
     end
     it "displays one item" do

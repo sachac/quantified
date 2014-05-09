@@ -171,6 +171,56 @@ Feature: Clothing
     Then I should see that "red shirt" was worn 2 times with "black pants"
     And I should see that "white shirt" was worn 1 time with "blue jeans"
     And I should see that "red shirt" was worn 1 time with "blue jeans"
+  Scenario: Analyze clothing by month
+    Given I have the following clothing logs:
+      |       Date | Clothing      | Tags    |
+      | 2011-10-31 | red dress     | dress   |
+      | 2011-11-01 | red shirt     | top     |
+      | 2011-11-01 | black pants   | bottom  |
+      | 2011-11-02 | blue jeans    | bottom  |
+      | 2011-11-02 | white shirt   | top     |
+      | 2011-11-03 | red shirt     | top     |
+      | 2011-11-03 | black pants   | bottom  |
+      | 2011-11-04 | red shirt     | top     |
+      | 2011-11-04 | blue jeans    | bottom  |
+      | 2011-11-04 | black sweater | sweater |
+      | 2011-12-01  | red shirt     | top     |
+    When I analyze my clothes by month from 2011-01-01 to 2012-12-31
+    Then I should see that "red shirt" was worn 3 times in the month ending 2011-11-30
+  Scenario: Analyze clothing by year
+    Given I have the following clothing logs:
+      |       Date | Clothing      | Tags    |
+      | 2011-11-01 | red shirt     | top     |
+      | 2011-11-01 | black pants   | bottom  |
+      | 2011-11-02 | blue jeans    | bottom  |
+      | 2011-11-02 | white shirt   | top     |
+      | 2011-11-03 | red shirt     | top     |
+      | 2011-11-03 | black pants   | bottom  |
+      | 2011-11-04 | red shirt     | top     |
+      | 2011-11-04 | blue jeans    | bottom  |
+      | 2011-11-04 | black sweater | sweater |
+      | 2011-12-01 | red shirt     | top     |
+      | 2010-12-01 | red shirt     | top     |
+    And the date is 2012-11-04
+    When I analyze my clothes by year from 2011-01-01 to 2012-12-31
+    Then I should see that "red shirt" was worn 4 times in the year ending 2011-12-31
+  Scenario: Analyze clothing by day
+    Given I have the following clothing logs:
+      |       Date | Clothing      | Tags    |
+      | 2011-11-01 | red shirt     | top     |
+      | 2011-11-01 | black pants   | bottom  |
+      | 2011-11-02 | blue jeans    | bottom  |
+      | 2011-11-02 | white shirt   | top     |
+      | 2011-11-03 | red shirt     | top     |
+      | 2011-11-03 | black pants   | bottom  |
+      | 2011-11-04 | red shirt     | top     |
+      | 2011-11-04 | blue jeans    | bottom  |
+      | 2011-11-04 | black sweater | sweater |
+      | 2011-12-01 | red shirt     | top     |
+      | 2010-12-01 | red shirt     | top     |
+    And the date is 2011-11-04
+    When I analyze my clothes by day
+    And I should see that "red shirt" was worn 1 time on "2011-11-03"
   Scenario: Graph clothing choices
     Given I have the following clothing logs:
       |       Date | Clothing      | Tags    |

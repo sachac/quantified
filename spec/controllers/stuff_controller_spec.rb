@@ -5,6 +5,7 @@ describe StuffController do
     @user = create(:user, :confirmed)
     @stuff = create(:stuff, user: @user, status: 'active', name: 'ABC', created_at: Time.zone.now - 1.hour)
     @stuff2 = create(:stuff, user: @user, status: 'inactive', name: 'DEF')
+    @stuff3 = create(:stuff, user: create(:user, :confirmed), status: 'inactive', name: 'DEF')
     sign_in @user
   end
   describe 'GET index' do
@@ -94,6 +95,12 @@ describe StuffController do
     it "removes the item" do
       delete :destroy, id: @stuff.id
       response.should redirect_to(stuff_index_path)
+    end
+  end
+  describe 'autocomplete' do
+    it "limits it to the user" do
+      get :autocomplete_stuff_name, term: 'DEF'
+      JSON.parse(response.body).length.should == 1
     end
   end
 end

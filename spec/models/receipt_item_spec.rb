@@ -3,7 +3,7 @@ require 'spec_helper'
 describe ReceiptItem do
   before do
     @text = 'ID	File	Store	Date	Time	Name	Quantity or net weight	Unit	Unit price	Total	Notes
-2	2131936.jpg	Nofrills Lower Food Prices	2012-02-23	RN Dried Apricot M	1		4	4	'
+2	2131936.jpg	Nofrills Lower Food Prices	2012-02-23	11:00	RN Dried Apricot M	1		4	4	'
   end
   describe ".parse_batch" do
     it "converts to CSV with headers" do
@@ -55,5 +55,19 @@ describe ReceiptItem do
       result = ReceiptItem.create_batch(@user, @data)
       result[:failed].size.should == 1
     end
+    it "creates unconditionally if ID is blank" do
+      text = "1	2131936.jpg	Nofrills Lower Food Prices	2012-02-23	11:00	RN Dried Apricot M	1		4	4	\n"
+      text += "	2131936.jpg	Nofrills Lower Food Prices	2012-02-23	11:00	RN Dried Apricot M	1		4	4	\n"
+      r = ReceiptItem.parse_batch(text)
+      ReceiptItem.create_batch(@user, r)
+      ReceiptItem.count.should == 2
+    end
   end
+  describe "#to_csv" do
+    it "should convert to CSV" do
+      rec = FactoryGirl.create(:receipt_item)
+      rec.to_comma.should == [rec.filename, rec.source_id.to_s, rec.source_name, rec.store, rec.date.to_s, rec.name, "", rec.quantity.to_s, rec.unit, rec.unit_price.to_s, rec.total.to_s, rec.notes]
+    end
+  end
+
 end

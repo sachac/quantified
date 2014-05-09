@@ -89,4 +89,9 @@ class ReceiptItemTypesController < ApplicationController
     end
     respond_with @result
   end
+
+  def get_autocomplete_items(parameters)
+    super(parameters).where(:user_id => current_account.id)
+  end
+
 end
