@@ -5,6 +5,12 @@ describe ApplicationHelper do
       helper.google_analytics_js.should match '2778'
     end
   end
+  describe '#set_focus_to_id' do
+    it "focuses on the ID" do
+      helper.set_focus_to_id("#x").should =~ /#x/
+      helper.set_focus_to_id("#x").should =~ /focus/
+    end
+  end
   describe '#clothing_thumbnail' do
     before do
       @c = create(:clothing, image: fixture_file_upload('/files/sample-color-ff0000.png'))
