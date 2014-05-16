@@ -25,12 +25,12 @@ class RecordCategoriesController < ApplicationController
     else
       @title = @record_category.name + " (" + I18n.t('general.inactive') + ")"
     end
-    if request.format.html? or request.format.csv?
+    if request.format.html? or request.format.csv?  # JSON doesn't get additional info
       params[:order] ||= 'newest'
-      @order = params[:order]
       params[:start] ||= (Time.zone.now.to_date - 1.year).midnight.to_s
       params[:end] ||= (Time.zone.now + 1.day).midnight.to_s
       prepare_filters [:date_range, :order, :filter_string, :split]
+      @order = params[:order]
       @summary_start = Time.zone.parse(params[:start])
       @summary_end = Time.zone.parse(params[:end])
       @records = @record_category.category_records(:start => @summary_start, :end => @summary_end, :filter_string => params[:filter_string], :include_private => managing?)
@@ -42,26 +42,21 @@ class RecordCategoriesController < ApplicationController
       else
         @records = @records.order('timestamp DESC')
       end
-      if request.format.html?
-        if @records then @records = @records.paginate :page => params[:page], :per_page => 20 end
-      end
-      if params[:split] and params[:split] == 'split'
-        split = Record.split(@records)
-        @records = split
-      end 
+      # Okay. We need to paginate, but we also need to split records,
+      # and the total should be calculated over everything. So we
+      # calculate the total before we paginate, and then we split
+      # after pagination.
       if request.format.html?
         @max_duration = 0
         @min_duration = nil
         @heatmap = Hash.new
         @total = 0
-        
         @records.each { |x|
           next unless x.record_category.category_type == 'activity'
           if !x.end_timestamp
             x.duration = ([Time.zone.now, @summary_end].min - x.timestamp).to_i
           end
           @total = @total + x.duration
-
           d = ((x.duration / 3600.0) * 10.0).to_i / 10.0
           @heatmap[x.timestamp.to_i] = d
           if x.duration > @max_duration
@@ -75,7 +70,13 @@ class RecordCategoriesController < ApplicationController
         @step = (@max_duration - @min_duration) / 3
         @count_domain = (((@summary_end - @summary_start).to_i / 1.day) / 30) + 1
       end
-      
+      if request.format.html?
+        if @records then @records = @records.paginate :page => params[:page], :per_page => 20 end
+      end
+      if params[:split] and params[:split] == 'split'
+        split = Record.split(@records)
+        @records = split
+      end 
     end
 
     respond_to do |format|

@@ -34,6 +34,6 @@
       = link_to e do 
         = surround '(', ')' do
           %time.timeago{:datetime => e.created_at} e.created_at    
-= will_paginate @timeline_events      
+= will_paginate @timeline_events
 %br
 
