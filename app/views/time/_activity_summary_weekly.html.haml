@@ -1,11 +1,15 @@
-
+- alternate_display = params[:display_type] == 'percentage' ? 'decimal' : params[:display_type]
+- count = ((summary_end - summary_start) / 1.day).to_int
+- end_date = summary_end.to_date
+- start_at = current_account.adjust_beginning_of_week(summary_start).to_date
 %p
   %table.table.table-condensed.table-bordered.full
     %thead
       %tr
+        %th Sparklines
         %th Activity
         - date = current_account.adjust_beginning_of_week(summary_start)
-        - while date <= summary_end
+        - while date < summary_end
           %th{:title => "Week ending #{l date + 6.days, :format => :long}"}
             = link_to l(date.to_date + 6.days, :format => :short), time_review_path(params.merge({:action => 'review', :controller => 'time', :start => date, :end => date + 1.week}))
           - date += 1.week
@@ -18,33 +22,44 @@
         - values = row[1]
         %tr
           %td
+            %span.spark
+              - date = start_at
+              - while date < end_date
+                - if date <= summary_end.to_date
+                  - if (date > start_at.to_date)
+                    ,
+                  - if params[:display_type] == 'percentage'
+                    - if (summary[:cols][date + 6.days][:total] > 0)
+                      = 100.0 * (values[date + 6.days] || 0) / summary[:cols][date + 6.days][:total]
+                    - else
+                      0
+                  - else
+                    = (values[date + 6.days] || 0) / 3600.0
+                - date += 1.week
+          %td
             = link_to category.full_name, time_review_path(params.merge(:action => 'review', :controller => 'time', :parent_id => category.id)), :title => category.full_name
             = " > " if category.list?
-          - date = current_account.adjust_beginning_of_week(summary_start).to_date
+          - date = start_at
           - total = 0
-          - end_date = summary_end.to_date
-          - count = 0
           - while date < end_date
             %td.right{:title => category.full_name + " - " + l(date + 6.days)}
-              = duration values[date + 6.days]
+              = duration values[date + 6.days], summary[:cols][date + 6.days][:total]
             - if values[date + 6.days]
               - total += values[date + 6.days]
-              - count += 1 if values[date + 6.days] > 0
             - date += 1.week
           %td.right
-            %strong{:title => ("Average: " + duration(total / count) if count > 0)}= duration total  
+            %strong{:title => ("Average: " + duration(total * 7.0 / count, 0, alternate_display) if count > 0)}= duration total, summary[:total][:total][:total]  
       %tr
         %td Total
         - date = current_account.adjust_beginning_of_week(summary_start).to_date
         - end_date = summary_end.to_date
         - values = summary[:total][:total]
         - total = 0
-        - count = 0
         - while date < end_date
-          %td.right{:title => l(date)}= duration values[date + 6.days]
+          %td.right{:title => l(date)}= duration values[date + 6.days], summary[:total][:total][:total]
           - total += values[date + 6.days]
           - date += 1.week
           - count += 1 if values[date + 6.days] > 0
         %td.right
-          %strong{:title => ("Average: " + duration(total / count) if count > 0)}= duration total  
+          %strong{:title => ("Average: " + duration(total * 7.0 / count, 0, alternate_display) if count > 0)}= duration total, 0, alternate_display  
 

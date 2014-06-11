@@ -1,9 +1,14 @@
+- start_at = Time.zone.local(summary_start.year, summary_start.month, 1).to_date
+- end_date = summary_end.to_date
+- count = (end_date.month - start_at.month) + (end_date.year - start_at.year) * 12
+- summary_end = summary_end.to_date
 %p
   %table.table.table-condensed.table-bordered.full
     %thead
       %tr
+        %th Sparklines
         %th Activity
-        - date = Time.zone.local(summary_start.year, summary_start.month, 1)
+        - date = start_at
         - while date <= summary_end
           %th{:title => date.strftime('%b %Y')}
             = link_to date.strftime('%b %Y'), time_review_path(params.merge({:action => 'review', :controller => 'time', :start => date, :end => date + 1.month}))
@@ -17,32 +22,44 @@
         - values = row[1]
         %tr
           %td
+            %span.spark
+              - date = start_at
+              - while date < end_date
+                - if date > start_at
+                  ,
+                - if params[:display_type] == 'percentage'
+                  - if (summary[:cols][date][:total] > 0)
+                    = 100.0 * (values[date] || 0) / summary[:cols][date][:total]
+                  - else
+                    0
+                - else
+                  = (values[date] || 0) / 3600.0
+                - date += 1.month
+          %td
             = link_to category.full_name, time_review_path(params.merge(:action => 'review', :controller => 'time', :parent_id => category.id)), :title => category.full_name
             = " > " if category.list?
           - date = Time.zone.local(summary_start.year, summary_start.month, 1).to_date
           - total = 0
-          - count = 0
-          - end_date = summary_end.to_date
           - while date < end_date
             %td.right{:title => category.full_name + " - " + date.strftime('%b %Y')}
-              = duration values[date]
+              = duration values[date], summary[:cols][date][:total]
             - if values[date + 6.days]
               - total += values[date]
-              - count += 1 if values[date] > 0
             - date += 1.month
           %td.right
-            %strong{:title => ("Average: " + duration(total / count) if count > 0)}= duration total  
-      %tr
-        %td Total
-        - date = Time.zone.local(summary_start.year, summary_start.month, 1).to_date
-        - values = summary[:total][:total]
-        - total = 0
-        - count = 0
-        - end_date = summary_end.to_date
-        - while date < end_date
-          %td.right{:title => l(date)}= duration values[date]
-          - total += values[date]
-          - count += 1 if values[date] > 0
-          - date += 1.month
-        %td.right
-          %strong{:title => ("Average: " + duration(total / count) if count > 0)}= duration total  
+            - if count > 0
+              %strong{:title => ("Total: " + duration(total, 0, 'decimal') + " Average: " + duration(total / count, summary[:total][:total][:total] / count))}
+                = duration total, summary[:total][:total][:total]
+      - if params.nil? or params[:display_type] != 'percentage'
+        %tr
+          %td Total
+          - date = Time.zone.local(summary_start.year, summary_start.month, 1).to_date
+          - values = summary[:total][:total]
+          - total = 0
+          - end_date = summary_end.to_date
+          - while date < end_date
+            %td.right{:title => l(date)}= duration values[date]
+            - total += values[date]
+            - date += 1.month
+            %td.right
+              %strong{:title => ("Average: " + duration(total / count, summary[:total][:total][:total] / count) if count > 0)}= duration total  

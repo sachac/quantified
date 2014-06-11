@@ -53,6 +53,8 @@
               = label_tag :display_type_inline, 'Time', :class => 'inline'
               = radio_button_tag :display_type, 'decimal', params[:display_type] == 'decimal', :class => 'inline'
               = label_tag :display_type_decimal, 'Decimal', :class => 'inline'
+              = radio_button_tag :display_type, 'percentage', params[:display_type] == 'percentage', :class => 'inline'
+              = label_tag :display_type_percentage, 'Percentage', :class => 'inline'
         - if @filters[:zoom_level]
           .control-group
             = label_tag :zoom_level, 'Zoom level', class: 'control-label'

@@ -273,6 +273,9 @@ class Record < ActiveRecord::Base
     # Have we specified a date, as in batch entry?
     if options[:date] 
       time = (time || Time.now) - (Time.zone.now.to_date - options[:date].to_date).days
+      if end_time
+        end_time = (end_time || Time.now) - (Time.zone.now.to_date - options[:date].to_date).days
+      end
     end
     
     # match -30m or -30min example, always as an offset from now
@@ -316,16 +319,26 @@ class Record < ActiveRecord::Base
     # At this point, time should be the correct time (except that it's based on today)
 
     # match m-d or m/d, and subtract as many days as needed to get to that date
-    regex = /\b([0-9]?[0-9])[-\/]([0-9]?[0-9])\b */
-    matches = new_string.match regex
-    if matches
-      d = Time.zone.local(Time.zone.now.to_date.year, matches[1].to_i, matches[2].to_i)
-      if d > Time.zone.today
-        d = Time.zone.local(Time.zone.now.to_date.year - 1, matches[1].to_i, matches[2].to_i)
+    regex = /\b(([0-9][0-9][0-9][0-9])[-\/])?([0-9]?[0-9])[-\/]([0-9]?[0-9])\b */
+    matches = new_string.scan(regex).each_with_index do |matches, i|
+      year = matches[1] ? matches[1].to_i : nil
+      month = matches[2].to_i
+      day = matches[3].to_i
+      if year
+        d = Time.zone.local(year, month, day)
+      else
+        d = Time.zone.local(Time.zone.now.to_date.year, month, day)
+        if d > Time.zone.today
+          d = Time.zone.local(Time.zone.now.to_date.year - 1, month, day)
+        end
       end
-      time = (time || Time.zone.now) - (Time.zone.now.to_date - d.to_date).days
-      new_string.gsub! regex, ''
+      if i == 0
+        time = (time || Time.zone.now) - (Time.zone.now.to_date - d.to_date).days
+      else
+        end_time = (end_time || Time.zone.now) - (Time.zone.now.to_date - d.to_date).days
+      end
     end
+    new_string.gsub! regex, ''
     [new_string.strip, time, end_time]
   end
 

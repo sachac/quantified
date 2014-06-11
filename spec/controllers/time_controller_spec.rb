@@ -12,6 +12,7 @@ describe TimeController do
     before do
       @user = create(:user, :confirmed)
       @cat = create(:record_category, user: @user)
+      @cat2 = create(:record_category, user: @user, name: "Category 2")
       @records = Array.new
       @records << create(:record, user: @user, record_category: @cat,
                          timestamp: Time.zone.local(2013, 1, 1, 3),
@@ -61,8 +62,7 @@ describe TimeController do
       it "lets me set the zoom to automatic" do
         get :review, zoom_level: '', start: Time.zone.now - 1.week, end: Time.zone.now - 1.day
         assigns(:zoom).should == :daily
-      end
-      
+      end      
     end
     describe 'GET graph' do
       it "displays records" do
