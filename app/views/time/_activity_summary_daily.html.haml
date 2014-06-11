@@ -77,6 +77,7 @@
               %td.right{:title => category.full_name + " average (#{pluralize count_days, "day"})"}
                 = duration(total / count_days, 0, 'decimal') if count_days > 0
         %tr
+          %td 
           %td Total
           - date = summary_start.to_date
           - end_date = summary_end.to_date

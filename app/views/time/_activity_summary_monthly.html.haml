@@ -52,6 +52,7 @@
                 = duration total, summary[:total][:total][:total]
       - if params.nil? or params[:display_type] != 'percentage'
         %tr
+          %td 
           %td Total
           - date = Time.zone.local(summary_start.year, summary_start.month, 1).to_date
           - values = summary[:total][:total]
@@ -61,5 +62,5 @@
             %td.right{:title => l(date)}= duration values[date]
             - total += values[date]
             - date += 1.month
-            %td.right
-              %strong{:title => ("Average: " + duration(total / count, summary[:total][:total][:total] / count) if count > 0)}= duration total  
+          %td.right
+            %strong{:title => ("Average: " + duration(total / count, summary[:total][:total][:total] / count) if count > 0)}= duration total  
