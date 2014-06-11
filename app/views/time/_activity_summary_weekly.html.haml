@@ -50,6 +50,7 @@
           %td.right
             %strong{:title => ("Average: " + duration(total * 7.0 / count, 0, alternate_display) if count > 0)}= duration total, summary[:total][:total][:total]  
       %tr
+        %td 
         %td Total
         - date = current_account.adjust_beginning_of_week(summary_start).to_date
         - end_date = summary_end.to_date
