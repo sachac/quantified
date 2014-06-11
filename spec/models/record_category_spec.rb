@@ -46,7 +46,7 @@ describe RecordCategory do
         it 'limits the records to that branch' do
           @options[:parent] = @cat2
           list = RecordCategory.roll_up_records(@options)
-          list[:total][:total].values.sum.should == 26 * 60 * 60
+          list[:total][:total][:total].should == 26 * 60 * 60
         end
       end
       context 'when displaying a full tree' do 
@@ -99,7 +99,7 @@ describe RecordCategory do
       context 'when summarizing a list' do
         it "summarizes records" do
           list = @cat2.summarize(@options)
-          list[:total][:total].values.sum.should == 26 * 60 * 60
+          list[:total][:total][:total].should == 26 * 60 * 60
         end
       end
     end

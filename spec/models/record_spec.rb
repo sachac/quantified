@@ -341,6 +341,15 @@ describe Record do
       o = Record.guess_time("test 12/31")
       o[1].year.should == Time.zone.now.year - 1
     end
+    it "recognizes y-m-d" do
+      o = Record.guess_time("test 2012-01-01")
+      o[1].year.should == 2012
+    end
+    it "recognizes y-m-d hh:mm y-m-d hh:mm" do
+      o = Record.guess_time("test 2012-12-31 23:00 2013-01-01 8:00")
+      o[1].year.should == 2012
+      o[2].year.should == 2013
+    end
     it "recognizes hh:mm hh:mm" do
       o = Record.guess_time("test 8:00 9:00")
       o[0].should == "test"

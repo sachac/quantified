@@ -171,13 +171,16 @@ module ApplicationHelper
     active ? 'active' : 'inactive'
   end
 
-  def duration(seconds)
-    display_type = (params && params[:display_type] == 'decimal') ? 'decimal' : 'time'
+  def duration(seconds, total = 0, display_type = nil)
+    display_type ||= (params && params[:display_type]) ? params[:display_type] : 'time'
     if seconds and seconds > 0
-      if display_type == 'time' 
+      case display_type
+      when 'time' 
         "%d" % (seconds.to_f / 1.hour) + (":%02d" % ((seconds.to_f % 1.hour) / 1.minute))
-      else
+      when 'decimal'
         "%.1f" % ((seconds.to_f / 1.hour).to_f.round(1))
+      when 'percentage'
+        "%0.1f%%" % (100.0 * seconds / total)
       end
     end
   end

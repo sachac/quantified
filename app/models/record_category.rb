@@ -43,7 +43,7 @@ class RecordCategory < ActiveRecord::Base
     if options[:range]
       records = records.map { |x| 
         x.end_timestamp ||= Time.now
-        x if ((x.end_timestamp >= options[:range].begin) and (x.timestamp < options[:range].end))
+        x if ((x.end_timestamp > options[:range].begin) and (x.timestamp < options[:range].end))
       }.compact
     end
     # Filter by categories
@@ -86,7 +86,9 @@ class RecordCategory < ActiveRecord::Base
           end
           summary[:rows][cat][:total] += rec.duration
         end
+        summary[:cols][key][:total] += rec.duration
         summary[:total][:total][key] += rec.duration
+        summary[:total][:total][:total] += rec.duration
       end
     end
     summary
