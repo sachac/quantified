@@ -1,5 +1,5 @@
 require 'spec_helper'
-describe SessionsController do
+describe SessionsController, :type => :controller  do
   before do
     @request.env["devise.mapping"] = Devise.mappings[:user]
   end
@@ -13,7 +13,7 @@ describe SessionsController do
     it "logs in" do
       @user = create(:user, :confirmed)
       post :create, scope: 'user', user: { login: @user.email, password: @user.password }, format: :json
-      JSON.parse(response.body)["success"].should be_true
+      expect(JSON.parse(response.body)["success"]).to be true
     end
   end
 end

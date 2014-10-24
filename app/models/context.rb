@@ -6,7 +6,7 @@ class Context < ActiveRecord::Base
   before_save :update_rules
 
   def update_rules
-    self.rules = self.context_rules.includes(:stuff).order('LOWER(stuff.name)').map { |x| x.stuff.name }.uniq.join(', ')
+    self.rules = self.context_rules.includes(:stuff).references(:stuff).order('LOWER(stuff.name)').map { |x| x.stuff.name }.uniq.join(', ')
   end
   
   def to_xml(options = {})

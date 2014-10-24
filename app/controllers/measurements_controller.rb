@@ -4,7 +4,7 @@ class MeasurementsController < ApplicationController
   # GET /measurements
   # GET /measurements.xml
   def index
-    @measurements = current_account.measurements.all
+    @measurements = current_account.measurements
     respond_with @measurements
   end
 
@@ -31,7 +31,7 @@ class MeasurementsController < ApplicationController
   # POST /measurements
   # POST /measurements.xml
   def create
-    @measurement = current_account.measurements.new(params[:measurement])
+    @measurement = current_account.measurements.new(measurement_params)
     if @measurement.save
       add_flash :notice, I18n.t('measurement.created')
     end
@@ -42,9 +42,8 @@ class MeasurementsController < ApplicationController
   # PUT /measurements/1.xml
   def update
     @measurement = current_account.measurements.find(params[:id])
-    params[:measurement].delete(:user_id)
 
-    if @measurement.update_attributes(params[:measurement])
+    if @measurement.update_attributes(measurement_params)
       add_flash :notice, I18n.t('measurement.updated')
     end
     respond_with @measurement
@@ -59,5 +58,10 @@ class MeasurementsController < ApplicationController
       format.html { redirect_to(measurements_url) }
       format.any  { head :ok }
     end
+  end
+
+  private
+  def measurement_params
+    params.require(:measurement).permit(:name, :notes, :unit, :average, :max, :min, :sum)
   end
 end

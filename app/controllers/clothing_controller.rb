@@ -10,9 +10,7 @@ class ClothingController < ApplicationController
     order = filter_sortable_column_order %w{clothing_type name status clothing_logs_count last_worn hue}, 'name'
     logger.info order
     @clothing = current_account.clothing
-    @clothing = @clothing.find(:all, 
-                               :conditions => ["status='active' OR status IS NULL OR status=''"],
-                               :order => order)
+    @clothing = @clothing.where("status='active' OR status IS NULL OR status=''").order(order)
     respond_with @clothing
   end
 
@@ -21,7 +19,7 @@ class ClothingController < ApplicationController
   def show
     @clothing = current_account.clothing.find(params[:id])
     authorize! :view, @clothing
-    @logs = current_account.clothing_logs.find(:all, :conditions => ["clothing_id=?", @clothing.id], :order => 'date DESC')
+    @logs = current_account.clothing_logs.where("clothing_id=?", @clothing.id).order('date DESC')
     @previous = @clothing.previous_by_id
     @next = @clothing.next_by_id
 
@@ -77,7 +75,7 @@ class ClothingController < ApplicationController
     if request.format.html?
       redirect_to clothing_path(@clothing) and return
     end
-    @logs = current_account.clothing_logs.find(:all, :conditions => ["clothing_id=?", @clothing.id], :order => 'date DESC')
+    @logs = current_account.clothing_logs.where("clothing_id=?", @clothing.id).order('date DESC')
     respond_with @logs
   end
   

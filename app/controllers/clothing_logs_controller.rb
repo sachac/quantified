@@ -63,7 +63,8 @@ class ClothingLogsController < ApplicationController
       else
         @clothing = current_account.clothing.where(name: params[:clothing]).first
         unless @clothing
-          @clothing ||= current_account.clothing.new(name: params[:clothing])
+          @clothing ||= current_account.clothing.new
+          @clothing.name = params[:clothing]
           @clothing.save
           add_flash :notice, "Saved new clothing ID #{@clothing.id}."
         end
@@ -71,9 +72,11 @@ class ClothingLogsController < ApplicationController
       end
     end
     if (params[:date] && params[:clothing_id]) then
-      @clothing_log = current_account.clothing_logs.new(date: params[:date], clothing_id: params[:clothing_id])
+      @clothing_log = current_account.clothing_logs.new
+      @clothing_log.date = params[:date]
+      @clothing_log.clothing_id = params[:clothing_id]
     else
-      @clothing_log = current_account.clothing_logs.new(params[:clothing_log])
+      @clothing_log = current_account.clothing_logs.new(clothing_log_params[:clothing_log])
       @clothing_log.clothing = @clothing if @clothing
     end
     @clothing_log.user_id = current_account.id
@@ -94,7 +97,7 @@ class ClothingLogsController < ApplicationController
     @clothing_log = current_account.clothing_logs.find(params[:id])
     authorize! :update, @clothing_log
     params[:clothing_log].delete(:user_id)
-    @clothing_log.update_attributes(params[:clothing_log])
+    @clothing_log.update_attributes(clothing_log_params)
     respond_with @clothing_log
   end
 
@@ -115,4 +118,10 @@ class ClothingLogsController < ApplicationController
     @next_date = @date + 1.day
     respond_with @clothing_logs
   end
+
+  private
+  def clothing_log_params
+    params.permit(:clothing_log => [:clothing_id, :date, :outfit_id])
+  end
+    
 end

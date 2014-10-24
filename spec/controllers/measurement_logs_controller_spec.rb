@@ -1,5 +1,5 @@
 require 'spec_helper'
-describe MeasurementLogsController do
+describe MeasurementLogsController, :type => :controller  do
   before do
     @request.env["devise.mapping"] = Devise.mappings[:user]
     @user = create(:user, :confirmed)
@@ -34,7 +34,7 @@ describe MeasurementLogsController do
   end
   describe 'POST create' do
     it "creates an item" do
-      post :create, measurement_log: { measurement_id: @measurement.id, notes: 'Hello world', value: 10, user_id: -1 }
+      post :create, { :measurement_log => { :measurement_id => @measurement.id, :notes => 'Hello world', :value => 10 } }
       assigns(:measurement_log).user_id.should == @user.id
       assigns(:measurement_log).value.should be_within(0.1).of(10)
       flash[:notice].should == I18n.t('measurement_log.created')

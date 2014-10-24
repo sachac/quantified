@@ -1,5 +1,5 @@
 require 'spec_helper'
-describe TorontoLibrariesController do
+describe TorontoLibrariesController, :type => :controller  do
   before do
     @request.env["devise.mapping"] = Devise.mappings[:user]
     @user = create(:user, :confirmed)
@@ -54,11 +54,11 @@ describe TorontoLibrariesController do
 
   describe 'POST /update' do
     it "refreshes the list" do
-      TorontoLibrary.any_instance.should_receive(:refresh_items)
+      expect_any_instance_of(TorontoLibrary).to receive(:refresh_items)
       post :refresh_all
     end
     it "refreshes the list and returns a CSV" do
-      TorontoLibrary.any_instance.should_receive(:refresh_items)
+      expect_any_instance_of(TorontoLibrary).to receive(:refresh_items)
       post :refresh_all, format: :json
     end
   end
@@ -66,16 +66,16 @@ describe TorontoLibrariesController do
   describe 'POST request_items' do
     context "when requests are successful" do
       it "returns a list of requested items" do
-        TorontoLibrary.any_instance.stub(:login).and_return(:true)
-        TorontoLibrary.any_instance.stub(:request_item).and_return(:true)
+        allow_any_instance_of(TorontoLibrary).to receive(:login).and_return(:true)
+        allow_any_instance_of(TorontoLibrary).to receive(:request_item).and_return(:true)
         post :request_items, id: @toronto_library.id, items: '12345678901234 blah 22345678901234'
         flash[:notice].should == 'Success: 12345678901234, 22345678901234'
       end
     end
     context "when requests are successful" do
       it "returns a list of failures" do
-        TorontoLibrary.any_instance.stub(:login).and_return(true)
-        TorontoLibrary.any_instance.stub(:request_item).and_return(false)
+        allow_any_instance_of(TorontoLibrary).to receive(:login).and_return(true)
+        allow_any_instance_of(TorontoLibrary).to receive(:request_item).and_return(false)
         post :request_items, id: @toronto_library.id, items: '12345678901234 blah 22345678901234'
         flash[:error].should == 'Error: 12345678901234, 22345678901234'
       end

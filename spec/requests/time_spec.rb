@@ -1,7 +1,7 @@
 require 'spec_helper'
 include Warden::Test::Helpers
 
-describe "Time" do
+describe "Time", :type => :request do
   describe "GET /time/review" do
     before :each do
       @user = create(:user, :confirmed)

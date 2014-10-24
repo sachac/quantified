@@ -1,5 +1,5 @@
 require 'spec_helper'
-describe Api::V1::TokensController do
+describe Api::V1::TokensController, :type => :controller  do
   before do
     @request.env["devise.mapping"] = Devise.mappings[:user]
     @user = create(:user, :confirmed)
@@ -24,7 +24,7 @@ describe Api::V1::TokensController do
   end
   describe 'DELETE' do
     it "requires a valid authentication token" do
-      @user.ensure_authentication_token!
+      @user.ensure_authentication_token
       old_token = @user.authentication_token
       delete :destroy, token: old_token, format: :json
       @user.reload.authentication_token.should_not == old_token
@@ -35,7 +35,7 @@ describe Api::V1::TokensController do
       response.status.should == 400
     end
     it "handles XML" do
-      @user.ensure_authentication_token!
+      @user.ensure_authentication_token
       old_token = @user.authentication_token
       delete :destroy, token: old_token, format: :xml
       response.body.should match @user.reload.authentication_token

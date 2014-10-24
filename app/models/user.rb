@@ -33,17 +33,15 @@ class User < ActiveRecord::Base
   validates :username, :uniqueness => { :case_sensitive => false }, :allow_blank => true
   validates :email, :presence => true, :email => true
   validates :email, :uniqueness => { :case_sensitive => false }
-  validates_format_of :username, :with => /^[A-Za-z\d]*$/
+  validates_format_of :username, :with => /\A[A-Za-z\d]*\Z/
   # Include default devise modules. Others available are:
   # :token_authenticatable, :encryptable, :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable, :token_authenticatable, :confirmable
-  attr_accessor :login
-
-  # Setup accessible (or protected) attributes for your model
-  attr_accessible :email, :password, :password_confirmation, :remember_me, :username, :login
+         :recoverable, :rememberable, :trackable, :validatable, :confirmable
+  
   before_save :update_memento_mori 
 
+  attr_accessor :login
   acts_as_tagger
   
   include RailsSettings::Extend 
@@ -107,7 +105,7 @@ class User < ActiveRecord::Base
       if match = val.match(/^([0-9]+)/)
         self.stuff.find_by_id(val)
       else  
-        loc = self.stuff.find(:first, :conditions => ['lower(name)=?', val.downcase.strip])
+        loc = self.stuff.where('lower(name)=?', val.downcase.strip).first
         loc ||= self.stuff.create(:name => val.strip, :stuff_type => 'location')
       end
     else
@@ -132,6 +130,21 @@ class User < ActiveRecord::Base
 
   def demo?
     (self.email == 'sacha@sachachua.com') || (self.role == 'demo')
+  end
+
+  
+  # https://gist.github.com/josevalim/fb706b1e933ef01e4fb6
+  # You likely have this before callback set up for the token.
+  before_save :ensure_authentication_token
+
+  def ensure_authentication_token
+    if authentication_token.blank?
+      self.authentication_token = generate_authentication_token
+    end
+  end
+
+  def reset_authentication_token!
+    self.authentication_token = generate_authentication_token
   end
 
   protected
@@ -180,4 +193,18 @@ class User < ActiveRecord::Base
  
   fires :new, :on => :create, :actor => :self
   fires :update, :on => :update, :actor => :self
+
+  private
+
+  def generate_authentication_token
+    loop do
+      token = Devise.friendly_token
+      break token unless User.where(authentication_token: token).first
+    end
+  end
+  
+  def user_params
+    # Setup accessible (or protected) attributes for your model
+    params.require(:email).permit(:username, :password, :password_confirmation, :login)
+  end
 end

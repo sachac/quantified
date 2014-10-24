@@ -9,7 +9,7 @@ describe ClothingLog do
       c3 = FactoryGirl.create(:clothing, user: @user)
       FactoryGirl.create(:clothing_log, clothing: c1, user: @user, date: Time.zone.today)
       FactoryGirl.create(:clothing_log, clothing: c2, user: @user, date: Time.zone.today)  
-      c1.clothing_matches.size.should == 1
+      expect(c1.clothing_matches.size).to eq(1)
     end
     context "when the clothing ID changes" do
       it "updates the matches" do
@@ -22,7 +22,7 @@ describe ClothingLog do
         log.clothing = c2
         log.save
         c1.reload
-        c1.clothing_matches.size.should == 0
+        expect(c1.clothing_matches.size).to eq(0)
       end
     end
   end
@@ -33,9 +33,9 @@ describe ClothingLog do
     c3 = FactoryGirl.create(:clothing, user: @user)
     log = FactoryGirl.create(:clothing_log, clothing: c1, user: @user, date: Time.zone.today)
     FactoryGirl.create(:clothing_log, clothing: c2, user: @user, date: Time.zone.today)
-    c2.clothing_matches.size.should == 1
+    expect(c2.clothing_matches.size).to eq(1)
     c1.destroy
-    c2.clothing_matches.size.should == 0
+    expect(c2.clothing_matches.size).to eq(0)
   end
   it "indexes logs by date" do
     @user = FactoryGirl.create(:user)
@@ -46,28 +46,28 @@ describe ClothingLog do
     log2 = FactoryGirl.create(:clothing_log, clothing: c2, user: @user, date: Time.zone.today - 1.day)
     log3 = FactoryGirl.create(:clothing_log, clothing: c3, user: @user, date: Time.zone.today)
     result = ClothingLog.by_date(@user.clothing_logs)
-    result[Time.zone.today].should == [log3]
-    result[Time.zone.today - 1.day].should == [log1, log2]
+    expect(result[Time.zone.today]).to eq([log3])
+    expect(result[Time.zone.today - 1.day]).to eq([log1, log2])
   end
   it "converts to XML" do
     log = FactoryGirl.build_stubbed(:clothing_log)
-    log.to_xml.should match 'clothing-name'
-    log.to_xml.should match log.clothing.name
+    expect(log.to_xml).to match 'clothing-name'
+    expect(log.to_xml).to match log.clothing.name
   end
   it "converts to JSON" do
     log = FactoryGirl.build_stubbed(:clothing_log)
-    log.to_json.should match 'clothing_name'
-    log.to_json.should match log.clothing.name
+    expect(log.to_json).to match 'clothing_name'
+    expect(log.to_json).to match log.clothing.name
   end
   it "converts to CSV" do
     log = FactoryGirl.build_stubbed(:clothing_log, date: Date.new(2014, 4, 1))
-    log.to_comma.should == [log.clothing_id.to_s,
+    expect(log.to_comma).to eq([log.clothing_id.to_s,
                             log.date.to_s,
                             "1",
                             log.clothing.name,
                             '2014-04-04',
                             '2014-04-30',
-                            '2014-12-31']
+                            '2014-12-31'])
   end
   describe "#summarize" do
     before do 
@@ -90,23 +90,23 @@ describe ClothingLog do
     end
     it "summarizes by day" do
       result = ClothingLog.summarize(zoom: 'daily', records: @logs, user: @user)
-      result[@c1.id][:sums][Date.new(2014, 4, 8)].should == 1
-      result[@c1.id][:sums][Date.new(2014, 4, 6)].should be_nil
+      expect(result[@c1.id][:sums][Date.new(2014, 4, 8)]).to eq(1)
+      expect(result[@c1.id][:sums][Date.new(2014, 4, 6)]).to be_nil
     end
     it "summarizes by week" do
       result = ClothingLog.summarize(zoom: 'weekly', records: @logs, user: @user)
-      result[@c1.id][:sums][Date.new(2014, 4, 11)].should == 2
-      result[@c1.id][:sums][Date.new(2014, 4, 18)].should == 1
-      result[@c2.id][:sums][Date.new(2014, 4, 11)].should == 1
+      expect(result[@c1.id][:sums][Date.new(2014, 4, 11)]).to eq(2)
+      expect(result[@c1.id][:sums][Date.new(2014, 4, 18)]).to eq(1)
+      expect(result[@c2.id][:sums][Date.new(2014, 4, 11)]).to eq(1)
     end
     it "summarizes by month" do
       result = ClothingLog.summarize(zoom: 'monthly', records: @logs, user: @user)
-      result[@c1.id][:sums][Date.new(2014, 4, 30)].should == 3
+      expect(result[@c1.id][:sums][Date.new(2014, 4, 30)]).to eq(3)
     end
     it "summarizes by year" do
       result = ClothingLog.summarize(zoom: 'yearly', records: @logs, user: @user)
-      result[@c1.id][:sums][Date.new(2014, 12, 31)].should == 4
-      result[@c1.id][:total].should == 4
+      expect(result[@c1.id][:sums][Date.new(2014, 12, 31)]).to eq(4)
+      expect(result[@c1.id][:total]).to eq(4)
     end
   end
 

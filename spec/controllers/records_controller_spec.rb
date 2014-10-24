@@ -1,5 +1,5 @@
 require 'spec_helper'
-describe RecordsController do
+describe RecordsController, :type => :controller  do
   before do
     @request.env["devise.mapping"] = Devise.mappings[:user]
   end

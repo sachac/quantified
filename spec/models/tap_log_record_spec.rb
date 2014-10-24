@@ -3,19 +3,19 @@ require 'spec_helper'
 describe TapLogRecord do
   describe '#time_category' do
     it 'recognizes discretionary' do
-      FactoryGirl.create(:tap_log_record, catOne: 'Discretionary', catTwo: 'Relax').time_category.should == 'D - Relax'
+      expect(FactoryGirl.create(:tap_log_record, catOne: 'Discretionary', catTwo: 'Relax').time_category).to eq 'D - Relax'
     end
     it 'recognizes personal' do
-      FactoryGirl.create(:tap_log_record, catOne: 'Personal', catTwo: 'Routines').time_category.should == 'P - Routines'
+      expect(FactoryGirl.create(:tap_log_record, catOne: 'Personal', catTwo: 'Routines').time_category).to eq 'P - Routines'
     end
     it 'recognizes unpaid work' do
-      FactoryGirl.create(:tap_log_record, catOne: 'Unpaid work', catTwo: 'Cooking').time_category.should == 'UW - Cooking'
+      expect(FactoryGirl.create(:tap_log_record, catOne: 'Unpaid work', catTwo: 'Cooking').time_category).to eq 'UW - Cooking'
     end
     it 'recognizes work' do
-      FactoryGirl.create(:tap_log_record, catOne: 'Work').time_category.should == 'A - Work'
+      expect(FactoryGirl.create(:tap_log_record, catOne: 'Work').time_category).to eq 'A - Work'
     end
     it 'recognizes sleep' do
-      FactoryGirl.create(:tap_log_record, catOne: 'Sleep').time_category.should == 'A - Sleep'
+      expect(FactoryGirl.create(:tap_log_record, catOne: 'Sleep').time_category).to eq 'A - Sleep'
     end
   end
   describe '#to_s' do
@@ -27,24 +27,24 @@ describe TapLogRecord do
   describe '#category_string' do
     it "should concatenate categories" do
       record = FactoryGirl.create(:tap_log_record, catOne: 'Unpaid work', catTwo: 'Cooking')
-      record.category_string.should == 'Unpaid work > Cooking'
+      expect(record.category_string).to eq 'Unpaid work > Cooking'
     end
   end
   describe '#private?' do
     it 'recognizes private notes' do
       record = FactoryGirl.create(:tap_log_record, catOne: 'Unpaid work', catTwo: 'Cooking', note: 'blah blah !private blah')
-      record.should be_private 
+      expect(record).to be_private 
     end
     it 'recognizes public notes' do
       record = FactoryGirl.create(:tap_log_record, catOne: 'Unpaid work', catTwo: 'Cooking', note: 'blah blah blah')
-      record.should_not be_private
+      expect(record).to_not be_private
     end
   end
   describe '#current_activity' do
     context 'when this is an activity' do
       it "detects the current activity" do
         record = FactoryGirl.create(:tap_log_record, entry_type: 'activity', catOne: 'Sleep')
-        record.current_activity.should == record
+        expect(record.current_activity).to eq record
       end
     end
     context 'when this is a record' do
@@ -53,7 +53,7 @@ describe TapLogRecord do
         old = FactoryGirl.create(:tap_log_record, user: user, entry_type: 'activity', timestamp: Time.zone.now - 1.day, catOne: 'Work', catTwo: 'Office')
         activity = FactoryGirl.create(:tap_log_record, user: user, entry_type: 'activity', catOne: 'Sleep', timestamp: Time.zone.now - 1.hour)
         record = FactoryGirl.create(:tap_log_record, user: user, entry_type: 'record', catOne: 'Text', timestamp: Time.zone.now)
-        record.current_activity.should == activity
+        expect(record.current_activity).to eq activity
       end
     end
   end
@@ -62,14 +62,14 @@ describe TapLogRecord do
       user = FactoryGirl.create(:confirmed_user)
       activity = FactoryGirl.create(:tap_log_record, user: user, entry_type: 'activity', catOne: 'Sleep', timestamp: Time.zone.now - 1.hour)
       record = FactoryGirl.create(:tap_log_record, user: user, entry_type: 'record', catOne: 'Text', timestamp: Time.zone.now)
-      activity.during_this.should == [record]
+      expect(activity.during_this).to eq [record]
     end
     it "identifies records inside an activity with an ending timestamp" do
       user = FactoryGirl.create(:confirmed_user)
       activity = FactoryGirl.create(:tap_log_record, user: user, entry_type: 'activity', catOne: 'Sleep', timestamp: Time.zone.now - 1.hour, end_timestamp: Time.zone.now - 30.minutes)
       record = FactoryGirl.create(:tap_log_record, user: user, entry_type: 'record', catOne: 'Text', timestamp: Time.zone.now - 45.minutes)
       record2 = FactoryGirl.create(:tap_log_record, user: user, entry_type: 'record', catOne: 'Text', timestamp: Time.zone.now)
-      activity.during_this.should == [record]
+      expect(activity.during_this).to eq [record]
     end
   end
   describe '#previous' do 
@@ -77,11 +77,11 @@ describe TapLogRecord do
       user = FactoryGirl.create(:confirmed_user)
       old = FactoryGirl.create(:tap_log_record, user: user, entry_type: 'activity', timestamp: Time.zone.now - 1.day, catOne: 'Work', catTwo: 'Office')
       activity = FactoryGirl.create(:tap_log_record, user: user, entry_type: 'activity', catOne: 'Sleep', timestamp: Time.zone.now)
-      activity.previous.should == [old]
+      expect(activity.previous).to eq [old]
     end
     it 'knows when there is no previous activity' do
       activity = FactoryGirl.create(:tap_log_record,  entry_type: 'activity', catOne: 'Sleep')
-      activity.previous.should == []
+      expect(activity.previous).to eq []
     end
   end
   describe '#next' do 
@@ -89,11 +89,11 @@ describe TapLogRecord do
       user = FactoryGirl.create(:confirmed_user)
       old = FactoryGirl.create(:tap_log_record, user: user, entry_type: 'activity', timestamp: Time.zone.now - 1.day, catOne: 'Work', catTwo: 'Office')
       activity = FactoryGirl.create(:tap_log_record, user: user, entry_type: 'activity', catOne: 'Sleep', timestamp: Time.zone.now)
-      old.next.should == [activity]
+      expect(old.next).to eq [activity]
     end
     it 'knows when there is no next activity' do
       activity = FactoryGirl.create(:tap_log_record, entry_type: 'activity', catOne: 'Sleep')
-      activity.next.should == []
+      expect(activity.next).to eq []
     end
   end
 

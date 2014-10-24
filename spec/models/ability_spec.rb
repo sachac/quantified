@@ -1,10 +1,12 @@
 require 'spec_helper'
-require "cancan/matchers"
+require 'cancan/matchers'
 
 describe Ability do
   context "when anonymous" do
     subject { Ability.new(nil) }
-    it { should_not be_able_to(:manage, User) }
+    it "cannot manage users" do
+      subject.should_not be_able_to(:manage, User)
+    end
     it { should_not be_able_to(:create, Stuff) }
     it "can access demo info" do
       demo = FactoryGirl.build_stubbed(:demo_user)

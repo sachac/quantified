@@ -33,4 +33,5 @@ class LocationHistoriesController < ApplicationController
     @location_history.destroy
     respond_with @location_history, :location => location_histories_path
   end
+
 end

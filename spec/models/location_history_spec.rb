@@ -19,7 +19,7 @@ describe LocationHistory do
     end
     it 'exports to CSV' do
       l = LocationHistory.last
-      l.to_comma.should == [l.datetime.to_s, l.stuff_id.to_s, l.stuff_name, l.location_id.to_s, l.location_name, ""]
+      l.to_comma.should == [l.datetime.to_s, l.stuff_id.to_s, l.stuff_name, l.location_id.to_s, l.location_name, nil]
     end
   end
 

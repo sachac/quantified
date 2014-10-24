@@ -10,9 +10,6 @@ class Api::V1::TokensController  < ApplicationController
       message = {:message => "The request must contain the user login and password."}
     else
       @user = User.find_record(login)
-      if @user
-        @user.ensure_authentication_token!
-      end
       if @user.nil? || !@user.valid_password?(password)
         logger.info("User #{login} failed signin, user cannot be found.")
         status = 400; message = {:message => "Invalid login or password."}
@@ -34,6 +31,7 @@ class Api::V1::TokensController  < ApplicationController
       status = 400; message = "Invalid token"
     else
       @user.reset_authentication_token!
+      @user.save
       status = 200; message = {:token => @user.authentication_token}
     end
     respond_to do |format|

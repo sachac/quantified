@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe RecordCategoriesController do
+describe RecordCategoriesController, :type => :routing do
   describe "routing" do
 
     it "routes to #index" do

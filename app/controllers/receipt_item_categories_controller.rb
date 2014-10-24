@@ -35,7 +35,7 @@ class ReceiptItemCategoriesController < ApplicationController
   # POST /receipt_item_categories.json
   def create
     params[:receipt_item_category].delete(:user_id) if params[:receipt_item_category]
-    @receipt_item_category = current_account.receipt_item_categories.new(params[:receipt_item_category])
+    @receipt_item_category = current_account.receipt_item_categories.new(receipt_item_category_params)
     if @receipt_item_category.save
       add_flash :notice, t('receipt_item_category.created')
     end
@@ -46,8 +46,7 @@ class ReceiptItemCategoriesController < ApplicationController
   # PUT /receipt_item_categories/1.json
   def update
     @receipt_item_category = current_account.receipt_item_categories.find(params[:id])
-    params[:receipt_item_category].delete(:user_id) if params[:receipt_item_category]
-    if @receipt_item_category.update_attributes(params[:receipt_item_category])
+    if @receipt_item_category.update_attributes(receipt_item_category_params)
       add_flash :notice, t('receipt_item_category.updated')
     end
     respond_with @receipt_item_category
@@ -61,4 +60,8 @@ class ReceiptItemCategoriesController < ApplicationController
     respond_with @receipt_item_category, location: receipt_item_categories_url 
   end
 
+  private
+  def receipt_item_category_params
+    params.require(:receipt_item_category).permit(:name)
+  end
 end

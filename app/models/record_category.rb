@@ -1,6 +1,6 @@
 class RecordCategory < ActiveRecord::Base
   require 'comma'
-  acts_as_tree_with_dotted_ids :order => "name"
+  acts_as_tree_with_dotted_ids
   has_many :records
   belongs_to :user
   before_save :add_data
@@ -109,7 +109,7 @@ class RecordCategory < ActiveRecord::Base
         cat = user.record_categories.create(:name => p, :category_type => (i == count - 1) ? 'record' : 'list', :user => user, :parent => parent)
       end
       if (i < count - 1) and !cat.list?
-        cat.update_attributes(:category_type => 'list')
+        cat.category_type = 'list'
       end
       parent = cat
     end
@@ -268,5 +268,5 @@ class RecordCategory < ActiveRecord::Base
   end
 
   scope :lookup, lambda { |x| if x.match(/\A\d+\Z/) then where("id = ?", x.to_i) else where("full_name = ?", x) end }
-  scope :active, where(:active => true)
+  scope :active, -> { where active: true }
 end

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe ReceiptItemsController do
+describe ReceiptItemsController, :type => :controller  do
   before do
     @request.env["devise.mapping"] = Devise.mappings[:user]
     @user = create(:user, :confirmed)
@@ -192,8 +192,8 @@ describe ReceiptItemsController do
     end
     it "sums up category totals" do
       get :graph
-      assigns(:data)['children'][0]['name'].should == 'Poultry'
-      assigns(:data)['children'][0]['total'].should == 4 + 5 + 6
+      assigns(:data)[:children][0][:name].should == 'Poultry'
+      assigns(:data)[:children][0][:total].should == 4 + 5 + 6
     end
   end
 end

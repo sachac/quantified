@@ -2,8 +2,8 @@ class Record < ActiveRecord::Base
   belongs_to :record_category
   belongs_to :user
   serialize :data
-  scope :activities, joins(:record_category).where(:record_categories => {:category_type => 'activity'}).readonly(false)
-  scope :public, where("records.data IS NULL OR LOWER(records.data) NOT LIKE '%!private%'")
+  scope :activities, -> { joins(:record_category).where(:record_categories => {:category_type => 'activity'}).readonly(false) }
+  scope :public, -> { where("records.data IS NULL OR LOWER(records.data) NOT LIKE '%!private%'") }
   before_save :add_data
   validate :end_timestamp_must_be_after_start
 

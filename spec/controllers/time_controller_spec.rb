@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe TimeController do
+describe TimeController, :type => :controller  do
   before do
     @request.env["devise.mapping"] = Devise.mappings[:user]
     Timecop.freeze(Time.zone.now.midnight)
@@ -49,7 +49,7 @@ describe TimeController do
       it "displays records" do
         get :review, start: Time.zone.now - 1.week, end: Time.zone.now - 1.day
         assigns(:zoom).should == :daily
-        assigns(:summary)['rows'][@cat.id]['total'].should == 3600
+        assigns(:summary)[:rows][@cat.id][:total].should == 3600
       end
       it "lets me set the zoom to weekly" do
         get :review, zoom_level: 'weekly'

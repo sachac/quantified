@@ -1,5 +1,5 @@
 require 'spec_helper'
-describe StuffController do
+describe StuffController, :type => :controller  do
   before do
     @request.env["devise.mapping"] = Devise.mappings[:user]
     @user = create(:user, :confirmed)
@@ -39,7 +39,7 @@ describe StuffController do
       flash[:notice].should == 'Updated: laptop'
     end
     it "handles failure" do
-      Stuff.any_instance.stub(:save).and_return(false)
+      allow_any_instance_of(Stuff).to receive(:save).and_return(false)
       post :bulk_update, location: 'shelf', batch: "laptop"
       flash[:notice].should == 'Failed: laptop'
     end

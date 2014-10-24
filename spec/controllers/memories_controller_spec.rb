@@ -1,5 +1,5 @@
 require 'spec_helper'
-describe MemoriesController do
+describe MemoriesController, :type => :controller  do
   before do
     @request.env["devise.mapping"] = Devise.mappings[:user]
     @user = create(:user, :confirmed)
@@ -59,7 +59,7 @@ describe MemoriesController do
     describe 'POST /memories' do
       context 'when given an invalid memory' do
         it "does not show the success message" do
-          Memory.any_instance.stub(:valid?).and_return(false)
+          allow_any_instance_of(Memory).to receive(:valid?).and_return(false)
           post :create
           flash[:notice].should be_nil
         end
@@ -77,7 +77,7 @@ describe MemoriesController do
       context "when given invalid attributes" do
         it "does not display the success message" do
           memory = create(:memory, user: @user)
-          Memory.any_instance.stub(:valid?).and_return(false)
+          allow_any_instance_of(Memory).to receive(:valid?).and_return(false)
           post :update, id: memory.id, memory: { body: 'Hello world' }
           flash[:notice].should be_nil
         end

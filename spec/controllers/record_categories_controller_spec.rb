@@ -1,6 +1,5 @@
-
 require 'spec_helper'
-describe RecordCategoriesController do
+describe RecordCategoriesController, :type => :controller  do
   before do
     @request.env["devise.mapping"] = Devise.mappings[:user]
   end
@@ -69,7 +68,7 @@ describe RecordCategoriesController do
       it "includes a summary of records for HTML/CSV" do
         @record = create(:record, record_category: @cat, timestamp: Time.zone.now - 1.hour)
         get :show, id: @cat.id
-        assigns(:records).all.should include @record
+        assigns(:records).should include @record
         assigns(:total).should >= 3600
         assigns(:total_entries).should == 1
       end
@@ -78,11 +77,11 @@ describe RecordCategoriesController do
         @record2 = create(:record, user: @user, record_category: @cat, timestamp: Time.zone.now - 2.hours, end_timestamp: Time.zone.now, data: { note: 'Hello', label: 'world' })
         get :show, id: @cat.id, format: :csv
         assigns(:record_category).should == @cat
-        assigns(:records).all.should include @record
+        assigns(:records).should include @record
       end
       it "returns JSON" do
         get :show, id: @cat.id, format: :json
-        JSON.parse(response.body).should == JSON.parse(@cat.to_json)
+        JSON.parse(response.body).except('created_at', 'updated_at').should == JSON.parse(@cat.to_json).except('created_at', 'updated_at')
       end
       it "returns XML" do
         get :show, id: @cat.id, format: :xml
@@ -161,7 +160,7 @@ describe RecordCategoriesController do
     end
     describe 'POST bulk_update' do
       it "recalculates durations" do
-        Record.should_receive(:recalculate_durations)
+        expect(Record).to receive(:recalculate_durations)
         post :bulk_update, commit: I18n.t('records.index.recalculate_durations')
       end
       it "updates category type" do

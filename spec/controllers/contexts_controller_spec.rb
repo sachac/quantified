@@ -1,32 +1,31 @@
 require 'spec_helper'
-describe ContextsController do
+describe ContextsController, :type => :controller  do
   before do
     @request.env["devise.mapping"] = Devise.mappings[:user]
     @user = create(:user, :confirmed)
-    @context = create(:context, user: @user)
+    @context = create(:context, user: @user, name: 'Sample context')
     sign_in @user
   end
   describe 'GET index' do
     it "returns the list of contexts" do
       get :index
-      assigns(:contexts).should == [@context]
+      expect(assigns(:contexts)).to eq [@context]
     end
   end
   describe 'GET show.json' do
     it "returns the JSON object" do
       get :show, id: @context.id, format: 'json'
-      expected = @context.to_json
-      response.body.should == expected
+      expect(JSON.parse(response.body).except('created_at', 'updated_at', 'context_rules')).to eq @context.attributes.except('created_at', 'updated_at', 'context_rules')
     end
     it "does not allow viewing of someone else's context" do
       context2 = create(:context)
-      lambda{ get :show, id: context2.id }.should raise_exception(ActiveRecord::RecordNotFound)
+      expect(lambda{ get :show, id: context2.id }).to raise_exception(ActiveRecord::RecordNotFound)
     end
   end
   describe 'GET edit' do
     it "displays the edit form with at least five additional spots for rules" do
       get :edit, id: @context.id
-      assigns(:context).context_rules.size.should == 5
+      expect(assigns(:context).context_rules.size).to eq 5
     end
   end
   describe 'PUT update' do
@@ -54,33 +53,33 @@ describe ContextsController do
     end
     subject { @context.context_rules }
     it "removes blank rules" do
-      subject[0].stuff.should_not == @stuff[0]
+      expect(subject[0].stuff).to_not eq @stuff[0]
     end
     it "keeps the same rules" do
-      subject[0].stuff.should == @stuff[1]
-      subject[0].location.should == @location[1]
+      expect(subject[0].stuff).to eq @stuff[1]
+      expect(subject[0].location).to eq @location[1]
     end
     it "updates previous rules" do
-      subject[1].stuff.should == @stuff[2]
-      subject[1].location.should == @location[2]
+      expect(subject[1].stuff).to eq @stuff[2]
+      expect(subject[1].location).to eq @location[2]
     end
     it "adds new rules" do
-      subject[2].stuff.should == @stuff[3]
-      subject[2].location.should == @location[3]
+      expect(subject[2].stuff).to eq @stuff[3]
+      expect(subject[2].location).to eq @location[3]
     end
     it "creates stuff if needed" do
-      subject[3].stuff.name.should == 'Item 4'
-      subject[3].location.should == @location[3]
+      expect(subject[3].stuff.name).to eq 'Item 4'
+      expect(subject[3].location).to eq @location[3]
     end
     it "creates locations if needed" do
-      subject[4].stuff.name.should == 'Item 5'
-      subject[4].stuff.location.name.should == 'Location 4'
+      expect(subject[4].stuff.name).to eq 'Item 5'
+      expect(subject[4].stuff.location.name).to eq 'Location 4'
     end
   end
   describe 'DELETE destroy' do
     it "deletes the object" do
       delete :destroy, id: @context.id
-      response.should redirect_to(contexts_path)
+      expect(response).to redirect_to(contexts_path)
     end
   end
 end

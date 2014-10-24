@@ -47,8 +47,7 @@ class GoalsController < ApplicationController
   # POST /goals.json
   def create
     authorize! :manage_account, current_account
-    @goal = current_account.goals.new(params[:goal])
-    params[:goal].delete(:user_id)
+    @goal = current_account.goals.new(goal_params)
     @goal.set_from_form(params)
     add_flash :notice, I18n.t('goals.created') if @goal.save
     respond_with @goal, location: goals_path
@@ -60,7 +59,7 @@ class GoalsController < ApplicationController
     authorize! :manage_account, current_account
     @goal = current_account.goals.find(params[:id])
     params[:goal].delete(:user_id)
-    result = @goal.update_attributes(params[:goal])
+    result = @goal.update_attributes(goal_params)
     @goal.set_from_form(params)
     add_flash :notice, I18n.t('goals.updated') if @goal.save
     respond_with @goal, location: goals_path
@@ -73,5 +72,10 @@ class GoalsController < ApplicationController
     @goal = current_account.goals.find(params[:id])
     @goal.destroy
     respond_with @goal, :location => goals_url
+  end
+
+  private
+  def goal_params
+    params.require(:goal).permit(:name, :expression, :record_category, :record_category_id, :period, :label)
   end
 end

@@ -10,8 +10,8 @@ class Stuff < ActiveRecord::Base
   has_many :contained_stuff, :class_name => 'Stuff', :foreign_key => :location_id
   before_save :update_in_place
 
-  scope :locations, where(:stuff_type => 'location')
-  scope :out_of_place, where('location_id != home_location_id')
+  scope :locations, -> { where(stuff_type => 'location') }
+  scope :out_of_place, -> { where('location_id != home_location_id') }
   def update_in_place
     self.in_place = (self.location and self.home_location and self.location == self.home_location)
     true
@@ -56,7 +56,7 @@ class Stuff < ActiveRecord::Base
   end
 
   def self.find_or_create(account, name)
-    stuff = account.stuff.find(:first, :conditions => [ 'lower(name) = ?', name.strip.downcase ])
+    stuff = account.stuff.where('lower(name) = ?', name.strip.downcase).first
     unless stuff
       stuff = account.stuff.new(:name => name.strip, :status => 'active', :stuff_type => 'stuff', :location => @location)
       stuff.user = account

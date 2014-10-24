@@ -1,5 +1,5 @@
 Home::Application.routes.draw do
-  match 'receipt_item_types/autocomplete' => 'receipt_item_types#autocomplete_receipt_item_type_friendly_name', :as => :autocomplete_receipt_item_type
+  match 'receipt_item_types/autocomplete' => 'receipt_item_types#autocomplete_receipt_item_type_friendly_name', :as => :autocomplete_receipt_item_type, :via => :get
   resources :receipt_item_types do
     collection do
       get :batch_entry
@@ -19,16 +19,15 @@ Home::Application.routes.draw do
 
 
   resources :goals
-  resources :pages
-  match 'auth/:service/callback' => 'services#create'
-  match 'auth/:service' => 'sessions#setup', :as => :oauth
+  match 'auth/:service/callback' => 'services#create', :via => :get
+  match 'auth/:service' => 'sessions#setup', :as => :oauth, :via => :get
   resources :services, :only => [:index, :create, :destroy]
-
-  match 'admin' => 'admin#index', :as => 'admin'
+  get 'privacy' => 'home#privacy'
+  match 'admin' => 'admin#index', :as => 'admin', :via => :get
   match 'admin/become/:id' => 'admin#become', :as => :become_user, :via => :post
-  match 'feedback' => 'home#send_feedback', :via => :post
-  match 'feedback' => 'home#feedback', :as => :feedback
-  match 'help/record_categories' => 'help#record_categories'
+  match 'feedback' => 'home#send_feedback', :as => :send_feedback, :via => :post
+  match 'feedback' => 'home#feedback', :as => :feedback, :via => :get
+  match 'help/record_categories' => 'help#record_categories', :via => :get
   offline = Rack::Offline.configure do
     cache "api/offline/v1/track"
     cache "assets/application.js"
@@ -53,8 +52,8 @@ Home::Application.routes.draw do
   match 'toronto_libraries/refresh_all' => 'toronto_libraries#refresh_all', :as => :library_refresh, :via => [:get, :post]
   match 'toronto_libraries/:id/request' => 'toronto_libraries#request_items', :as => :request_library_items, :via => :post
 
-  match 'record_categories/autocomplete' => 'record_categories#autocomplete_record_category_full_name', :as => :autocomplete_record_category
-  match 'stuff/autocomplete' => 'stuff#autocomplete_stuff_name', :as => :autocomplete_stuff
+  match 'record_categories/autocomplete' => 'record_categories#autocomplete_record_category_full_name', :as => :autocomplete_record_category, :via => :get
+  match 'stuff/autocomplete' => 'stuff#autocomplete_stuff_name', :as => :autocomplete_stuff, :via => :get
   resources :record_categories do
     member do
       post :track
@@ -101,7 +100,7 @@ Home::Application.routes.draw do
   
   resources :location_histories, only: [:index, :show, :destroy]
   match 'stuff/log', :via => :post, :as => :log_stuff
-  match 'menu' => 'home#menu', :as => :menu
+  match 'menu' => 'home#menu', :via => :get, :as => :menu
 
   match 'csa_foods/bulk_update', :as => :bulk_update_csa_foods, :via => :post
   resources :csa_foods do
@@ -131,26 +130,26 @@ Home::Application.routes.draw do
 
   match 'library_items/bulk', :as => :library_item_bulk, :via => :post
 
-  match 'time/graph(/:url_start(/:url_end))' => 'time#graph', :as => :time_graph
-  match 'time/dashboard' => 'time#dashboard', :as => :time_dashboard
+  match 'time/graph(/:url_start(/:url_end))' => 'time#graph', :as => :time_graph, :via => :get
+  match 'time/dashboard' => 'time#dashboard', :as => :time_dashboard, :via => :get
   match 'time/refresh' => 'time#refresh_from_csv', :as => :refresh_from_csv, :via => :post
-  match 'time/refresh' => 'time#refresh', :as => :refresh_time
-  match 'time/review' => 'time#review', :as => :time_review
+  match 'time/refresh' => 'time#refresh', :as => :refresh_time, :via => :get
+  match 'time/review' => 'time#review', :as => :time_review, :via => :get
   match 'time/track' => 'time#track', :as => :track_time, :via => [:post, :get]
-  match 'time/batch' => 'records#batch', :as => :batch_records, :via => [:post, :get]
+  match 'time/batch' => 'records#batch', :as => :time_batch_records, :via => [:post, :get]
 
-  match 'time/track' => 'time#dashboard'
-  match 'time' => 'time#dashboard'
+  match 'time/track' => 'time#dashboard', :via => :get
+  match 'time' => 'time#dashboard', :via => :get
   match 'clothing/bulk' => 'clothing#bulk', :as => :clothing_bulk, :via => :post
   match 'clothing/missing_info' => 'clothing#update_missing_info', :as => :update_missing_clothing_information, :via => :post
-  match 'clothing/missing_info' => 'clothing#missing_info', :as => :missing_clothing_information
+  match 'clothing/missing_info' => 'clothing#missing_info', :as => :missing_clothing_information, :via => :get
   match 'clothing/:id/save_color' => 'clothing#save_color', :as => :save_clothing_color, :via => :post
   match 'clothing/:id/:color' => 'clothing#delete_color', :as => :delete_clothing_color, :via => :delete
-  match 'clothing_logs/by_date/:date' => 'clothing_logs#by_date', :as => :clothing_logs_by_date
-  match 'clothing/tag/:id' => 'clothing#tag', :as => :clothing_by_tag
-  match 'clothing/status/:status' => 'clothing#by_status', :as => :clothing_by_status
-  match 'clothing/analyze(/:start(/:end))' => 'clothing#analyze', :as => :analyze_clothing
-  match 'clothing/graph(/:start(/:end))' => 'clothing#graph', :as => :graph_clothing
+  match 'clothing_logs/by_date/:date' => 'clothing_logs#by_date', :as => :clothing_logs_by_date, :via => :get
+  match 'clothing/tag/:id' => 'clothing#tag', :as => :clothing_by_tag, :via => :get
+  match 'clothing/status/:status' => 'clothing#by_status', :as => :clothing_by_status, :via => :get
+  match 'clothing/analyze(/:start(/:end))' => 'clothing#analyze', :as => :analyze_clothing, :via => :get
+  match 'clothing/graph(/:start(/:end))' => 'clothing#graph', :as => :graph_clothing, :via => :get
   resources :clothing do
     collection do
       get :autocomplete_clothing_name
@@ -225,7 +224,7 @@ Home::Application.routes.draw do
     end
     namespace :offline do
       namespace :v1 do
-        match 'track' => 'offline#track', :as => :track_offline
+        match 'track' => 'offline#track', :as => :track_offline, :via => :get
         match 'bulk_track' => 'offline#bulk_track', :via => :post
         match 'bulk_track' => 'offline#bulk_track', :via => :get
       end

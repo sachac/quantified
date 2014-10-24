@@ -1,5 +1,5 @@
 require 'spec_helper'
-describe FoodsController do
+describe FoodsController, :type => :controller  do
   before do
     @request.env["devise.mapping"] = Devise.mappings[:user]
     @user = create(:user, :confirmed)
@@ -12,49 +12,49 @@ describe FoodsController do
   describe 'GET index' do
     it "returns the list" do
       get :index
-      assigns(:info)[@food.id][:total].should == 7
-      assigns(:info)[@food.id][:remaining].should == 3
-      assigns(:foods).should include(@food)
+      expect(assigns(:info)[@food.id][:total]).to eq 7
+      expect(assigns(:info)[@food.id][:remaining]).to eq 3
+      expect(assigns(:foods)).to include(@food)
     end
   end
   describe 'GET show' do
     it "displays the item" do
       get :show, id: @food.id
-      assigns(:food).should == @food
+      expect(assigns(:food)).to eq @food
     end
   end
   describe 'GET new' do
     it "displays the new form" do
       get :new
-      assigns(:food).should be_new_record
+      expect(assigns(:food)).to be_new_record
     end
   end
   describe 'GET edit' do
     it "edits the item" do
       get :edit, id: @food.id
-      assigns(:food).should == @food
-      assigns(:food).user_id.should == @user.id
+      expect(assigns(:food)).to eq @food
+      expect(assigns(:food).user_id).to eq @user.id
     end
   end
   describe 'POST create' do
     it "creates an item" do
       post :create, food: { name: 'steak' }
-      assigns(:food).name.should == 'steak'
-      flash[:notice].should == I18n.t('food.created')
+      expect(assigns(:food).name).to eq 'steak'
+      expect(flash[:notice]).to eq I18n.t('food.created')
     end
   end
   describe 'PUT update' do
     it "updates the item" do
       put :update, id: @food.id, food: { name: 'potato' }
-      assigns(:food).name.should == 'potato'
-      flash[:notice].should == I18n.t('food.updated')
+      expect(assigns(:food).name).to eq 'potato'
+      expect(flash[:notice]).to eq I18n.t('food.updated')
     end
   end
   describe 'DELETE destroy' do
     it "removes the item" do
       delete :destroy, id: @food.id
-      lambda { @user.foods.find(@food.id) }.should raise_exception(ActiveRecord::RecordNotFound)
-      response.should redirect_to(foods_url)
+      expect(lambda { @user.foods.find(@food.id) }).to raise_exception(ActiveRecord::RecordNotFound)
+      expect(response).to redirect_to(foods_url)
     end
   end
 end
