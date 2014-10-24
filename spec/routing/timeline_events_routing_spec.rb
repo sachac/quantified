@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe TimelineEventsController do
+describe TimelineEventsController, :type => :routing do
   describe "routing" do
 
     it "routes to #index" do

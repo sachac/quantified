@@ -6,9 +6,6 @@ Home::Application.configure do
   # since you don't have to restart the webserver when you make code changes.
   config.cache_classes = false
 
-  # Log error messages when you accidentally call methods on nil.
-  config.whiny_nils = true
-
   # Show full error reports and disable caching
   config.consider_all_requests_local       = true
   config.action_controller.perform_caching = false
@@ -35,14 +32,7 @@ Home::Application.configure do
   config.action_mailer.default_url_options = { :host => "dev.quantifiedawesome.com" }
   config.action_mailer.delivery_method = :test
   config.action_mailer.perform_deliveries = false
-  config.dev_tweaks.autoload_rules do
-    keep :all
-    
-    skip '/favicon.ico'
-    skip :assets
-    skip :xhr
-    keep :forced
-  end
+  
 end
 
 ActionMailer::Base.delivery_method = :test

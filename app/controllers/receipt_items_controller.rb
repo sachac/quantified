@@ -42,7 +42,7 @@ class ReceiptItemsController < ApplicationController
   # POST /receipt_items.json
   def create
     if params[:receipt_item] then params[:receipt_item].delete(:user_id) end
-    @receipt_item = current_account.receipt_items.new(params[:receipt_item])
+    @receipt_item = current_account.receipt_items.new(receipt_item_params)
     if @receipt_item.save
       add_flash :notice, I18n.t('receipt_item.created')
     end
@@ -54,7 +54,7 @@ class ReceiptItemsController < ApplicationController
   def update
     @receipt_item = current_account.receipt_items.find(params[:id])
     if params[:receipt_item] then params[:receipt_item].delete(:user_id) end
-    if @receipt_item.update_attributes(params[:receipt_item])
+    if @receipt_item.update_attributes(receipt_item_params)
       add_flash :notice, I18n.t('receipt_item.updated')
     end
     respond_with @receipt_item
@@ -112,4 +112,9 @@ class ReceiptItemsController < ApplicationController
     end
     @data = { name: 'Receipts', children: list.values.sort_by { |v| -(v[:total] || 0) } }
   end
+  private
+  def receipt_item_params
+    params.require(:receipt_item).permit(:filename, :source_id, :source_name, :store, :date, :name, :quantity, :unit, :unit_price, :total, :notes, :receipt_item_type_id)
+  end
+
 end

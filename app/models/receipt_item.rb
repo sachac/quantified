@@ -1,5 +1,4 @@
 class ReceiptItem < ActiveRecord::Base
-  attr_accessible :date, :filename, :name, :notes, :quantity, :source_id, :source_name, :store, :total, :unit, :unit_price
   belongs_to :user
   belongs_to :receipt_item_type
   delegate :friendly_name, to: :receipt_item_type, allow_nil: true
@@ -14,18 +13,18 @@ class ReceiptItem < ActiveRecord::Base
   end
 
   def set_from_row(row)
-    update_attributes(filename: (row['File'] || '').strip,
-                      store: (row['Store'] || '').strip,
-                      date: Time.zone.parse(row['Date']).to_date,
-                      name: (row['Name'] || '').strip,
-                      quantity: row['Quantity'].blank? ? 1 : row['Quantity'].to_f,
-                      source_id: (row['ID'] || '').strip,
-                      source_name: 'batch',
-                      store: (row['Store'] || '').strip,
-                      unit: (row['Unit'] || '').strip,
-                      unit_price: row['Unit price'].blank? ? nil : row['Unit price'].to_f,
-                      total: row['Total'].blank? ? nil : row['Total'].to_f,
-                      notes: (row['Notes'] || '').strip)
+    self.filename = (row['File'] || '').strip
+    self.store = (row['Store'] || '').strip
+    self.date = Time.zone.parse(row['Date']).to_date
+    self.name = (row['Name'] || '').strip
+    self.quantity = row['Quantity'].blank? ? 1 : row['Quantity'].to_f
+    self.source_id = (row['ID'] || '').strip
+    self.source_name = 'batch'
+    self.store = (row['Store'] || '').strip
+    self.unit = (row['Unit'] || '').strip
+    self.unit_price = row['Unit price'].blank? ? nil : row['Unit price'].to_f
+    self.total = row['Total'].blank? ? nil : row['Total'].to_f
+    self.notes = (row['Notes'] || '').strip
   end
   
   def self.create_batch(user, csv)
@@ -68,4 +67,10 @@ class ReceiptItem < ActiveRecord::Base
     total
     notes
   end
+
+  private
+  def receipt_item_params
+    params.permit(:total, :name, :date, :filename, :notes, :quantity, :source_id, :source_name, :store, :unit, :unit_price)
+  end
+    
 end

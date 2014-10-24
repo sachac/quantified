@@ -19,7 +19,7 @@ class Clothing < ActiveRecord::Base
   end
 
   has_attached_file :image, :styles => { :large => "400x400", :medium => "x90", :small => "x40" }, :default_url => '/images/clothing/:style/missing.jpg', :path => ':rails_root/public/f/clothing/:user_id/:hashed_path/:id/:style/:basename.:extension', :url => '/f/clothing/:user_id/:hashed_path/:id/:style/:basename.:extension'
-
+  validates_attachment_content_type :image, :content_type => ["image/jpg", "image/jpeg", "image/png", "image/gif"]
   before_save :update_hsl
 
   def autocomplete_view
@@ -73,10 +73,10 @@ class Clothing < ActiveRecord::Base
   end
 
   def previous_by_id
-    self.user.clothing.first(:conditions => ['id < ?', self.id], :order => 'id desc')
+    self.user.clothing.where('id < ?', self.id).order('id desc').first
   end
   def next_by_id
-    self.user.clothing.first(:conditions => ['id > ?', self.id], :order => 'id asc')
+    self.user.clothing.where('id > ?', self.id).order('id asc').first
   end
 
   def Clothing.guess_color(filepath, x = nil, y = nil)
@@ -91,7 +91,7 @@ class Clothing < ActiveRecord::Base
       "%02x%02x%02x" % [ @red, @green, @blue ]
     end
   end
-  scope :active, where("(status IS NULL or status = 'active')")
+  scope :active, -> { where("(status IS NULL or status = 'active')") }
   
   def image_url
     self.image.url

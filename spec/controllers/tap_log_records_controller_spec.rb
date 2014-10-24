@@ -1,6 +1,6 @@
 
 require 'spec_helper'
-describe TapLogRecordsController do
+describe TapLogRecordsController, :type => :controller  do
   before do
     @request.env["devise.mapping"] = Devise.mappings[:user]
   end

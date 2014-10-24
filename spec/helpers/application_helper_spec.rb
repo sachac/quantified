@@ -1,5 +1,6 @@
 require 'spec_helper'
-describe ApplicationHelper do
+
+describe ApplicationHelper, :type => :helper do
   describe '#google_analytics_js' do
     it "includes tag" do
       helper.google_analytics_js.should match '2778'
@@ -13,7 +14,7 @@ describe ApplicationHelper do
   end
   describe '#clothing_thumbnail' do
     before do
-      @c = create(:clothing, image: fixture_file_upload('/files/sample-color-ff0000.png'))
+      @c = create(:clothing, image: fixture_file_upload('/files/sample-color-ff0000.png', 'image/png'))
     end
     it "requires clothing" do
       helper.clothing_thumbnail(nil).should be_nil
@@ -23,66 +24,66 @@ describe ApplicationHelper do
       helper.clothing_thumbnail(@c).should match '1 day ago'
     end
     it "shows tiny thumbnail" do
-      @c.image.should_receive(:url).with(:small)
-      helper.clothing_thumbnail(@c, size: :tiny).should match "clothing_#{@c.id}"
+      expect(@c.image).to receive(:url).with(:small)
+      expect(helper.clothing_thumbnail(@c, size: :tiny)).to match "clothing_#{@c.id}"
     end
     it "includes large thumbnail if specified" do
-      @c.image.should_receive(:url).with(:large)
-      helper.clothing_thumbnail(@c, size: :large).should match "clothing_#{@c.id}"
+      expect(@c.image).to receive(:url).with(:large)
+      expect(helper.clothing_thumbnail(@c, size: :large)).to match "clothing_#{@c.id}"
     end
     it "includes medium thumbnail by default" do
-      @c.image.should_receive(:url).with(:medium)
-      helper.clothing_thumbnail(@c).should match "clothing_#{@c.id}"
+      expect(@c.image).to receive(:url).with(:medium)
+      expect(helper.clothing_thumbnail(@c)).to match "clothing_#{@c.id}"
     end
   end
   describe '#date_ago_future' do
     it "shows the dates for the future" do
-      helper.date_ago_future(Time.zone.local(2100, 1, 1)).should be_within(1.day).of(Time.zone.local(2100, 1, 1))
+      expect(helper.date_ago_future(Time.zone.local(2100, 1, 1))).to be_within(1.day).of(Time.zone.local(2100, 1, 1))
     end
     it "shows 'today'" do
-      helper.date_ago_future(Time.zone.now).should == 'today'
+      expect(helper.date_ago_future(Time.zone.now)).to eq 'today'
     end
     it "shows days ago" do
-      helper.date_ago_future(Time.zone.now - 1.day).should == '1 day ago'
-      helper.date_ago_future(Time.zone.now - 2.days).should == '2 days ago'
+      expect(helper.date_ago_future(Time.zone.now - 1.day)).to eq '1 day ago'
+      expect(helper.date_ago_future(Time.zone.now - 2.days)).to eq '2 days ago'
     end
   end
   describe '#resource_name' do
     it "returns the resource name" do
-      helper.resource_name.should == :user
+      expect(helper.resource_name).to eq :user
     end
   end
   describe '#resource' do
     it "returns a resource" do
-      helper.resource.class.should == User
+      expect(helper.resource.class).to eq User
     end
   end
   describe '#devise_mapping' do
     it "returns user" do
       @request.env["devise.mapping"] = Devise.mappings[:user]
-      helper.devise_mapping.should == Devise.mappings[:user]
+      expect(helper.devise_mapping).to eq Devise.mappings[:user]
     end
   end
   describe '#conditional_html' do
     it 'returns IE code' do
-      helper.conditional_html('en').should match 'IE 7'
+      expect(helper.conditional_html('en')).to match 'IE 7'
     end
   end
   describe '#object_labels' do
     it "shows the status" do
-      helper.object_labels(build_stubbed(:clothing, status: 'donated')).should match 'donated'
+      expect(helper.object_labels(build_stubbed(:clothing, status: 'donated'))).to match 'donated'
     end
     it "shows private" do
-      helper.object_labels(build_stubbed(:tap_log_record, note: '!private')).should match I18n.t('app.general.private')
+      expect(helper.object_labels(build_stubbed(:tap_log_record, note: '!private'))).to match I18n.t('app.general.private')
     end
   end
   describe '#actions' do
     context "when logged in" do
       before do
         @user = create(:user, :confirmed)
-        helper.stub(:can?).and_return(true)
-        helper.stub(:managing?).and_return(true)
-        helper.stub(:current_account).and_return(@user)
+        allow(helper).to receive(:can?).and_return(true)
+        allow(helper).to receive(:managing?).and_return(true)
+        allow(helper).to receive(:current_account).and_return(@user)
       end
       context "when given a memory" do
         subject { helper.actions(build_stubbed(:memory, user: @user)).join('') }
@@ -120,9 +121,9 @@ describe ApplicationHelper do
     context "when not logged in" do
       before do
         @user = create(:user, :demo)
-        helper.stub(:can?).and_return(false)
-        helper.stub(:managing?).and_return(false)
-        helper.stub(:current_account).and_return(create(:user, :confirmed))
+        allow(helper).to receive(:can?).and_return(false)
+        allow(helper).to receive(:managing?).and_return(false)
+        allow(helper).to receive(:current_account).and_return(create(:user, :confirmed))
       end
       context "when given a memory" do
         subject { helper.actions(build_stubbed(:memory, user: @user)).join('') }
@@ -156,39 +157,36 @@ describe ApplicationHelper do
   end
   describe '#tags' do
     it "returns a list of tags" do
-      helper.tags(create(:clothing, user: @user, tag_list: 'a, b')).should == 'a, b'
+      expect(helper.tags(create(:clothing, user: @user, tag_list: 'a, b'))).to eq 'a, b'
     end
   end
   describe '#after_title' do
     it "stores the info if given a string" do
-      helper.should_receive(:content_for).with(:after_title)
+      expect(helper).to receive(:content_for).with(:after_title)
       helper.after_title('hello')
     end
     it "stores the info if given a block" do
-      helper.should_receive(:content_for).with(:after_title)
+      expect(helper).to receive(:content_for).with(:after_title)
       helper.after_title do 'hello' end
     end
   end
   describe '#active_menu' do
-    let(:request) { mock('request', :fullpath => '/time') }
-    before :each do
-      controller.stub(:request).and_return request
-    end
+    let(:request) { double('request', :fullpath => '/time') }
     it "matches regular expressions" do
-      active_menu(/\/time/).should == 'active'
+      expect(active_menu(/\/time/)).to eq 'active'
     end
     it "does not match regular expressions if inactive" do
-      active_menu(/\/dashboard/).should == 'inactive'
+      expect(active_menu(/\/dashboard/)).to eq 'inactive'
     end
   end
   describe '#duration' do
     it "shows as time" do
-      helper.stub!(:params).and_return({ display_type: 'time' })
-      helper.duration(60 * 6).should == '0:06'
+      allow(helper).to receive(:params).and_return({ display_type: 'time' })
+      expect(helper.duration(60 * 6)).to eq '0:06'
     end
     it "shows as decimal" do
-      helper.stub!(:params).and_return({ display_type: 'decimal' })
-      helper.duration(60 * 6).should == '0.1'
+      allow(helper).to receive(:params).and_return({ display_type: 'decimal' })
+      expect(helper.duration(60 * 6)).to eq '0.1'
     end
   end
   describe '#record_category_breadcrumbs' do
@@ -196,25 +194,25 @@ describe ApplicationHelper do
       @u = create(:user, :confirmed)
       @c1 = create(:record_category, user: @u, name: 'AB')
       @c2 = create(:record_category, user: @u, parent: @c1, name: 'CD')
-      helper.record_category_breadcrumbs(@c2).should match 'AB'
-      helper.record_category_breadcrumbs(@c2).should_not match 'CD'
+      expect(helper.record_category_breadcrumbs(@c2)).to match 'AB'
+      expect(helper.record_category_breadcrumbs(@c2)).to_not match 'CD'
     end
   end
   describe '#delete_icon' do
     it "gets the path when passed an object" do
-      helper.delete_icon(create(:user, :confirmed)).should match /user/
+      expect(helper.delete_icon(create(:user, :confirmed))).to match /user/
     end
   end
   describe "#record_category_full" do
     it "requires a category" do
-      helper.record_category_full(nil).should == '(deleted?)'
+      expect(helper.record_category_full(nil)).to eq '(deleted?)'
     end
     it "displays the full name" do
       @u = create(:user, :confirmed)
       @c1 = create(:record_category, user: @u, name: 'AB')
       @c2 = create(:record_category, user: @u, parent: @c1, name: 'CD')
-      helper.record_category_full(@c2).should match 'AB'
-      helper.record_category_full(@c2).should match 'CD'
+      expect(helper.record_category_full(@c2)).to match 'AB'
+      expect(helper.record_category_full(@c2)).to match 'CD'
     end
   end
   describe "#record_data" do
@@ -224,22 +222,22 @@ describe ApplicationHelper do
     end
     it "returns blank if there is no data" do
       @record_blank = create(:record, user: @u, record_category: @c1)
-      helper.record_data(@record_blank.data).should == ''
+      expect(helper.record_data(@record_blank.data)).to eq ''
     end
     it "returns blank if there is zero data" do
       @record_blank = create(:record, user: @u, record_category: @c1, data: {})
-      helper.record_data(@record_blank.data).should == ''
+      expect(helper.record_data(@record_blank.data)).to eq ''
     end
     it "displays one item" do
       @record = create(:record, user: @u, record_category: @c1, data: { note: 'Note' })
-      helper.record_data(@record.data).should == '<strong>Note</strong>: Note'
+      expect(helper.record_data(@record.data)).to eq '<strong>Note</strong>: Note'
     end
     it "displays multiple items" do
       @c2 = create(:record_category, user: @u, name: 'AB', data: { note: { key: 'note', label: 'Note', type: 'text' },
                      note2: { key: 'another', label: 'Another', type: 'text' } })
       @record2 = create(:record, user: @u, record_category: @c2, data: { note: 'NValue', another: 'AValue' })
-      helper.record_data(@record2.data).should match '<strong>Note</strong>: NValue'
-      helper.record_data(@record2.data).should match '<strong>Another</strong>: AValue'
+      expect(helper.record_data(@record2.data)).to match '<strong>Note</strong>: NValue'
+      expect(helper.record_data(@record2.data)).to match '<strong>Another</strong>: AValue'
     end
   end
   describe '#graph_time_entry' do
@@ -249,13 +247,13 @@ describe ApplicationHelper do
     it "outputs Javascript with the category color" do
       cat = create(:record_category, color: '#000')
       @row = [Time.zone.now, Time.zone.now + 1.hour, create(:record, user: @user, record_category: cat)]
-      helper.graph_time_entry('canvas', 0, @row).should match '1:00'
-      helper.graph_time_entry('canvas', 0, @row).should match '#000'
+      expect(helper.graph_time_entry('canvas', 0, @row)).to match '1:00'
+      expect(helper.graph_time_entry('canvas', 0, @row)).to match '#000'
     end
     it "outputs Javascript default color" do
       @row = [Time.zone.now, Time.zone.now + 1.hour, create(:record, user: @user)]
-      helper.graph_time_entry('canvas', 0, @row).should match '1:00'
-      helper.graph_time_entry('canvas', 0, @row).should match '#ccc'
+      expect(helper.graph_time_entry('canvas', 0, @row)).to match '1:00'
+      expect(helper.graph_time_entry('canvas', 0, @row)).to match '#ccc'
     end
   end
   describe '#graph_time_total' do
@@ -263,13 +261,13 @@ describe ApplicationHelper do
       cat = create(:record_category, color: '#000')
       rec = create(:record, timestamp: Time.zone.now, end_timestamp: Time.zone.now + 1.hour, record_category: cat)
       x = helper.graph_time_total('canvas', Time.zone.now.midnight..(Time.zone.now.midnight + 1.day), Time.zone.now.midnight, rec.record_category, 3600)
-      x.should match '#000'
+      expect(x).to match '#000'
     end
     it "uses the default color" do
       rec = create(:record, timestamp: Time.zone.now, end_timestamp: Time.zone.now + 1.hour)
       x = helper.graph_time_total('canvas', Time.zone.now.midnight..(Time.zone.now.midnight + 1.day), Time.zone.now.midnight, rec.record_category, 3600)
-      x.should match rec.record_category.name
-      x.should match '#ccc'
+      expect(x).to match rec.record_category.name
+      expect(x).to match '#ccc'
     end
   end
   describe '#record_data_input' do
@@ -299,7 +297,7 @@ describe ApplicationHelper do
         '=' => 'should be equal to',
         '!=' => 'should not be equal to'}
       list.each do |k,v|
-        helper.explain_op(k).should == v
+        expect(helper.explain_op(k)).to eq v
       end
     end
   end

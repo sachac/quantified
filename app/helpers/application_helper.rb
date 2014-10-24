@@ -280,7 +280,7 @@ module ApplicationHelper
     if !path.is_a? String
       path = send("#{path.class.to_s.underscore}_path", path, options)
     end
-    link_to image_tag('trash.png', :alt => t('general.delete'), :title => t('general.delete')), path, :method => :delete, :class => 'icon delete', :confirm => I18n.t('general.are_you_sure')
+    link_to image_tag('trash.png', :alt => t('general.delete'), :title => t('general.delete')), path, :method => :delete, :class => 'icon delete', data: {confirm: I18n.t('general.are_you_sure')}
   end
 
   def edit_icon(path, options = nil)

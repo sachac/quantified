@@ -69,10 +69,10 @@ class ClothingMatch < ActiveRecord::Base
     end
     # Get all the unique clothes included in these matches
     matches = user.clothing_matches.range(range).where('clothing_a_id < clothing_b_id')
-      .find(:all,
-            select: 'clothing_a_id, clothing_b_id, count(clothing_b_id) AS count_matches',
-            group: 'clothing_a_id, clothing_b_id').map { |x| {source: x.clothing_a_id, target: x.clothing_b_id, count_matches: x.count_matches} }
-    {clothing: clothing.all, matches: matches}
+              .select('clothing_a_id, clothing_b_id, count(clothing_b_id) AS count_matches')
+              .group('clothing_a_id, clothing_b_id')
+              .map { |x| {source: x.clothing_a_id, target: x.clothing_b_id, count_matches: x.count_matches} }
+    {clothing: clothing.to_a, matches: matches}
   end
 
   def as_json(options = {})
@@ -90,6 +90,6 @@ class ClothingMatch < ActiveRecord::Base
     clothing_b 'Clothing B name' do |x| x.name if x end
   end
 
-  scope :range, lambda { |range| range ? where('clothing_log_date >= ? AND clothing_log_date < ?', range.begin, range.end) : scoped }
+  scope :range, lambda { |range| range ? where('clothing_log_date >= ? AND clothing_log_date < ?', range.begin, range.end) : all }
 
 end

@@ -1,5 +1,5 @@
 require 'spec_helper'
-describe UsersController do
+describe UsersController, :type => :controller  do
   before do
     @request.env["devise.mapping"] = Devise.mappings[:user]
     @u2 = create(:user, :confirmed)

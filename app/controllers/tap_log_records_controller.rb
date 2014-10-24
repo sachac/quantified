@@ -70,7 +70,7 @@ class TapLogRecordsController < ApplicationController
   # POST /tap_log_records
   # POST /tap_log_records.xml
   def create
-    @tap_log_record = current_account.tap_log_records.new(params[:tap_log_record])
+    @tap_log_record = current_account.tap_log_records.new(tap_log_record_params)
     authorize! :create, @tap_log_record
     if @tap_log_record.save
       add_flash :notice, t('tap_log_record.created')
@@ -92,7 +92,7 @@ class TapLogRecordsController < ApplicationController
     @tap_log_record = current_account.tap_log_records.find(params[:id])
     authorize! :update, @tap_log_record
     params[:tap_log_record].delete(:user_id)
-    if @tap_log_record.update_attributes(params[:tap_log_record])
+    if @tap_log_record.update_attributes(tap_log_record_params)
       add_flash :notice, t('tap_log_record.updated')
     end
     respond_with @tap_log_record
@@ -105,5 +105,10 @@ class TapLogRecordsController < ApplicationController
     authorize! :delete, @tap_log_record
     @tap_log_record.destroy
     respond_with @tap_log_record, location: tap_log_records_url
+  end
+
+  private
+  def tap_log_record_params
+    params.require(:tap_log_record).permit(:timestamp, :catOne, :catTwo, :catThree, :number, :rating, :note, :status, :end_timestamp, :end_timestamp, :entry_type, :duration, :source)
   end
 end

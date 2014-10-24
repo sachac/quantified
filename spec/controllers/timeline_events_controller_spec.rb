@@ -18,7 +18,7 @@ require 'spec_helper'
 # Message expectations are only used when there is no simpler way to specify
 # that an instance is receiving a specific message.
 
-describe TimelineEventsController do
+describe TimelineEventsController, :type => :controller  do
 
   # This should return the minimal set of attributes required to create a valid
   # TimelineEvent. As you add validations to TimelineEvent, be sure to

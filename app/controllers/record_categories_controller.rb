@@ -178,7 +178,7 @@ class RecordCategoriesController < ApplicationController
   # POST /record_categories.xml
   def create
     authorize! :manage_account, current_account
-    @record_category = current_account.record_categories.new(params[:record_category])
+    @record_category = current_account.record_categories.new(record_category_params)
     params[:record_category][:data].reject! { |x| x['key'].blank? } if params[:record_category][:data]
     @record_category.data ||= Array.new
     if @record_category.save
@@ -203,7 +203,7 @@ class RecordCategoriesController < ApplicationController
     @record_category = current_account.record_categories.find(params[:id])
     params[:record_category][:data].reject! { |x| x['key'].blank? } if params[:record_category][:data]
     params[:record_category].delete(:user_id)
-    if @record_category.update_attributes(params[:record_category])
+    if @record_category.update_attributes(record_category_params)
       add_flash :notice, t('record_category.updated')
     end
     respond_with @record_category
@@ -285,5 +285,9 @@ class RecordCategoriesController < ApplicationController
   def get_autocomplete_items(parameters)
     super(parameters).where(:user_id => current_account.id)
   end
-  
+
+  private
+  def record_category_params
+    params.require(:record_category).permit(:name, :category_type)
+  end
 end

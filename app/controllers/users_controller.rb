@@ -4,7 +4,7 @@ class UsersController < ApplicationController
   # GET /users.xml
   def index
     authorize! :manage, User
-    @users = User.all
+    @users = User.order('email')
     respond_with @users
   end
 
@@ -35,7 +35,7 @@ class UsersController < ApplicationController
   # POST /users.xml
   def create
     authorize! :manage, User
-    @user = User.new(params[:user])
+    @user = User.new(user_params[:user])
     if @user.save
       add_flash :notice, I18n.t('user.created')
     end
@@ -58,7 +58,7 @@ class UsersController < ApplicationController
       logger.info "Trying to set timezone? " + @user.settings.timezone
       params[:user].delete(:settings)
     end
-    if @user.update_attributes(params[:user])
+    if @user.update_attributes(user_params[:user])
       add_flash :notice, I18n.t('user.updated')
     end
     respond_with(@user)
@@ -76,4 +76,8 @@ class UsersController < ApplicationController
     end
   end
 
+  private
+  def user_params
+    params.permit(:user => [:email, :username, :password, :password_confirmation])
+  end
 end

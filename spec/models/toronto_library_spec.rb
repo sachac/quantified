@@ -4,7 +4,7 @@ describe TorontoLibrary do
     it "finds the form in the login page" do
       card = FactoryGirl.create(:toronto_library)
       FakeWeb.register_uri(:get, 'https://www.torontopubliclibrary.ca/youraccount', body: File.read(Rails.root.join('spec/fixtures/files/login.html')), content_type: 'text/html')
-      Mechanize::Form.any_instance.should_receive(:submit)
+      expect_any_instance_of(Mechanize::Form).to receive(:submit)
       card.login
     end
   end
@@ -15,9 +15,9 @@ describe TorontoLibrary do
       card.agent = Mechanize.new
       FakeWeb.register_uri(:get, 'https://www.torontopubliclibrary.ca/youraccount', body: File.read(Rails.root.join('spec/fixtures/files/account.html')), content_type: 'text/html')
       card.agent.get('https://www.torontopubliclibrary.ca/youraccount')
-      Mechanize::Form.any_instance.should_receive(:submit)
+      expect_any_instance_of(Mechanize::Form).to receive(:submit)
       card.renew_items([FactoryGirl.create(:library_item, user: card.user, toronto_library: card, library_id: '37131168694917')])
-      card.agent.page.form_with(id: 'renewitems').checkboxes_with(name: /37131168694917/).first.should be_checked
+      expect(card.agent.page.form_with(id: 'renewitems').checkboxes_with(name: /37131168694917/).first).to be_checked
     end
   end
 
@@ -27,10 +27,10 @@ describe TorontoLibrary do
       card.agent = Mechanize.new
       FakeWeb.register_uri(:get, 'https://www.torontopubliclibrary.ca/youraccount', body: File.read(Rails.root.join('spec/fixtures/files/account.html')), content_type: 'text/html')
       card.agent.get('https://www.torontopubliclibrary.ca/youraccount')
-      Mechanize::Form.any_instance.should_receive(:submit)
+      expect_any_instance_of(Mechanize::Form).to receive(:submit)
       card.renew_items_by_date(Time.zone.local(2013, 6, 6))
-      card.agent.page.form_with(id: 'renewitems').checkboxes_with(name: /37131168694917/).first.should be_checked
-      card.agent.page.form_with(id: 'renewitems').checkboxes_with(name: /37131150618767/).first.should_not be_checked
+      expect(card.agent.page.form_with(id: 'renewitems').checkboxes_with(name: /37131168694917/).first).to be_checked
+      expect(card.agent.page.form_with(id: 'renewitems').checkboxes_with(name: /37131150618767/).first).to_not be_checked
     end
   end
 
@@ -86,7 +86,7 @@ describe TorontoLibrary do
       FakeWeb.register_uri(:get, 'https://www.torontopubliclibrary.ca/youraccount', body: File.read(Rails.root.join('spec/fixtures/files/account.html')), content_type: 'text/html')
       FakeWeb.register_uri(:get, %r|https?://(www.)?torontopubliclibrary.ca/uhtbin/.*|, body: '', content_type: 'text/html')
       card.agent.get('https://www.torontopubliclibrary.ca/youraccount')
-      Mechanize::Page::Link.any_instance.should_receive(:click)
+      expect_any_instance_of(Mechanize::Page::Link).to receive(:click)
       card.logout
     end
   end
@@ -99,7 +99,7 @@ describe TorontoLibrary do
         card.agent.get('https://www.torontopubliclibrary.ca/youraccount')
 
         item = FactoryGirl.create(:library_item, user: card.user, toronto_library: card, status: 'due', due: Time.zone.today, title: 'Hello world', updated_at: Time.zone.now.yesterday)
-        card.stub(:login).and_return(true)
+        allow(card).to receive(:login).and_return(true)
         card.refresh_items
         item.reload.status.should == 'returned'
       end
@@ -109,14 +109,14 @@ describe TorontoLibrary do
       card.agent = Mechanize.new
       FakeWeb.register_uri(:get, 'https://www.torontopubliclibrary.ca/youraccount', body: File.read(Rails.root.join('spec/fixtures/files/account.html')), content_type: 'text/html')
       card.agent.get('https://www.torontopubliclibrary.ca/youraccount')
-      card.stub(:login).and_return(true)
+      allow(card).to receive(:login).and_return(true)
       card.refresh_items
       card.library_items.size.should == 25
     end
     it 'updates existing entries' do
       card = FactoryGirl.create(:toronto_library)
       card.agent = Mechanize.new
-      card.stub(:login).and_return(true)
+      allow(card).to receive(:login).and_return(true)
       FakeWeb.register_uri(:get, 'https://www.torontopubliclibrary.ca/youraccount', body: File.read(Rails.root.join('spec/fixtures/files/account.html')), content_type: 'text/html')
       card.agent.get('https://www.torontopubliclibrary.ca/youraccount')
       card.refresh_items

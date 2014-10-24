@@ -46,7 +46,7 @@ class MemoriesController < ApplicationController
   # POST /memories
   # POST /memories.xml
   def create
-    @memory = current_account.memories.new(params[:memory])
+    @memory = current_account.memories.new(memory_params[:memory])
     authorize! :create, Memory
     @memory.user = current_account
     if @memory.save
@@ -63,7 +63,7 @@ class MemoriesController < ApplicationController
     @memory = current_account.memories.find(params[:id])
     authorize! :update, @memory
     params[:memory].delete(:user_id)
-    if @memory.update_attributes(params[:memory])
+    if @memory.update_attributes(memory_params[:memory])
       add_flash :notice, 'Memory was successfully updated.'
       respond_with @memory, :location => memories_path
     else
@@ -82,5 +82,10 @@ class MemoriesController < ApplicationController
       format.html { go_to(memories_url) }
       format.any  { head :ok }
     end
+  end
+
+  private
+  def memory_params
+    params.permit(:memory => [:name, :body, :access, :timestamp, :rating, :date_entry, :sort_time])
   end
 end

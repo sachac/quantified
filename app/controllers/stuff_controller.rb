@@ -94,7 +94,7 @@ class StuffController < ApplicationController
       loc = current_account.get_location(params[:stuff][:home_location_id])
       params[:stuff].delete(:home_location_id)
     end
-    @stuff = current_account.stuff.new(params[:stuff])
+    @stuff = current_account.stuff.new(stuff_params)
     @stuff.home_location = loc
     @stuff.location = @stuff.home_location
     @stuff.user = current_account
@@ -113,7 +113,7 @@ class StuffController < ApplicationController
     end
     params[:stuff].delete(:home_location_id)
     params[:stuff].delete(:user_id)
-    result = @stuff.update_attributes(params[:stuff])
+    result = @stuff.update_attributes(stuff_params)
     unless loc.blank? || !result
       @stuff.home_location = loc
       result = @stuff.save
@@ -134,4 +134,9 @@ class StuffController < ApplicationController
     super(parameters).where(:user_id => current_account.id)
   end
 
+  private
+  def stuff_params
+    params.require(:stuff).permit(:name, :status, :price, :purchase_date, :notes, :long_name, :location_id, :home_location_id, :in_place, :stuff_type)
+  end
+    
 end

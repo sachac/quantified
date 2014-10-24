@@ -1,8 +1,7 @@
 class TorontoLibrary < ActiveRecord::Base
   belongs_to :user
   has_many :library_items
-  attr_accessor :agent
-#  attr_accessible :card, :pin, :name
+  attr_accessor :agent  
   def login
     @agent ||= Mechanize.new
     self.logout
@@ -128,7 +127,7 @@ class TorontoLibrary < ActiveRecord::Base
       rec.save
     end
     # Mark all the un-updated due books as returned
-    LibraryItem.find(:all, :conditions => ["toronto_library_id = ? AND updated_at < ? AND (status IS NULL OR status='due' OR status='read')", self.id, stamp]).each do |item|
+    LibraryItem.where("toronto_library_id = ? AND updated_at < ? AND (status IS NULL OR status='due' OR status='read')", self.id, stamp).each do |item|
       item.status = "returned"
       item.save
     end

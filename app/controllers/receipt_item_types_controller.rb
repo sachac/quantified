@@ -42,8 +42,7 @@ class ReceiptItemTypesController < ApplicationController
   # POST /receipt_item_types
   # POST /receipt_item_types.json
   def create
-    params[:receipt_item_type].delete(:user_id) if params[:receipt_item_type]
-    @receipt_item_type = current_account.receipt_item_types.new(params[:receipt_item_type])
+    @receipt_item_type = current_account.receipt_item_types.new(receipt_item_type_params)
     if @receipt_item_type.save
       @receipt_item_type.map
       add_flash :notice, t('receipt_item_type.created')
@@ -56,7 +55,7 @@ class ReceiptItemTypesController < ApplicationController
   def update
     @receipt_item_type = current_account.receipt_item_types.find(params[:id])
     params[:receipt_item_type].delete(:user_id) if params[:receipt_item_type]
-    if @receipt_item_type.update_attributes(params[:receipt_item_type])
+    if @receipt_item_type.update_attributes(receipt_item_type_params)
       add_flash :notice, t('receipt_item_type.updated')
     end
     respond_with @receipt_item_type
@@ -94,4 +93,8 @@ class ReceiptItemTypesController < ApplicationController
     super(parameters).where(:user_id => current_account.id)
   end
 
+  private
+  def receipt_item_type_params
+    params.require(:receipt_item_type).permit(:friendly_name, :receipt_name)
+  end
 end

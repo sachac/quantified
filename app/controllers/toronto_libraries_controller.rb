@@ -25,9 +25,8 @@ class TorontoLibrariesController < ApplicationController
   end
 
   def create
-    @toronto_library = current_account.toronto_libraries.new(params[:toronto_library])
     authorize! :manage_account, current_account
-    @toronto_library.user = current_account
+    @toronto_library = current_account.toronto_libraries.new(toronto_library_params)
     if @toronto_library.save
       add_flash :notice, I18n.t('toronto_library.created')
       location = toronto_libraries_path
@@ -41,7 +40,7 @@ class TorontoLibrariesController < ApplicationController
     @toronto_library = current_account.toronto_libraries.find(params[:id])
     authorize! :manage_account, current_account
     params[:toronto_library].delete(:user_id)
-    if @toronto_library.update_attributes(params[:toronto_library])
+    if @toronto_library.update_attributes(toronto_library_params)
       add_flash :notice, I18n.t('toronto_library.updated')
     end
     respond_with @toronto_library
@@ -92,5 +91,10 @@ class TorontoLibrariesController < ApplicationController
     else 
       respond_with result, location: params[:destination] || request.env['HTTP_REFERER'] || root_path
     end
+  end
+
+  private
+  def toronto_library_params
+    params.require(:toronto_library).permit(:name, :card, :pin, :last_checked, :pickup_count)
   end
 end

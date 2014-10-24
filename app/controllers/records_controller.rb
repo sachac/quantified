@@ -70,11 +70,10 @@ class RecordsController < ApplicationController
   # POST /records.xml
   def create
     authorize! :manage_account, current_account
+    @record = current_account.records.new(record_params)
     if !params[:record][:timestamp].blank? and params[:record][:timestamp].match /^[0-9]+/  # probably a timestamp
-       params[:record][:timestamp] = Time.at(params[:record][:timestamp].to_f)
+       @record.timestamp = Time.at(params[:record][:timestamp].to_f)
     end
-    params[:record].delete(:user_id)
-    @record = current_account.records.new(params[:record])
     if @record.save
       @record.update_previous
       @record.update_next
@@ -91,8 +90,7 @@ class RecordsController < ApplicationController
     if params[:record][:end_timestamp].blank?
       params[:record].delete(:end_timestamp)
     end
-    params[:record].delete(:user_id)
-    if @record.update_attributes(params[:record])
+    if @record.update_attributes(record_params)
       @record.update_previous
       @record.update_next
       add_flash :notice, t('record.updated')
@@ -135,4 +133,10 @@ class RecordsController < ApplicationController
   def help
     authorize! :manage_account, current_account
   end
+
+  private
+  def record_params
+    params.require(:record).permit(:source_name, :source_id, :timestamp, :record_category_id, :data, :end_timestamp, :duration, :date, :manual)
+  end
+    
 end

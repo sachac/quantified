@@ -1,6 +1,8 @@
 class ContextsController < ApplicationController
   before_filter :authenticate_user!, :except => [:index, :show, :start]
   respond_to :html, :xml, :json, :csv
+  before_filter :modify_context_rules, :only => :update
+
   # GET /contexts
   # GET /contexts.xml
   def index
@@ -63,7 +65,35 @@ class ContextsController < ApplicationController
   def update
     @context = current_account.contexts.find(params[:id])
     authorize! :update, @context
-    params[:context].delete(:user_id)
+    # Do this manually, since strong parameters are being a pain
+    @context.name = params[:context][:name]
+    if params[:context][:context_rules_attributes]
+      params[:context][:context_rules_attributes].each do |k,v|
+        if v[:_destroy]
+          @context.context_rules.delete(v[:id])
+        elsif v[:id]
+          rule = @context.context_rules.where(id: v[:id]).first
+          if rule
+            rule.location_id = v[:location_id]
+            rule.stuff_id = v[:stuff_id]
+            rule.save
+          end
+        else
+          rule = @context.context_rules.new
+          rule.location_id = v[:location_id]
+          rule.stuff_id = v[:stuff_id]
+          rule.save
+        end
+      end
+    end
+    
+    if @context.save
+      add_flash :notice, 'Context was successfully updated.'
+    end
+    respond_with @context
+  end
+
+  def modify_context_rules
     rules = params[:context][:context_rules_attributes] if params[:context]
     if rules
       rules.each do |k, v|
@@ -77,17 +107,14 @@ class ContextsController < ApplicationController
           if stuff.nil?
             stuff = @account.stuff.create(:name => v[:stuff], :location => location, :home_location => location, :status => 'active', :stuff_type => 'stuff')
           end
-          params[:context][:context_rules_attributes][k][:stuff] = stuff
-          params[:context][:context_rules_attributes][k][:location] = location
+          params[:context][:context_rules_attributes][k][:stuff_id] = stuff.id
+          params[:context][:context_rules_attributes][k][:location_id] = location.id
         end
       end
     end
-    if @context.update_attributes(params[:context])
-      add_flash :notice, 'Context was successfully updated.'
-    end
-    respond_with @context
+    true
   end
-
+  
   # DELETE /contexts/1
   # DELETE /contexts/1.xml
   def destroy
@@ -115,4 +142,28 @@ class ContextsController < ApplicationController
     add_flash :notice, "Context marked complete."
     respond_with @context, :location => stuff_index_path
   end
+
+  
+  private
+  def context_params
+    #params.permit(:name, :rules, context_rules_attributes: [:stuff_id, :location_id, :context_id, :stuff, :location, :context, :id, :_destroy])
+    #params.require(:context).permit(:name, :rules, context_rules_attributes: [:stuff_id, :location_id, :context_id, :stuff, :location, :context, :id, :_destroy])
+
+    params.require(:context).tap do |whitelisted|
+      whitelisted[:context_rules_attributes] ||= {}
+      whitelisted[:name] = params[:context][:name]
+      whitelisted[:id] = params[:context][:id]
+      params[:context][:context_rules_attributes].each do |k, v|
+        whitelisted[:context_rules_attributes][k] = {
+          stuff_id: v[:stuff_id],
+          location_id: v[:location_id],
+          stuff: v[:stuff],
+          location: v[:location],
+          id: v[:id],
+          _destroy: v[:_destroy]
+        }
+      end
+    end
+  end
+  
 end

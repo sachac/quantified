@@ -13,7 +13,7 @@ describe Stuff do
       stuff.location = location1
       stuff.location.save
       stuff2 = FactoryGirl.create(:stuff, user: stuff.user)
-      stuff.distinct_locations.all.size.should == 2
+      expect(stuff.distinct_locations.to_a.size).to eq 2
     end
   end
 
@@ -24,7 +24,7 @@ describe Stuff do
       stuff.save
       stuff.location.location = FactoryGirl.create(:stuff, name: 'Location', user: stuff.user)
       stuff.location.save
-      stuff.reload.hierarchy.should == [stuff.location, stuff.location.location]
+      expect(stuff.reload.hierarchy).to eq [stuff.location, stuff.location.location]
     end
 
     it 'does not get confused by loops' do
@@ -35,7 +35,7 @@ describe Stuff do
       stuff.location.save
       stuff.location.location.location = stuff.location
       stuff.location.location.save
-      stuff.reload.hierarchy.should == [stuff.location, stuff.location.location]
+      expect(stuff.reload.hierarchy).to eq [stuff.location, stuff.location.location]
     end
 
     it 'stops at locations' do
@@ -44,7 +44,7 @@ describe Stuff do
       stuff.save
       stuff.location.location = nil
       stuff.location.save
-      stuff.reload.hierarchy.should == [stuff.location]
+      expect(stuff.reload.hierarchy).to eq [stuff.location]
     end
   end
 
@@ -53,26 +53,26 @@ describe Stuff do
       loc = FactoryGirl.create(:stuff, name: 'Secret Lair')
       backpack = FactoryGirl.create(:stuff, name: 'Backpack', user: loc.user)
       results = Stuff.bulk_update(loc.user, loc.name, "backpack\nwallet")
-      loc.user.stuff.where(name: 'backpack').first.location.should == loc
-      loc.user.stuff.where(name: 'wallet').first.location.should == loc
-      results[:success].size.should == 2
+      expect(loc.user.stuff.where(name: 'backpack').first.location).to eq loc
+      expect(loc.user.stuff.where(name: 'wallet').first.location).to eq loc
+      expect(results[:success].size).to eq 2
     end
     it 'handles errors' do
       loc = FactoryGirl.create(:stuff, name: 'Secret Lair')
       backpack = FactoryGirl.create(:stuff, name: 'Backpack', user: loc.user)
-      Stuff.any_instance.stub(:save).and_return(false)
+      allow_any_instance_of(Stuff).to receive(:save).and_return(false)
       results = Stuff.bulk_update(loc.user, loc.name, "backpack\nwallet")
-      results[:failure].should == ['backpack', 'wallet']
+      expect(results[:failure]).to eq ['backpack', 'wallet']
     end
   end
 
   describe '#find_or_create' do
     it "finds existing stuff" do
       stuff = FactoryGirl.create(:stuff)
-      Stuff.find_or_create(stuff.user, stuff.name).should == stuff
+      expect(Stuff.find_or_create(stuff.user, stuff.name)).to eq stuff
     end
     it "creates stuff if needed" do
-      Stuff.find_or_create(FactoryGirl.create(:user), 'newstuff').name.should == 'newstuff'
+      expect(Stuff.find_or_create(FactoryGirl.create(:user), 'newstuff').name).to eq 'newstuff'
     end
   end
 
@@ -84,7 +84,7 @@ describe Stuff do
     end
     
     it 'converts to CSV' do
-      @stuff.to_comma.should == [@stuff.id.to_s,
+      expect(@stuff.to_comma).to eq [@stuff.id.to_s,
                                  'Rocket launcher',
                                  'Deluxe rocket launcher',
                                  'true',
@@ -96,13 +96,13 @@ describe Stuff do
                                  'notes go here']
     end
     it 'converts to XML' do
-      @stuff.to_xml.should match /home-location-name/
-      @stuff.to_xml.should match /Weapons box/
+      expect(@stuff.to_xml).to match /home-location-name/
+      expect(@stuff.to_xml).to match /Weapons box/
     end
 
     it 'converts to JSON' do
-      @stuff.to_json.should match /home_location_name/
-      @stuff.to_json.should match /Weapons box/
+      expect(@stuff.to_json).to match /home_location_name/
+      expect(@stuff.to_json).to match /Weapons box/
     end
   end
 end

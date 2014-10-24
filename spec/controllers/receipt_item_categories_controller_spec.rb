@@ -1,5 +1,5 @@
 require 'spec_helper'
-describe ReceiptItemCategoriesController do
+describe ReceiptItemCategoriesController, :type => :controller  do
   before do
     @request.env["devise.mapping"] = Devise.mappings[:user]
     @user = create(:user, :confirmed)
@@ -64,14 +64,14 @@ describe ReceiptItemCategoriesController do
     describe "with invalid params" do
       it "assigns a newly created but unsaved receipt_item_category as @receipt_item_category" do
         # Trigger the behavior that occurs when invalid params are submitted
-        ReceiptItemCategory.any_instance.stub(:save).and_return(false)
+        allow_any_instance_of(ReceiptItemCategory).to receive(:save).and_return(false)
         post :create, {:receipt_item_category => { "name" => "invalid value" }}
         assigns(:receipt_item_category).should be_a_new(ReceiptItemCategory)
       end
 
       it "re-renders the 'new' template" do
         # Trigger the behavior that occurs when invalid params are submitted
-        ReceiptItemCategory.any_instance.stub(:save).and_return(false)
+        allow_any_instance_of(ReceiptItemCategory).to receive(:save).and_return(false)
         post :create, {:receipt_item_category => { "name" => "invalid value" }}
         flash[:notice].should be_blank
       end
@@ -86,7 +86,7 @@ describe ReceiptItemCategoriesController do
         # specifies that the ReceiptItemCategory created on the previous line
         # receives the :update_attributes message with whatever params are
         # submitted in the request.
-        ReceiptItemCategory.any_instance.should_receive(:update_attributes).with({ "name" => "MyString" })
+        allow_any_instance_of(ReceiptItemCategory).to receive(:update_attributes).with({ "name" => "MyString" })
         put :update, {:id => receipt_item_category.to_param, :receipt_item_category => { "name" => "MyString" }}
       end
 
@@ -107,7 +107,7 @@ describe ReceiptItemCategoriesController do
       it "assigns the receipt_item_category as @receipt_item_category" do
         receipt_item_category = create(:receipt_item_category, user: @user)
         # Trigger the behavior that occurs when invalid params are submitted
-        ReceiptItemCategory.any_instance.stub(:save).and_return(false)
+        allow_any_instance_of(ReceiptItemCategory).to receive(:save).and_return(false)
         put :update, {:id => receipt_item_category.to_param, :receipt_item_category => { "name" => "invalid value" }}
         assigns(:receipt_item_category).should eq(receipt_item_category)
       end
@@ -115,7 +115,7 @@ describe ReceiptItemCategoriesController do
       it "re-renders the 'edit' template" do
         receipt_item_category = create(:receipt_item_category, user: @user)
         # Trigger the behavior that occurs when invalid params are submitted
-        ReceiptItemCategory.any_instance.stub(:save).and_return(false)
+        allow_any_instance_of(ReceiptItemCategory).to receive(:save).and_return(false)
         put :update, {:id => receipt_item_category.to_param, :receipt_item_category => { "name" => "invalid value" }}
         flash[:notice].should be_blank
       end

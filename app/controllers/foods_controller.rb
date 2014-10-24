@@ -6,7 +6,7 @@ class FoodsController < ApplicationController
   def index
     authorize! :view_food, current_account
     @info = Hash.new
-    current_account.csa_foods.all.each do |log|
+    current_account.csa_foods.each do |log|
       @info[log.food_id] ||= Hash.new
       @info[log.food_id][:unit] = log.unit
       @info[log.food_id][:total] ||= 0
@@ -16,7 +16,7 @@ class FoodsController < ApplicationController
         @info[log.food_id][:remaining] += log.quantity
       end
     end
-    @foods = current_account.foods.all
+    @foods = current_account.foods
     respond_with @foods
   end
 
@@ -46,7 +46,7 @@ class FoodsController < ApplicationController
   # POST /foods.xml
   def create
     authorize! :manage_account, current_account
-    @food = current_account.foods.new(params[:food])
+    @food = current_account.foods.new(food_params)
     add_flash :notice, I18n.t('food.created') if @food.save
     respond_with @food
   end
@@ -56,8 +56,7 @@ class FoodsController < ApplicationController
   def update
     authorize! :manage_account, current_account
     @food = current_account.foods.find(params[:id])
-    params[:food].delete(:user_id)
-    add_flash :notice, I18n.t('food.updated') if @food.update_attributes(params[:food])
+    add_flash :notice, I18n.t('food.updated') if @food.update_attributes(food_params)
     respond_with @food
   end
 
@@ -68,5 +67,10 @@ class FoodsController < ApplicationController
     @food = current_account.foods.find(params[:id])
     @food.destroy
     respond_with @food, :location => foods_url
+  end
+
+  private
+  def food_params
+    params.require(:food).permit(:name, :food_id, :total, :remaining, :unit)
   end
 end

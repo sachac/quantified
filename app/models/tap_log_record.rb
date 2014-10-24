@@ -54,7 +54,7 @@ class TapLogRecord < ActiveRecord::Base
     end
   end
 
-  scope :activity, where('entry_type=?', 'activity')
+  scope :activity, -> { where('entry_type=?', 'activity') }
 
   def previous
     self.user.tap_log_records.where('timestamp < ? OR (timestamp = ? AND id < ?)', self.timestamp, self.timestamp, self.id).order('timestamp desc, id desc').limit(1)

@@ -14,7 +14,9 @@ class CsaFoodsController < ApplicationController
     authorize! :manage_account, current_account
     if params[:bulk]
       params[:bulk].each do |key, val|
-        current_account.csa_foods.find(key).update_attributes(:disposition => val)
+        entry = current_account.csa_foods.find(key)
+        entry.disposition = val
+        entry.save
       end
     end
     redirect_to csa_foods_path
@@ -64,7 +66,7 @@ class CsaFoodsController < ApplicationController
     authorize! :manage_account, current_account
     @csa_food = current_account.csa_foods.find(params[:id])
     params[:csa_food].delete(:user_id)
-    if @csa_food.update_attributes(params[:csa_food])
+    if @csa_food.update_attributes(csa_food_params)
       add_flash :notice, I18n.t('csa_food.updated')
     end
     respond_with @csa_food, :location => csa_foods_path
@@ -92,5 +94,10 @@ class CsaFoodsController < ApplicationController
     else
       respond_with :error, :location => csa_foods_path(:date => params[:date])
     end
+  end
+
+  private
+  def csa_food_params
+    params.permit(:food, :quantity, :unit, :date_received, :notes, :disposition)
   end
 end

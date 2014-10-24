@@ -1,5 +1,5 @@
 require 'spec_helper'
-describe ServicesController do
+describe ServicesController, :type => :controller  do
   before do
     request.env["devise.mapping"] = Devise.mappings[:user]
     omniauth_hash = { "provider" => "facebook", "uid" => "1234", "credentials" => {"token" => "abcdefg"}, "extra"=>{"raw_info" => {"id" => "1234567", "email" => "test@example.com", "name" => "Foo", "gender" => "male" }}}

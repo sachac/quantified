@@ -1,5 +1,5 @@
 require 'spec_helper'
-describe DecisionLogsController do
+describe DecisionLogsController, :type => :controller  do
   before do
     @request.env["devise.mapping"] = Devise.mappings[:user]
     @user = create(:user, :confirmed)

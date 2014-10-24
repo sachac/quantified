@@ -5,6 +5,8 @@ class ApplicationController < ActionController::Base
   handles_sortable_columns
   protect_from_forgery
   before_filter :before_awesome
+  before_filter :authenticate_user_from_token!
+      
   helper_method :current_account  
   helper_method :mobile?
   helper_method :managing?
@@ -56,6 +58,7 @@ class ApplicationController < ActionController::Base
         sign_in(User, u)
       end
     end
+
     @account = current_account
     # Set the timezone
     Time.zone = @account.settings.timezone if @account and @account.settings.timezone
@@ -152,6 +155,23 @@ class ApplicationController < ActionController::Base
       }
     end
     respond_with(data)
+  end
+
+
+  # From https://gist.github.com/josevalim/fb706b1e933ef01e4fb6
+  # For this example, we are simply using token authentication
+  # via parameters. However, anyone could use Rails's token
+  # authentication features to get the token from a header.
+  def authenticate_user_from_token!
+    user_token = params[:user_token].presence
+    user       = user_token && User.find_by_authentication_token(user_token.to_s)
+    if user
+      # Notice we are passing store false, so the user is not
+      # actually stored in the session and a token is needed
+      # for every request. If you want the token to work as a
+      # sign in token, you can simply remove store: false.
+      sign_in user, store: false
+    end
   end
 end
 

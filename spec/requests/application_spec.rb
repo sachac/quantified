@@ -1,7 +1,7 @@
 require 'spec_helper'
 include Warden::Test::Helpers
 
-describe ApplicationController do
+describe ApplicationController, :type => :request do
   describe '#rescue_from CanCan::AccessDenied' do
     it "denies access if necessary" do
       login_as create(:user, :confirmed), scope: :user

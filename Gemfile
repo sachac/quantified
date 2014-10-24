@@ -1,7 +1,7 @@
 source 'http://rubygems.org'
 
 gem 'rack-offline', :git => 'git://github.com/wycats/rack-offline.git'
-gem 'rails', '~> 3.2.13'
+gem 'rails', '~> 4.0'
 gem 'haml-rails', '= 0.4'
 # Bundle edge Rails instead:
 #gem 'rails', :git => 'git://github.com/rails/rails.git'
@@ -22,14 +22,15 @@ gem 'ruby-graphviz', :git => "https://github.com/glejeune/Ruby-Graphviz.git"
 gem 'narray'
 gem 'formtastic'
 gem 'jquery-rails', '~> 2.1.4'
-gem 'rails3-jquery-autocomplete', :git => 'https://github.com/crowdint/rails3-jquery-autocomplete.git'
+gem 'rails4-autocomplete'
 gem 'formtastic-bootstrap', :git => 'https://github.com/mjbellantoni/formtastic-bootstrap.git'
 gem 'handles_sortable_columns'
 gem 'gdata_19', '1.1.5'
-gem 'cancan'
+gem 'cancancan', '~> 1.9'
+gem 'rails-observers'
 #gem 'n_gram'
 #gem 'statsample'
-gem 'exception_notification', :require => 'exception_notifier'
+gem 'exception_notification', '~> 4', :require => 'exception_notifier'
 
 # Use unicorn as the web server
 # gem 'unicorn'
@@ -55,12 +56,12 @@ gem 'exception_notification', :require => 'exception_notifier'
 # end
 gem 'acts-as-taggable-on', :git => 'git://github.com/mbleigh/acts-as-taggable-on.git'
 gem 'chronic'
-gem 'acts-as-tree-with-dotted-ids'
+gem 'acts-as-tree-with-dotted-ids', :git => 'https://github.com/tma/acts-as-tree-with-dotted-ids.git'
 gem 'nifty-generators'
 #gem 'sparklines'
 #gem 'sparklines_generator'
 gem 'workflow'
-gem 'devise', '~> 2.2.4' 
+gem 'devise', '~> 3.4.0' 
 #gem 'aizuchi'
 gem 'actionmailer-with-request'
 gem 'omniauth', :git => 'git://github.com/intridea/omniauth.git'
@@ -69,32 +70,32 @@ gem 'omniauth-twitter'
 gem 'omniauth-openid'
 gem 'ruby_parser'
 gem 'passgen'
-gem 'high_voltage'
-gem 'sass-rails', "~> 3.2.6"
-gem 'compass_twitter_bootstrap', '~> 2.2.2.2'
-gem 'compass-rails'
+#gem 'barometer'
+gem 'mechanize'
+gem 'rails-settings-cached', '~> 0.3.1'
+gem 'subdomain-fu', :git => "git://github.com/nhowell/subdomain-fu.git"
+gem 'fastercsv'
+gem 'bootstrap-sass', '~> 3.2.0'
+gem 'sass-rails', '4.0.2'
+gem 'sprockets', '~> 2.11.0'
+gem 'autoprefixer-rails'
 
-group :assets do
-  gem 'coffee-rails', "~> 3.2.2"
+group :development do
+  gem 'compass-rails'
+  gem 'coffee-rails', '~> 4'
   gem 'uglifier'
   gem 'libv8', '~> 3.11'
   gem 'therubyracer', '~> 0.11.4'
 end
-	
-#gem 'barometer'
-gem 'mechanize'
-gem 'rails-settings-cached', '~> 0.2.4'
-gem 'subdomain-fu', :git => "git://github.com/nhowell/subdomain-fu.git"
-gem 'fastercsv'
+
 group :development, :test do
-  gem 'rails-dev-tweaks'
-  #gem 'hpricot'
-  #gem 'rcov'
   gem 'database_cleaner'
   gem 'rspec-rails'
   gem 'factory_girl_rails'  
   gem 'forgery'
   gem 'rspec'
+  gem 'rspec-mocks'
+  gem 'rspec-activemodel-mocks'
   gem 'guard-cucumber'
   gem 'timecop'
   gem 'spring'

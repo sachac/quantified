@@ -2,12 +2,11 @@ class ClothingLog < ActiveRecord::Base
   belongs_to :user
   belongs_to :clothing, :counter_cache => true
   has_and_belongs_to_many :clothing_matches, \
-  :class_name => "ClothingLog", \
-  :join_table => "clothing_matches", \
-  :foreign_key => :clothing_log_a_id, \
-  :association_foreign_key => :clothing_log_b_id, \
-  :readonly => true
-
+                          :class_name => "ClothingLog", \
+                          :join_table => "clothing_matches", \
+                          :foreign_key => :clothing_log_a_id, \
+                          :association_foreign_key => :clothing_log_b_id
+  
   after_save :update_matches
   after_destroy :delete_matches
   validates_presence_of :date
@@ -101,4 +100,8 @@ class ClothingLog < ActiveRecord::Base
   end
 
   fires :new, :on => :create, :actor => :user, :secondary_subject => :clothing
+  private
+  def clothing_log_params
+    params.require(:clothing_id, :date).permit(:outfit_id)
+  end
 end

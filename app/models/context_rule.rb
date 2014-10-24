@@ -12,6 +12,6 @@ class ContextRule < ActiveRecord::Base
     super(options.update(:methods => [:stuff_name, :location_name]))
   end
 
-  scope :out_of_place, includes(:stuff).where('(stuff.location_id IS NULL OR stuff.location_id != context_rules.location_id)')
-  scope :in_place, includes(:stuff).where('stuff.location_id = context_rules.location_id')
+  scope :out_of_place, -> { includes(:stuff).where('(stuff.location_id IS NULL OR stuff.location_id != context_rules.location_id)').references(:stuff) }
+  scope :in_place, -> { includes(:stuff).where('stuff.location_id = context_rules.location_id').references(:stuff) }
 end

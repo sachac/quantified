@@ -1,5 +1,5 @@
 require 'spec_helper'
-describe LibraryItemsController do
+describe LibraryItemsController, :type => :controller  do
   before do
     @request.env["devise.mapping"] = Devise.mappings[:user]
   end
@@ -72,8 +72,8 @@ describe LibraryItemsController do
     end
     describe 'POST bulk' do
       it "renews" do
-        TorontoLibrary.any_instance.should_receive(:renew_items)
-        TorontoLibrary.any_instance.should_receive(:refresh_items)
+        expect_any_instance_of(TorontoLibrary).to receive(:renew_items)
+        expect_any_instance_of(TorontoLibrary).to receive(:refresh_items)
         post :bulk, op: 'Renew', bulk: [ @library_item.id ]
       end
       it "makes public" do

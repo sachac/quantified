@@ -1,11 +1,11 @@
 class HomeController < ApplicationController
-  skip_authorization_check :only => [:feedback, :send_feedback]
+  skip_authorization_check :only => [:feedback, :send_feedback, :privacy]
   def index
     authorize! :view_dashboard, current_account
     flash.keep
     @clothing_today = ClothingLog.where('date = ?', Time.zone.now.to_date)
     if current_account then
-      @clothing_logs = current_account.clothing_logs.select('clothing_logs.date, clothing.clothing_logs_count, clothing.last_worn, clothing.image_file_name').includes(:clothing).where('date >= ? and date <= ?', Time.zone.now.to_date - 1.week, Date.today).order('date, outfit_id DESC, clothing.clothing_type')
+      @clothing_logs = current_account.clothing_logs.select('clothing_logs.date, clothing.clothing_logs_count, clothing.last_worn, clothing.image_file_name').includes(:clothing).references(:clothing).where('date >= ? and date <= ?', Time.zone.now.to_date - 1.week, Date.today).order('date, outfit_id DESC, clothing.clothing_type')
       @clothing_tags = current_account.clothing.tag_counts_on(:tags).sort_by(&:name)
       @by_date = current_account.clothing_logs.by_date(@clothing_logs)
       @dates = 7.downto(0).collect { |i| Time.zone.now.to_date - i.days }
@@ -38,5 +38,9 @@ class HomeController < ApplicationController
       @email = params[:email].blank? ? (current_user ? current_user.email : '') : params[:email]
       render 'feedback'
     end
+  end
+
+  def privacy
+    render 'privacy'
   end
 end

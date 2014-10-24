@@ -1,5 +1,5 @@
 require 'spec_helper'
-describe Api::V1::RecordsController do
+describe Api::V1::RecordsController, :type => :controller  do
   describe 'POST create' do
     before do
       @request.env["devise.mapping"] = Devise.mappings[:user]

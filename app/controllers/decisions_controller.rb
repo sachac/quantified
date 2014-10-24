@@ -23,7 +23,7 @@ class DecisionsController < ApplicationController
   # POST /decisions
   # POST /decisions.xml
   def create
-    @decision.user = current_account
+    @decision = current_account.decisions.new(decision_params)
     if @decision.save
       add_flash :notice, I18n.t('decision.created')
     end
@@ -34,7 +34,7 @@ class DecisionsController < ApplicationController
   # PUT /decisions/1.xml
   def update
     params[:decision].delete(:user_id)
-    if @decision.update_attributes(params[:decision])
+    if @decision.update_attributes(decision_params)
       add_flash :notice, I18n.t('decision.updated')
     end
     respond_with @decision
@@ -48,5 +48,10 @@ class DecisionsController < ApplicationController
       format.html { redirect_to(decisions_url) }
       format.any  { head :ok }
     end
+  end
+
+  private
+  def decision_params
+    params.require(:decision).permit(:notes, :notes_html, :date, :status, :name)
   end
 end

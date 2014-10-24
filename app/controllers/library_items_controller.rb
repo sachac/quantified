@@ -59,8 +59,7 @@ class LibraryItemsController < ApplicationController
   # POST /library_items.xml
   def create
     authorize! :create, LibraryItem
-    @library_item = current_account.library_items.new(params[:library_item])
-    @library_item.user_id = current_account.id
+    @library_item = current_account.library_items.new(library_item_params)
     add_flash :notice => I18n.t('library_item.created') if @library_item.save
     respond_with @library_item
   end
@@ -71,7 +70,7 @@ class LibraryItemsController < ApplicationController
     @library_item = current_account.library_items.find(params[:id])
     authorize! :update, @library_item
     params[:library_item].delete(:user_id)
-    if @library_item.update_attributes(params[:library_item])
+    if @library_item.update_attributes(library_item_params)
       add_flash :notice, t('library_item.updated')
     end
     respond_with @library_item, location: params[:destination] || request.env['HTTP_REFERER'] || library_items_path
@@ -148,5 +147,10 @@ class LibraryItemsController < ApplicationController
     @tags = @library_items.tag_counts_on(:tags).sort_by(&:name)
     @library_items = @library_items.order(:due, :status)
     respond_with @library_items
+  end
+
+  private
+  def library_item_params
+    params.require(:library_item).permit(:due, :status, :public, :notes, :details, :price, :title)
   end
 end

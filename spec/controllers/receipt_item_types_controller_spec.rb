@@ -1,5 +1,5 @@
 require 'spec_helper'
-describe ReceiptItemTypesController do
+describe ReceiptItemTypesController, :type => :controller  do
   before do
     @request.env["devise.mapping"] = Devise.mappings[:user]
     @user = create(:user, :confirmed)
@@ -64,14 +64,14 @@ describe ReceiptItemTypesController do
     describe "with invalid params" do
       it "assigns a newly created but unsaved receipt_item_type as @receipt_item_type" do
         # Trigger the behavior that occurs when invalid params are submitted
-        ReceiptItemType.any_instance.stub(:save).and_return(false)
+        allow_any_instance_of(ReceiptItemType).to receive(:save).and_return(false)
         post :create, {:receipt_item_type => { "receipt_name" => "invalid value" }}
         assigns(:receipt_item_type).should be_a_new(ReceiptItemType)
       end
 
       it "re-renders the 'new' template" do
         # Trigger the behavior that occurs when invalid params are submitted
-        ReceiptItemType.any_instance.stub(:save).and_return(false)
+        allow_any_instance_of(ReceiptItemType).to receive(:save).and_return(false)
         post :create, {:receipt_item_type => { "receipt_name" => "invalid value" }}
         flash[:notice].should be_blank
       end
@@ -86,7 +86,7 @@ describe ReceiptItemTypesController do
         # specifies that the ReceiptItemType created on the previous line
         # receives the :update_attributes message with whatever params are
         # submitted in the request.
-        ReceiptItemType.any_instance.should_receive(:update_attributes).with({ "receipt_name" => "MyString" })
+        allow_any_instance_of(ReceiptItemType).to receive(:update_attributes).with({ "receipt_name" => "MyString" })
         put :update, {:id => receipt_item_type.to_param, :receipt_item_type => { "receipt_name" => "MyString" }}
       end
 
@@ -107,7 +107,7 @@ describe ReceiptItemTypesController do
       it "assigns the receipt_item_type as @receipt_item_type" do
         receipt_item_type = create(:receipt_item_type, user: @user)
         # Trigger the behavior that occurs when invalid params are submitted
-        ReceiptItemType.any_instance.stub(:save).and_return(false)
+        allow_any_instance_of(ReceiptItemType).to receive(:save).and_return(false)
         put :update, {:id => receipt_item_type.to_param, :receipt_item_type => { "receipt_name" => "invalid value" }}
         assigns(:receipt_item_type).should eq(receipt_item_type)
       end
@@ -115,7 +115,7 @@ describe ReceiptItemTypesController do
       it "re-renders the 'edit' template" do
         receipt_item_type = create(:receipt_item_type, user: @user)
         # Trigger the behavior that occurs when invalid params are submitted
-        ReceiptItemType.any_instance.stub(:save).and_return(false)
+        allow_any_instance_of(ReceiptItemType).to receive(:save).and_return(false)
         put :update, {:id => receipt_item_type.to_param, :receipt_item_type => { "receipt_name" => "invalid value" }}
         flash[:notice].should be_blank
       end

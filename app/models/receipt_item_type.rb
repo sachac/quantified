@@ -1,8 +1,8 @@
 class ReceiptItemType < ActiveRecord::Base
-  attr_accessible :friendly_name, :receipt_name, :receipt_item_category_id
   has_many :receipt_items
   belongs_to :user
   belongs_to :receipt_item_category
+
   
   def self.map(user, receipt_name, friendly_name, category_id = nil)
     type = user.receipt_item_types.create(friendly_name: friendly_name,
@@ -25,5 +25,8 @@ class ReceiptItemType < ActiveRecord::Base
     user.receipt_items.where(receipt_item_type_id: nil).select('name, count(name) AS name_count').group(:name).order('name_count DESC')
   end
 
-  
+  private
+  def receipt_item_params
+    params.require(:receipt_name).permit(:friendly_name, :receipt_item_category_id)
+  end
 end

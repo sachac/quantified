@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "timeline_events/new.html.haml" do
+describe "timeline_events/new.html.haml", type: :view do
   before(:each) do
     assign(:timeline_event, stub_model(TimelineEvent).as_new_record)
   end

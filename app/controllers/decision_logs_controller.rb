@@ -5,7 +5,7 @@ class DecisionLogsController < ApplicationController
   respond_to :html, :json, :xml, :csv
   def index
     authorize! :manage_account, current_account
-    @decision_logs = current_account.decision_logs.all
+    @decision_logs = current_account.decision_logs
     respond_with @decision_logs
   end
 
@@ -35,8 +35,7 @@ class DecisionLogsController < ApplicationController
   # POST /decision_logs.xml
   def create
     authorize! :manage_account, current_account
-    @decision_log = DecisionLog.new(params[:decision_log])
-    @decision_log.user = current_account
+    @decision_log = current_account.decision_logs.new(decision_log_params)
     if @decision_log.save
       add_flash :notice, I18n.t('decision_log.created')
     end
@@ -48,7 +47,7 @@ class DecisionLogsController < ApplicationController
   def update
     @decision_log = current_account.decision_logs.find(params[:id])
     params[:decision_log].delete(:user_id)
-    if @decision_log.update_attributes(params[:decision_log])
+    if @decision_log.update_attributes(decision_log_params)
       add_flash :notice, I18n.t('decision_log.updated')
     end
     respond_with @decision_log
@@ -62,5 +61,10 @@ class DecisionLogsController < ApplicationController
       format.html { redirect_to(decision_logs_url) }
       format.any  { head :ok }
     end
+  end
+
+  private
+  def decision_log_params
+    params.permit(:decision, :notes, :decision_id)
   end
 end
