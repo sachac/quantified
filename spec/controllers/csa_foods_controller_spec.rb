@@ -67,7 +67,7 @@ describe CsaFoodsController, :type => :controller  do
       expect(flash[:notice]).to eq I18n.t('csa_food.logged')
     end
     it "deals with errors" do
-      allow_any_instance_of(CsaFood).to receive(:log).and_return(false)
+      allow(CsaFood).to receive(:log).and_return(false)
       post :quick_entry, food: 'potatoes', quantity: 1, unit: 'kg'
       expect(response).to_not be_success
     end

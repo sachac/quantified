@@ -90,7 +90,7 @@
       .date= current_user ? (link_to c.date, clothing_log_path(c)) : c.date
       .clothes
         - if c.date
-          - current_account.clothing_logs.find(:all, :select => 'clothing_logs.id, clothing_id, clothing.name', :order => 'clothing.name', :joins => 'INNER JOIN clothing ON clothing_logs.clothing_id=clothing.id', :conditions => ["date >= ? and date < ? and outfit_id=?", c.date, c.date + 1.day, c.outfit_id]).each do |x| 
+          - current_account.clothing_logs.select('clothing_logs.id, clothing_id, clothing.name').order('clothing.name').joins(:clothing).where('clothing_logs.clothing_id=clothing.id AND date >= ? AND date < ? AND outfit_id=?', c.date, c.date + 1.day, c.outfit_id).each do |x| 
             .item= clothing_thumbnail x.clothing, {:size => :medium, :path => current_user ? clothing_log_path(x) : clothing_path(x.clothing)}
 
 .clear-both

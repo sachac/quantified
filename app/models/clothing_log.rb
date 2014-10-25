@@ -100,8 +100,4 @@ class ClothingLog < ActiveRecord::Base
   end
 
   fires :new, :on => :create, :actor => :user, :secondary_subject => :clothing
-  private
-  def clothing_log_params
-    params.require(:clothing_id, :date).permit(:outfit_id)
-  end
 end

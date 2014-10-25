@@ -11,6 +11,14 @@ When /^I go to the dashboard$/ do
   visit root_path
 end
 
+When(/^I go to the privacy page$/) do
+  visit privacy_path
+end
+
+Then(/^I should see the privacy page$/) do
+  page.should have_content 'privacy'
+end
+
 When /^I switch to the mobile layout$/ do
   click_link I18n.t('app.layout.mobile')
 end

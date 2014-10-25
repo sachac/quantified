@@ -26,6 +26,13 @@ GIT
     rack-offline (0.6.4)
 
 GIT
+  remote: https://github.com/ekubal/formtastic-bootstrap
+  revision: bbe573b64ea70475ef60f19c371a5f84189f142e
+  specs:
+    formtastic-bootstrap (3.0.0)
+      formtastic (>= 3.0.0)
+
+GIT
   remote: https://github.com/glejeune/Ruby-Graphviz.git
   revision: 6659c3c21060c5c67375642631d9aac284a93149
   specs:
@@ -44,13 +51,6 @@ GIT
     cucumber_factory (1.9.2)
       activesupport
       cucumber
-
-GIT
-  remote: https://github.com/mjbellantoni/formtastic-bootstrap.git
-  revision: 6bb54e3f8e71c77d0755f443519496819dedfbd2
-  specs:
-    formtastic-bootstrap (3.0.0)
-      formtastic (>= 2.2)
 
 GIT
   remote: https://github.com/tma/acts-as-tree-with-dotted-ids.git

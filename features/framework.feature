@@ -12,3 +12,6 @@ Feature: Framework
     Given there is a user with the username "test1"
     When I go to the context creation page
     Then I should not have access
+  Scenario: Get the privacy page
+    When I go to the privacy page
+    Then I should see the privacy page

@@ -67,10 +67,5 @@ class ReceiptItem < ActiveRecord::Base
     total
     notes
   end
-
-  private
-  def receipt_item_params
-    params.permit(:total, :name, :date, :filename, :notes, :quantity, :source_id, :source_name, :store, :unit, :unit_price)
-  end
     
 end

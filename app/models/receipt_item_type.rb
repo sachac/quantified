@@ -25,8 +25,4 @@ class ReceiptItemType < ActiveRecord::Base
     user.receipt_items.where(receipt_item_type_id: nil).select('name, count(name) AS name_count').group(:name).order('name_count DESC')
   end
 
-  private
-  def receipt_item_params
-    params.require(:receipt_name).permit(:friendly_name, :receipt_item_category_id)
-  end
 end

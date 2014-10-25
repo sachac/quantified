@@ -8,9 +8,9 @@
   = f.inputs do
     = f.input :date, :as => :string
     = f.input :outfit_id
-    = f.input :clothing, :collection => current_account.clothing.order('name').map { |x| [ x.name, x.id ] }
+    = f.input :clothing, :as => :select, :collection => current_account.clothing.order('name').map { |x| [ x.name, x.id ] }
   .control-group
     .controls
       = f.submit 'Save', :class => 'btn btn-primary'
       - if !@clothing_log.new_record? and can? :delete, @clothing_log
-        = link_to I18n.t('app.general.delete'), clothing_log_path(@clothing_log), :method => :delete, :confirm => I18n.t('general.are_you_sure'), :class => 'btn'
+        = link_to I18n.t('app.general.delete'), clothing_log_path(@clothing_log), :method => :delete, :data => {:confirm => I18n.t('general.are_you_sure')}, :class => 'btn'
