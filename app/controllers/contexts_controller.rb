@@ -45,13 +45,16 @@ class ContextsController < ApplicationController
     authorize! :create, Context
     # Change context_rules_attributes to stuff and locations
     rules = params[:context].delete :context_rules_attributes if params[:context] 
-    @context = current_account.contexts.new(params[:context])
+    @context = current_account.contexts.new(context_params)
     if rules
       rules.each do |k, v|
         next if v['stuff'].blank? or v['location'].blank?
-        stuff = @account.stuff.find_or_create_by_name(v['stuff'])
+        stuff = @account.stuff.find_or_create_by(name: v['stuff'])
         location = @account.get_location(v['location'])
-        @context.context_rules.build(:stuff => stuff, :location => location)
+        rule = @context.context_rules.new
+        rule.stuff = stuff
+        rule.location = location
+        @context.context_rules << rule
       end
     end
     if @context.save
@@ -146,24 +149,8 @@ class ContextsController < ApplicationController
   
   private
   def context_params
-    #params.permit(:name, :rules, context_rules_attributes: [:stuff_id, :location_id, :context_id, :stuff, :location, :context, :id, :_destroy])
-    #params.require(:context).permit(:name, :rules, context_rules_attributes: [:stuff_id, :location_id, :context_id, :stuff, :location, :context, :id, :_destroy])
-
-    params.require(:context).tap do |whitelisted|
-      whitelisted[:context_rules_attributes] ||= {}
-      whitelisted[:name] = params[:context][:name]
-      whitelisted[:id] = params[:context][:id]
-      params[:context][:context_rules_attributes].each do |k, v|
-        whitelisted[:context_rules_attributes][k] = {
-          stuff_id: v[:stuff_id],
-          location_id: v[:location_id],
-          stuff: v[:stuff],
-          location: v[:location],
-          id: v[:id],
-          _destroy: v[:_destroy]
-        }
-      end
-    end
+    params.require(:context).permit(:name)
   end
+
   
 end

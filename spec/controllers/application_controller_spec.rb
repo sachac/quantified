@@ -37,6 +37,7 @@ describe ApplicationController, :type => :controller do
       assigns(:user).username.should == user.username
     end
   end
+  
   describe "#go_to" do
     it "redirects to a destination if specified" do
       allow(subject).to receive(:params).and_return({destination: time_dashboard_path})
@@ -74,6 +75,26 @@ describe ApplicationController, :type => :controller do
         allow(subject).to receive(:params).and_return({})
         subject.send(:after_sign_in_path_for, create(:user, :confirmed)).should == root_path
       end
+    end
+  end
+
+  describe '#authenticate_user_from_token!' do
+    it "handles valid tokens" do
+      user = create(:user, :confirmed)
+      user.ensure_authentication_token
+      user.save
+      allow(subject).to receive(:params).and_return({user_token: user.authentication_token})
+      controller.instance_eval do
+        authenticate_user_from_token!
+      end
+      expect(controller.current_account).to eq(user)
+    end
+    it "handles invalid tokens" do
+      allow(subject).to receive(:params).and_return({user_token: 'invalid'})
+      controller.instance_eval do
+        authenticate_user_from_token!
+      end
+      expect(controller.current_account).to be_nil
     end
   end
 end

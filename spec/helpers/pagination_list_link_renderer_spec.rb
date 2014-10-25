@@ -3,10 +3,10 @@ require 'will_paginate/array'
 
 describe Renderer, :type => :helper do
   before do
-    5.times do
+    30.times do
       create(:user, :confirmed)
     end
-    @x = User.paginate(page: 2, per_page: 2)
+    @x = User.paginate(page: 2, per_page: 1)
     allow(helper).to receive(:params).and_return({controller: 'users', action: 'index'})
   end
   describe '#to_html' do

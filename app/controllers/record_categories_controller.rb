@@ -288,6 +288,6 @@ class RecordCategoriesController < ApplicationController
 
   private
   def record_category_params
-    params.require(:record_category).permit(:name, :category_type)
+    params.require(:record_category).permit(:name, :category_type, :parent_id, :data, :full_name, :color, :active)
   end
 end

@@ -50,7 +50,7 @@ class ClothingController < ApplicationController
     @matches = Array.new
     @previous_matches = Array.new
     list ||= Hash.new
-    @clothing.clothing_matches.count(:group => :clothing_b_id).sort { |a,b| b[1] <=> a[1] }.each do |id, count| 
+    @clothing.clothing_matches.group(:clothing_b_id).distinct.count.sort { |a,b| b[1] <=> a[1] }.each do |id, count| 
       item = current_account.clothing.find_by_id(id)
       if item and item.status == 'active'
         list[id] ||= item
@@ -99,7 +99,7 @@ class ClothingController < ApplicationController
   # POST /clothing.xml
   def create
     authorize! :create, Clothing
-    @clothing = Clothing.new(params[:clothing])
+    @clothing = Clothing.new(clothing_params)
     @clothing.user_id = current_account.id
     if @clothing.save
       add_flash :notice, 'Clothing was successfully created.'
@@ -114,7 +114,7 @@ class ClothingController < ApplicationController
     authorize! :update, @clothing
     params[:clothing].delete(:user_id)
 
-    if @clothing.update_attributes(params[:clothing])
+    if @clothing.update_attributes(clothing_params)
       add_flash :notice, 'Clothing was successfully updated.'
     end
     respond_with @clothing
@@ -307,4 +307,8 @@ class ClothingController < ApplicationController
     redirect_to @clothing
   end
 
+  private
+  def clothing_params
+    params.require(:clothing).permit(:name, :color, :clothing_type, :notes, :labeled, :status, :hue, :saturation, :brightness, :cost, :last_worn, :tag_list)
+  end    
 end

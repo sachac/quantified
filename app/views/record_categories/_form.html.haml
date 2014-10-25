@@ -30,10 +30,10 @@
                 %td= text_field_tag "record_category[data][][key]", datum["key"]
                 %td= text_field_tag "record_category[data][][label]", datum["label"]
                 %td= select_tag "record_category[data][][type]", options_for_select([["One line of text", "string"], ["Multiple lines of text", "text"]], datum["type"])
-    = f.input :color
+    = f.input :color, :as => :text
   .control-group
     .controls
       = f.submit t('general.save'), :class => 'btn btn-primary'
       - if @record_category
-        = link_to t('general.delete'), @record_category, :class => 'btn', :method => :delete, :confirm => t('general.are_you_sure')
+        = link_to t('general.delete'), @record_category, :class => 'btn', :method => :delete, :data => {:confirm => t('general.are_you_sure')}
     

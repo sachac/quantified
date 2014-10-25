@@ -202,9 +202,4 @@ class User < ActiveRecord::Base
       break token unless User.where(authentication_token: token).first
     end
   end
-  
-  def user_params
-    # Setup accessible (or protected) attributes for your model
-    params.require(:email).permit(:username, :password, :password_confirmation, :login)
-  end
 end

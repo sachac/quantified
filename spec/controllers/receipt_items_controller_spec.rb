@@ -70,14 +70,14 @@ describe ReceiptItemsController, :type => :controller  do
     describe "with invalid params" do
       it "assigns a newly created but unsaved receipt_item as @receipt_item" do
         # Trigger the behavior that occurs when invalid params are submitted
-        ReceiptItem.any_instance.stub(:save).and_return(false)
+        allow_any_instance_of(ReceiptItem).to receive(:save).and_return(false)
         post :create, {:receipt_item => { "filename" => "invalid value" }}
         assigns(:receipt_item).should be_a_new(ReceiptItem)
       end
 
       it "re-renders the 'new' template" do
         # Trigger the behavior that occurs when invalid params are submitted
-        ReceiptItem.any_instance.stub(:save).and_return(false)
+        allow_any_instance_of(ReceiptItem).to receive(:save).and_return(false)
         post :create, {:receipt_item => { "filename" => "invalid value" }}
         flash[:notice].should be_nil
       end
@@ -92,7 +92,7 @@ describe ReceiptItemsController, :type => :controller  do
         # specifies that the ReceiptItem created on the previous line
         # receives the :update_attributes message with whatever params are
         # submitted in the request.
-        ReceiptItem.any_instance.should_receive(:update_attributes).with({ "filename" => "MyString" })
+        expect_any_instance_of(ReceiptItem).to receive(:update_attributes).with({ "filename" => "MyString" })
         put :update, {:id => receipt_item.to_param, :receipt_item => { "filename" => "MyString" }}
       end
 
@@ -113,7 +113,7 @@ describe ReceiptItemsController, :type => :controller  do
       it "assigns the receipt_item as @receipt_item" do
         receipt_item = create(:receipt_item, user: @user)
         # Trigger the behavior that occurs when invalid params are submitted
-        ReceiptItem.any_instance.stub(:save).and_return(false)
+        allow_any_instance_of(ReceiptItem).to receive(:save).and_return(false)
         put :update, {:id => receipt_item.to_param, :receipt_item => { "filename" => "invalid value" }}
         assigns(:receipt_item).should eq(receipt_item)
       end
@@ -121,7 +121,7 @@ describe ReceiptItemsController, :type => :controller  do
       it "re-renders the 'edit' template" do
         receipt_item = create(:receipt_item, user: @user)
         # Trigger the behavior that occurs when invalid params are submitted
-        ReceiptItem.any_instance.stub(:save).and_return(false)
+        allow_any_instance_of(ReceiptItem).to receive(:save).and_return(false)
         put :update, {:id => receipt_item.to_param, :receipt_item => { "filename" => "invalid value" }}
         flash[:notice].should be_nil
       end
@@ -168,7 +168,7 @@ describe ReceiptItemsController, :type => :controller  do
       assigns(:outcome)[:updated].size.should == 1
     end
     it "confirms the data and fails records" do
-      ReceiptItem.any_instance.stub(:save).and_return(false)
+      allow_any_instance_of(ReceiptItem).to receive(:save).and_return(false)
       post :batch_entry, batch: text, confirm_data: 'confirmed'
       assigns(:outcome)[:failed].size.should == 1
     end

@@ -41,6 +41,6 @@ class HomeController < ApplicationController
   end
 
   def privacy
-    render 'privacy'
+    render 'terms_privacy'
   end
 end

@@ -9,7 +9,7 @@ class ClothingLogsController < ApplicationController
     params[:end] ||= Time.zone.now.strftime('%Y-%m-%d')
     prepare_filters [:date_range]
     @range = Date.parse(params[:start])..Date.parse(params[:end])
-    @clothing_logs = current_account.clothing_logs.where(:date => @range).includes(:clothing).order("date DESC, outfit_id DESC, clothing.clothing_type")
+    @clothing_logs = current_account.clothing_logs.where(:date => @range).includes(:clothing).references(:clothing).order("date DESC, outfit_id DESC, clothing.clothing_type")
     @by_date = Hash.new
     @clothing_logs.each do |l|
       @by_date[l.date] ||= Array.new
@@ -25,7 +25,7 @@ class ClothingLogsController < ApplicationController
     params[:start] ||= current_account.clothing_matches.minimum(:date)
     params[:end] ||= Time.zone.now.tomorrow.strftime('%Y-%m-%d')
     range = Time.zone.parse(params[:start])..Time.zone.parse(params[:end])
-    @clothing_matches = current_account.clothing_matches.range(range).includes(:clothing_a, :clothing_b).order('clothing_log_date DESC')
+    @clothing_matches = current_account.clothing_matches.range(range).includes(:clothing_a, :clothing_b).references(:clothing_a, :clothing_b).order('clothing_log_date DESC')
     @clothing_matches = @clothing_matches.paginate(page: params[:page]) unless request.format.csv?
     respond_with_data @clothing_matches
   end
@@ -97,7 +97,7 @@ class ClothingLogsController < ApplicationController
     @clothing_log = current_account.clothing_logs.find(params[:id])
     authorize! :update, @clothing_log
     params[:clothing_log].delete(:user_id)
-    @clothing_log.update_attributes(clothing_log_params)
+    @clothing_log.update_attributes(clothing_log_params[:clothing_log])
     respond_with @clothing_log
   end
 
@@ -113,7 +113,7 @@ class ClothingLogsController < ApplicationController
   def by_date
     authorize! :view_clothing_logs, current_account
     @date = Time.zone.parse(params[:date])
-    @clothing_logs = current_account.clothing_logs.where('date >= ? AND date < ?', @date.to_date, @date.to_date + 1.day).includes(:clothing).order('outfit_id, clothing.clothing_type')
+    @clothing_logs = current_account.clothing_logs.where('date >= ? AND date < ?', @date.to_date, @date.to_date + 1.day).includes(:clothing).references(:clothing).order('outfit_id, clothing.clothing_type')
     @previous_date = @date - 1.day
     @next_date = @date + 1.day
     respond_with @clothing_logs
