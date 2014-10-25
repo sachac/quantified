@@ -4,7 +4,7 @@
       %p= message
 = form_for(resource, :as => resource_name, :url => session_path(resource_name), :html => { :class => "form login form-horizontal" }) do |f|
   .group.wat-cf
-    .left= f.label :login, :class => "label right"
+    .left= f.label :login, :class => "label right label-default"
     .right= f.text_field :login, :class => "text_field"
   .group.wat-cf
     .left= f.label :password, :class => "label right"
@@ -16,6 +16,6 @@
         = f.label :remember_me, :class => "checkbox"
   .group.wat-cf
     .right
-      %button.button{ type: "submit", class: 'btn' }
+      %button.button{ type: "submit", class: 'btn btn-default' }
         Log in
 = render :partial => "devise/shared/links", :locals => {:controller_name => 'sessions'}

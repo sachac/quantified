@@ -1,10 +1,10 @@
 .navbar
   .navbar-inner
     - if current_account
-      = link_to "#{current_account.username.blank? ? current_account.email : current_account.username}", root_path, :class => 'brand'
+      = link_to "#{current_account.username.blank? ? current_account.email : current_account.username}", root_path, :class => 'navbar-brand'
     - else
-      = link_to "quantified awesome",root_path, :class => 'brand'
-    %ul.nav
+      = link_to "quantified awesome",root_path, :class => 'navbar-brand'
+    %ul.nav.navbar-nav
       %li{:class => active_menu('/stuff')}= link_to 'stuff', stuff_index_path
       %li{:class => active_menu('/clothing')}= link_to 'clothing', clothing_index_path
       - if current_account and current_account.demo?
