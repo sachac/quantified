@@ -55,10 +55,10 @@ Home::Application.configure do
    config.assets.digest = true
   config.action_mailer.default_url_options = { :host => "quantifiedawesome.com" }
 
-  config.after_initialize do
-    config.middleware.use ExceptionNotifier,
-    :email_prefix => "[Quantified Awesome Exception] ",
-    :sender_address => %{"Exception Notifier" <sacha@quantifiedawesome.com>},
-    :exception_recipients => %w{sacha@quantifiedawesome.com}
-  end
+#  config.after_initialize do
+#    config.middleware.use ExceptionNotifier,
+#    :email_prefix => "[Quantified Awesome Exception] ",
+#    :sender_address => %{"Exception Notifier" <sacha@quantifiedawesome.com>},
+#    :exception_recipients => %w{sacha@quantifiedawesome.com}
+#  end
 end
