@@ -81,7 +81,7 @@ gem 'sprockets', '~> 2.11.0'
 gem 'autoprefixer-rails'
 
 group :development do
-  gem 'compass-rails'
+  gem 'compass-rails', '~> 1.1.2'
   gem 'coffee-rails', '~> 4'
   gem 'uglifier'
   gem 'libv8', '~> 3.11'
