@@ -28,7 +28,7 @@ Tags:
   = form_tag clothing_bulk_path, class: 'form-inline' do
     - if managing?
       = select_tag 'op', options_for_select(['Store', 'Donate', 'Activate', 'Yesterday', 'Today', 'Tomorrow'])
-      = submit_tag 'Save changes', :class => 'btn'
+      = submit_tag 'Save changes', :class => 'btn btn-default'
     %table.table.table-bordered.table-condensed.table-responsive
       %tr
         - if can? :update, Clothing
@@ -65,5 +65,5 @@ Tags:
               = edit_icon edit_clothing_path(clothing)
               = delete_icon clothing_path(clothing)
     - if managing?
-      = submit_tag 'Save changes', :class => 'btn'
+      = submit_tag 'Save changes', :class => 'btn btn-default'
 

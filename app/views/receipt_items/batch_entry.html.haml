@@ -27,7 +27,7 @@
       %td
   %h3 1. Enter data
   = text_area_tag 'batch', params[:batch], required: true, style: 'width: 100%; margin-bottom: 10px', rows: @result ? 5 : 10
-  = submit_tag 'Update', :class => params[:batch] ? 'btn' : 'btn btn-primary'
+  = submit_tag 'Update', :class => params[:batch] ? 'btn btn-default' : 'btn btn-primary'
   - if @result
     %h3 2. Confirm data
     = submit_tag 'Confirm batch creation', name: 'confirm_data', class: 'btn btn-primary'

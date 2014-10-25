@@ -35,5 +35,5 @@
     .controls
       = f.submit t('general.save'), :class => 'btn btn-primary'
       - if @record_category
-        = link_to t('general.delete'), @record_category, :class => 'btn', :method => :delete, :data => {:confirm => t('general.are_you_sure')}
+        = link_to t('general.delete'), @record_category, :class => 'btn btn-default', :method => :delete, :data => {:confirm => t('general.are_you_sure')}
     

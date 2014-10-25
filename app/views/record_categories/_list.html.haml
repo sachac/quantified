@@ -7,7 +7,7 @@
           %tr
             %td{:width => 100}
               - if c.activity? or c.record?
-                = link_to("Track", track_time_path(:category_id => c.id), :class => 'btn', :method => :post)
+                = link_to("Track", track_time_path(:category_id => c.id), :class => 'btn btn-default', :method => :post)
             %td
               = link_to (show_all ? c.full_name : c.name), c
               - if c.list?

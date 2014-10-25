@@ -15,7 +15,7 @@
     = "#{pluralize days, "day"} until next delivery = "
     = "#{'%0.1f' % (remaining * 1.0 / days)}kg per day"
     - if can? :update, CsaFood
-      = submit_tag 'Save disposition notes', :class => 'btn'
+      = submit_tag 'Save disposition notes', :class => 'btn btn-default'
   %table.table.table-bordered
     %tr
       %th Date received

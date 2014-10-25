@@ -2,7 +2,7 @@
 <% form_tag class: 'form-inline' do %>
   Start: <%= text_field_tag :start, @start.strftime("%Y-%m-%d"), :class => 'datepicker' %>
   End: <%= text_field_tag :end, @end.strftime("%Y-%m-%d"), :class => 'datepicker' %>
-  <%= submit_tag "Go", class: 'btn' %>
+  <%= submit_tag "Go", class: 'btn btn-default' %>
 <% end %>
 <% radius = 200 %>
 <div class="day">

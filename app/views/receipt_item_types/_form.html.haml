@@ -8,4 +8,4 @@
       .controls
         = f.submit t('general.save'), class: 'btn btn-primary'
         - if !@receipt_item_type.new_record?
-          = link_to t('general.delete'), @receipt_item_type, class: 'btn', method: :delete, confirm: t('general.are_you_sure')
+          = link_to t('general.delete'), @receipt_item_type, class: 'btn btn-default', method: :delete, confirm: t('general.are_you_sure')
