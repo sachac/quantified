@@ -1,8 +1,8 @@
 source 'http://rubygems.org'
 
 gem 'rack-offline', :git => 'git://github.com/wycats/rack-offline.git'
-gem 'rails', '~> 4.0'
-gem 'haml-rails', '= 0.4'
+gem 'rails', '4.0'
+gem 'haml-rails', '~> 0.4'
 # Bundle edge Rails instead:
 #gem 'rails', :git => 'git://github.com/rails/rails.git'
 #gem 'arel', :git => 'git://github.com/rails/arel.git'
@@ -20,7 +20,7 @@ gem 'will_paginate'
 gem 'color'
 gem 'ruby-graphviz', :git => "https://github.com/glejeune/Ruby-Graphviz.git"
 gem 'narray'
-gem 'formtastic'
+gem 'formtastic', '~> 3'
 gem 'jquery-rails', '~> 2.1.4'
 gem 'rails4-autocomplete'
 gem 'formtastic-bootstrap', :git => 'https://github.com/ekubal/formtastic-bootstrap'
@@ -76,7 +76,7 @@ gem 'rails-settings-cached', '~> 0.3.1'
 gem 'subdomain-fu', :git => "git://github.com/nhowell/subdomain-fu.git"
 gem 'fastercsv'
 gem 'bootstrap-sass', '~> 3.2.0'
-gem 'sass-rails', '4.0.2'
+gem 'sass-rails', '~> 4.0.2'
 gem 'sprockets', '~> 2.11.0'
 gem 'autoprefixer-rails'
 

@@ -1,6 +1,7 @@
 Home::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
 
+  config.eager_load = true
   # The production environment is meant for finished, "live" apps.
   # Code is not reloaded between requests
   config.cache_classes = true
@@ -44,11 +45,11 @@ Home::Application.configure do
   # Send deprecation notices to registered listeners
   config.active_support.deprecation = :notify
 
- config.assets.precompile += %w( search.js offline.js mobile.css offline.css )
+ # config.assets.precompile += %w( search.js offline.js mobile.css offline.css )
 
   # Specifies the header that your server uses for sending files
    # Disable Rails's static asset server (Apache or nginx will already do this)
-   config.serve_static_assets = false
+   config.serve_static_assets = true
 
    config.assets.compress = true
    config.assets.compile = true

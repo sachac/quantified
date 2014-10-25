@@ -11,7 +11,7 @@
       %td
         = goal.label
         - if !goal.active?
-          %span{class: 'label'} Inactive
+          %span{class: 'label label-default'} Inactive
       %td= render 'explain_goal', goal: goal
       %td= action_list goal
 
