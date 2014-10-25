@@ -81,6 +81,6 @@
           %span.label{:class => 'label ' + library_class}
             = due.strftime('%a %b %e')
         - if can? :refresh_library, current_account  
-          = link_to "refresh", library_refresh_path, :class => 'btn', :style => 'margin-left: 5px'
+          = link_to "refresh", library_refresh_path, :class => 'btn btn-default', :style => 'margin-left: 5px'
 - else
   No accounts yet.

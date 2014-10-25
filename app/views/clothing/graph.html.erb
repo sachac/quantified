@@ -3,7 +3,7 @@
 <% form_tag(class: 'form-inline') do %>
   Start: <%= text_field_tag :start, @start.strftime("%Y-%m-%d") %>
   End: <%= text_field_tag :end, @end.strftime("%Y-%m-%d") %>
-  <%= submit_tag "Go", class: 'btn' %>
+  <%= submit_tag "Go", class: 'btn btn-default' %>
 <% end %>
 
 <table><tr><th>ID</th><th>Name</th><th>Type</th></tr>

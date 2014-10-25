@@ -9,7 +9,7 @@
 - if @record_categories.length > 0
   - if managing?
     = render 'quick_record'
-    %p= link_to 'Create record category', new_record_category_path, :class => 'btn'
+    %p= link_to 'Create record category', new_record_category_path, :class => 'btn btn-default'
   = render 'list', list: @record_categories, show_all: show_all
 - else
   - if managing?

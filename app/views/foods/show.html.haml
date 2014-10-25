@@ -6,7 +6,7 @@
 
 = form_tag bulk_update_csa_foods_path do
   - if can? :update, CsaFood
-    = submit_tag 'Update records', class: 'btn'
+    = submit_tag 'Update records', class: 'btn btn-default'
   %table.table.table-bordered
     - @food.csa_foods.order('date_received DESC').each do |l|
       %tr

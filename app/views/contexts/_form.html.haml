@@ -22,4 +22,4 @@
     .controls
       = f.submit 'Save', :class => 'btn btn-primary'
       - unless @context.new_record?
-        = link_to 'Delete', context_path(@context), :method => :delete, :class => 'btn'
+        = link_to 'Delete', context_path(@context), :method => :delete, :class => 'btn btn-default'

@@ -4,10 +4,10 @@
 - if managing?
   - if @record_category.activity?
     - after_title do
-      = link_to(t('.start_activity'), track_record_category_path(:id => @record_category.id), :class => 'btn', :style => 'margin-left: 5px', :method => :post)
-      = link_to(t('goal.set'), new_goal_path(record_category_id: @record_category.id), class: 'btn', style: 'margin-left: 5px')
+      = link_to(t('.start_activity'), track_record_category_path(:id => @record_category.id), :class => 'btn btn-default', :style => 'margin-left: 5px', :method => :post)
+      = link_to(t('goal.set'), new_goal_path(record_category_id: @record_category.id), class: 'btn btn-default', style: 'margin-left: 5px')
   - if @record_category.record?
-    - after_title link_to(t('.record'), track_record_category_path(:id => @record_category.id), :class => 'btn', :style => 'margin-left: 5px', :method => :post)
+    - after_title link_to(t('.record'), track_record_category_path(:id => @record_category.id), :class => 'btn btn-default', :style => 'margin-left: 5px', :method => :post)
   
 %p
   = record_category_breadcrumbs(@record_category)
