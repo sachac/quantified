@@ -1,22 +1,22 @@
-= semantic_form_for @clothing, :html => {:class => 'form ' + (mobile? ? 'form-stacked' : 'form-horizontal')}  do |f|
+= simple_form_for @clothing, :html => {:class => 'form ' + (mobile? ? 'form-stacked' : 'form-horizontal')}  do |f|
   -if @clothing.errors.any?
     #error_explanation
       %h2= "#{pluralize(@clothing.errors.count, "error")} prohibited this clothing from being saved:"
       %ul
         - @clothing.errors.full_messages.each do |msg|
           %li= msg
-  = f.inputs do
+  .input
     = f.input :name, :input_html => { :autofocus => true }
-    .control-group
+    .form-group
       = label_tag :tag_list, "Tags", class: 'control-label'
-      .controls= f.text_field :tag_list
+      = f.text_field :tag_list, class: 'form-control'
     = f.input :clothing_type
     = f.input :image
     = f.input :status
     = f.input :cost
     = f.input :notes, :as => :text, :input_html => { :rows => 5 }
-  .control-group
-    .controls
+  .form-group
+    .col-sm-offset-2
       = f.submit I18n.t('app.general.save'), :class => 'btn btn-primary'
       - if !@clothing.new_record? and can? :delete, @clothing
         = link_to I18n.t('app.general.delete'), clothing_path(@clothing), :method => :delete, :data => {:confirm => I18n.t('general.are_you_sure')}, :class => 'btn btn-default'

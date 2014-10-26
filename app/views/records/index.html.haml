@@ -4,39 +4,39 @@
   %legend Options [+]
   .details
     = form_tag records_path, method: :get, class: 'form-horizontal' do
-      .control-group
-        = label_tag :start, 'Start', class: 'control-label'
-        .controls= text_field_tag :start, @start ? @start.strftime("%Y-%m-%d") : nil, :class => 'datepicker' 
-      .control-group
-        = label_tag :end, 'End', class: 'control-label'
-        .controls= text_field_tag :end, @end ? @end.strftime("%Y-%m-%d") : nil, :class => 'datepicker' 
-      .control-group
-        = label_tag :order, 'Order', class: 'control-label'
-        .controls.form-inline
+      .form-group
+        = label_tag :start, 'Start', class: 'control-label col-sm-2'
+        .col-sm-10= text_field_tag :start, @start ? @start.strftime("%Y-%m-%d") : nil, :class => 'datepicker form-control' 
+      .form-group
+        = label_tag :end, 'End', class: 'control-label col-sm-2'
+        .col-sm-10= text_field_tag :end, @end ? @end.strftime("%Y-%m-%d") : nil, :class => 'datepicker form-control' 
+      .form-group
+        = label_tag :order, 'Order', class: 'control-label col-sm-2'
+        .col-sm-10.form-inline
           = radio_button_tag :order, 'newest', @order != 'desc', :class => 'inline'
           = label_tag :order_newest, 'Newest on top', :class => 'inline'
           = radio_button_tag :order, 'oldest', @order == 'desc'
           = label_tag :order_oldest, 'Oldest on top', :class => 'inline'
-      .control-group
-        = label_tag :display_type, 'Display', class: 'control-label'
-        .controls.form-inline
+      .form-group
+        = label_tag :display_type, 'Display', class: 'control-label col-sm-2'
+        .col-sm-10.form-inline
           = radio_button_tag :display_type, 'time', params[:display_type] != 'decimal', :class => 'inline'
           = label_tag :display_type_inline, 'Time', :class => 'inline'
           = radio_button_tag :display_type, 'decimal', params[:display_type] == 'decimal', :class => 'inline'
           = label_tag :display_type_decimal, 'Decimal', :class => 'inline'
-      .control-group
-        = label_tag :split, 'Split', class: 'control-label'
-        .controls.form-inline
+      .form-group
+        = label_tag :split, 'Split', class: 'control-label col-sm-2'
+        .col-sm-10.form-inline
           = radio_button_tag :split, 'keep', params[:split] != 'split', :class => 'inline'
           = label_tag :split_keep, 'Keep original entries', :class => 'inline'
           = radio_button_tag :split, 'split', params[:split] == 'split', :class => 'inline'
           = label_tag :split_split, 'Split by midnight', :class => 'inline'
-      .control-group
-        = label_tag :filter, t('app.general.filter'), class: 'control-label'
-        .controls
+      .form-group
+        = label_tag :filter, t('app.general.filter'), class: 'control-label col-sm-2'
+        .col-sm-10
           = text_field_tag :filter_string, params[:filter_string]
-      .control-group
-        .controls
+      .form-group
+        .col-sm-10.col-sm-offset-2
           = submit_tag t('app.general.filter'), :class => 'btn btn-primary'
           = submit_tag t('.recalculate_durations'), :class => 'btn btn-default'
 = render 'summary', :records => @data[:entries], :show_duration => true

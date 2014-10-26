@@ -1,15 +1,15 @@
-= semantic_form_for @decision, html: {class: 'form-horizontal'} do |f|
+= simple_form_for @decision, html: {class: 'form-horizontal'} do |f|
   -if @decision.errors.any?
     #error_explanation
       %h2= "#{pluralize(@decision.errors.count, "error")} prohibited this decision from being saved:"
       %ul
         - @decision.errors.full_messages.each do |msg|
           %li= msg
-  = f.inputs do
+  .inputs
     = f.input :date, :as => :string
     = f.input :name
     = f.input :notes
-    = f.input :status, :as => :radio, :collection => ["Good", "Bad", "Uncertain"]
-  .control-group
-    .controls
-      = f.submit 'Save', class: 'btn btn-primary'
+    = f.input :status, :as => :radio_buttons, :collection => ["Good", "Bad", "Uncertain"]
+  .form-group
+    .col-sm-offset-2
+      = submit_tag I18n.t('app.general.submit'), :class => 'btn btn-primary'

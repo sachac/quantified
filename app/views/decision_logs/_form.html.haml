@@ -1,11 +1,11 @@
-= semantic_form_for @decision_log, html: {class: 'form-horizontal'} do |f|
+= simple_form_for @decision_log, html: {class: 'form-horizontal'} do |f|
   -if @decision_log.errors.any?
     #error_explanation
       %h2= "#{pluralize(@decision_log.errors.count, "error")} prohibited this decision_log from being saved:"
       %ul
         - @decision_log.errors.full_messages.each do |msg|
           %li= msg
-  = f.inputs do
+  .inputs
     -if @decision_log.decision then
       = "#{@decision_log.decision.name} (#{@decision_log.decision.date})"
       %pre= @decision_log.decision.notes
@@ -14,5 +14,7 @@
     = f.input :date, :as => :string
     = f.input :notes
     = f.input :status, :as => :radio, :collection => ["Pending", "Good", "Bad", "Uncertain"]
-  .control-group
-    .controls= f.submit 'Save', class: 'btn btn-primary'
+  .form-group
+    .col-sm-offset-2
+      = submit_tag I18n.t('app.general.submit'), :class => 'btn btn-primary'
+

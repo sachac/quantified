@@ -1,11 +1,11 @@
-= semantic_form_for @user, html: {class: 'form-horizontal'} do |f|
+= simple_form_for @user, html: {class: 'form-horizontal'} do |f|
   -if @user.errors.any?
     #error_explanation
       %h2= "#{pluralize(@user.errors.count, "error")} prohibited this user from being saved:"
       %ul
         - @user.errors.full_messages.each do |msg|
           %li= msg
-  = f.inputs do
+  .inputs
     = f.input :email, :input_html => { :autocomplete => 'off' }
     = f.input :username, :input_html => { :autocomplete => 'off' }
     .control-group
@@ -17,6 +17,7 @@
         If you'd like to change your password, enter your new password below:
         = f.input :password, :required => false, :autocomplete => 'off'
         = f.input :password_confirmation, :autocomplete => 'off'
-  .control-group
-    .controls
-      = f.submit 'Save', :class => 'btn btn-primary'
+  .form-group
+    .col-sm-offset-2
+      = submit_tag I18n.t('app.general.submit'), :class => 'btn btn-primary'
+

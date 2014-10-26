@@ -1,7 +1,7 @@
 source 'http://rubygems.org'
 
 gem 'rack-offline', :git => 'git://github.com/wycats/rack-offline.git'
-gem 'rails', '4.0'
+gem 'rails', '4.0.4'
 gem 'haml-rails', '~> 0.4'
 # Bundle edge Rails instead:
 #gem 'rails', :git => 'git://github.com/rails/rails.git'
@@ -20,10 +20,9 @@ gem 'will_paginate'
 gem 'color'
 gem 'ruby-graphviz', :git => "https://github.com/glejeune/Ruby-Graphviz.git"
 gem 'narray'
-gem 'formtastic', '~> 3'
+gem 'simple_form'
 gem 'jquery-rails', '~> 2.1.4'
 gem 'rails4-autocomplete'
-gem 'formtastic-bootstrap', :git => 'https://github.com/ekubal/formtastic-bootstrap'
 gem 'handles_sortable_columns'
 gem 'gdata_19', '1.1.5'
 gem 'cancancan', '~> 1.9'

@@ -1,18 +1,18 @@
-= semantic_form_for @stuff, html: {class: 'form-horizontal'} do |f|
+= simple_form_for @stuff, html: {class: 'form-horizontal'} do |f|
   -if @stuff.errors.any?
     #error_explanation
       %h2= "#{pluralize(@stuff.errors.count, "error")} prohibited this stuff from being saved:"
       %ul
         - @stuff.errors.full_messages.each do |msg|
           %li= msg
-  = f.inputs do
+  .inputs
     = f.input :name
     = f.input :stuff_type, :as => :radio, :collection => [['Stuff: Things that you move around. Stuff can contain other stuff.', 'stuff'], ['Location: Places that contain stuff. Locations generally don\'t move.', 'location']]
     = f.input :status
     = f.input :home_location, :collection => current_account.stuff.order('name')
     = f.input :notes, :input_html => { :rows => 5 }
-  .control-group
-    .controls
-      = f.submit 'Save', :class => 'btn btn-primary'
+  .form-group
+    .col-sm-offset-2
+      = submit_tag I18n.t('app.general.submit'), :class => 'btn btn-primary'
       - if !@stuff.new_record? and can? :delete, @stuff
         = link_to I18n.t('general.delete'), stuff_path(@stuff), :method => :delete, :confirm => I18n.t('general.are_you_sure'), :class => 'btn btn-default'

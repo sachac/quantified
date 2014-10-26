@@ -1,9 +1,17 @@
-= semantic_form_for @measurement, html: {class: 'form-horizontal'} do |f|
+= simple_form_for @measurement, html: {class: 'form-horizontal'} do |f|
   -if @measurement.errors.any?
     #error_explanation
       %h2= "#{pluralize(@measurement.errors.count, "error")} prohibited this measurement from being saved:"
       %ul
         - @measurement.errors.full_messages.each do |msg|
           %li= msg
-  = f.inputs :name, :tag_list, :unit, :notes
-  = f.buttons
+  = f.input :name
+  = f.input :tag_list
+  = f.input :unit
+  = f.input :notes
+  .form-group
+    .col-sm-offset-2
+      = f.submit t('general.save'), class: 'btn btn-primary'
+      - if !@measurement.new_record?
+        = link_to t('general.delete'), @measurement, class: 'btn btn-default', method: :delete, data: { confirm: t('general.are_you_sure') }
+

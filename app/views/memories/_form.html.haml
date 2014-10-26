@@ -1,10 +1,15 @@
-= semantic_form_for @memory, html: {class: 'form-horizontal'} do |f|
-  = f.inputs do
+= simple_form_for @memory, html: {class: 'form-horizontal'} do |f|
+  .inputs
     = f.input :name
     = f.input :body
     = f.input :tag_list
-    = f.input :access, :as => :radio, :collection => access_collection
+    = f.input :access, :as => :radio_buttons, :collection => access_collection
     = f.input :date_entry
     = hidden_field_tag :destination, params[:destination]
-  .actions  
-    = f.submit I18n.t('app.general.save'), :class => 'btn btn-primary'
+  .form-group
+    .col-sm-offset-2
+      = submit_tag I18n.t('app.general.save'), :class => 'btn btn-primary'
+      - if !@memory.new_record?
+        = link_to t('general.delete'), @record_category, :class => 'btn btn-default', :method => :delete, :data => {:confirm => t('general.are_you_sure')}
+
+

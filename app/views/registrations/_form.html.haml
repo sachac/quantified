@@ -1,7 +1,7 @@
-= semantic_form_for(resource, :as => resource_name, :url => registration_path(resource_name)) do |f|
-  = f.semantic_errors :base
+= simple_form_for(resource, :as => resource_name, :url => registration_path(resource_name)) do |f|
+  = f.error :base
   = devise_error_messages!
-  = f.inputs do
+  .inputs
     %legend= t('user.sign_up')
     .inner
       .clear-fix
@@ -20,5 +20,7 @@
       .clear-fix
         %label Password confirmation
         .input= f.password_field :password_confirmation
-  .actions  
-    = f.submit t('user.sign_up'), :class => 'btn btn-primary'
+  .form-group
+    .col-sm-offset-2
+      = submit_tag I18n.t('user.sign_up'), :class => 'btn btn-primary'
+
