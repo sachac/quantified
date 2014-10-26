@@ -1,9 +1,9 @@
 - rec ||= @record_category
 - show_parent = true if show_parent.nil?
-= semantic_form_for rec, html: {class: 'form-horizontal'} do |f|
-  = f.inputs do
+= simple_form_for rec, html: {class: 'form-horizontal'} do |f|
+  .inputs
     - if params and params[:timestamp]
-      .control-group
+      .form-group
         %label.control-label Timestamp
         .controls.text
           = l Time.zone.parse(params[:timestamp]), :format => :short
@@ -11,11 +11,11 @@
     = f.input :name, :input_html => { :autofocus => true }
     = f.input :active
     - if show_parent and current_account.record_categories.where('id IS NOT NULL AND category_type = ?', 'list').length > 0
-      = f.input :parent, :collection => current_account.record_categories.where('category_type = ?', 'list').order('full_name').map { |x| [x.full_name, x.id] }
+      = f.input :parent_id, :collection => current_account.record_categories.where('category_type = ?', 'list').order('full_name').map { |x| [x.full_name, x.id] }
     - else
       = f.input :parent_id, :as => :hidden
-    = f.input :category_type, :as => :radio, :collection => [[t('record_categories.type.activity'), 'activity'], [t('record_categories.type.record'), 'record'], [t('record_categories.type.list'), 'list']]
-    .control-group
+    = f.input :category_type, :as => :radio_buttons, :collection => [[t('record_categories.type.activity'), 'activity'], [t('record_categories.type.record'), 'record'], [t('record_categories.type.list'), 'list']]
+    .form-group
       %label.control-label Data
       .controls
         You can use this to enter additional data in your log entries. For example, if you want to add a note, you can add a line with the key "note", the label "Note", and the type "Multiple lines of text". The key is used when exporting data, the label will be displayed on the form, and the type controls what kind of form element will be used to collect data.
@@ -31,9 +31,9 @@
                 %td= text_field_tag "record_category[data][][label]", datum["label"]
                 %td= select_tag "record_category[data][][type]", options_for_select([["One line of text", "string"], ["Multiple lines of text", "text"]], datum["type"])
     = f.input :color, :as => :text
-  .control-group
-    .controls
-      = f.submit t('general.save'), :class => 'btn btn-primary'
-      - if @record_category
+  .form-group
+    .col-sm-offset-2
+      = submit_tag I18n.t('app.general.save'), :class => 'btn btn-primary'
+      - if !@record_category.new_record?
         = link_to t('general.delete'), @record_category, :class => 'btn btn-default', :method => :delete, :data => {:confirm => t('general.are_you_sure')}
     

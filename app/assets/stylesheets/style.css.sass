@@ -1,5 +1,3 @@
-@import "bootstrap-sprockets"
-@import "bootstrap"
 $lightBackground: #eee
 
 body
@@ -7,6 +5,9 @@ body
   padding-top: 0
 a
   text-decoration: none
+.navbar-brand
+  font-size: 14px
+  font-weight: bold
 .topbar
   position: relative
   height: auto
@@ -24,15 +25,8 @@ a
   margin-left: 10px
 .auto
   width: auto
-.formtastic fieldset.inputs ol
-  list-style: none
 li.input
   margin-left: 0px
-.formtastic li
-  margin-top: 3px
-  margin-bottom: 3px
-  input, textarea, select
-    margin-left: 10px
 form .clear-fix 
   margin-bottom: 10px
   zoom: 1
@@ -162,3 +156,21 @@ select.op
   margin-left: 20px
 th.number, td.number, div.number
   text-align: right
+.form-horizontal
+  .control-group
+    @extend .form-group
+  .control-label
+    @extend .col-sm-2
+  .control-group > .form-control, .form-group > .form-control, .form-group > .collection
+    @extend .col-sm-9
+  .help-block
+    @extend .col-sm-offset-2
+  .control-label.boolean
+    text-align: left
+    font-weight: normal
+    @extend .col-sm-offset-2
+.datetime .form-control
+  width: auto
+  
+label.radio
+  font-weight: normal

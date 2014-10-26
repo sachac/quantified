@@ -1,25 +1,24 @@
-= semantic_form_for @context, html: {class: 'form-horizontal'} do |f|
+= simple_form_for @context, html: {class: 'form-horizontal'} do |f|
   -if @context.errors.any?
     #error_explanation
       %h2= "#{pluralize(@context.errors.count, "error")} prohibited this context from being saved:"
       %ul
         - @context.errors.full_messages.each do |msg|
           %li= msg
-  = f.inputs do
-    = f.input :name, :input_html => {:autofocus => true}
-    .control-group
-      %label.control-label Stuff
-      .controls
-        %table.table
+  = f.input :name, :input_html => {:autofocus => true}
+  .form-group
+    %label.control-label Stuff
+    .col-sm-10
+      %table.table
+        %tr
+          %th Stuff
+          %th Location
+        = f.fields_for :context_rules do |r|
           %tr
-            %th Stuff
-            %th Location
-          = f.fields_for :context_rules do |r|
-            %tr
-              %td= r.autocomplete_field :stuff, autocomplete_stuff_path, :value => r.object.stuff ? r.object.stuff.name : ''
-              %td= r.autocomplete_field :location, autocomplete_stuff_path, :value => r.object.location ? r.object.location.name : ''
-  .control-group
-    .controls
+            %td= r.autocomplete_field :stuff, autocomplete_stuff_path, value: r.object.stuff ? r.object.stuff.name : '', class: 'form-control'
+            %td= r.autocomplete_field :location, autocomplete_stuff_path, value: r.object.location ? r.object.location.name : '', class: 'form-control'
+  .form-group
+    .col-sm-offset-2
       = f.submit 'Save', :class => 'btn btn-primary'
       - unless @context.new_record?
         = link_to 'Delete', context_path(@context), :method => :delete, :class => 'btn btn-default'

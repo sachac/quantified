@@ -24,7 +24,7 @@
         - elsif can? :manage_account, @account
           = link_to '(Set timezone)', edit_user_path(@account)
 - if Rails.env.development?
-  .alert.warning This is the development site.
+  .alert.alert-warning This is the development site.
 - else
-  .alert.warning This site is in beta. Please send me feedback if you run into anything that doesn't work or can be improved!
+  .alert.alert-warning This site is in beta. Please send me feedback if you run into anything that doesn't work or can be improved!
 - flash.discard

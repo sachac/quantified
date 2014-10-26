@@ -1,11 +1,11 @@
-= semantic_form_for @receipt_item_type do |f|
-  = f.semantic_errors
-  = f.inputs do
+= simple_form_for @receipt_item_type do |f|
+  = f.errors
+  .inputs
     = f.input :receipt_name
     = f.input :friendly_name
     = f.input :receipt_item_category
-    .control-group
-      .controls
-        = f.submit t('general.save'), class: 'btn btn-primary'
+    .form-group
+      .col-sm-offset-2
+        = submit_tag I18n.t('app.general.submit'), :class => 'btn btn-primary'
         - if !@receipt_item_type.new_record?
           = link_to t('general.delete'), @receipt_item_type, class: 'btn btn-default', method: :delete, confirm: t('general.are_you_sure')

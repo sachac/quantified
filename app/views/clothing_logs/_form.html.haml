@@ -1,16 +1,16 @@
-= semantic_form_for @clothing_log, html: {class: 'form-horizontal'} do |f|
+= simple_form_for @clothing_log, html: {class: 'form-horizontal'} do |f|
   -if @clothing_log.errors.any?
     #error_explanation
       %h2= "#{pluralize(@clothing_log.errors.count, "error")} prohibited this clothing_log from being saved:"
       %ul
         - @clothing_log.errors.full_messages.each do |msg|
           %li= msg
-  = f.inputs do
+  .inputs
     = f.input :date, :as => :string
     = f.input :outfit_id
-    = f.input :clothing, :as => :select, :collection => current_account.clothing.order('name').map { |x| [ x.name, x.id ] }
-  .control-group
-    .controls
-      = f.submit 'Save', :class => 'btn btn-primary'
+    = f.input :clothing_id, :as => :select, :collection => current_account.clothing.order('name').map { |x| [ x.name, x.id ] }
+  .form-group
+    .col-sm-offset-2
+      = submit_tag I18n.t('app.general.save'), :class => 'btn btn-primary'
       - if !@clothing_log.new_record? and can? :delete, @clothing_log
         = link_to I18n.t('app.general.delete'), clothing_log_path(@clothing_log), :method => :delete, :data => {:confirm => I18n.t('general.are_you_sure')}, :class => 'btn btn-default'

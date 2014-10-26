@@ -1,16 +1,19 @@
-= semantic_form_for @csa_food, html: {class: 'form-horizontal'} do |f|
+= simple_form_for @csa_food, html: {class: 'form-horizontal'} do |f|
   -if @csa_food.errors.any?
     #error_explanation
       %h2= "#{pluralize(@csa_food.errors.count, "error")} prohibited this csa_food from being saved:"
       %ul
         - @csa_food.errors.full_messages.each do |msg|
           %li= msg
-  = f.inputs do
+  .inputs
     = f.input :food
     = f.input :quantity
     = f.input :unit
     = f.input :disposition, :input_html => { :autofocus => !@csa_food.quantity.blank? }
     = f.input :date_received
     = f.input :notes
-  = f.buttons    
+  .form-group
+    .col-sm-offset-2
+      = submit_tag I18n.t('app.general.submit'), :class => 'btn btn-primary'
+
     

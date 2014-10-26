@@ -1,15 +1,17 @@
 %h2 Need to reset your password?
-= semantic_form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { method: :post, class: 'form-horizontal' }) do |f|
+= simple_form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { method: :post, class: 'form-horizontal' }) do |f|
   = devise_error_messages!
-  = f.inputs do
+  .inputs
     = f.input :login
-    .control-group
+    .form-group
       %label.control-label
         Or log in with...
       .controls
         = link_to image_tag('google_32.png', :size => "32x32", :alt => "Google"), oauth_url(:google, :subdomain => false), :class => 'service'
         = link_to image_tag('facebook_32.png', :size => "32x32", :alt => "Facebook"), oauth_url(:facebook, :subdomain => false), :class => 'service'
 
-  .control-group
-    .controls= f.submit "Send me reset password instructions", :class => 'btn btn-primary'
+  .form-group
+    .col-sm-offset-2
+      = f.submit "Send me reset password instructions", :class => 'btn btn-primary'
+    
 = render :partial => "devise/shared/links"

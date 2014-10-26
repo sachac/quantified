@@ -1,15 +1,15 @@
-= semantic_form_for @toronto_library, class: 'form-horizontal' do |f|
+= simple_form_for @toronto_library, class: 'form-horizontal' do |f|
   -if @toronto_library.errors.any?
     #error_explanation
       %h2= "#{pluralize(@toronto_library.errors.count, "error")} prohibited this toronto_library from being saved:"
       %ul
         - @toronto_library.errors.full_messages.each do |msg|
           %li= msg
-  = f.inputs do
+  .inputs
     = f.input :name, :autofocus => true
     = f.input :card
     = f.input :pin
-  .control-group
-    .controls
-      = f.submit 'Save', :class => 'btn btn-default'
+  .form-group
+    .col-sm-offset-2
+      = submit_tag I18n.t('app.general.submit'), :class => 'btn btn-primary'
       = link_to 'Back', toronto_libraries_path

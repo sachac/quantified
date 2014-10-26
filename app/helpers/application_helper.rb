@@ -246,19 +246,17 @@ module ApplicationHelper
   end
 
   def record_data_input(record, info, index = nil)
-    content_tag(:div, :class => 'optional stringish control-group') do
+    content_tag(:div, :class => 'optional stringish form-group') do
       key = info[:key] || info["key"]
       label = info[:label] || info["label"] || key
       if key
-        s = label_tag("data[#{key}]", label, :class => 'control-label')
-        s += content_tag(:div, :class => 'controls') do
-          case info[:type]
-          when 'text'
-            text_area_tag("record[data][#{key}]", record.data ? record.data[key] : nil, :autofocus => (index == 0))
-          else
-            text_field_tag("record[data][#{key}]", record.data ? record.data[key] : nil, :autofocus => (index == 0))
-          end
-        end
+        s = label_tag("data[#{key}]", label, class: 'control-label')
+        s += case info[:type]
+             when 'text'
+               text_area_tag("record[data][#{key}]", record.data ? record.data[key] : nil, autofocus: (index == 0), class: 'form-control')
+             else
+               text_field_tag("record[data][#{key}]", record.data ? record.data[key] : nil, autofocus: (index == 0), class: 'form-control')
+             end
         s
       end
     end
