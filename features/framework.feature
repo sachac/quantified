@@ -15,3 +15,6 @@ Feature: Framework
   Scenario: Get the privacy page
     When I go to the privacy page
     Then I should see the privacy page
+  Scenario: Authenticate by token
+    When I have a valid authentication token
+    Then I should be able to post via the API

@@ -83,14 +83,14 @@ describe ApplicationController, :type => :controller do
       user = create(:user, :confirmed)
       user.ensure_authentication_token
       user.save
-      allow(subject).to receive(:params).and_return({user_token: user.authentication_token})
+      allow(subject).to receive(:params).and_return({auth_token: user.authentication_token})
       controller.instance_eval do
         authenticate_user_from_token!
       end
       expect(controller.current_account).to eq(user)
     end
     it "handles invalid tokens" do
-      allow(subject).to receive(:params).and_return({user_token: 'invalid'})
+      allow(subject).to receive(:params).and_return({auth_token: 'invalid'})
       controller.instance_eval do
         authenticate_user_from_token!
       end
