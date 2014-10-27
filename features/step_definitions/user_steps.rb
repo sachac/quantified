@@ -315,3 +315,14 @@ end
 When(/^I view my dashboard$/) do
   visit root_path
 end
+
+When(/^I have a valid authentication token$/) do
+  @user = create(:user, :confirmed)
+  @user.ensure_authentication_token
+end
+
+Then(/^I should be able to post via the API$/) do
+  post record_categories_path, {record_category: { name: 'Test', category_type: 'activity' }, auth_token: @user.authentication_token, format: :json}
+  expect(JSON.parse(last_response.body)['id']).to_not be_nil
+  
+end
