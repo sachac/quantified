@@ -12,6 +12,7 @@ class GroceryListItemsController < ApplicationController
   end
 
   def show
+    @price_history = @grocery_list_item.price_history.order('date DESC')
     respond_with(@grocery_list_item)
   end
 

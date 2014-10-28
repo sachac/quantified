@@ -97,16 +97,7 @@ end
 Then(/^"(.*?)" should have the price of (\d+)\.(\d+)$/) do |arg1, arg2, arg3|
   pending # express the regexp above with the code you wish you had
 end
-
-When(/^I set the price of "(.*?)" to (\d+)\.(\d+) on (\d+)\-(\d+)\-(\d+)$/) do |arg1, arg2, arg3, arg4, arg5, arg6|
-  pending # express the regexp above with the code you wish you had
-end
-
 Then(/^the current price of "(.*?)" should be (\d+)\.(\d+)$/) do |arg1, arg2, arg3|
-  pending # express the regexp above with the code you wish you had
-end
-
-Then(/^"(.*?)" should have the past price of (\d+)\.(\d+) on (\d+)\-(\d+)\-(\d+)$/) do |arg1, arg2, arg3, arg4, arg5, arg6|
   pending # express the regexp above with the code you wish you had
 end
 
@@ -142,3 +133,22 @@ Then(/^I should see a request to meet at the counters$/) do
   pending # express the regexp above with the code you wish you had
 end
 
+When(/^I have the following price history:$/) do |table|
+  # table is a Cucumber::Ast::Table
+  table.hashes.each do |h|
+    type = @user.receipt_item_types.find_by(friendly_name: h['Name'])
+    if type.nil?
+      type = @user.receipt_item_types.create(friendly_name: h['Name'])
+    end
+    create(:receipt_item, name: h['Name'], receipt_item_type: type, quantity: h['Quantity'], unit_price: h['Unit price'], total: h['Total'], date: h['Date'], user: @user)
+  end
+end
+
+When(/^I view the grocery item page for "(.*?)"$/) do |arg1|
+  item = @grocery_list.grocery_list_items.find_by(name: arg1)
+  visit grocery_list_item_path(item)
+end
+
+Then(/^I should see that "(.*?)" had the past price of (\d+)\.(\d+)$/) do |arg1, arg2, arg3|
+  expect(page.body).to match arg3
+end

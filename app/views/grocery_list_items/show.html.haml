@@ -14,6 +14,19 @@
   %b Category:
   = @grocery_list_item.category
 
+%table.table.table-bordered.price-history
+  %tr
+    %th Date
+    %th Quantity
+    %th Unit price
+    %th Total
+  - @price_history.each do |p|
+    %tr
+      %td= p.date
+      %td= p.quantity
+      %td= p.unit_price
+      %td= p.total
+  
 = link_to 'Edit', edit_grocery_list_item_path(@grocery_list_item)
 \|
 = link_to 'Back', grocery_list_items_path

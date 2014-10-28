@@ -40,15 +40,18 @@ Feature: Kitchen - Groceries
     Then the grocery list categories should be:
       | Household Supplies |
       | Produce |
+  Scenario: Items have a price history
+    When I have the following price history:
+      | Name   | Quantity | Unit price | Total |       Date |
+      | Apples |        1 |          5 |  5.00 | 2014-10-01 |
+      | Apples |        2 |          4 |  8.00 | 2014-10-02 |
+    And I add "Apples" to our grocery list
+    And I view the grocery item page for "Apples"
+    Then I should see that "Apples" had the past price of 5.0
   Scenario: I can set the price of an item
     When I add "Apples" to our grocery list
     And I set the price of "Apples" to 3.97
     Then "Apples" should have the price of 3.97
-  Scenario: Items have a price history
-    When I set the price of "Apples" to 3.97 on 2014-10-01
-    And I set the price of "Apples" to 4.50 on 2014-10-02
-    Then the current price of "Apples" should be 4.50
-    And "Apples" should have the past price of 3.97 on 2014-10-01
   Scenario: We can indicate our intent to pick something up
     When I add "Apples" to our grocery list
     And "W" indicates an intent to pick up "Apples"

@@ -4,7 +4,7 @@ RSpec.describe GroceryListItem, :type => :model do
   before(:each) do
     @user = create(:user, :confirmed)
     @grocery_list = create(:grocery_list, user: @user)
-    create(:receipt_item_type, friendly_name: 'Apples', receipt_item_category: create(:receipt_item_category, name: 'Produce', user: @user), user: @user)
+    @apples = create(:receipt_item_type, friendly_name: 'Apples', receipt_item_category: create(:receipt_item_category, name: 'Produce', user: @user), user: @user)
     create(:receipt_item_type, friendly_name: 'Chicken', receipt_item_category: create(:receipt_item_category, name: 'Meat', user: @user), user: @user)
   end
   describe '#guess_category' do
@@ -24,6 +24,15 @@ RSpec.describe GroceryListItem, :type => :model do
     it 'reuses a category if it exists' do
       item = @grocery_list.grocery_list_items.new(name: 'Cheese', grocery_list: @grocery_list, category: 'Deli')
       expect(item.receipt_item_category.name).to eq 'Deli'
+    end
+  end
+  describe '#price_history' do
+    it 'returns the price history' do
+      create(:receipt_item, receipt_item_type: @apples, name: 'APPL', quantity: 2, unit_price: 4, total: 8, date: '2014-10-01', user: @user)
+      create(:receipt_item, receipt_item_type: @apples, name: 'APP2', quantity: 2, unit_price: 5, total: 8, date: '2014-10-01', user: @user)
+      create(:receipt_item, receipt_item_type: create(:receipt_item_type, user: @user, friendly_name: 'Pears'), name: 'PEAR', quantity: 2, unit_price: 4, total: 8, date: '2014-10-01')
+      x = create(:grocery_list_item, name: 'Apples', grocery_list: @grocery_list)
+      expect(x.price_history.count).to eq 2
     end
   end
 end
