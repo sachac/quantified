@@ -1,0 +1,21 @@
+%p#notice= notice
+
+%h1= @grocery_list.name
+
+= form_tag quick_add_to_grocery_list_path(@grocery_list), method: :post, class: 'form-inline' do
+  = t('grocery_list_item.item')
+  = text_field_tag 'quick_add'
+  = submit_tag t('general.add'), class: 'btn'
+
+%table.table.table-bordered.groceries
+  - @grocery_list.grocery_list_items.each do |x|
+    %tr{id: "item_#{x.id}", class: x.status}
+      %td= x.category
+      %td= action_list x
+      %td= x.quantity
+      %td= x.name
+
+  
+= link_to 'Edit', edit_grocery_list_path(@grocery_list)
+\|
+= link_to 'Back', grocery_lists_path

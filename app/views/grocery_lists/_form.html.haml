@@ -1,0 +1,7 @@
+= simple_form_for @grocery_list do |f|
+  .inputs
+    = f.input :name
+  .form-group
+    .col-sm-offset-2
+      = submit_tag I18n.t('app.general.submit'), :class => 'btn btn-primary'
+

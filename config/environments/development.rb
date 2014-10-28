@@ -33,7 +33,7 @@ Home::Application.configure do
   config.action_mailer.default_url_options = { :host => "dev.quantifiedawesome.com" }
   config.action_mailer.delivery_method = :test
   config.action_mailer.perform_deliveries = false
-  
+  config.eager_load = false
 end
 
 ActionMailer::Base.delivery_method = :test

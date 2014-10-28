@@ -12,7 +12,7 @@ require 'email_spec/cucumber'
 SimpleCov.start 'rails' do
   SimpleCov.command_name 'Cucumber'
   SimpleCov.use_merging true
-  SimpleCov.merge_timeout 3600
+  SimpleCov.merge_timeout 12000
   SimpleCov.coverage_dir 'coverage'
 end
 World FactoryGirl::Syntax::Methods
