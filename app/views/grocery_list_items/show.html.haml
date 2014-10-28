@@ -1,0 +1,19 @@
+%p#notice= notice
+
+%p= link_to 'Grocery list: ' + @grocery_list_item.grocery_list.name, @grocery_list_item.grocery_list
+
+%h1= @grocery_list_item.name
+  
+%p
+  %b Quantity:
+  = @grocery_list_item.quantity
+%p
+  %b Status:
+  = @grocery_list_item.status
+%p
+  %b Category:
+  = @grocery_list_item.category
+
+= link_to 'Edit', edit_grocery_list_item_path(@grocery_list_item)
+\|
+= link_to 'Back', grocery_list_items_path

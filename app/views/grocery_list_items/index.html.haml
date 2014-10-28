@@ -1,0 +1,25 @@
+%h1 Listing grocery_list_items
+
+%table
+  %tr
+    %th Name
+    %th Grocery list
+    %th Quantity
+    %th Status
+    %th
+    %th
+    %th
+
+  - @grocery_list_items.each do |grocery_list_item|
+    %tr
+      %td= grocery_list_item.name
+      %td= grocery_list_item.grocery_list_id
+      %td= grocery_list_item.quantity
+      %td= grocery_list_item.status
+      %td= link_to 'Show', grocery_list_item
+      %td= link_to 'Edit', edit_grocery_list_item_path(grocery_list_item)
+      %td= link_to 'Destroy', grocery_list_item, :method => :delete, :data => { :confirm => 'Are you sure?' }
+
+%br
+
+= link_to 'New Grocery list item', new_grocery_list_item_path

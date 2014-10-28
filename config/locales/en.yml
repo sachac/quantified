@@ -13,6 +13,7 @@ en:
     save: Save
     delete: Delete
     edit: Edit
+    add: Add
     are_you_sure: Are you sure?
     inactive: Inactive
   library:
@@ -172,3 +173,10 @@ en:
   receipt_item_category:
     created: Receipt item category created.
     updated: Receipt item category updated.
+  grocery_list_item:
+    item: Item
+    error:
+      adding: "Error adding %{item}."
+    added: "Added %{item}."
+
+    

@@ -1,4 +1,7 @@
 Home::Application.routes.draw do
+  resources :grocery_list_items
+
+
   match 'receipt_item_types/autocomplete' => 'receipt_item_types#autocomplete_receipt_item_type_friendly_name', :as => :autocomplete_receipt_item_type, :via => :get
   resources :receipt_item_types do
     collection do
@@ -17,7 +20,11 @@ Home::Application.routes.draw do
     end
   end
 
-
+  resources :grocery_lists do
+    member do
+      post :quick_add_to
+    end
+  end
   resources :goals
   match 'auth/:service/callback' => 'services#create', :via => :get
   match 'auth/:service' => 'sessions#setup', :as => :oauth, :via => :get

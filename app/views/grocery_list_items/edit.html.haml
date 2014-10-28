@@ -1,0 +1,7 @@
+%h1= @grocery_list_item.name
+
+= render 'form'
+
+= link_to 'Show', @grocery_list_item
+\|
+= link_to 'Back', grocery_list_items_path

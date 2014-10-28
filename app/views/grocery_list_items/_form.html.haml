@@ -1,0 +1,10 @@
+= simple_form_for @grocery_list_item do |f|
+  .inputs
+    = f.input :name
+    = f.input :grocery_list_id, collection: current_account ? current_account.grocery_lists : nil
+    = f.input :category, as: :string
+    = f.input :quantity
+    = f.input :status
+  .form-group
+    .col-sm-offset-2
+      = submit_tag I18n.t('app.general.save'), :class => 'btn btn-primary'
