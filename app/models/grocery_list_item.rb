@@ -28,4 +28,10 @@ class GroceryListItem < ActiveRecord::Base
       end
     end
   end
+
+  def price_history
+    if self.grocery_list and self.grocery_list.user
+      ReceiptItem.joins(:receipt_item_type).where('receipt_items.user_id=? AND receipt_item_types.friendly_name=?', self.grocery_list.user_id, self.name)
+    end
+  end
 end
