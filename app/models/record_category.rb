@@ -246,7 +246,7 @@ class RecordCategory < ActiveRecord::Base
       records = records.order('timestamp DESC')
     end
     unless options[:include_private]
-      records = records.public
+      records = records.public_records
     end
     if !options[:filter_string].blank?
       query = "%" + options[:filter_string].downcase + "%"
