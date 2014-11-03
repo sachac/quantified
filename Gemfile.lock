@@ -392,6 +392,8 @@ GEM
       rack (>= 1.0)
     webrobots (0.1.1)
     will_paginate (3.0.7)
+    will_paginate-bootstrap (1.0.1)
+      will_paginate (>= 3.0.3)
     workflow (1.2.0)
     xpath (2.0.0)
       nokogiri (~> 1.3)
@@ -472,6 +474,6 @@ DEPENDENCIES
   timecop
   timeline_fu!
   uglifier
-  will_paginate
+  will_paginate-bootstrap
   workflow
   yaml_db

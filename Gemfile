@@ -16,7 +16,7 @@ gem 'rake'
 gem 'haml'
 gem 'mysql2'
 gem "paperclip", ">= 2.0"
-gem 'will_paginate'
+gem 'will_paginate-bootstrap'
 gem 'color'
 gem 'ruby-graphviz', :git => "https://github.com/glejeune/Ruby-Graphviz.git"
 gem 'narray'
