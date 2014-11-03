@@ -116,7 +116,7 @@ class RecordCategoriesController < ApplicationController
     prepare_filters [:date_range, :order, :filter_string]
     @records = @record_category.category_records(:order => @order, :start => @summary_start, :end => @summary_end, :filter_string => params[:filter_string])
     unless managing?
-      @records = @records.public
+      @records = @records.public_records
     end
     unless request.format.csv?
       @records = @records.paginate :page => params[:page], :per_page => 20
