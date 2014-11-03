@@ -1,10 +1,9 @@
-require 'pagination_list_link_renderer'
 module ApplicationHelper
   # change the default link renderer for will_paginate
   # Modified from https://github.com/mislav/will_paginate/wiki/Link-renderer
   def will_paginate(collection_or_options = nil, options = {})
     unless options[:renderer]
-      options = options.merge :renderer => Renderer::PaginationListLinkRenderer
+      options = options.merge renderer: BootstrapPagination::Rails
     end
     super *[collection_or_options, options].compact
   end

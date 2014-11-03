@@ -1,29 +1,29 @@
 .block#block-login
   .content
     .row
-      .login
-        = form_for(resource, :as => resource_name, :url => session_path(resource_name), :html => { :class => mobile? ? "form-stacked" : "form-horizontal" }) do |f|
+      .login.col-sm-5
+        = form_for(resource, :as => resource_name, :url => session_path(resource_name), :html => {class: 'form-stacked'}) do |f|
           = hidden_field_tag :destination, params[:destination]
           %fieldset
             %legend Sign in
             .inner
-              .control-group
-                %label.control-label Sign in with
+              .form-group
+                %label Sign in with
                 .controls
                   .box#services
-                    = link_to image_tag('google_32.png', :size => "32x32", :alt => "Google"), oauth_url(:google, :subdomain => false), :class => 'service'
-                    = link_to image_tag('facebook_32.png', :size => "32x32", :alt => "Facebook"), oauth_url(:facebook, :subdomain => false), :class => 'service'
+                    = link_to image_tag(asset_path('google_32.png'), :size => "32x32", :alt => "Google"), oauth_url(:google, :subdomain => false), :class => 'service'
+                    = link_to image_tag(asset_path('facebook_32.png'), :size => "32x32", :alt => "Facebook"), oauth_url(:facebook, :subdomain => false), :class => 'service'
                     or fill in the form below
-              .control-group
+              .form-group
                 = label_tag :login, "Login", class: 'control-label'
                 .controls= f.text_field :login, :class => "text_field"
-              .control-group  
+              .form-group  
                 = label_tag :password, "Password", class: 'control-label'
                 .controls= f.password_field :password, :class => "text_field"
               - if devise_mapping.rememberable?
                 .control-group
                   .controls
-                    .controlss-list
+                    .controls-list
                       %label
                         = f.check_box :remember_me, :class => "checkbox"
                         Remember me
@@ -33,5 +33,5 @@
               .controls
                 %button.btn.btn-primary{ :type => "submit" }
                   = I18n.t('app.user.login_submit')
-      .sign_up
+      .sign_up.col-sm-5
         = render 'registrations/form'

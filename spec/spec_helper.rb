@@ -1,8 +1,9 @@
+require 'rubygems'
 require 'simplecov'
 SimpleCov.start 'rails' do
   use_merging true
-  SimpleCov.merge_timeout 12000
-  SimpleCov.command_name 'RSpec'
+  SimpleCov.merge_timeout 3600
+  SimpleCov.command_name 'rspec'
   coverage_dir 'coverage'
 end
 require 'rubygems'

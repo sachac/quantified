@@ -1,7 +1,7 @@
 source 'http://rubygems.org'
 
 gem 'rack-offline', :git => 'git://github.com/wycats/rack-offline.git'
-gem 'rails', '4.0.4'
+gem 'rails', '~> 4.1'
 gem 'haml-rails', '~> 0.4'
 # Bundle edge Rails instead:
 #gem 'rails', :git => 'git://github.com/rails/rails.git'
@@ -16,7 +16,7 @@ gem 'rake'
 gem 'haml'
 gem 'mysql2'
 gem "paperclip", ">= 2.0"
-gem 'will_paginate'
+gem 'will_paginate-bootstrap'
 gem 'color'
 gem 'ruby-graphviz', :git => "https://github.com/glejeune/Ruby-Graphviz.git"
 gem 'narray'
@@ -71,7 +71,7 @@ gem 'ruby_parser'
 gem 'passgen'
 #gem 'barometer'
 gem 'mechanize'
-gem 'rails-settings-cached', '~> 0.3.1'
+gem 'rails-settings-cached', '~> 0.4'
 gem 'subdomain-fu', :git => "git://github.com/nhowell/subdomain-fu.git"
 gem 'fastercsv'
 gem 'bootstrap-sass', '~> 3.2.0'
@@ -105,7 +105,6 @@ end
 group :test do
   gem 'spork'
   gem 'guard-rspec'
-  gem 'guard-spork'
   gem 'guard-spring'
   gem 'cucumber'
   gem 'fakeweb'
