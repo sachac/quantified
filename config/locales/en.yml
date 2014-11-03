@@ -16,6 +16,8 @@ en:
     add: Add
     are_you_sure: Are you sure?
     inactive: Inactive
+    error:
+      unknown: Unknown error.
   library:
     request: Request items
   time_log:
@@ -178,5 +180,8 @@ en:
     error:
       adding: "Error adding %{item}."
     added: "Added %{item}."
+  grocery_lists:
+    user_added: "%{email} added."
+    user_not_found: "%{email} is not yet a user. Please ask them to sign up first. Thank you!"
 
     

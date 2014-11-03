@@ -23,6 +23,7 @@ Home::Application.routes.draw do
   resources :grocery_lists do
     member do
       post :quick_add_to
+      delete :unshare
     end
   end
   resources :goals

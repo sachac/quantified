@@ -56,11 +56,12 @@ Then(/^I should have "(.*?)" on our grocery list$/) do |arg1|
 end
 
 Given(/^I have a grocery list like:$/) do |table|
-  # table is a Cucumber::Ast::Table
-  pending # express the regexp above with the code you wish you had
+  table.hashes.each do |h|
+    create(:grocery_list_item, name: h['Name'], status: h['Status'].downcase, grocery_list: @grocery_list)
+  end
 end
 
-When(/^I clear all crosse\-off items$/) do
+When(/^I clear all crossed\-off items$/) do
   pending # express the regexp above with the code you wish you had
 end
 
@@ -151,4 +152,73 @@ end
 
 Then(/^I should see that "(.*?)" had the past price of (\d+)\.(\d+)$/) do |arg1, arg2, arg3|
   expect(page.body).to match arg3
+end
+
+When(/^the other user accepts the invitation$/) do
+  click_link I18n.t('app.user.logout')
+  @other = User.find_by(email: @other_user_email)
+  expect(@other.invitation_token).to_not be_nil
+  @other_password = 'test password'
+  puts accept_user_invitation_url(invitation_token: @other.invitation_token)
+  visit accept_user_invitation_url(invitation_token: @other.invitation_token)
+  puts page.body
+  
+  @other.reload
+end
+
+When(/^the other user logs in$/) do
+  click_link I18n.t('app.user.login')
+  within '.login' do
+    fill_in 'user[login]', :with => @other.email
+    fill_in 'user[password]', :with => @other.password
+    click_button "Log in"
+  end
+  page.body.should_not include 'Log in'
+end
+
+
+When(/^I share my grocery list with a non\-existent user$/) do
+  visit edit_grocery_list_path(@grocery_list)
+  @other_user_email = 'test_new_user@example.com'
+  fill_in 'email', with: @other_user_email
+  click_button 'Submit'
+end
+
+Then(/^I should see that the other user does not exist$/) do
+  expect(page.body).to include I18n.t('grocery_lists.user_not_found', email: @other_user_email)
+end
+
+Then(/^the other user should see the list in their grocery lists$/) do
+  no_access = create(:grocery_list, user: @user)
+  visit grocery_lists_path
+  expect(page.body).to include grocery_list_path(@grocery_list)
+  expect(page.body).to_not include grocery_list_path(no_access)
+end
+
+Then(/^the other user should be able to add "(.*?)"$/) do |arg1|
+  visit grocery_list_path(@grocery_list)
+  fill_in 'quick_add', with: arg1
+  click_button I18n.t('general.add')
+end
+
+Then(/^the other user should be able to cross off "(.*?)"$/) do |arg1|
+  item = @grocery_list.grocery_list_items.find_by_name(arg1)
+  visit grocery_list_path(@grocery_list)
+  find(".cross_off_#{item.id}").click
+end
+
+When(/^I share my list with an existing user$/) do
+  @other = create(:user, :confirmed)
+  visit edit_grocery_list_path(@grocery_list)
+  fill_in 'email', with: @other.email
+  click_button 'Submit'
+end
+
+Given(/^I remove the other user from the grocery list$/) do
+  visit edit_grocery_list_path(@grocery_list)
+  click_link ".remove_access_#{@other.id}"
+end
+
+Then(/^the other person should not have access to my grocery list$/) do
+  expect(GroceryList.lists_for(@other).count).to eq 0
 end
