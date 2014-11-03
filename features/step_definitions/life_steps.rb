@@ -23,6 +23,6 @@ When /^I check our library items$/ do
 end
 
 Then /^there should be no items that are overdue$/ do
-  assert_equal 0, LibraryItem.where('status = ? AND due < ?', 'due', Time.zone.today).size
+  expect(LibraryItem.where('status = ? AND due < ?', 'due', Time.zone.today).count).to eq 0
 end
 

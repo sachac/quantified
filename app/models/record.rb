@@ -3,7 +3,7 @@ class Record < ActiveRecord::Base
   belongs_to :user
   serialize :data
   scope :activities, -> { joins(:record_category).where(:record_categories => {:category_type => 'activity'}).readonly(false) }
-  scope :public, -> { where("records.data IS NULL OR LOWER(records.data) NOT LIKE '%!private%'") }
+  scope :public_records, -> { where("records.data IS NULL OR LOWER(records.data) NOT LIKE '%!private%'") }
   before_save :add_data
   validate :end_timestamp_must_be_after_start
 
@@ -463,7 +463,7 @@ class Record < ActiveRecord::Base
       records = records.joins(:record_category).where('LOWER(records.data) LIKE ? OR LOWER(record_categories.full_name) LIKE ?', query, query)
     end
     unless options[:include_private]
-      records = records.public
+      records = records.public_records
     end
     records
   end
