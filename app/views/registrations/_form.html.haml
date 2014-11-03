@@ -8,8 +8,8 @@
         %label Sign up through
         .input
           .box#services
-            = link_to image_tag('google_32.png', :size => "32x32", :alt => "Google"), oauth_url(:google, :subdomain => false), :class => 'service'
-            = link_to image_tag('facebook_32.png', :size => "32x32", :alt => "Facebook"), oauth_url(:facebook, :subdomain => false), :class => 'service'
+            = link_to image_tag(asset_path('google_32.png'), :size => "32x32", :alt => "Google"), oauth_url(:google, :subdomain => false), :class => 'service'
+            = link_to image_tag(asset_path('facebook_32.png'), :size => "32x32", :alt => "Facebook"), oauth_url(:facebook, :subdomain => false), :class => 'service'
             or fill in the form below
       .clear-fix
         %label E-mail
@@ -21,6 +21,5 @@
         %label Password confirmation
         .input= f.password_field :password_confirmation
   .form-group
-    .col-sm-offset-2
-      = submit_tag I18n.t('user.sign_up'), :class => 'btn btn-primary'
+    = submit_tag I18n.t('user.sign_up'), :class => 'btn btn-primary'
 
