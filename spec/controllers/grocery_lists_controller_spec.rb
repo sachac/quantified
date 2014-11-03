@@ -125,6 +125,13 @@ RSpec.describe GroceryListsController, :type => :controller do
         put :update, {:id => grocery_list.to_param, :grocery_list => valid_attributes}, valid_session
         expect(response).to redirect_to(grocery_list)
       end
+
+      it "shares the list with an existing user" do
+        u = create(:user, :confirmed, email: 'foo@bar.com')
+        grocery_list = GroceryList.create! valid_attributes
+        put :update, {:id => grocery_list.to_param, :grocery_list => valid_attributes, email: u.email}, valid_session
+        expect(flash[:notice][0]).to eq I18n.t('grocery_lists.user_added', email: u.email)
+      end
     end
 
     describe "with invalid params" do
@@ -138,6 +145,15 @@ RSpec.describe GroceryListsController, :type => :controller do
         grocery_list = GroceryList.create! valid_attributes
         put :update, {:id => grocery_list.to_param, :grocery_list => invalid_attributes}, valid_session
         expect(response).to render_template("edit")
+      end
+
+      it "does not share the list" do
+        grocery_list = GroceryList.create! valid_attributes
+        create(:user, :confirmed, email: 'foo@bar.com')
+        allow(GroceryListUser).to receive(:create).and_return(false)
+        put :update, {:id => grocery_list.to_param, :email => 'foo@bar.com', :grocery_list => invalid_attributes}, valid_session
+        expect(response).to render_template("edit")
+        expect(flash[:error]).to_not be_nil
       end
     end
   end
@@ -156,5 +172,7 @@ RSpec.describe GroceryListsController, :type => :controller do
       expect(response).to redirect_to(grocery_lists_url)
     end
   end
+
+ 
 
 end

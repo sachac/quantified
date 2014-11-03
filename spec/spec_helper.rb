@@ -11,6 +11,7 @@ require 'database_cleaner'
 require 'paperclip/matchers'
 require 'fakeweb'
 FakeWeb.allow_net_connect = false
+ActiveRecord::Migration.maintain_test_schema! if defined?(ActiveRecord::Migration)
 ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'

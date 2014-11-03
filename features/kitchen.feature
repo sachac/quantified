@@ -26,7 +26,7 @@ Feature: Kitchen - Groceries
       | Apples  | Done   |
       | Pears   | Done   |
       | Oranges |        |
-    When I clear all crosse-off items
+    When I clear all crossed-off items
     Then I should not see "Apples" on my grocery list
     And I should see "Oranges" on my grocery list  
   Scenario: I can indicate quantities
@@ -61,6 +61,30 @@ Feature: Kitchen - Groceries
     And "W" indicates an intent to pick up "Apples"
     And "W" clears the intent to pick up "Apples"
     Then I should see that "Apples" are free to pick up
+  Scenario: I cannot grant access to my list to a new user
+    When I have a grocery list like:
+      | Name    | Status |
+      | Apples  | Done   |
+      | Pears   | Done   |
+      | Oranges |        |
+    And I share my grocery list with a non-existent user
+    Then I should see that the other user does not exist
+  Scenario: I can grant access to my list to an existing user
+    When I have a grocery list like:
+      | Name    | Status |
+      | Apples  | Done   |
+      | Pears   | Done   |
+      | Oranges |        |
+    And I share my list with an existing user
+    And I log out
+    And the other user logs in
+    Then the other user should see the list in their grocery lists
+    And the other user should be able to add "Bananas"
+    And the other user should be able to cross off "Oranges"
+  Scenario: I can remove someone's access to my grocery list
+    Given I share my list with an existing user
+    And I remove the other user from the grocery list
+    Then the other person should not have access to my grocery list
   Scenario: We can send messages
     When "W" sends me a message
     Then I should see that message

@@ -145,6 +145,9 @@ GEM
       responders
       thread_safe (~> 0.1)
       warden (~> 1.2.3)
+    devise_invitable (1.4.0)
+      actionmailer (>= 3.2.6, < 5)
+      devise (>= 3.2.0)
     diff-lcs (1.2.5)
     docile (1.1.5)
     domain_name (0.5.22)
@@ -209,7 +212,7 @@ GEM
       thor (>= 0.14, < 2.0)
     json (1.8.1)
     jwt (1.0.0)
-    launchy (2.4.2)
+    launchy (2.4.3)
       addressable (~> 2.3)
     libv8 (3.11.8.17)
     listen (2.7.11)
@@ -217,7 +220,7 @@ GEM
       rb-fsevent (>= 0.9.3)
       rb-inotify (>= 0.9)
     lumberjack (1.0.9)
-    mail (2.6.1)
+    mail (2.6.3)
       mime-types (>= 1.16, < 3)
     mechanize (2.7.3)
       domain_name (~> 0.5, >= 0.5.1)
@@ -422,6 +425,7 @@ DEPENDENCIES
   cucumber_factory!
   database_cleaner
   devise (~> 3.4.0)
+  devise_invitable
   email_spec
   email_validator
   exception_notification (~> 4)

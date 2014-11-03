@@ -6,10 +6,14 @@ class Ability
     if user.role == 'admin'
       can :manage, :all
     elsif !user.id.blank?
-      [Clothing, ClothingLog, Context, ClothingMatch, CsaFood, DecisionLog, Decision, Food, LibraryItem, LocationHistory, MeasurementLog, Measurement, Stuff, TimeRecord, TorontoLibrary, Memory, TapLogRecord, RecordCategory, Goal, ReceiptItem, ReceiptItemType, ReceiptItemCategory, GroceryList].each do |item|
+      [Clothing, ClothingLog, Context, ClothingMatch, CsaFood, DecisionLog, Decision, Food, LibraryItem, LocationHistory, MeasurementLog, Measurement, Stuff, TimeRecord, TorontoLibrary, Memory, TapLogRecord, RecordCategory, Goal, ReceiptItem, ReceiptItemType, ReceiptItemCategory].each do |item|
         can :manage, item, user_id: user.id
         can :create, item
       end
+      can :manage, GroceryList do |o|
+        o.user_id == user.id || GroceryListUser.find_by(grocery_list_id: o.id, user_id: user.id)
+      end
+      can :create, GroceryList
       can :manage, GroceryListItem do |o|
         can? :manage, o.grocery_list
       end

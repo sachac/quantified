@@ -1,11 +1,12 @@
 class GroceryListsController < ApplicationController
   respond_to :html, :xml, :json, :csv
-  load_and_authorize_resource
+  load_and_authorize_resource except: [:index]
+  
   before_action :set_grocery_list, only: [:show, :edit, :update, :destroy]
 
   def index
     authorize! :manage_account, current_account
-    @grocery_lists = current_account.grocery_lists
+    @grocery_lists = GroceryList.lists_for(current_account)
     respond_with(@grocery_lists)
   end
 
@@ -36,12 +37,14 @@ class GroceryListsController < ApplicationController
   
   def create
     @grocery_list = current_account.grocery_lists.new(grocery_list_params)
-    flash[:notice] = 'GroceryList was successfully created.' if @grocery_list.save
+    add_email_to_list(@grocery_list, params[:email]) if params[:email]
+    add_flash(:notice, 'GroceryList was successfully created.') if @grocery_list.save
     respond_with(@grocery_list)
   end
 
   def update
-    flash[:notice] = 'GroceryList was successfully updated.' if @grocery_list.update(grocery_list_params)
+    add_email_to_list(@grocery_list, params[:email]) if params[:email]
+    add_flash(:notice, 'GroceryList was successfully updated.') if @grocery_list.update(grocery_list_params)
     respond_with(@grocery_list)
   end
 
@@ -50,7 +53,27 @@ class GroceryListsController < ApplicationController
     respond_with(@grocery_list)
   end
 
+  def unshare
+    if @grocery_list.grocery_list_users.where(user_id: params[:user_id]).destroy_all
+      add_flash(:notice, 'Removed.')
+    end
+    respond_with @grocery_list, location: edit_grocery_list_path(@grocery_list), action: :edit
+  end
+  
   private
+    def add_email_to_list(list, email)
+      user = User.find_by(email: email)
+      if user.nil?
+        add_flash :error, I18n.t('grocery_lists.user_not_found', email: email)
+      else
+        if GroceryListUser.create(grocery_list: list, user: user)
+          add_flash :notice, I18n.t('grocery_lists.user_added', email: email)
+        else
+          add_flash :error, I18n.t('general.error.unknown')
+        end
+      end
+    end
+    
     def set_grocery_list
       @grocery_list = GroceryList.find(params[:id])
     end
