@@ -18,3 +18,4 @@ coverage
 public/coverage
 public/f/
 chef/
+node_modules

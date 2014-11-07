@@ -1,21 +1,33 @@
-%p#notice= notice
+%div#app{'ng-app' => 'groceries', 'data-grocery-list-id' => @grocery_list.id, 'ng-controller' => 'GroceriesController'}
+  %p#notice= notice
 
-%h1= @grocery_list.name
+  %h1= @grocery_list.name
 
-= form_tag quick_add_to_grocery_list_path(@grocery_list), method: :post, class: 'form-inline' do
-  = t('grocery_list_item.item')
-  = text_field_tag 'quick_add'
-  = submit_tag t('general.add'), class: 'btn'
+  = form_tag quick_add_to_grocery_list_path(@grocery_list), method: :post, class: 'form-inline', remote: true do
+    = t('grocery_list_item.item')
+    = text_field_tag 'quick_add'
+    = submit_tag t('general.add'), class: 'btn'
 
-%table.table.table-bordered.groceries
-  - @grocery_list.grocery_list_items.each do |x|
-    %tr{id: "item_#{x.id}", class: x.status}
-      %td= x.category
-      %td= action_list x
-      %td= x.quantity
-      %td= x.name
+  %div{'ng-repeat' => 'category in data.items'}
+    %h2 {{category[0]}}
+    %table.table.table-bordered.table-striped.groceries
+      %tr{'ng-repeat' => 'x in category[1]', 'ng-class' => 'x.status'}
+        %td.quantity {{x.quantity}}
+        %td.name {{x.name}}
+        %td.commands
+          %span.glyphicon.glyphicon-edit.edit
+          %span.glyphicon.glyphicon-user.reserve{'ng-click' => 'setStatus(x, "done")'}
+          %span.glyphicon.glyphicon-shopping-cart.done{'ng-click' => 'setStatus(x, "done")'}
+  %h2 In cart
+  %table.table.table-bordered.table-striped.groceries
+    %tr{'ng-repeat' => 'x in data.in_cart', 'ng-id' => 'x.id', 'ng-class' => 'x.status'}
+      %td.quantity {{x.quantity}}
+      %td.name {{x.name}}
+      %td.commands
+        %span.glyphicon.glyphicon-edit.edit
+        %span.glyphicon.glyphicon-list.restore{'ng-click' => 'setStatus(x, "")'}
 
-  
+          
 = link_to 'Edit', edit_grocery_list_path(@grocery_list)
 \|
 = link_to 'Back', grocery_lists_path

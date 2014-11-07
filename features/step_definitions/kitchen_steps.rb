@@ -8,10 +8,6 @@ When(/^I add "(.*?)" to our grocery list$/) do |arg1|
   click_button I18n.t('general.add')
 end
 
-When(/^I look at our grocery list$/) do
-  visit grocery_list_path(@grocery_list)
-end
-
 When(/^I set "(.*?)" to belong to "(.*?)"$/) do |arg1, arg2|
   item = @grocery_list.grocery_list_items.find_by_name(arg1)
   visit edit_grocery_list_item_path(item)
@@ -20,11 +16,23 @@ When(/^I set "(.*?)" to belong to "(.*?)"$/) do |arg1, arg2|
 end
 
 Then(/^I should see "(.*?)" under "(.*?)"$/) do |arg1, arg2|
-  item = @grocery_list.grocery_list_items.find_by_name(arg1)
-  visit grocery_list_path(@grocery_list)
-  expect(page.find("tr#item_#{item.id}").text).to match arg2
-  expect(item.category).to eq arg2
+  visit items_for_grocery_list_path(@grocery_list.id, format: :json)
+  value = JSON.parse(page.body)['items']
+  found = false
+  value.each do |row|
+    if row[0] == arg2
+      found = row[1].to_json.match(arg1)
+    end
+  end
+  expect(found).to be_truthy
 end
+
+Then(/^I should (?:see|have) "(.*?)" on (?:my|our) grocery list$/) do |arg1|
+  visit items_for_grocery_list_path(@grocery_list.id, format: :json)
+  value = JSON.parse(page.body)
+  expect(value['items'].to_json).to include(arg1)
+end
+
 
 Given(/^I have "(.*?)" on our grocery list$/) do |arg1|
   @grocery_list.grocery_list_items.create(name: arg1)
@@ -32,27 +40,26 @@ end
 
 When(/^I cross "(.*?)" off$/) do |arg1|
   item = @grocery_list.grocery_list_items.find_by_name(arg1)
-  visit grocery_list_path(@grocery_list)
-  find(".cross_off_#{item.id}").click
+  item.status = 'done'
+  item.save!
 end
 
-Then(/^"(.*?)" should be crossed off$/) do |arg1|
-  visit grocery_list_path(@grocery_list)
+Then(/^the other user should be able to cross off "(.*?)"$/) do |arg1|
   item = @grocery_list.grocery_list_items.find_by_name(arg1)
-  expect(page.find("tr.done#item_#{item.id}")).to_not be_nil
+  item.status = 'done'
+  item.save!
+end
+
+
+Then(/^"(.*?)" should be crossed off$/) do |arg1|
+  visit items_for_grocery_list_path(@grocery_list.id, format: :json)
+  expect(JSON.parse(page.body)['in_cart'].to_json).to match arg1
 end
 
 When(/^I restore "(.*?)"$/) do |arg1|
   item = @grocery_list.grocery_list_items.find_by_name(arg1)
-  visit grocery_list_path(@grocery_list)
-  find(".restore_#{item.id}").click
-end
-
-Then(/^I should have "(.*?)" on our grocery list$/) do |arg1|
-  item = @grocery_list.grocery_list_items.find_by_name(arg1)
-  visit grocery_list_path(@grocery_list)
-  expect(page.find("tr#item_#{item.id}")).to_not be_nil
-  expect(page).to have_no_selector("tr.done#item_#{item.id}")
+  item.status = ''
+  item.save!
 end
 
 Given(/^I have a grocery list like:$/) do |table|
@@ -65,11 +72,7 @@ When(/^I clear all crossed\-off items$/) do
   pending # express the regexp above with the code you wish you had
 end
 
-Then(/^I should not see "(.*?)" on my grocery list$/) do |arg1|
-  pending # express the regexp above with the code you wish you had
-end
-
-Then(/^I should see "(.*?)" on my grocery list$/) do |arg1|
+Then(/^I should not see "(.*?)" on (?:my|our) grocery list$/) do |arg1|
   pending # express the regexp above with the code you wish you had
 end
 
@@ -159,10 +162,7 @@ When(/^the other user accepts the invitation$/) do
   @other = User.find_by(email: @other_user_email)
   expect(@other.invitation_token).to_not be_nil
   @other_password = 'test password'
-  puts accept_user_invitation_url(invitation_token: @other.invitation_token)
   visit accept_user_invitation_url(invitation_token: @other.invitation_token)
-  puts page.body
-  
   @other.reload
 end
 
@@ -201,22 +201,17 @@ Then(/^the other user should be able to add "(.*?)"$/) do |arg1|
   click_button I18n.t('general.add')
 end
 
-Then(/^the other user should be able to cross off "(.*?)"$/) do |arg1|
-  item = @grocery_list.grocery_list_items.find_by_name(arg1)
-  visit grocery_list_path(@grocery_list)
-  find(".cross_off_#{item.id}").click
-end
-
 When(/^I share my list with an existing user$/) do
   @other = create(:user, :confirmed)
   visit edit_grocery_list_path(@grocery_list)
   fill_in 'email', with: @other.email
   click_button 'Submit'
+  expect(GroceryListUser.where(grocery_list_id: @grocery_list.id, user_id: @other.id).count).to eq 1
 end
 
 Given(/^I remove the other user from the grocery list$/) do
   visit edit_grocery_list_path(@grocery_list)
-  click_link ".remove_access_#{@other.id}"
+  page.find(".remove_access_#{@other.id}").click
 end
 
 Then(/^the other person should not have access to my grocery list$/) do

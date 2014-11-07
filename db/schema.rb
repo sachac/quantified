@@ -161,6 +161,15 @@ ActiveRecord::Schema.define(version: 20141025194910) do
     t.integer  "receipt_item_category_id"
   end
 
+  create_table "grocery_list_users", force: true do |t|
+    t.integer  "grocery_list_id"
+    t.string   "email"
+    t.integer  "user_id"
+    t.string   "status"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "grocery_lists", force: true do |t|
     t.integer  "user_id"
     t.string   "name"

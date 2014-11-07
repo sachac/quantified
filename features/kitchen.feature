@@ -4,12 +4,10 @@ Feature: Kitchen - Groceries
     And I have a grocery list named "Home"
   Scenario: I can add an item to our grocery list
     When I add "Apples" to our grocery list
-    And I look at our grocery list
-    Then I should see "Apples"
+    Then I should see "Apples" on our grocery list
   Scenario: I can organize items by aisle/category
     When I add "Apples" to our grocery list
     And I set "Apples" to belong to "Produce"
-    And I look at our grocery list
     Then I should see "Apples" under "Produce"
   Scenario: We can cross items off
     Given I have "Apples" on our grocery list
@@ -19,7 +17,7 @@ Feature: Kitchen - Groceries
     Given I have "Apples" on our grocery list
     And I cross "Apples" off
     When I restore "Apples"
-    Then I should have "Apples" on our grocery list
+    Then I should see "Apples" on our grocery list
   Scenario: I can clear all crossed-off items
     Given I have a grocery list like:
       | Name    | Status |

@@ -1,0 +1,11 @@
+asset 'd3'
+asset 'angular'
+asset 'angular-devise'
+asset 'angular-mocks'
+asset 'angular-resource'
+asset 'angular-route'
+asset 'karma'
+asset 'karma-jasmine'
+asset 'karma-ng-scenario'
+asset 'grunt-mocha'
+

@@ -1,0 +1,15 @@
+{
+  "name": "dsl-generated dependencies",
+  "dependencies": {
+    "d3": "latest",
+    "angular": "latest",
+    "angular-devise": "latest",
+    "angular-mocks": "latest",
+    "angular-resource": "latest",
+    "angular-route": "latest",
+    "karma": "latest",
+    "karma-jasmine": "latest",
+    "karma-ng-scenario": "latest",
+    "grunt-mocha": "latest"
+  }
+}

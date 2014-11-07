@@ -1,4 +1,5 @@
 source 'http://rubygems.org'
+source 'https://rails-assets.org'
 
 gem 'rack-offline', :git => 'git://github.com/wycats/rack-offline.git'
 gem 'rails', '~> 4.1'
@@ -24,12 +25,14 @@ gem 'simple_form'
 gem 'jquery-rails', '~> 2.1.4'
 gem 'rails4-autocomplete'
 gem 'handles_sortable_columns'
+gem 'angular_rails_csrf'
 gem 'gdata_19', '1.1.5'
 gem 'cancancan', '~> 1.9'
 gem 'rails-observers'
 #gem 'n_gram'
 #gem 'statsample'
 gem 'exception_notification', '~> 4', :require => 'exception_notifier'
+gem 'rails-assets-angular'
 
 # Use unicorn as the web server
 # gem 'unicorn'
@@ -88,7 +91,11 @@ group :development do
   gem 'therubyracer', '~> 0.11.4'
 end
 
+gem 'bower-rails'
+
 group :development, :test do
+  gem 'rails-assets-angular-mocks'
+  gem 'selenium-webdriver'
   gem 'database_cleaner'
   gem 'rspec-rails'
   gem 'factory_girl_rails'  

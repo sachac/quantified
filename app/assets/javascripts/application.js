@@ -14,3 +14,4 @@
 //= require jquery.timeago
 //= require cal-heatmap.min
 //= require quantified
+//= require grocery_lists

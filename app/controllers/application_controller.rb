@@ -4,6 +4,7 @@ class ApplicationController < ActionController::Base
   check_authorization :unless => :devise_controller?
   handles_sortable_columns
   protect_from_forgery
+  respond_to :html, :json
   before_filter :before_awesome
   before_filter :authenticate_user_from_token!
       
