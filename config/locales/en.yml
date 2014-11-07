@@ -180,6 +180,7 @@ en:
     error:
       adding: "Error adding %{item}."
     added: "Added %{item}."
+    already_added: "%{item} already on the list."
   grocery_lists:
     user_added: "%{email} added."
     user_not_found: "%{email} is not yet a user. Please ask them to sign up first. Thank you!"

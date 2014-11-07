@@ -55,6 +55,13 @@ RSpec.describe GroceryListsController, :type => :controller do
   end
 
   describe "POST quick_add_to" do
+    it "does not add duplicates" do
+      grocery_list = GroceryList.create! valid_attributes
+      post :quick_add_to, {id: grocery_list.to_param, quick_add: 'Milk'}, valid_session
+      post :quick_add_to, {id: grocery_list.to_param, quick_add: 'Milk'}, valid_session
+      expect(grocery_list.grocery_list_items.where(name: 'Milk').count).to eq 1
+    end
+    
     describe "with invalid params" do
       it "reports an error" do
         grocery_list = GroceryList.create! valid_attributes

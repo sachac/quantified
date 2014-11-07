@@ -4,6 +4,7 @@
     "d3": "latest",
     "angular": "latest",
     "angular-devise": "latest",
+    "angular-filter": "latest",
     "angular-mocks": "latest",
     "angular-resource": "latest",
     "angular-route": "latest",

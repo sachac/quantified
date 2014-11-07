@@ -3,24 +3,24 @@
 
   %h1= @grocery_list.name
 
-  = form_tag quick_add_to_grocery_list_path(@grocery_list), method: :post, class: 'form-inline', remote: true do
+  = form_tag quick_add_to_grocery_list_path(@grocery_list), method: :post, class: 'form-inline', remote: true, 'ng-submit' => 'quickAdd' do
     = t('grocery_list_item.item')
-    = text_field_tag 'quick_add'
+    = text_field_tag 'quick_add', nil, 'ng-model' => 'addText'
     = submit_tag t('general.add'), class: 'btn'
 
-  %div{'ng-repeat' => 'category in data.items'}
-    %h2 {{category[0]}}
+  %div
     %table.table.table-bordered.table-striped.groceries
-      %tr{'ng-repeat' => 'x in category[1]', 'ng-class' => 'x.status'}
+      %tr{'ng-repeat' => 'x in data', 'ng-class' => 'x.status', 'ng-show' => 'x.status != "cart"'}
+        %td.category {{x.category}}
         %td.quantity {{x.quantity}}
         %td.name {{x.name}}
         %td.commands
           %span.glyphicon.glyphicon-edit.edit
-          %span.glyphicon.glyphicon-user.reserve{'ng-click' => 'setStatus(x, "done")'}
-          %span.glyphicon.glyphicon-shopping-cart.done{'ng-click' => 'setStatus(x, "done")'}
+          %span.glyphicon.glyphicon-shopping-cart.done{'ng-click' => 'setStatus(x, "cart")'}
   %h2 In cart
   %table.table.table-bordered.table-striped.groceries
-    %tr{'ng-repeat' => 'x in data.in_cart', 'ng-id' => 'x.id', 'ng-class' => 'x.status'}
+    %tr{'ng-repeat' => 'x in data', 'ng-id' => 'x.id', 'ng-class' => 'x.status', 'ng-show' => 'x.status == "cart"'}
+      %td.category {{x.category}}
       %td.quantity {{x.quantity}}
       %td.name {{x.name}}
       %td.commands
