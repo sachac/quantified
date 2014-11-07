@@ -17,11 +17,11 @@ end
 
 Then(/^I should see "(.*?)" under "(.*?)"$/) do |arg1, arg2|
   visit items_for_grocery_list_path(@grocery_list.id, format: :json)
-  value = JSON.parse(page.body)['items']
+  value = JSON.parse(page.body)
   found = false
   value.each do |row|
-    if row[0] == arg2
-      found = row[1].to_json.match(arg1)
+    if row.name == arg1
+      found = row.category == arg2
     end
   end
   expect(found).to be_truthy
@@ -30,7 +30,7 @@ end
 Then(/^I should (?:see|have) "(.*?)" on (?:my|our) grocery list$/) do |arg1|
   visit items_for_grocery_list_path(@grocery_list.id, format: :json)
   value = JSON.parse(page.body)
-  expect(value['items'].to_json).to include(arg1)
+  expect(value.to_json).to include(arg1)
 end
 
 
@@ -40,20 +40,27 @@ end
 
 When(/^I cross "(.*?)" off$/) do |arg1|
   item = @grocery_list.grocery_list_items.find_by_name(arg1)
-  item.status = 'done'
+  item.status = 'cart'
   item.save!
 end
 
 Then(/^the other user should be able to cross off "(.*?)"$/) do |arg1|
   item = @grocery_list.grocery_list_items.find_by_name(arg1)
-  item.status = 'done'
+  item.status = 'cart'
   item.save!
 end
 
 
 Then(/^"(.*?)" should be crossed off$/) do |arg1|
   visit items_for_grocery_list_path(@grocery_list.id, format: :json)
-  expect(JSON.parse(page.body)['in_cart'].to_json).to match arg1
+  found = false
+  JSON.parse(page.body).each do |x|
+    if (x.name == arg1)
+      expect(x.status).to eq 'cart'
+      found = true
+    end
+  end
+  expect(found).to be_truthy
 end
 
 When(/^I restore "(.*?)"$/) do |arg1|

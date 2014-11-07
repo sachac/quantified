@@ -12,6 +12,9 @@
 //= require jquery.qtip.min
 //= require jquery.sparkline.min
 //= require jquery.timeago
+//= require angular/angular
+//= require angular-filter/dist/angular-filter.min
+//= require angular-devise/lib/devise-min
 //= require cal-heatmap.min
 //= require quantified
 //= require grocery_lists

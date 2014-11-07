@@ -15,9 +15,8 @@ class GroceryListsController < ApplicationController
 
   
   def items_for
-    @items = @grocery_list.grocery_list_items.joins('LEFT JOIN receipt_item_categories ON grocery_list_items.receipt_item_category_id=receipt_item_categories.id').where('status IS NULL OR status != ?', 'done').group_by { |x| x.receipt_item_category ? x.receipt_item_category.name : '' }.sort_by { |k,v| k }
-    @in_cart = @grocery_list.grocery_list_items.where(status: 'done')
-    respond_with in_cart: @in_cart, items: @items
+    @items = @grocery_list.grocery_list_items.joins('LEFT JOIN receipt_item_categories ON grocery_list_items.receipt_item_category_id=receipt_item_categories.id').includes(:receipt_item_category).select('grocery_list_items.id, grocery_list_items.name, grocery_list_items.status, grocery_list_items.quantity, receipt_item_category_id, receipt_item_categories.name AS category')
+    respond_with @items
   end
   
 
@@ -31,12 +30,17 @@ class GroceryListsController < ApplicationController
 
   def quick_add_to
     if @grocery_list
-      item = @grocery_list.grocery_list_items.new
-      item.name = params[:quick_add]
-      if item.save
-        flash[:notice] = t('grocery_list_item.added', item: params[:quick_add])
+      item = @grocery_list.grocery_list_items.find_by(name: params[:quick_add])
+      if item
+        add_flash :notice, t('grocery_list_item.already_added', item: params[:quick_add])
       else
-        flash[:error] = t('grocery_list_item.error.adding', item: params[:quick_add])
+        item = @grocery_list.grocery_list_items.new
+        item.name = params[:quick_add]
+        if item.save
+          add_flash :notice, t('grocery_list_item.added', item: params[:quick_add])
+        else
+          add_flash :error, t('grocery_list_item.error.adding', item: params[:quick_add])
+        end
       end
       respond_with item, location: params[:destination] || grocery_list_path(@grocery_list)
     end
