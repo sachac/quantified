@@ -14,7 +14,7 @@
         - @grocery_list.grocery_list_users.each do |u|
           %tr
             %td= u.user.email
-            %td= link_to 'Remove', unshare_grocery_list_path(@grocery_list, user_id: u.user_id), class: "remove_access_#{u.id}", method: :delete
+            %td= link_to 'Remove', unshare_grocery_list_path(@grocery_list, user_id: u.user_id), class: "remove_access_#{u.user_id}", method: :delete
   .form-group
     = submit_tag I18n.t('app.general.submit'), :class => 'btn btn-primary'
     

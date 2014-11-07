@@ -117,17 +117,6 @@ module ApplicationHelper
         actions << edit_icon(o, destination: request.fullpath)
         actions << delete_icon(o, destination: request.fullpath)
       end
-    elsif o.is_a? GroceryListItem
-      if can? :manage, o
-        actions << edit_icon(edit_grocery_list_item_path(o))
-        actions << delete_icon(grocery_list_item_path(o))
-        if o.status != 'done'
-          actions << link_to('Cross off', grocery_list_item_path(o, grocery_list_item: { status: 'done'}), method: :patch, class: "cross_off_#{o.id}")
-        else
-          actions << link_to('Restore', grocery_list_item_path(o, grocery_list_item: { status: ''}), method: :patch, class: "restore_#{o.id}")
-          
-        end
-      end
     end
     actions
   end

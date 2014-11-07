@@ -26,7 +26,8 @@ class GroceryListItemsController < ApplicationController
   end
 
   def create
-    authenticate_managing!
+    @grocery_list = GroceryList.find(params[:grocery_list_item][:grocery_list_id])
+    authorize! :manage, @grocery_list
     @grocery_list_item = GroceryListItem.new(grocery_list_item_params)
     flash[:notice] = 'GroceryListItem was successfully created.' if @grocery_list_item.save
     respond_with(@grocery_list_item)

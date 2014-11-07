@@ -11,8 +11,15 @@ class GroceryListsController < ApplicationController
   end
 
   def show
-    respond_with(@grocery_list)
   end
+
+  
+  def items_for
+    @items = @grocery_list.grocery_list_items.joins('LEFT JOIN receipt_item_categories ON grocery_list_items.receipt_item_category_id=receipt_item_categories.id').where('status IS NULL OR status != ?', 'done').group_by { |x| x.receipt_item_category ? x.receipt_item_category.name : '' }.sort_by { |k,v| k }
+    @in_cart = @grocery_list.grocery_list_items.where(status: 'done')
+    respond_with in_cart: @in_cart, items: @items
+  end
+  
 
   def new
     @grocery_list = current_account.grocery_lists.new
@@ -31,7 +38,7 @@ class GroceryListsController < ApplicationController
       else
         flash[:error] = t('grocery_list_item.error.adding', item: params[:quick_add])
       end
-      redirect_to params[:destination] || grocery_list_path(@grocery_list)
+      respond_with item, location: params[:destination] || grocery_list_path(@grocery_list)
     end
   end
   

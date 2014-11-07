@@ -24,6 +24,7 @@ Home::Application.routes.draw do
     member do
       post :quick_add_to
       delete :unshare
+      get :items_for
     end
   end
   resources :goals
