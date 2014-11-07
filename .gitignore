@@ -19,3 +19,5 @@ public/coverage
 public/f/
 chef/
 node_modules
+vendor/assets/bower_components
+log/
