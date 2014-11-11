@@ -1,7 +1,10 @@
 %div#app{'ng-app' => 'groceries', 'data-grocery-list-id' => @grocery_list.id, 'ng-controller' => 'GroceriesController'}
   %p#notice= notice
 
-  %h1= @grocery_list.name
+  %h1
+    = @grocery_list.name
+    = link_to '', grocery_list_path(@grocery_list), class: 'glyphicon glyphicon-refresh', 'ng-click' => 'loadData', style: 'font-size: small'
+  .last-loaded Last sync: {{ lastLoaded | date : 'mediumTime'}}
 
   = form_tag quick_add_to_grocery_list_path(@grocery_list), method: :post, class: 'form-inline', remote: true, 'ng-submit' => 'quickAdd' do
     = t('grocery_list_item.item')
