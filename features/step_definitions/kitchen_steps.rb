@@ -20,8 +20,8 @@ Then(/^I should see "(.*?)" under "(.*?)"$/) do |arg1, arg2|
   value = JSON.parse(page.body)
   found = false
   value.each do |row|
-    if row.name == arg1
-      found = row.category == arg2
+    if row['name'] == arg1
+      found = (row['category'] == arg2)
     end
   end
   expect(found).to be_truthy
@@ -55,8 +55,8 @@ Then(/^"(.*?)" should be crossed off$/) do |arg1|
   visit items_for_grocery_list_path(@grocery_list.id, format: :json)
   found = false
   JSON.parse(page.body).each do |x|
-    if (x.name == arg1)
-      expect(x.status).to eq 'cart'
+    if (x['name'] == arg1)
+      expect(x['status']).to eq 'cart'
       found = true
     end
   end
@@ -76,11 +76,13 @@ Given(/^I have a grocery list like:$/) do |table|
 end
 
 When(/^I clear all crossed\-off items$/) do
-  pending # express the regexp above with the code you wish you had
+  visit grocery_list_path(@grocery_list)
+  click_link 'Clear all in cart'
 end
 
 Then(/^I should not see "(.*?)" on (?:my|our) grocery list$/) do |arg1|
-  pending # express the regexp above with the code you wish you had
+  visit grocery_list_path(@grocery_list)
+  expect(page.body).to_not match arg1
 end
 
 Then(/^our grocery list should say I need (\d+) "(.*?)"$/) do |arg1, arg2|

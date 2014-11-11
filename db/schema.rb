@@ -11,23 +11,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141025194910) do
+ActiveRecord::Schema.define(version: 20141103181747) do
 
   create_table "clothing", force: true do |t|
     t.string   "name"
     t.string   "color"
     t.string   "clothing_type"
     t.string   "notes"
-    t.boolean  "labeled",              default: true
+    t.boolean  "labeled",                         default: true
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "status"
-    t.float    "hue"
-    t.float    "saturation"
-    t.float    "brightness"
-    t.float    "cost"
+    t.float    "hue",                  limit: 24
+    t.float    "saturation",           limit: 24
+    t.float    "brightness",           limit: 24
+    t.float    "cost",                 limit: 24
     t.date     "last_worn"
-    t.integer  "clothing_logs_count",  default: 0
+    t.integer  "clothing_logs_count",             default: 0
     t.integer  "last_clothing_log_id"
     t.integer  "user_id"
     t.string   "image_file_name"
@@ -493,14 +493,14 @@ ActiveRecord::Schema.define(version: 20141025194910) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.date     "birthdate"
-    t.float    "life_expectancy"
+    t.float    "life_expectancy",          limit: 24
     t.integer  "life_expectancy_in_years"
     t.date     "projected_end"
     t.string   "role"
     t.string   "username"
     t.string   "authentication_token"
     t.text     "data",                     limit: 16777215
-    t.string   "invitation_token",         limit: 60
+    t.string   "invitation_token"
     t.datetime "invitation_sent_at"
     t.datetime "invitation_accepted_at"
     t.integer  "invitation_limit"
@@ -511,11 +511,14 @@ ActiveRecord::Schema.define(version: 20141025194910) do
     t.datetime "confirmation_sent_at"
     t.boolean  "approved",                                  default: false, null: false
     t.string   "unconfirmed_email"
+    t.datetime "invitation_created_at"
+    t.integer  "invitations_count",                         default: 0
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["invitation_token"], name: "index_users_on_invitation_token", using: :btree
+  add_index "users", ["invitations_count"], name: "index_users_on_invitations_count", using: :btree
   add_index "users", ["invited_by_id"], name: "index_users_on_invited_by_id", using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
 

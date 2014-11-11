@@ -19,6 +19,10 @@ class GroceryListsController < ApplicationController
     respond_with @items
   end
   
+  def clear
+    @items = @grocery_list.grocery_list_items.where('status=?', 'cart').destroy_all
+    respond_with @grocery_list
+  end
 
   def new
     @grocery_list = current_account.grocery_lists.new
@@ -45,7 +49,7 @@ class GroceryListsController < ApplicationController
       respond_with item, location: params[:destination] || grocery_list_path(@grocery_list)
     end
   end
-  
+
   def create
     @grocery_list = current_account.grocery_lists.new(grocery_list_params)
     add_email_to_list(@grocery_list, params[:email]) if params[:email]
