@@ -7,7 +7,9 @@
     - else
       - data.each_with_index do |v, i|
         = record_data_input @record, v, i
-  = f.input :record_category, :collection => current_account.record_categories.order('full_name')
+  .form-group
+    %label.control-label Category
+    = select_tag('record[record_category]', options_from_collection_for_select(current_account.record_categories.order('full_name'), 'id', 'full_name', @record.record_category_id), class: 'form-control')
   - previous_activity = @record.previous_activity
   - previous_hint = nil
   - if @record.record_category.category_type == 'activity'
