@@ -5,7 +5,7 @@ Feature: Kitchen - Groceries
   Scenario: I can add an item to our grocery list
     When I add "Apples" to our grocery list
     Then I should see "Apples" on our grocery list
-  Scenario: I can organize items by aisle/category
+  Scenario: I can organize items by aisle or category
     When I add "Apples" to our grocery list
     And I set "Apples" to belong to "Produce"
     Then I should see "Apples" under "Produce"
@@ -88,7 +88,7 @@ Feature: Kitchen - Groceries
     Then I should see that message
   Scenario: We can request to meet and indicate our location
     When "W" requests to meet at the counters
-    Then I should see a request to meet at the counters
+    Then I should see a request to meet at the counters    
   Scenario: I can take notes on products
   Scenario: I can autocomplete an item name
   Scenario: I can link groceries to recipes

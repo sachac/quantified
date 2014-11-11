@@ -18,6 +18,7 @@
           %span.glyphicon.glyphicon-edit.edit
           %span.glyphicon.glyphicon-shopping-cart.done{'ng-click' => 'setStatus(x, "cart")'}
   %h2 In cart
+  = link_to 'Clear all in cart', clear_grocery_list_path(@grocery_list), method: :post, 'ng-click' => 'clearCart()'
   %table.table.table-bordered.table-striped.groceries
     %tr{'ng-repeat' => 'x in data', 'ng-id' => 'x.id', 'ng-class' => 'x.status', 'ng-show' => 'x.status == "cart"'}
       %td.category {{x.category}}
