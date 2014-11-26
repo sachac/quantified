@@ -6,6 +6,12 @@ Also, if you use Emacs, see lisp/quantified.el
 
 ----
 
+Other useful building steps:
+
+rake bower:install
+
+----
+
 If you're creating your own instance, here's how to set up an admin user using *rails console*:
 
 ```ruby
