@@ -132,12 +132,17 @@ describe RecordCategoriesController, :type => :controller  do
       it "does not let me spoof user ID" do
         u2 = create(:user, :demo)
         post :create, record_category: { name: 'blah', user_id: u2.id, category_type: 'activity' }
-        assigns(:record_category).user.should == @user
+        expect(assigns(:record_category).user).to eq @user
       end
       it "tracks a record if the timestamp was specified" do
         post :create, record_category: { name: 'blah', category_type: 'activity' }, timestamp: Time.zone.now - 1.hour
-        Record.last.record_category.name.should == 'blah'
+        expect(Record.last.record_category.name).to eq 'blah'
       end
+      it "lets me add data fields" do
+        post :create, record_category: { name: 'blah', category_type: 'activity', data: [{key: 'info', label: 'Info', type: 'string' }] }
+        expect(assigns[:record_category].data.to_json).to match /info/
+      end
+      
     end
     describe 'PUT update' do
       it "updates the item" do
@@ -148,8 +153,12 @@ describe RecordCategoriesController, :type => :controller  do
       it "doesn't let me spoof user ID" do
         u2 = create(:user, :demo)
         put :update, id: @record_category.id, record_category: { name: 'blah', data: [ { 'key' => 'note', 'label' => 'Note', 'type' => 'text' } ], user_id: u2.id }
-        assigns(:record_category).user_id.should == @user.id
-        flash[:notice].should == I18n.t('record_category.updated')
+        expect(assigns(:record_category).user_id).to eq @user.id
+        expect(flash[:notice]).to eq I18n.t('record_category.updated')
+      end
+      it "lets me add data fields" do
+        put :update, id: @record_category.id, record_category: { name: 'blah', data: [ { 'key' => 'note', 'label' => 'Note', 'type' => 'text' } ] }
+        expect(assigns(:record_category).data.to_json).to match /note/
       end
     end
     describe 'POST track' do
