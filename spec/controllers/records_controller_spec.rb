@@ -83,6 +83,10 @@ describe RecordsController, :type => :controller  do
         put :update, id: @record.id, record: { id: @record.id, timestamp: Time.zone.now - 2.hours }
         flash[:notice].should == I18n.t('record.updated')
       end
+      it "updates a record with a note" do
+        put :update, id: @record.id, record: { id: @record.id, timestamp: Time.zone.now - 2.hours, data: { note: 'This is a note' }}
+        expect(@record.reload.data['note']).to eq 'This is a note'
+      end
     end
     describe 'DELETE /records/1' do
       it "removes the record" do

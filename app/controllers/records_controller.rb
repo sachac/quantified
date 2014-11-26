@@ -74,6 +74,9 @@ class RecordsController < ApplicationController
     if !params[:record][:timestamp].blank? and params[:record][:timestamp].match /^[0-9]+/  # probably a timestamp
        @record.timestamp = Time.at(params[:record][:timestamp].to_f)
     end
+    if params[:data]
+      @record.data = params[:data]
+    end
     if @record.save
       @record.update_previous
       @record.update_next
@@ -90,7 +93,11 @@ class RecordsController < ApplicationController
     if params[:record][:end_timestamp].blank?
       params[:record].delete(:end_timestamp)
     end
-    if @record.update_attributes(record_params)
+    @record.assign_attributes(record_params)
+    if params[:record][:data]
+      @record.data = params[:record][:data]
+    end
+    if @record.save
       @record.update_previous
       @record.update_next
       add_flash :notice, t('record.updated')
@@ -136,7 +143,7 @@ class RecordsController < ApplicationController
 
   private
   def record_params
-    params.require(:record).permit(:source_name, :source_id, :timestamp, :record_category_id, :data, :end_timestamp, :duration, :date, :manual)
+    params.require(:record).permit(:source_name, :source_id, :timestamp, :record_category_id, :end_timestamp, :duration, :date, :manual)
   end
     
 end
