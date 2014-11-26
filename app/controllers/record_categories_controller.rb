@@ -180,7 +180,7 @@ class RecordCategoriesController < ApplicationController
     authorize! :manage_account, current_account
     @record_category = current_account.record_categories.new(record_category_params)
     params[:record_category][:data].reject! { |x| x['key'].blank? } if params[:record_category][:data]
-    @record_category.data ||= Array.new
+    @record_category.data = params[:record_category][:data] || Array.new
     if @record_category.save
       add_flash :notice, t('record_category.created')
     end
@@ -202,7 +202,7 @@ class RecordCategoriesController < ApplicationController
     authorize! :manage_account, current_account
     @record_category = current_account.record_categories.find(params[:id])
     params[:record_category][:data].reject! { |x| x['key'].blank? } if params[:record_category][:data]
-    params[:record_category].delete(:user_id)
+    @record_category.data = params[:record_category][:data] || Array.new
     if @record_category.update_attributes(record_category_params)
       add_flash :notice, t('record_category.updated')
     end
@@ -288,6 +288,6 @@ class RecordCategoriesController < ApplicationController
 
   private
   def record_category_params
-    params.require(:record_category).permit(:name, :category_type, :parent_id, :data, :full_name, :color, :active)
+    params.require(:record_category).permit(:name, :category_type, :parent_id, :full_name, :color, :active)
   end
 end
