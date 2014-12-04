@@ -5,13 +5,22 @@ VAGRANTFILE_API_VERSION = "2"
 
 $apt = <<APT
 sudo apt-get update
-sudo apt-get install -y bundler git libmysqlclient-dev libsqlite3-dev
+sudo apt-get install -y bundler git libmysqlclient-dev libsqlite3-dev npm nodejs-legacy
 APT
 
 $bundler = <<BUNDLER
 cd /vagrant
 bundle install
 BUNDLER
+
+$npm = <<NPM
+npm install bower -g
+NPM
+
+$bower = <<BOWER
+cd /vagrant
+echo n | rake bower:install
+BOWER
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "ubuntu/trusty64"
@@ -21,4 +30,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
   config.vm.provision "shell", privileged: true, inline: $apt
   config.vm.provision "shell", privileged: false, inline: $bundler
+  config.vm.provision "shell", privileged: true, inline: $npm
+  config.vm.provision "shell", privileged: false, inline: $bower
 end
