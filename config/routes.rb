@@ -29,8 +29,11 @@ Home::Application.routes.draw do
     end
   end
   resources :goals
-  match 'auth/:service/callback' => 'services#create', :via => :get
-  match 'auth/:service' => 'sessions#setup', :as => :oauth, :via => :get
+  devise_scope :user do
+    match 'auth/:service/callback' => 'services#create', :via => [:get, :post]
+    match 'auth/:service' => 'sessions#setup', :as => :oauth, :via => [:get, :post]
+  end 
+
   resources :services, :only => [:index, :create, :destroy]
   get 'privacy' => 'home#privacy'
   match 'admin' => 'admin#index', :as => 'admin', :via => :get

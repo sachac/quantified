@@ -1,5 +1,6 @@
 class ServicesController < ApplicationController
   skip_authorization_check :only => [:create]
+  protect_from_forgery :except => [:create]
   def create
     omniauth = request.env['omniauth.auth']
     service_route = params[:service] || 'no service (invalid callback)'
@@ -18,8 +19,8 @@ class ServicesController < ApplicationController
       name = omniauth['info']['name']
       provider = omniauth['provider']
       uid = omniauth['uid']
-    else
-      flash[:error] =  service_route.capitalize + ' cannot be used to sign up on Quantified Awesome. Please use another authentication provider, or create an account.'
+else
+flash[:error] =  service_route.capitalize + ' cannot be used to sign up on Quantified Awesome. Please use another authentication provider, or create an account.'
       redirect_to new_user_session_path and return
     end
     
@@ -30,7 +31,7 @@ class ServicesController < ApplicationController
     auth = Service.find_by_provider_and_uid(provider, uid)
     if user_signed_in?
       if !auth
-        current_account.services.create(:provider => provider, :uid => uid, :uname => name, :uemail => email)
+        current_account.services.create({:provider => provider, :uid => uid, :uname => name, :uemail => email}.permit!)
         flash[:notice] = 'Sign in via ' + provider.capitalize + ' has been added to your account.'
         redirect_to root_path and return
       else
@@ -38,7 +39,6 @@ class ServicesController < ApplicationController
         redirect_to root_path and return
       end  
     end
-    
     if auth
       flash[:notice] = 'Signed in successfully via ' + provider.capitalize + '.'
       sign_in_and_redirect(:user, auth.user)
@@ -49,16 +49,21 @@ class ServicesController < ApplicationController
         existing_user = User.find_by_email(email)
         if existing_user
           # map this new login method via a service provider to an existing account if the email address is the same
-          existing_user.services.create(:provider => provider, :uid => uid, :uname => name, :uemail => email)
+          service = existing_user.services.new
+          service.provider = provider
+          service.uid = uid
+          service.uname = name
+          service.email = email
+          service.save
           flash[:notice] = 'Sign in via ' + provider.capitalize + ' has been added to your account ' + existing_user.email + '. Signed in successfully!'
           sign_in_and_redirect(:user, existing_user)
         else
           # new user, set email, a random password and take the name from the authentication service
           # let's create a new user: register this user and add this authentication method for this user
           name = name[0, 39] if name.length > 39             # otherwise our user validation will hit us
-          user = User.new :email => email, :password => SecureRandom.hex(10)
+          user = User.new({:email => email, :password => SecureRandom.hex(10)}.permit!)
           # add this authentication service to our new user
-          user.services.build(:provider => provider, :uid => uid, :uname => name, :uemail => email)
+          user.services.build({:provider => provider, :uid => uid, :uname => name, :uemail => email}.permit!)
           
           # do not send confirmation email, we directly save and confirm the new record
           user.skip_confirmation!
