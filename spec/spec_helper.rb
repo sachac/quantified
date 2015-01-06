@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'simplecov'
+ActiveRecord::Migration.maintain_test_schema!
 SimpleCov.start 'rails' do
   use_merging true
   SimpleCov.merge_timeout 3600

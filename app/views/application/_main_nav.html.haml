@@ -1,10 +1,16 @@
 %nav.navbar.navbar-default{role: 'navigation'}
   .container-fluid
-    - if current_account
-      = link_to "#{current_account.username.blank? ? current_account.email : current_account.username}", root_path, :class => 'navbar-brand'
-    - else
-      = link_to "quantified awesome",root_path, :class => 'navbar-brand'
-    .collapse.navbar-collapse
+    .navbar-header
+      %button.navbar-toggle.collapsed{'type' => 'button', 'data-toggle' => 'collapse', 'data-target' => '#navbar-collapse-1' }
+        %span.sr-only Toggle navigation
+        %span.icon-bar
+        %span.icon-bar
+        %span.icon-bar
+      - if current_account
+        = link_to "#{current_account.username.blank? ? current_account.email : current_account.username}", root_path, :class => 'navbar-brand'
+      - else
+        = link_to "quantified awesome",root_path, :class => 'navbar-brand'
+    .collapse.navbar-collapse#navbar-collapse-1
       %ul.nav.navbar-nav
         %li{:class => active_menu('/stuff')}= link_to 'stuff', stuff_index_path
         %li{:class => active_menu('/clothing')}= link_to 'clothing', clothing_index_path
@@ -19,3 +25,4 @@
         - else
           %li.track= link_to t('app.user.login'), new_user_session_path
         %li.feedback{:class => active_menu('/feedback')}= feedback_link
+      %ul.nav.navbar-nav-navbar-right  

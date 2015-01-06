@@ -1,0 +1,11 @@
+language: ruby
+rvm:
+  - "2.0.0"
+install:
+  - bundle install
+  - npm install bower -g
+  - echo n | bundle exec rake bower:install
+  - cp config/database.yml.sample config/database.yml
+  - cp config/initializers/secret_token.rb.sample config/initializers/secret_token.rb
+  - mysql -e 'create database quantified_test;'
+script: bundle exec rspec spec
