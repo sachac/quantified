@@ -8,3 +8,4 @@ install:
   - copy config/initializers/secret_token.rb.sample config/initializers/secret_token.rb
 before_script:
   - mysql -e 'create database quantified_test;'
+script: rspec spec
