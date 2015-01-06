@@ -1,8 +1,6 @@
 language: ruby
 rvm:
   - "2.0.0"
-node_js:
-  - "0.10"
 install:
   - npm install bower -g
   - echo n | rake bower:install
