@@ -1,4 +1,7 @@
-%h1 Community-supported agriculture
+%h1 Food
+
+.note
+  This is for tracking perishables so that you remember to use them. As you finish the perishables, add a note about its disposition. I originally used this to track the fruits and vegetables we received in community-supported agriculture boxes, but you might be able to use it for groceries too.
 
 = form_tag quick_entry_csa_foods_path, class: 'form-inline' do
   Quick entry:
@@ -8,14 +11,11 @@
   = text_field_tag :unit, 'g', :class => 'span1'
   = submit_tag 'Save', :class => 'btn btn-primary'
 = form_tag bulk_update_csa_foods_path do
-  .food
-    - remaining = (current_account.csa_foods.where('disposition = ""').sum(:quantity) / 1000.0)
-    = link_to "#{'%0.1f' % remaining}kg of CSA food to go,", csa_foods_path
-    - if can? :update, CsaFood
-      = submit_tag 'Save disposition notes', :class => 'btn btn-default'
+  - if can? :update, CsaFood
+    .food= submit_tag 'Save disposition notes', :class => 'btn btn-default'
   %table.table.table-bordered
     %tr
-      %th Date received
+      %th Date
       %th Food
       %th Quantity
       %th Unit
