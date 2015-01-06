@@ -3,7 +3,7 @@ rvm:
   - 2.0.0
 install:
   - sudo apt-get update
-  - sudo apt-get install -y bundler git libmysqlclient-dev libsqlite3-dev npm nodejs-legacy
+  - sudo apt-get install -y npm nodejs-legacy
   - npm install bower -g
   - echo n | rake bower:install
   - copy config/database.yml.sample config/database.yml
