@@ -2,6 +2,7 @@ language: ruby
 rvm:
   - "2.0.0"
 install:
+  - bundle install
   - npm install bower -g
   - echo n | rake bower:install
   - copy config/database.yml.sample config/database.yml
