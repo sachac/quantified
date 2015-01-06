@@ -18,3 +18,4 @@
 //= require cal-heatmap.min
 //= require quantified
 //= require grocery_lists
+//= require clothing
