@@ -7,6 +7,5 @@ install:
   - echo n | bundle exec rake bower:install
   - cp config/database.yml.sample config/database.yml
   - cp config/initializers/secret_token.rb.sample config/initializers/secret_token.rb
-before_script:
   - mysql -e 'create database quantified_test;'
-script: rspec spec
+script: bundle exec rspec spec
