@@ -1,0 +1,12 @@
+language: ruby
+rvm:
+  - 2.0.0
+install:
+  - sudo apt-get update
+  - sudo apt-get install -y bundler git libmysqlclient-dev libsqlite3-dev npm nodejs-legacy
+  - npm install bower -g
+  - echo n | rake bower:install
+  - copy config/database.yml.sample config/database.yml
+  - copy config/initializers/secret_token.rb.sample config/initializers/secret_token.rb
+before_script:
+  - mysql -e 'create database quantified_test;'
