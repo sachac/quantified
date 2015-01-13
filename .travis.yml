@@ -8,4 +8,4 @@ install:
   - cp config/database.yml.sample config/database.yml
   - cp config/initializers/secret_token.rb.sample config/initializers/secret_token.rb
   - mysql -e 'create database quantified_test;'
-script: bundle exec rspec spec
+script: bundle exec rspec spec && bundle exec rake cucumber
