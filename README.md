@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/sachac/quantified.svg?branch=master)](https://travis-ci.org/sachac/quantified)
+
 This is the source code for QuantifiedAwesome.com. It'll probably take a lot of tweaking to get it to work for you, but at least it's up here! =)
 
 Instructions for setting up:
