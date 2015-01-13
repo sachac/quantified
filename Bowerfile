@@ -9,4 +9,3 @@ asset 'karma'
 asset 'karma-jasmine'
 asset 'karma-ng-scenario'
 asset 'grunt-mocha'
-

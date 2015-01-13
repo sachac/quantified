@@ -32,7 +32,7 @@ class User < ActiveRecord::Base
   # validates :username, :presence => true
   validates_length_of :username, :maximum => 20, :allow_blank => true
   validates :username, :uniqueness => { :case_sensitive => false }, :allow_blank => true
-  validates :email, :presence => true, :email => true
+  validates :email, :presence => true
   validates :email, :uniqueness => { :case_sensitive => false }
   validates_format_of :username, :with => /\A[A-Za-z\d]*\Z/
   # Include default devise modules. Others available are:

@@ -41,16 +41,6 @@ Home::Application.routes.draw do
   match 'feedback' => 'home#send_feedback', :as => :send_feedback, :via => :post
   match 'feedback' => 'home#feedback', :as => :feedback, :via => :get
   match 'help/record_categories' => 'help#record_categories', :via => :get
-  offline = Rack::Offline.configure do
-    cache "api/offline/v1/track"
-    cache "assets/application.js"
-    cache "assets/offline.js"
-    cache "assets/application.css"
-    cache "assets/mobile.css"
-    cache "assets/offline.css"
-    network "/"
-  end
-  #match '/offline.manifest' => offline
 
   match 'records/batch' => 'records#batch', :as => :batch_records, :via => [:post, :get]
   resources :timeline_events, :except => [:create, :update]
@@ -234,13 +224,6 @@ Home::Application.routes.draw do
       match 'destroy' => 'tokens#destroy', via: :delete
       match 'tokens' => 'tokens#create', via: :post
       resources :records
-    end
-    namespace :offline do
-      namespace :v1 do
-        match 'track' => 'offline#track', :as => :track_offline, :via => :get
-        match 'bulk_track' => 'offline#bulk_track', :via => :post
-        match 'bulk_track' => 'offline#bulk_track', :via => :get
-      end
     end
   end
   

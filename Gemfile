@@ -1,38 +1,39 @@
 source 'http://rubygems.org'
 source 'https://rails-assets.org'
 
-gem 'rack-offline', :git => 'git://github.com/wycats/rack-offline.git'
 gem 'rails', '~> 4.1'
-gem 'haml-rails', '~> 0.4'
-# Bundle edge Rails instead:
-#gem 'rails', :git => 'git://github.com/rails/rails.git'
-#gem 'arel', :git => 'git://github.com/rails/arel.git'
-#gem 'journey', :git => 'git://github.com/rails/journey.git'
-gem 'comma'
-gem 'timeline_fu', :git => 'https://github.com/jamesgolick/timeline_fu.git'
-#gem 'rails-dev-tweaks'
-gem 'sqlite3'
-#gem 'isbndb'
+gem 'haml-rails', '~> 0.4'  # templating language
+gem 'comma' # For easy CSV output
+gem 'timeline_fu', :git => 'https://github.com/jamesgolick/timeline_fu.git'  # for viewing events in a timeline
 gem 'rake'
-gem 'haml'
 gem 'mysql2'
 gem "paperclip", ">= 2.0"
 gem 'will_paginate-bootstrap'
 gem 'color'
-gem 'ruby-graphviz', :git => "https://github.com/glejeune/Ruby-Graphviz.git"
 gem 'narray'
-gem 'simple_form'
-gem 'jquery-rails', '~> 2.1.4'
+gem 'simple_form'          # easy form markup
+gem 'jquery-rails', '~> 2.1.4' # add to page
 gem 'rails4-autocomplete'
 gem 'handles_sortable_columns'
 gem 'angular_rails_csrf'
-gem 'gdata_19', '1.1.5'
-gem 'cancancan', '~> 1.9'
-gem 'rails-observers'
+gem 'cancancan', '~> 1.9'  # permissions
+gem 'rails-observers'      # to trigger timeline events
 #gem 'n_gram'
 #gem 'statsample'
 gem 'exception_notification', '~> 4', :require => 'exception_notifier'
-gem 'rails-assets-angular'
+group :under_consideration do
+  gem 'rack-offline', :git => 'git://github.com/wycats/rack-offline.git'
+  gem 'ruby-graphviz', :git => "https://github.com/glejeune/Ruby-Graphviz.git"
+  gem 'rails-assets-angular' # handled by bower instead?
+  gem 'gdata_19', '1.1.5'
+  gem 'workflow'
+  gem 'actionmailer-with-request'
+  gem 'subdomain-fu', :git => "git://github.com/nhowell/subdomain-fu.git"
+  gem 'passgen'
+  gem 'ruby_parser'
+  gem 'autoprefixer-rails'
+  gem 'email_validator'
+end
 
 # Use unicorn as the web server
 # gem 'unicorn'
@@ -57,31 +58,22 @@ gem 'rails-assets-angular'
 #   gem 'webrat'
 # end
 gem 'acts-as-taggable-on', :git => 'git://github.com/mbleigh/acts-as-taggable-on.git'
-gem 'chronic'
+gem 'chronic'  # time
 gem 'acts-as-tree-with-dotted-ids', :git => 'https://github.com/tma/acts-as-tree-with-dotted-ids.git'
 gem 'nifty-generators'
-#gem 'sparklines'
-#gem 'sparklines_generator'
-gem 'workflow'
 gem 'devise', '~> 3.4.0'
 gem 'devise_invitable'
 #gem 'aizuchi'
-gem 'actionmailer-with-request'
 gem 'omniauth', :git => 'git://github.com/intridea/omniauth.git'
 gem 'omniauth-facebook'
 gem 'omniauth-twitter'
 gem 'omniauth-openid'
-gem 'ruby_parser'
-gem 'passgen'
 #gem 'barometer'
-gem 'mechanize'
+gem 'mechanize'  # for talking to the library website
 gem 'rails-settings-cached', '~> 0.4'
-gem 'subdomain-fu', :git => "git://github.com/nhowell/subdomain-fu.git"
-gem 'fastercsv'
 gem 'bootstrap-sass', '~> 3.2.0'
 gem 'sass-rails', '~> 4.0.2'
 gem 'sprockets', '~> 2.11.0'
-gem 'autoprefixer-rails'
 
 group :development do
   gem 'compass-rails', '~> 1.1.2'
@@ -91,26 +83,26 @@ group :development do
   gem 'therubyracer', '~> 0.11.4'
 end
 
-gem 'bower-rails'
-
 group :development, :test do
+  gem 'bower-rails'
+  gem 'rspec-rails'
+end
+
+group :test do
+  gem 'database_cleaner'
   gem 'rails-assets-angular-mocks'
   gem 'selenium-webdriver'
-  gem 'database_cleaner'
-  gem 'rspec-rails'
-  gem 'factory_girl_rails'  
   gem 'forgery'
+  gem 'factory_girl_rails'  
+  gem 'email_spec'
   gem 'rspec'
   gem 'rspec-mocks'
-  gem 'rspec-activemodel-mocks'
   gem 'guard-cucumber'
-  gem 'timecop'
   gem 'spring'
   gem 'spring-commands-rspec'
   gem 'spring-commands-cucumber'
-  gem 'email_spec'
-end
-group :test do
+  gem 'rspec-activemodel-mocks'
+  gem 'timecop'
   gem 'spork'
   gem 'guard-rspec'
   gem 'guard-spring'
@@ -121,5 +113,9 @@ group :test do
   gem 'capybara'
   gem 'cucumber_factory', :git => 'https://github.com/makandra/cucumber_factory.git'
 end
-gem 'yaml_db'
-gem 'email_validator'
+group :console do
+  gem 'gem_bench', :require => false
+  gem 'fastercsv'  # loading CSVs
+  gem 'yaml_db'
+end
+

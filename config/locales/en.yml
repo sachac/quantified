@@ -138,8 +138,6 @@ en:
   decision_log:
     created: Decision log was successfully created.
     updated: Decision log was successfully updated.
-  offline:
-    category_not_found: Could not find category.
   csa_food:
     logged: Logged.
     updated: CSA food successfully updated.

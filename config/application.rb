@@ -2,7 +2,7 @@ require File.expand_path('../boot', __FILE__)
 
 require 'rails/all'
 
-Bundler.require *Rails.groups(:assets => %w(development test)) if defined?(Bundler)
+require File.expand_path('../application.bundler', __FILE__)
 
 module Home
   class Application < Rails::Application
@@ -49,7 +49,6 @@ module Home
     config.to_prepare do
       Devise::SessionsController.layout "sign"
     end
-    ENV["RAILS_ASSET_ID"] = "" # disable timestamps at end of asset files for offline browsing
     ActionDispatch::Callbacks.after do
       # Reload the factories
       if (Rails.env.development? || Rails.env.test?) and FactoryGirl.factories.blank? # first init will load factories, this should only run on subsequent reloads

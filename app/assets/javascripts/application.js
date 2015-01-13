@@ -5,7 +5,6 @@
 //= require jquery-ui
 //= require bootstrap-sprockets
 //= require json
-//= require jquery.offline
 //= require jquery.tmpl.min
 //= require autocomplete-rails
 //= require raphael-min

@@ -1,4 +1,6 @@
 require 'rubygems'
+ENV["RAILS_ENV"] ||= 'test'
+require File.expand_path("../../config/environment", __FILE__)
 require 'simplecov'
 ActiveRecord::Migration.maintain_test_schema!
 SimpleCov.start 'rails' do

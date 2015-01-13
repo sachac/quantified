@@ -31,7 +31,11 @@ flash[:error] =  service_route.capitalize + ' cannot be used to sign up on Quant
     auth = Service.find_by_provider_and_uid(provider, uid)
     if user_signed_in?
       if !auth
-        current_account.services.create({:provider => provider, :uid => uid, :uname => name, :uemail => email}.permit!)
+        s = current_account.services.new
+        s.provider = provider
+        s.uid = uid
+        s.uname = name
+        s.save!
         flash[:notice] = 'Sign in via ' + provider.capitalize + ' has been added to your account.'
         redirect_to root_path and return
       else
@@ -49,11 +53,10 @@ flash[:error] =  service_route.capitalize + ' cannot be used to sign up on Quant
         existing_user = User.find_by_email(email)
         if existing_user
           # map this new login method via a service provider to an existing account if the email address is the same
-          service = existing_user.services.new
+          service = existing_user.services.build
           service.provider = provider
           service.uid = uid
           service.uname = name
-          service.email = email
           service.save
           flash[:notice] = 'Sign in via ' + provider.capitalize + ' has been added to your account ' + existing_user.email + '. Signed in successfully!'
           sign_in_and_redirect(:user, existing_user)
@@ -61,14 +64,19 @@ flash[:error] =  service_route.capitalize + ' cannot be used to sign up on Quant
           # new user, set email, a random password and take the name from the authentication service
           # let's create a new user: register this user and add this authentication method for this user
           name = name[0, 39] if name.length > 39             # otherwise our user validation will hit us
-          user = User.new({:email => email, :password => SecureRandom.hex(10)}.permit!)
+          user = User.new
+          user.email = email
+          user.password = SecureRandom.hex(10)
           # add this authentication service to our new user
-          user.services.build({:provider => provider, :uid => uid, :uname => name, :uemail => email}.permit!)
-          
+          s = user.services.build
+          s.provider = provider
+          s.uid = uid
+          s.uname = name
           # do not send confirmation email, we directly save and confirm the new record
           user.skip_confirmation!
           user.save!
           user.confirm!
+          s.save
           
           # flash and sign in
           flash[:notice] = 'Your account on Quantified Awesome has been created via ' + provider.capitalize + '. In your profile, you can change your personal information and add a local password.'
