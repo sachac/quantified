@@ -7,7 +7,7 @@ require 'action_mailer'
 require 'email_spec'
 require 'email_spec/cucumber'
 require 'coveralls'
-Coveralls.wear!
+Coveralls.wear_merged!
 #uncomment the following line to use spork with the debugger
 #require 'spork/ext/ruby-debug'
 

@@ -3,7 +3,7 @@ ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("../../config/environment", __FILE__)
 require 'simplecov'
 require 'coveralls'
-Coveralls.wear!
+Coveralls.wear_merged!
 ActiveRecord::Migration.maintain_test_schema!
 SimpleCov.start 'rails' do
   use_merging true
