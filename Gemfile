@@ -86,6 +86,7 @@ end
 group :development, :test do
   gem 'bower-rails'
   gem 'rspec-rails'
+  gem 'coveralls', require: false
 end
 
 group :test do

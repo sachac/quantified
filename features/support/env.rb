@@ -6,6 +6,8 @@ require 'factory_girl'
 require 'action_mailer'
 require 'email_spec'
 require 'email_spec/cucumber'
+require 'coveralls'
+Coveralls.wear!
 #uncomment the following line to use spork with the debugger
 #require 'spork/ext/ruby-debug'
 
