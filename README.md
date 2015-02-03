@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/sachac/quantified.svg?branch=master)](https://travis-ci.org/sachac/quantified)
+[![Build Status](https://travis-ci.org/sachac/quantified.svg?branch=master)](https://travis-ci.org/sachac/quantified) [![Coverage Status](https://coveralls.io/repos/sachac/quantified/badge.svg?branch=master)](https://coveralls.io/r/sachac/quantified?branch=master)
 
 This is the source code for QuantifiedAwesome.com. It'll probably take a lot of tweaking to get it to work for you, but at least it's up here! =)
 
