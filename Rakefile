@@ -4,8 +4,7 @@
 require File.expand_path('../config/application', __FILE__)
 require 'rake'
 include Rake::DSL
+require 'coveralls/rake/task'
 Home::Application.load_tasks
 
-require 'coveralls/rake/task'
 Coveralls::RakeTask.new
-task :test_with_coveralls => [:spec, :features, 'coveralls:push']
