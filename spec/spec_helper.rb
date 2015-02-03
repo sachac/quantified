@@ -15,7 +15,7 @@ require 'rubygems'
 require 'database_cleaner'
 require 'paperclip/matchers'
 require 'fakeweb'
-FakeWeb.allow_net_connect = false
+FakeWeb.allow_net_connect = %r[^https?://coveralls.io]
 ActiveRecord::Migration.maintain_test_schema! if defined?(ActiveRecord::Migration)
 ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("../../config/environment", __FILE__)
