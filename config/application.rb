@@ -6,7 +6,9 @@ require File.expand_path('../application.bundler', __FILE__)
 
 module Home
   class Application < Rails::Application
-    Dotenv.load Rails.root.join('.env')
+    if (Rails.env.development? || Rails.env.test?) 
+      Dotenv.load Rails.root.join('.env')
+    end
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
