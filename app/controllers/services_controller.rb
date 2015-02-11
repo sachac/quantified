@@ -1,6 +1,7 @@
 class ServicesController < ApplicationController
   skip_authorization_check :only => [:create]
   protect_from_forgery :except => [:create]
+  
   def create
     omniauth = request.env['omniauth.auth']
     service_route = params[:service] || 'no service (invalid callback)'
@@ -14,13 +15,15 @@ class ServicesController < ApplicationController
       name = omniauth['extra']['raw_info']['name']
       uid = omniauth['extra']['raw_info']['id']
       provider = omniauth['provider']
-    when 'google'
+      provider_name = 'Facebook'
+    when 'google_oauth2'
       email = omniauth['info']['email']
       name = omniauth['info']['name']
       provider = omniauth['provider']
       uid = omniauth['uid']
-else
-flash[:error] =  service_route.capitalize + ' cannot be used to sign up on Quantified Awesome. Please use another authentication provider, or create an account.'
+      provider_name = 'Google'
+    else
+      flash[:error] =  service_route.capitalize + ' cannot be used to sign up on Quantified Awesome. Please use another authentication provider, or create an account.'
       redirect_to new_user_session_path and return
     end
     
@@ -36,7 +39,7 @@ flash[:error] =  service_route.capitalize + ' cannot be used to sign up on Quant
         s.uid = uid
         s.uname = name
         s.save!
-        flash[:notice] = 'Sign in via ' + provider.capitalize + ' has been added to your account.'
+        flash[:notice] = 'Sign in via ' + provider_name + ' has been added to your account.'
         redirect_to root_path and return
       else
         flash[:notice] = service_route.capitalize + ' is already linked to your account.'
@@ -44,7 +47,7 @@ flash[:error] =  service_route.capitalize + ' cannot be used to sign up on Quant
       end  
     end
     if auth
-      flash[:notice] = 'Signed in successfully via ' + provider.capitalize + '.'
+      flash[:notice] = 'Signed in successfully via ' + provider_name + '.'
       sign_in_and_redirect(:user, auth.user)
     else
       # check if this user is already registered with this email address; get out if no email has been provided
@@ -58,7 +61,7 @@ flash[:error] =  service_route.capitalize + ' cannot be used to sign up on Quant
           service.uid = uid
           service.uname = name
           service.save
-          flash[:notice] = 'Sign in via ' + provider.capitalize + ' has been added to your account ' + existing_user.email + '. Signed in successfully!'
+          flash[:notice] = 'Sign in via ' + provider_name + ' has been added to your account ' + existing_user.email + '. Signed in successfully!'
           sign_in_and_redirect(:user, existing_user)
         else
           # new user, set email, a random password and take the name from the authentication service
@@ -79,7 +82,7 @@ flash[:error] =  service_route.capitalize + ' cannot be used to sign up on Quant
           s.save
           
           # flash and sign in
-          flash[:notice] = 'Your account on Quantified Awesome has been created via ' + provider.capitalize + '. In your profile, you can change your personal information and add a local password.'
+          flash[:notice] = 'Your account on Quantified Awesome has been created via ' + provider_name + '. In your profile, you can change your personal information and add a local password.'
           sign_in_and_redirect(:user, user)
         end
       end

@@ -5,13 +5,13 @@ describe ServicesController, :type => :controller  do
     omniauth_hash = { "provider" => "facebook", "uid" => "1234", "credentials" => {"token" => "abcdefg"}, "extra"=>{"raw_info" => {"id" => "1234567", "email" => "test@example.com", "name" => "Foo", "gender" => "male" }}}
     
     OmniAuth.config.add_mock(:facebook, omniauth_hash)
-    omniauth_hash = { provider: "google",
+    omniauth_hash = { provider: "google_oauth2",
       uid: "test@example.com",
       info: { name: "Jane Smith",
         email: "test@example.com" },
       credentials: {token: "testtoken234tsdf"},
     }
-    OmniAuth.config.add_mock(:google, omniauth_hash)
+    OmniAuth.config.add_mock(:google_oauth2, omniauth_hash)
     request.env["omniauth.auth"] = OmniAuth.config.mock_auth[:facebook]
   end
   describe 'POST create' do
@@ -41,8 +41,8 @@ describe ServicesController, :type => :controller  do
         flash[:notice].should match 'Sign in via Facebook has been added to'
       end
       it "authenticates Google" do
-        request.env["omniauth.auth"] = OmniAuth.config.mock_auth[:google]
-        post :create, service: 'google'
+        request.env["omniauth.auth"] = OmniAuth.config.mock_auth[:google_oauth2]
+        post :create, service: 'google_oauth2'
         flash[:notice].should match 'Sign in via Google has been added to'
       end
       context "when I have oauthed before" do

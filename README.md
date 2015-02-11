@@ -31,3 +31,12 @@ u.role = 'admin'
 u.save!
 u.confirm!
 ```
+
+----
+Environment variables to set:
+
+- Oauth2 for Google: https://github.com/zquestz/omniauth-google-oauth2
+  - GOOGLE_CLIENT_ID
+  - GOOGLE_CLIENT_SECRET
+- Devise
+  - DEVISE_SECRET_KEY

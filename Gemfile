@@ -2,6 +2,7 @@ source 'http://rubygems.org'
 source 'https://rails-assets.org'
 
 gem 'rails', '~> 4.1'
+gem 'dotenv-rails', :groups => [:development, :test]
 gem 'haml-rails', '~> 0.4'  # templating language
 gem 'comma' # For easy CSV output
 gem 'timeline_fu', :git => 'https://github.com/jamesgolick/timeline_fu.git'  # for viewing events in a timeline
@@ -67,7 +68,7 @@ gem 'devise_invitable'
 gem 'omniauth', :git => 'git://github.com/intridea/omniauth.git'
 gem 'omniauth-facebook'
 gem 'omniauth-twitter'
-gem 'omniauth-openid'
+gem 'omniauth-google-oauth2'
 #gem 'barometer'
 gem 'mechanize'  # for talking to the library website
 gem 'rails-settings-cached', '~> 0.4'

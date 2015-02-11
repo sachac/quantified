@@ -11,7 +11,7 @@
                 %label Sign in with
                 .controls
                   .box#services
-                    = link_to image_tag(asset_path('google_32.png'), :size => "32x32", :alt => "Google"), oauth_url(:google, :subdomain => false), :class => 'service'
+                    = link_to image_tag(asset_path('google_32.png'), :size => "32x32", :alt => "Google"), oauth_url(:google_oauth2, :subdomain => false), :class => 'service'
                     = link_to image_tag(asset_path('facebook_32.png'), :size => "32x32", :alt => "Facebook"), oauth_url(:facebook, :subdomain => false), :class => 'service'
                     or fill in the form below
               .form-group
