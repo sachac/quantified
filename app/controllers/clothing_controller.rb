@@ -301,7 +301,7 @@ class ClothingController < ApplicationController
     authorize! :manage_account, current_account
     @clothing = current_account.clothing.find_by_id(params[:id])
     if @clothing and params[:x] and params[:y]
-      @clothing.add_color(Clothing.guess_color(@clothing.image.path, params[:x], params[:y]))
+      @clothing.add_color(Clothing.guess_color(@clothing.image.path(:large), params[:x], params[:y]))
       @clothing.save!
     end
     redirect_to @clothing
