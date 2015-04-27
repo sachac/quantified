@@ -47,13 +47,7 @@ class TimeController < ApplicationController
     params[:end] ||= Time.zone.now.strftime('%Y-%m-%d')
     prepare_filters [:date_range]
     @range = Time.zone.parse(params[:start]).to_date..Time.zone.parse(params[:end]).to_date
-    entries = current_account.records.activities.where('end_timestamp >= ? AND timestamp < ?', @range.begin, @range.end).order('timestamp').includes(:record_category)
-    # Adjust the last entry and the first entry as needed
-    entries.first.timestamp = [@range.begin, entries.first.timestamp].max
-    entries.first.duration = entries.first.end_timestamp - entries.first.timestamp
-    entries.last.end_timestamp = [@range.end, entries.last.timestamp || Time.zone.now, Time.zone.now].min
-    entries.last.duration = entries.last.end_timestamp - entries.last.timestamp
-    
+    entries = Record.get_entries_for_time_range(current_account, @range)
     @records = Record.prepare_graph(@range, entries)
     unsorted = RecordCategory.summarize(:key => :date, :range => @range, :records => entries, :zoom => :daily, :user => current_account, :tree => :individual)[:rows]
     @categories = current_account.record_categories.index_by(&:id)

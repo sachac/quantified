@@ -222,6 +222,18 @@ class Record < ActiveRecord::Base
     list
   end
 
+  def self.get_entries_for_time_range(user, range)
+    entries = user.records.activities.where('end_timestamp >= ? AND timestamp < ?', range.begin, range.end).order('timestamp').includes(:record_category)
+    # Adjust the last entry and the first entry as needed
+    if entries.count > 0 then
+      entries.first.timestamp = [range.begin, entries.first.timestamp].max
+      entries.first.duration = entries.first.end_timestamp - entries.first.timestamp
+      entries.last.end_timestamp = [range.end, entries.last.timestamp || Time.zone.now, Time.zone.now].min
+      entries.last.duration = entries.last.end_timestamp - entries.last.timestamp
+    end
+    entries
+  end
+  
   # Return an array of [date => [[start time, end time, category], [start time, end time, category]]]
   # Pre-fill colors
   def self.prepare_graph(range, records)

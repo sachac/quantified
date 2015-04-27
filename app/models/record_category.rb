@@ -25,6 +25,7 @@ class RecordCategory < ActiveRecord::Base
   #    other - each entry counts only towards its own category
   def self.roll_up_records(options = {})
     summary = Hash.new { |h,k| h[k] = Hash.new { |h2,k2| h2[k2] = Hash.new { |h3,k3| h3[k3] = 0 } } }
+    summary[:total][:total][:total] = 0
     records = options[:records]
     user = options[:user]
     max = Time.now

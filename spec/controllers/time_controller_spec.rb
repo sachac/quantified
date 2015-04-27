@@ -8,6 +8,25 @@ describe TimeController, :type => :controller  do
   after do
     Timecop.return
   end
+  context "when logged in, but without data" do
+    before do
+      @user = create(:user, :confirmed)
+      sign_in @user
+    end
+    describe 'GET review' do
+      it "does not result in errors" do
+        get :review, start: Time.zone.now - 1.week, end: Time.zone.now - 1.day
+        assigns(:zoom).should == :daily
+        assigns(:summary)[:total][:total][:total].should == 0
+      end
+    end
+    describe 'GET graph' do
+      it "displays records" do
+        get :graph, start: Time.zone.now - 1.week, end: Time.zone.now.midnight
+        assigns(:total).should == "0"
+      end
+    end
+  end
   context "when logged in" do
     before do
       @user = create(:user, :confirmed)
