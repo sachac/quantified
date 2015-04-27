@@ -54,7 +54,7 @@ module Home
     end
     ActionDispatch::Callbacks.after do
       # Reload the factories
-      if (Rails.env.development? || Rails.env.test?) and FactoryGirl.factories.blank? # first init will load factories, this should only run on subsequent reloads
+      if (Rails.env.test?) and FactoryGirl.factories.blank? # first init will load factories, this should only run on subsequent reloads
         FactoryGirl.factories.clear
         FactoryGirl.sequences.clear
         FactoryGirl.find_definitions
