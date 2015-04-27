@@ -12,7 +12,7 @@ class UsersController < ApplicationController
   # GET /users/1.xml
   def show
     @user = User.find(params[:id])
-    authorize! :view, @user
+    authorize! :manage_account, @user
     respond_with @user
   end
 

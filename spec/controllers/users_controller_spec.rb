@@ -45,6 +45,7 @@ describe UsersController, :type => :controller  do
         put :update, id: @u2.id, user: { username: 'elvis' }
         assigns(:user).username.should == 'elvis'
         flash[:notice].should == I18n.t('user.updated')
+        response.should redirect_to user_url(@u2)
       end
     end
     describe 'DELETE destroy' do
@@ -104,6 +105,8 @@ describe UsersController, :type => :controller  do
         put :update, id: @u2.id, user: { username: 'potato' }
         assigns(:user).username.should == 'potato'
         flash[:notice].should == I18n.t('user.updated')
+        flash[:error].should_not == I18n.t('error.access_denied_logged_in')
+        response.should redirect_to user_url(@u2)
       end
       it "changes the password if specified" do
         put :update, id: @u2.id, user: { password: 'foobar', password_confirmation: 'foobar' }
