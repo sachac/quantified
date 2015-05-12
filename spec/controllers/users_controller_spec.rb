@@ -36,16 +36,16 @@ describe UsersController, :type => :controller  do
     describe 'POST create' do
       it "creates an item" do
         post :create, user: { email: 'foo@example.com', password: 'foobar', password_confirmation: 'foobar' }
-        assigns(:user).email.should == 'foo@example.com'
+        assigns(:user).email.should eq 'foo@example.com'
         flash[:notice].should == I18n.t('user.created')
       end
     end
     describe 'PUT update' do
       it "updates the item" do
         put :update, id: @u2.id, user: { username: 'elvis' }
-        assigns(:user).username.should == 'elvis'
-        flash[:notice].should == I18n.t('user.updated')
-        response.should redirect_to user_url(@u2)
+        assigns(:user).username.should eq 'elvis'
+        flash[:notice].should eq I18n.t('user.updated')
+        response.should redirect_to edit_user_url(@u2)
       end
     end
     describe 'DELETE destroy' do
@@ -103,10 +103,10 @@ describe UsersController, :type => :controller  do
     describe 'PUT update' do
       it "updates my account" do
         put :update, id: @u2.id, user: { username: 'potato' }
-        assigns(:user).username.should == 'potato'
-        flash[:notice].should == I18n.t('user.updated')
-        flash[:error].should_not == I18n.t('error.access_denied_logged_in')
-        response.should redirect_to user_url(@u2)
+        assigns(:user).username.should eq 'potato'
+        flash[:notice].should eq I18n.t('user.updated')
+        flash[:error].should_not eq I18n.t('error.access_denied_logged_in')
+        response.should redirect_to edit_user_url(@u2)
       end
       it "changes the password if specified" do
         put :update, id: @u2.id, user: { password: 'foobar', password_confirmation: 'foobar' }
@@ -118,14 +118,14 @@ describe UsersController, :type => :controller  do
       end
       it "doesn't let me change other people's accounts" do
         put :update, id: @user.id, user: { username: 'potato' }
-        flash[:error].should == I18n.t('error.access_denied_logged_in')
+        flash[:error].should eq I18n.t('error.access_denied_logged_in')
         response.should redirect_to root_path
       end
     end
     describe 'DELETE destroy' do
       it "doesn't let me" do
         delete :destroy, id: @u2.id
-        flash[:error].should == I18n.t('error.access_denied_logged_in')
+        flash[:error].should eq I18n.t('error.access_denied_logged_in')
         response.should redirect_to root_path
       end
     end

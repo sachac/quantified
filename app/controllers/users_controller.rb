@@ -61,7 +61,9 @@ class UsersController < ApplicationController
     if @user.update_attributes(user_params[:user])
       add_flash :notice, I18n.t('user.updated')
     end
-    respond_with(@user)
+    respond_with(@user) do |format|
+      format.html { redirect_to(edit_user_url(@user)) }
+    end
   end
 
   # DELETE /users/1
