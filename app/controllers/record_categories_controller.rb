@@ -202,7 +202,9 @@ class RecordCategoriesController < ApplicationController
     authorize! :manage_account, current_account
     @record_category = current_account.record_categories.find(params[:id])
     params[:record_category][:data].reject! { |x| x['key'].blank? } if params[:record_category][:data]
-    @record_category.data = params[:record_category][:data] || Array.new
+    if params[:record_category][:data]
+      @record_category.update_data(params[:record_category][:data])
+    end
     if @record_category.update_attributes(record_category_params)
       add_flash :notice, t('record_category.updated')
     end

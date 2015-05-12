@@ -19,6 +19,27 @@ class RecordCategory < ActiveRecord::Base
     self.full_name = self_and_ancestors.reverse.map{ |c| c.name }.join(' - ').html_safe
   end
 
+  def update_data(data_fields)
+    do_rename = false
+    data_fields.each do |row|
+      if row['oldkey'] and row['key'] != row['oldkey']
+        do_rename = true
+      end
+    end
+    if do_rename
+      self.records.each do |record|
+        data_fields.each do |row|
+          if row['oldkey'] and row['key'] != row['oldkey']
+            record.data[row['key']] = record.data[row['oldkey']]
+            record.data.delete(row['oldkey'])
+          end
+        end
+        record.save!
+      end
+    end
+    self.data = data_fields
+  end
+  
   # :tree =>
   #    :full - parent totals include that of child categories, show all categories below this
   #    :next_level - only the next level of children is shown

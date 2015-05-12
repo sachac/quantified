@@ -26,8 +26,10 @@
             %th Type
           - if rec.data
             - rec.data.each do |datum|
-              %tr
-                %td= text_field_tag "record_category[data][][key]", datum["key"], class: 'form-control'
+              %tr{'data-key' => datum['key']}
+                %td
+                  = hidden_field_tag "record_category[data][][oldkey]", datum["key"]
+                  = text_field_tag "record_category[data][][key]", datum["key"], class: 'form-control'
                 %td= text_field_tag "record_category[data][][label]", datum["label"], class: 'form-control'
                 %td= select_tag "record_category[data][][type]", options_for_select([["One line of text", "string"], ["Multiple lines of text", "text"]], datum["type"]), class: 'form-control'
     = f.input :color, :as => :string

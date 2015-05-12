@@ -12,7 +12,7 @@ When(/^I go to my record categories$/) do
   visit record_categories_path
 end
 
-When /^I create a record category named "([^"]*)" which is an "([^"]*)" under "([^"]*)"$/ do |arg1, arg2, arg3|
+When(/^I create a record category named "([^"]*)" which is an "([^"]*)" under "([^"]*)"$/)do |arg1, arg2, arg3|
   visit new_record_category_path
   fill_in 'record_category[name]', :with => arg1
   choose "record_category_category_type_#{arg2}"
@@ -21,3 +21,30 @@ When /^I create a record category named "([^"]*)" which is an "([^"]*)" under "(
   click_button I18n.t('app.general.save')
 end
 
+When(/^I rename the keys for a category with existing data/) do
+  @cat = create(:record_category, user: @user, name: 'Test', data: [{'key' => 'foo', 'label' => 'Bar', 'type' => 'string'}])
+  @cat2 = create(:record_category, user: @user, name: 'Another Test', data: [{'key' => 'foo', 'label' => 'Bar', 'type' => 'string'}])
+  d1 = create(:record, user: @user, record_category_id: @cat.id, data: {'foo' => 'ABC'})
+  d2 = create(:record, user: @user, record_category_id: @cat2.id, data: {'foo' => 'DEF'})
+  visit edit_record_category_path(@cat)
+  find(:css, 'tr[@data-key="foo"]').fill_in('record_category[data][][key]', with: 'newfoo')
+  click_button I18n.t('app.general.save')
+end
+
+Then(/^the records should be updated with the same keys/) do
+  @cat2.records.first.data['foo'].should eq 'DEF'
+  @cat.records.first.data['newfoo'].should eq 'ABC'
+end
+
+When(/^I delete the keys for a category$/) do
+  @cat = create(:record_category, user: @user, name: 'Test', data: [{'key' => 'foo', 'label' => 'Foo', 'type' => 'string'}, {'key' => 'bar', 'label' => 'Bar', 'type' => 'string'}])
+  visit edit_record_category_path(@cat)
+  find(:css, 'tr[@data-key="foo"]').fill_in('record_category[data][][key]', with: '')
+  click_button I18n.t('app.general.save')
+end
+
+Then(/^the category fields should be updated$/) do
+  @cat = @cat.reload
+  @cat.data.length.should eq 1
+  @cat.data[0]['key'].should eq 'bar'
+end
