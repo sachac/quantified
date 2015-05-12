@@ -1,5 +1,4 @@
 source 'http://rubygems.org'
-source 'https://rails-assets.org'
 
 gem 'rails', '~> 4.1'
 gem 'dotenv-rails', :groups => [:development, :test]
@@ -21,11 +20,15 @@ gem 'cancancan', '~> 1.9'  # permissions
 gem 'rails-observers'      # to trigger timeline events
 #gem 'n_gram'
 #gem 'statsample'
+gem 'rails-assets-angular', :source => 'https://rails-assets.org'
+gem 'rails-assets-angular-filter', :source => 'https://rails-assets.org'
+gem 'rails-assets-angular-devise', :source => 'https://rails-assets.org'
 gem 'exception_notification', '~> 4', :require => 'exception_notifier'
 group :under_consideration do
   gem 'rack-offline', :git => 'git://github.com/wycats/rack-offline.git'
   gem 'ruby-graphviz', :git => "https://github.com/glejeune/Ruby-Graphviz.git"
-  gem 'rails-assets-angular' # handled by bower instead?
+  
+ # handled by bower instead?
   gem 'gdata_19', '1.1.5'
   gem 'workflow'
   gem 'actionmailer-with-request'
@@ -92,7 +95,7 @@ end
 
 group :test do
   gem 'database_cleaner'
-  gem 'rails-assets-angular-mocks'
+  gem 'rails-assets-angular-mocks', :source => 'https://rails-assets.org'
   gem 'selenium-webdriver'
   gem 'forgery'
   gem 'factory_girl_rails'  
