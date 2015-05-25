@@ -28,13 +28,15 @@ class RecordCategory < ActiveRecord::Base
     end
     if do_rename
       self.records.each do |record|
-        data_fields.each do |row|
-          if row['oldkey'] and row['key'] != row['oldkey']
-            record.data[row['key']] = record.data[row['oldkey']]
-            record.data.delete(row['oldkey'])
-          end
+        if record.data
+          data_fields.each do |row|
+            if row['oldkey'] and row['key'] != row['oldkey']
+              record.data[row['key']] = record.data[row['oldkey']]
+              record.data.delete(row['oldkey'])
+            end
+          end  
+          record.save!
         end
-        record.save!
       end
     end
     self.data = data_fields
