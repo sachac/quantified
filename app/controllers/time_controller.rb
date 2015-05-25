@@ -122,15 +122,24 @@ class TimeController < ApplicationController
     end
     time ||= Time.now
     @time = time
-    if rec.nil?
-      # Could not find matching category. Offer to create?
-      go_to new_record_category_path(:timestamp => time), notice: t('record_category.not_found_create') and return
-    elsif rec.is_a? Record
-      redirect_to edit_record_path(rec, :destination => params[:destination]) and return
+    if request.format.html? then
+      if rec.nil?
+        # Could not find matching category. Offer to create?
+        go_to new_record_category_path(:timestamp => time), notice: t('record_category.not_found_create') and return
+      elsif rec.is_a? Record
+        redirect_to edit_record_path(rec, :destination => params[:destination]) and return
+      else
+        redirect_to disambiguate_record_categories_path(:timestamp => time, :category => category_input), :method => :post and return
+      end
     else
-      redirect_to disambiguate_record_categories_path(:timestamp => time, :category => category_input), :method => :post and return 
+      if rec.nil?
+        # Could not find matching category. Offer to create?
+        respond_with 'error' => 'Record category not found'
+      elsif rec.is_a? Record
+        respond_with rec
+      else
+        respond_with 'error' => 'Ambiguous', 'categories' => rec
+      end
     end
   end
-
-  
 end
