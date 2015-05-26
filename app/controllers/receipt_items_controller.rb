@@ -21,8 +21,8 @@ class ReceiptItemsController < ApplicationController
   # GET /receipt_items/1
   # GET /receipt_items/1.json
   def show
-    @receipt_item = current_account.receipt_items.find(params[:id])
-    respond_with @receipt_item
+    @receipt_item = current_account.receipt_items.includes(:receipt_item_type).find(params[:id])
+    respond_with @receipt_item 
   end
 
   # GET /receipt_items/new
@@ -42,7 +42,7 @@ class ReceiptItemsController < ApplicationController
   # POST /receipt_items.json
   def create
     if params[:receipt_item] then params[:receipt_item].delete(:user_id) end
-    @receipt_item = current_account.receipt_items.new(receipt_item_params)
+    @receipt_item = current_account.receipt_items.includes(:receipt_item_type).new(receipt_item_params)
     if @receipt_item.save
       add_flash :notice, I18n.t('receipt_item.created')
     end
@@ -52,7 +52,7 @@ class ReceiptItemsController < ApplicationController
   # PUT /receipt_items/1
   # PUT /receipt_items/1.json
   def update
-    @receipt_item = current_account.receipt_items.find(params[:id])
+    @receipt_item = current_account.receipt_items.includes(:receipt_item_type).find(params[:id])
     if params[:receipt_item] then params[:receipt_item].delete(:user_id) end
     if @receipt_item.update_attributes(receipt_item_params)
       add_flash :notice, I18n.t('receipt_item.updated')

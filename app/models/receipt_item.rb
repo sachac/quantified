@@ -73,5 +73,8 @@ class ReceiptItem < ActiveRecord::Base
     total
     notes
   end
-    
+
+  def as_json(options={})
+    super(:include => [:receipt_item_type])
+  end
 end

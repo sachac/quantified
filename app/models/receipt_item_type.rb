@@ -2,7 +2,6 @@ class ReceiptItemType < ActiveRecord::Base
   has_many :receipt_items
   belongs_to :user
   belongs_to :receipt_item_category
-
   
   def self.map(user, receipt_name, friendly_name, category_id = nil)
     type = user.receipt_item_types.create(friendly_name: friendly_name,
