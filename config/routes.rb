@@ -8,6 +8,9 @@ Home::Application.routes.draw do
       get :batch_entry
       post :batch_entry
     end
+    member do
+      get :latest_receipt_items
+    end
   end
 
   resources :receipt_item_categories

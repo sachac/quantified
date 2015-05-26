@@ -69,6 +69,12 @@ class ReceiptItemTypesController < ApplicationController
     respond_with @receipt_item_type, location: receipt_item_types_url 
   end
 
+  def latest_receipt_items
+    @receipt_item_type = current_account.receipt_item_types.find(params[:id])
+    respond_with @receipt_item_type.receipt_items.order(:date => :desc).limit((params[:limit] || 10).to_i)
+    
+  end
+  
   def batch_entry
     @unmapped = ReceiptItemType.list_unmapped(current_account)
     count = 0
