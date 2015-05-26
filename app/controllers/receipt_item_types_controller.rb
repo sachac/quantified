@@ -6,8 +6,8 @@ class ReceiptItemTypesController < ApplicationController
   # GET /receipt_item_types
   # GET /receipt_item_types.json
   def index
-    order = filter_sortable_column_order %w{friendly_name receipt_name total}
-    @receipt_item_types = current_account.receipt_item_types.joins('LEFT JOIN receipt_items ON receipt_item_types.id=receipt_items.receipt_item_type_id').select('MIN(receipt_item_types.id) AS id, receipt_item_types.friendly_name, receipt_item_types.receipt_name, receipt_item_category_id, SUM(total) AS total').group('receipt_item_types.friendly_name, receipt_item_category_id').order(order)
+    order = filter_sortable_column_order %w{friendly_name receipt_name receipt_item_category.name}
+    @receipt_item_types = current_account.receipt_item_types.joins('LEFT JOIN receipt_item_categories ON (receipt_item_types.receipt_item_category_id=receipt_item_categories.id)').select('receipt_item_types.*, receipt_item_categories.name AS receipt_item_category_name').order(order)
     respond_with @receipt_item_types
   end
 
