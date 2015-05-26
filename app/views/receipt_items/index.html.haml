@@ -23,10 +23,10 @@
       %td= receipt_item.date
       %td= link_to receipt_item.name, receipt_items_path(params.merge(filter_string: receipt_item.name))
       %td= link_to receipt_item.friendly_name, receipt_item.receipt_item_type if receipt_item.receipt_item_type
-      %td= '%0.3f' % receipt_item.quantity
+      %td= '%0.3f' % receipt_item.quantity if receipt_item.quantity
       %td= receipt_item.unit
-      %td= '%0.3f' % receipt_item.unit_price
-      %td= '%0.2f' % receipt_item.total
+      %td= '%0.3f' % receipt_item.unit_price if receipt_item.unit_price
+      %td= '%0.2f' % receipt_item.total if receipt_item.total
       %td= receipt_item.notes
       %td= action_list receipt_item
 %br

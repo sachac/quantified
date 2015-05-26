@@ -2,8 +2,14 @@ class ReceiptItem < ActiveRecord::Base
   belongs_to :user
   belongs_to :receipt_item_type
   delegate :friendly_name, to: :receipt_item_type, allow_nil: true
+  before_save :update_total
 
-
+  def update_total
+    if !self.total and self.quantity and self.unit_price
+      self.total = self.quantity * self.unit_price
+    end
+  end
+  
   def self.parse_batch(text)
     text = text.strip
     h = ['ID', 'File', 'Store', 'Date', 'Time', 'Name', 'Quantity or net weight', 'Unit', 'Unit price', 'Total', 'Notes']

@@ -1,5 +1,11 @@
 = simple_form_for @receipt_item_type do |f|
-  = f.errors
+  -if @receipt_item_type.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@receipt_item_type.errors.count, "error")} prohibited this receipt_item_tityype from being saved:"
+      %ul
+        - @receipt_item_type.errors.full_messages.each do |msg|
+          %li= msg
+  
   .inputs
     = f.input :receipt_name
     = f.input :friendly_name

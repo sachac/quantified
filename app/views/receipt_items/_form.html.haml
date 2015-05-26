@@ -1,5 +1,10 @@
 = simple_form_for @receipt_item, html: { class: 'form-horizontal' } do |f|
-  = f.semantic_errors
+  -if @receipt_item.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@receipt_item.errors.count, "error")} prohibited this clothing from being saved:"
+      %ul
+        - @receipt_item.errors.full_messages.each do |msg|
+          %li= msg
   .inputs
     = f.input :name
     = f.input :friendly_name
