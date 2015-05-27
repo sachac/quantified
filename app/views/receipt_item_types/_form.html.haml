@@ -9,7 +9,7 @@
   .inputs
     = f.input :receipt_name
     = f.input :friendly_name
-    = f.input :receipt_item_category
+    = f.input :receipt_item_category_id, :as => :select, :collection => current_account.receipt_item_categories.order('name').map { |x| [ x.name, x.id ] }
     .form-group
       .col-sm-offset-2
         = submit_tag I18n.t('app.general.submit'), :class => 'btn btn-primary'
