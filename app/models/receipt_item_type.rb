@@ -19,6 +19,12 @@ class ReceiptItemType < ActiveRecord::Base
     unmapped.update_all(receipt_item_type_id: self.id)
     count
   end
+
+  def move_to(new_item_type)
+    if self.receipt_items.update_all(receipt_item_type_id: new_item_type.id)
+      self.delete
+    end
+  end
   
   def self.list_unmapped(user)
     user.receipt_items.where(receipt_item_type_id: nil).select('name, count(name) AS name_count').group(:name).order('name_count DESC')

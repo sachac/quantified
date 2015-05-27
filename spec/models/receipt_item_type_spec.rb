@@ -22,6 +22,24 @@ describe ReceiptItemType do
       expect(x[:count]).to eq 1
     end
   end
+  describe '#move_to' do
+    before :each do
+      @type1 = create(:receipt_item_type, user: @user)
+      @type2 = create(:receipt_item_type, user: @user)
+      @type3 = create(:receipt_item_type, user: @user)
+      @rec1 = create(:receipt_item, receipt_item_type: @type1, user: @user)
+      @rec2 = create(:receipt_item, receipt_item_type: @type2, user: @user)
+      @rec3 = create(:receipt_item, receipt_item_type: @type3, user: @user)
+    end
+    it 'moves records, but not unrelated ones' do
+      @type1.move_to(@type2)
+      @rec1.reload
+      @rec1.receipt_item_type.id.should == @type2.id
+      @rec3.reload
+      @rec3.receipt_item_type.id.should == @type3.id
+      @user.receipt_item_types.where(id: @type1.id).size.should == 0
+    end
+  end
   describe '#list_unmapped' do
     it "returns unmapped strings" do
       item = create(:receipt_item, user: @user, name: 'RCPT ITEM')

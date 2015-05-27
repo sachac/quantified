@@ -78,6 +78,25 @@ describe ReceiptItemTypesController, :type => :controller  do
     end
   end
 
+  describe "PUT moveTo" do
+    before :each do
+      @type1 = create(:receipt_item_type, user: @user)
+      @type2 = create(:receipt_item_type, user: @user)
+      @type3 = create(:receipt_item_type, user: @user)
+      @rec1 = create(:receipt_item, receipt_item_type: @type1, user: @user)
+      @rec2 = create(:receipt_item, receipt_item_type: @type2, user: @user)
+      @rec3 = create(:receipt_item, receipt_item_type: @type3, user: @user)
+    end
+    it "moves all the items from the specified item type to the other item type" do
+      put :move_to, {:id => @type1.id, :new_id => @type2.id}
+      @rec1.reload
+      @rec1.receipt_item_type.id.should == @type2.id
+      @rec3.reload
+      @rec3.receipt_item_type.id.should == @type3.id
+      @user.receipt_item_types.where(id: @type1.id).size.should == 0
+    end
+  end
+  
   describe "PUT update" do
     describe "with valid params" do
       it "updates the requested receipt_item_type" do

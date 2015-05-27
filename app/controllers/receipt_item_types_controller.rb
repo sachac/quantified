@@ -55,6 +55,11 @@ class ReceiptItemTypesController < ApplicationController
   def update
     @receipt_item_type = current_account.receipt_item_types.find(params[:id])
     params[:receipt_item_type].delete(:user_id) if params[:receipt_item_type]
+    @receipt_item_category = current_account.receipt_item_categories.find(params[:receipt_item_type][:receipt_item_category_id]) if params[:receipt_item_type][:receipt_item_category_id]
+    if @receipt_item_category
+      @receipt_item_type.receipt_item_category_id = @receipt_item_category.id
+      params[:receipt_item_type].delete(:receipt_item_type_id)
+    end
     if @receipt_item_type.update_attributes(receipt_item_type_params)
       add_flash :notice, t('receipt_item_type.updated')
     end
@@ -97,6 +102,17 @@ class ReceiptItemTypesController < ApplicationController
 
   def get_autocomplete_items(parameters)
     super(parameters).where(:user_id => current_account.id)
+  end
+
+  def move_to
+    old_type = current_account.receipt_item_types.find(params[:id])
+    new_type = current_account.receipt_item_types.find(params[:new_id])
+    if old_type && new_type
+      old_type.move_to(new_type)
+      respond_with(new_type)
+    else
+      respond_with('Could not find item types in your account.', status: 404)
+    end
   end
 
   private

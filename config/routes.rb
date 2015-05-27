@@ -10,9 +10,10 @@ Home::Application.routes.draw do
     end
     member do
       get :latest_receipt_items
+      put 'move_to/:new_id', :action => 'move_to'
     end
   end
-
+  
   resources :receipt_item_categories
 
   resources :receipt_items do
