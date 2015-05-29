@@ -2,6 +2,7 @@ class ReceiptItem < ActiveRecord::Base
   belongs_to :user
   belongs_to :receipt_item_type
   delegate :friendly_name, to: :receipt_item_type, allow_nil: true
+  delegate :category_name, to: :receipt_item_type, allow_nil: true
   before_save :update_total
 
   def update_total
@@ -67,6 +68,7 @@ class ReceiptItem < ActiveRecord::Base
     date
     name
     friendly_name
+    category_name
     quantity
     unit
     unit_price

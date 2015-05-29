@@ -5,7 +5,7 @@ class ReceiptItemsController < ApplicationController
   # GET /receipt_items
   # GET /receipt_items.json
   def index
-    @receipt_items = current_account.receipt_items.order('date DESC').joins('LEFT JOIN receipt_item_types ON receipt_items.receipt_item_type_id=receipt_item_types.id').select('receipt_items.*, receipt_item_types.friendly_name')
+    @receipt_items = current_account.receipt_items.order('date DESC').joins('LEFT JOIN receipt_item_types ON receipt_items.receipt_item_type_id=receipt_item_types.id LEFT JOIN receipt_item_categories ON receipt_item_types.receipt_item_category_id=receipt_item_categories.id').select('receipt_items.*, receipt_item_types.friendly_name, receipt_item_types.receipt_item_category_id, receipt_item_categories.name AS category_name')
     params[:start] = (current_account.receipt_items.minimum(:date) - 1.day).to_s if params[:start].blank? and current_account.receipt_items.size > 0 
     params[:end] ||= (Time.zone.now + 1.day).midnight.to_s
     prepare_filters [:filter_string, :date_range]

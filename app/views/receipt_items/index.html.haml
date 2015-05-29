@@ -8,21 +8,23 @@
 %table.table.table-bordered.full
   %tr
     %th Store
-    %th Date
+    %th(width=100) Date
     %th Name
     %th Friendly name
+    %th Category
     %th Quantity
     %th Unit
     %th Unit price
     %th Total
     %th Notes
-    %th
+    %th(width=50)
   - @receipt_items.each do |receipt_item|
     %tr
       %td= receipt_item.store
       %td= receipt_item.date
       %td= link_to receipt_item.name, receipt_items_path(params.merge(filter_string: receipt_item.name))
       %td= link_to receipt_item.friendly_name, receipt_item.receipt_item_type if receipt_item.receipt_item_type
+      %td= link_to receipt_item.category_name, receipt_item_category_path(receipt_item.receipt_item_category_id) if receipt_item.receipt_item_category_id
       %td= '%0.3f' % receipt_item.quantity if receipt_item.quantity
       %td= receipt_item.unit
       %td= '%0.3f' % receipt_item.unit_price if receipt_item.unit_price
