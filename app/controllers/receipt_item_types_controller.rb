@@ -107,7 +107,7 @@ class ReceiptItemTypesController < ApplicationController
   def move_to
     old_type = current_account.receipt_item_types.find(params[:id])
     new_type = current_account.receipt_item_types.find(params[:new_id])
-    if old_type && new_type
+    if old_type && new_type && old_type.id != new_type.id
       old_type.move_to(new_type)
       respond_with(new_type)
     else
