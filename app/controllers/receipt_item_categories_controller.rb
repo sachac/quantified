@@ -5,17 +5,43 @@ class ReceiptItemCategoriesController < ApplicationController
   # GET /receipt_item_categories
   # GET /receipt_item_categories.json
   def index
-    order = filter_sortable_column_order %w{name total}
-    @receipt_item_categories = current_account.receipt_item_categories.joins('LEFT JOIN receipt_item_types j ON (receipt_item_categories.id=j.receipt_item_category_id) LEFT JOIN receipt_items i ON (j.id=i.receipt_item_type_id)').select('receipt_item_categories.id, receipt_item_categories.name, SUM(i.total) AS total').group('receipt_item_categories.id, receipt_item_categories.name').order(order)
+    order = sortable_column_order do |column, direction|
+      case column
+      when 'name'
+        "#{column} #{direction}"
+      when 'total'
+        "#{column} #{direction}"
+      else
+        'total DESC'
+      end
+    end
+    
+    params[:start] = (Time.zone.now - 30.days).to_s if params[:start].blank? and current_account.receipt_items.size > 0 
+    params[:end] ||= (Time.zone.now + 1.day).midnight.to_s
+    prepare_filters [:date_range]
+    @receipt_item_categories = current_account.receipt_item_categories.joins('LEFT JOIN receipt_item_types j ON (receipt_item_categories.id=j.receipt_item_category_id) LEFT JOIN receipt_items i ON (j.id=i.receipt_item_type_id)').where('i.date BETWEEN ? AND ?', Time.zone.parse(params[:start]), Time.zone.parse(params[:end])).select('receipt_item_categories.id, receipt_item_categories.name, SUM(i.total) AS total').group('receipt_item_categories.id, receipt_item_categories.name').order(order)
     respond_with @receipt_item_categories
   end
 
   # GET /receipt_item_categories/1
   # GET /receipt_item_categories/1.json
   def show
+    order = sortable_column_order do |column, direction|
+      case column
+      when 'name'
+        "#{column} #{direction}"
+      when 'total'
+        "#{column} #{direction}"
+      else
+        'total DESC'
+      end
+    end
+    
+    params[:start] = (Time.zone.now - 30.days).to_s if params[:start].blank? and current_account.receipt_items.size > 0 
+    params[:end] ||= (Time.zone.now + 1.day).midnight.to_s
+    prepare_filters [:date_range]
     @receipt_item_category = current_account.receipt_item_categories.find(params[:id])
-    @receipt_item_types = @receipt_item_category.receipt_item_types.joins(:receipt_items)
-    @receipt_item_types = @receipt_item_types.select('MIN(receipt_item_types.id) AS id, friendly_name, SUM(receipt_items.total) AS total').group(:friendly_name)
+    @receipt_item_types = @receipt_item_category.receipt_item_types.joins(:receipt_items).where('receipt_items.date BETWEEN ? AND ?', Time.zone.parse(params[:start]), Time.zone.parse(params[:end])).select('MIN(receipt_item_types.id) AS id, friendly_name, SUM(receipt_items.total) AS total').group(:friendly_name).order(order)
     respond_with @receipt_item_category
   end
 

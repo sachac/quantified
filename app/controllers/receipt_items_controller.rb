@@ -6,7 +6,7 @@ class ReceiptItemsController < ApplicationController
   # GET /receipt_items.json
   def index
     @receipt_items = current_account.receipt_items.order('date DESC').joins('LEFT JOIN receipt_item_types ON receipt_items.receipt_item_type_id=receipt_item_types.id LEFT JOIN receipt_item_categories ON receipt_item_types.receipt_item_category_id=receipt_item_categories.id').select('receipt_items.*, receipt_item_types.friendly_name, receipt_item_types.receipt_item_category_id, receipt_item_categories.name AS category_name')
-    params[:start] = (current_account.receipt_items.minimum(:date) - 1.day).to_s if params[:start].blank? and current_account.receipt_items.size > 0 
+    params[:start] = (Time.zone.now - 30.days).to_s if params[:start].blank? and current_account.receipt_items.size > 0 
     params[:end] ||= (Time.zone.now + 1.day).midnight.to_s
     prepare_filters [:filter_string, :date_range]
     @receipt_items = @receipt_items.where(date: Time.zone.parse(params[:start])..Time.zone.parse(params[:end]))
@@ -92,7 +92,9 @@ class ReceiptItemsController < ApplicationController
   end
 
   def graph
-    params[:start] ||= (current_account.receipt_items.minimum(:date) - 1.day).to_s if params[:start].blank? and current_account.receipt_items.size > 0
+    params[:start] ||= (Time.zone.now - 30.days).to_s if params[:start].blank? and current_account.receipt_items.size > 0
+    params[:end] ||= (Time.zone.now + 1.day).midnight.to_s
+        
     prepare_filters :date_range
     base = current_account.receipt_item_types.joins('INNER JOIN receipt_items ON receipt_item_types.id=receipt_items.receipt_item_type_id INNER JOIN receipt_item_categories ON receipt_item_types.receipt_item_category_id=receipt_item_categories.id').select('receipt_item_types.friendly_name, receipt_item_categories.name, SUM(total) AS total').where('NOT(receipt_item_categories.name IN (?))', ['Non-grocery', 'Gifts', 'Gardening supplies', 'Pet care']).where('date >= ? AND date < ?', Time.zone.parse(params[:start]).to_date, Time.zone.parse(params[:end]).to_date)
     @receipt_item_types = base.group('receipt_item_types.friendly_name').order("total DESC")

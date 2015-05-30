@@ -1,6 +1,12 @@
 = setup_page 'receipt_item_categories', 'Receipt item categories', 'receipt_items/nav'
 
 = link_to 'New receipt item category', new_receipt_item_category_path
+
+= render 'filters', expanded: true
+
+.total
+  Total:
+  = @receipt_item_categories.map(&:total).sum
 %table.table.table-bordered.table-striped
   %tr
     %th.number= sortable_column 'Total'
@@ -8,8 +14,8 @@
     %th
   - @receipt_item_categories.each do |receipt_item_category|
     %tr
-      %td.number= receipt_item_category.total
-      %td= link_to receipt_item_category.name, receipt_item_category
+      %td.number= '%0.2f' % receipt_item_category.total
+      %td= link_to receipt_item_category.name, receipt_item_category_path(receipt_item_category, params)
       %td= action_list receipt_item_category
 
 %br

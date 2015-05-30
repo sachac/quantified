@@ -1,14 +1,15 @@
 = setup_page 'receipt_item_categories', @receipt_item_category.name, 'receipt_items/nav'
+= render 'filters', expanded: true
 
 %table.table.table-bordered
   %tr
-    %th Type
     %th Total
+    %th Type
     %th
   - @receipt_item_types.each do |x|
     %tr
+      %td.number= '%0.2f' % x.total
       %td= link_to x.friendly_name, x
-      %td= x.total
       %td= action_list x
 
 = link_to 'Edit', edit_receipt_item_category_path(@receipt_item_category)
