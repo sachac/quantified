@@ -15,13 +15,16 @@ class RecordsController < ApplicationController
     end
     @order = params[:order]
     @records = Record.get_records(current_account, :order => @order, :include_private => managing?, :start => @start, :end => @end, :filter_string => @filter_string)
+    if params[:category_type]
+      @records = @records.where('record_categories.category_type=?', [params[:category_type]])
+    end
     if request.format.csv?
       if params[:split] and params[:split] == 'split'
         @records = Record.split(@records)
       end
       @data = @records
     else
-      @records = @records.paginate :page => params[:page]
+      @records = @records.paginate :page => params[:page], :per_page => params[:per_page]
       base = @records
       @pre_split = @records
       if params[:split] and params[:split] == 'split'

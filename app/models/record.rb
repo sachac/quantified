@@ -477,6 +477,7 @@ class Record < ActiveRecord::Base
     unless options[:include_private]
       records = records.public_records
     end
+    records = records.joins(:record_category).select('records.*, record_categories.full_name, record_categories.color, record_categories.name, record_categories.parent_id, record_categories.category_type')
     records
   end
 
