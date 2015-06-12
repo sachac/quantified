@@ -14,7 +14,7 @@ describe ReceiptItemCategoriesController, :type => :controller  do
     it "assigns all receipt_item_categories as @receipt_item_categories" do
       receipt_item_category = create(:receipt_item_category, user: @user)
       get :index, {}
-      assigns(:receipt_item_categories).should eq([receipt_item_category])
+      assigns(:receipt_item_categories).first.id.should == receipt_item_category.id
     end
   end
 

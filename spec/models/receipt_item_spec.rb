@@ -66,7 +66,7 @@ describe ReceiptItem do
   describe "#to_csv" do
     it "should convert to CSV" do
       rec = FactoryGirl.create(:receipt_item)
-      expect(rec.to_comma).to eq [rec.filename, rec.source_id.to_s, rec.source_name, rec.store, rec.date.to_s, rec.name, nil, rec.quantity.to_s, rec.unit, rec.unit_price.to_s, rec.total.to_s, rec.notes]
+      expect(rec.to_comma).to eq [rec.filename, rec.source_id.to_s, rec.source_name, rec.store, rec.date.to_s, rec.name, nil, nil, rec.quantity.to_s, rec.unit, rec.unit_price.to_s, rec.total.to_s, rec.notes]
     end
   end
 

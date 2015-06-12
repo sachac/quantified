@@ -12,7 +12,7 @@ class ReceiptItemsController < ApplicationController
     @receipt_items = @receipt_items.where(date: Time.zone.parse(params[:start])..Time.zone.parse(params[:end]))
     if !params[:filter_string].blank?
       filter = '%' + params[:filter_string].downcase + '%'
-      @receipt_items = @receipt_items.where('LOWER(name) LIKE ? OR LOWER(friendly_name) LIKE ?', filter, filter)
+      @receipt_items = @receipt_items.where('LOWER(receipt_items.name) LIKE ? OR LOWER(receipt_item_types.friendly_name) LIKE ?', filter, filter)
     end
     @receipt_items = @receipt_items.paginate(page: params[:page]) unless request.format.csv?
     respond_with_data @receipt_items
