@@ -1,5 +1,10 @@
 = simple_form_for @receipt_item_category do |f|
-  = f.errors
+  - if @receipt_item_category.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@receipt_item_category.errors.count, "error")} prohibited this from being saved:"
+      %ul
+        - @receipt_item_category.errors.full_messages.each do |msg|
+          %li= msg
   .inputs
     = f.input :name
     .form-group
