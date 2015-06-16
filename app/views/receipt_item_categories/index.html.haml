@@ -6,7 +6,7 @@
 
 .total
   Total:
-  = @receipt_item_categories.map(&:total).sum
+  = @receipt_item_categories.map(&:total).compact.sum
 %table.table.table-bordered.table-striped
   %tr
     %th.number= sortable_column 'Total'
@@ -14,7 +14,7 @@
     %th
   - @receipt_item_categories.each do |receipt_item_category|
     %tr
-      %td.number= '%0.2f' % receipt_item_category.total
+      %td.number= '%0.2f' % (receipt_item_category.total || 0)
       %td= link_to receipt_item_category.name, receipt_item_category_path(receipt_item_category, params)
       %td= action_list receipt_item_category
 

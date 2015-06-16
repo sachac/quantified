@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141103181747) do
+ActiveRecord::Schema.define(version: 20141103162500) do
 
   create_table "clothing", force: true do |t|
     t.string   "name"
@@ -500,7 +500,7 @@ ActiveRecord::Schema.define(version: 20141103181747) do
     t.string   "username"
     t.string   "authentication_token"
     t.text     "data",                     limit: 16777215
-    t.string   "invitation_token"
+    t.string   "invitation_token",         limit: 60
     t.datetime "invitation_sent_at"
     t.datetime "invitation_accepted_at"
     t.integer  "invitation_limit"
@@ -511,14 +511,11 @@ ActiveRecord::Schema.define(version: 20141103181747) do
     t.datetime "confirmation_sent_at"
     t.boolean  "approved",                                  default: false, null: false
     t.string   "unconfirmed_email"
-    t.datetime "invitation_created_at"
-    t.integer  "invitations_count",                         default: 0
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["invitation_token"], name: "index_users_on_invitation_token", using: :btree
-  add_index "users", ["invitations_count"], name: "index_users_on_invitations_count", using: :btree
   add_index "users", ["invited_by_id"], name: "index_users_on_invited_by_id", using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
 
