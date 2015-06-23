@@ -42,11 +42,7 @@ class ReceiptItemTypesController < ApplicationController
   # POST /receipt_item_types
   # POST /receipt_item_types.json
   def create
-    @receipt_item_type = current_account.receipt_item_types.new(receipt_item_type_params)
-    if @receipt_item_type.save
-      @receipt_item_type.set_name_and_category(current_account, self.receipt_name, self.friendly_name, self.category_id)
-      add_flash :notice, t('receipt_item_type.created')
-    end
+    @receipt_item_type = current_account.receipt_item_types.create(receipt_item_type_params)
     respond_with @receipt_item_type
   end
 
@@ -88,7 +84,10 @@ class ReceiptItemTypesController < ApplicationController
     if params[:batch]
       params[:batch].each do |k, x|
         if !x[:friendly_name].blank?
-          result = ReceiptItemType.set_name_and_category(current_account, x[:receipt_name], x[:friendly_name], x[:receipt_item_category_id])
+          result = ReceiptItemType.set_name_and_category(current_account,
+                                                         {receipt_name: x[:receipt_name],
+                                                          friendly_name: x[:friendly_name],
+                                                          category_id: x[:receipt_item_category_id]})
           count += result[:count]
           @result[x[:receipt_name]] = result
         end

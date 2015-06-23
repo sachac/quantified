@@ -3,10 +3,10 @@ class ReceiptItemType < ActiveRecord::Base
   belongs_to :user
   belongs_to :receipt_item_category
   delegate :name, to: :receipt_item_category, prefix: :category, allow_nil: true
-  def self.set_name_and_category(user, receipt_name, friendly_name, category_id = nil)
-    type = user.receipt_item_types.create(friendly_name: friendly_name,
-                                          receipt_name: receipt_name,
-                                          receipt_item_category_id: category_id)
+  def self.set_name_and_category(user, params)
+    type = user.receipt_item_types.create(friendly_name: params[:friendly_name],
+                                          receipt_name: params[:receipt_name],
+                                          receipt_item_category_id: params[:category_id])
                                   
     {type: type, count: type.map}
   end
