@@ -61,6 +61,14 @@ describe ReceiptItemsController, :type => :controller  do
         assigns(:receipt_item).should be_persisted
       end
 
+      it "sets up the friendly name if specified" do
+        post :create, {:receipt_item => valid_attributes.merge(:friendly_name => 'Test Type',
+                                                               :category_name => 'Meat')}
+        assigns(:receipt_item).receipt_item_type.friendly_name.should eq 'Test Type'
+        assigns(:receipt_item).receipt_item_type.receipt_item_category.name.should eq 'Meat'
+        
+      end
+
       it "redirects to the created receipt_item" do
         post :create, {:receipt_item => valid_attributes}
         response.should redirect_to(ReceiptItem.last)
@@ -107,6 +115,28 @@ describe ReceiptItemsController, :type => :controller  do
         put :update, {:id => receipt_item.to_param, :receipt_item => valid_attributes}
         response.should redirect_to(receipt_item)
       end
+
+      it "sets up the friendly name if specified" do
+        receipt_item = create(:receipt_item, user: @user)
+        put :update, {:id => receipt_item.to_param,
+                      :receipt_item => valid_attributes.merge(:friendly_name => 'Test Type',
+                                                              :category_name => 'Meat',
+                                                              :receipt_item_type_id => nil)}
+        assigns(:receipt_item).receipt_item_type.friendly_name.should eq 'Test Type'
+        assigns(:receipt_item).receipt_item_type.receipt_item_category.name.should eq 'Meat'
+      end
+
+      it "can use category IDs" do
+        receipt_item = create(:receipt_item, user: @user)
+        c = create(:receipt_item_category, name: 'Meat', user: @user)
+        put :update, {:id => receipt_item.to_param,
+                      :receipt_item => valid_attributes.merge(:friendly_name => 'Test Type',
+                                                              :receipt_item_category_id => c.id,
+                                                              :receipt_item_type_id => nil)}
+        assigns(:receipt_item).receipt_item_type.friendly_name.should eq 'Test Type'
+        assigns(:receipt_item).receipt_item_type.receipt_item_category.name.should eq 'Meat'
+      end
+     
     end
 
     describe "with invalid params" do

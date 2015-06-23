@@ -43,6 +43,7 @@ class ReceiptItemsController < ApplicationController
   def create
     if params[:receipt_item] then params[:receipt_item].delete(:user_id) end
     @receipt_item = current_account.receipt_items.includes(:receipt_item_type).new(receipt_item_params)
+    @receipt_item.set_associated(params[:receipt_item])
     if @receipt_item.save
       add_flash :notice, I18n.t('receipt_item.created')
     end
@@ -55,6 +56,8 @@ class ReceiptItemsController < ApplicationController
     @receipt_item = current_account.receipt_items.includes(:receipt_item_type).find(params[:id])
     if params[:receipt_item] then params[:receipt_item].delete(:user_id) end
     if @receipt_item.update_attributes(receipt_item_params)
+      @receipt_item.set_associated(params[:receipt_item])
+      @receipt_item.save
       add_flash :notice, I18n.t('receipt_item.updated')
     end
     respond_with @receipt_item

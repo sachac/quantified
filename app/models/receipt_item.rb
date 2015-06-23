@@ -1,10 +1,40 @@
 class ReceiptItem < ActiveRecord::Base
   belongs_to :user
-  belongs_to :receipt_item_type
+  belongs_to :receipt_item_type, autosave: true
   delegate :friendly_name, to: :receipt_item_type, allow_nil: true
   delegate :category_name, to: :receipt_item_type, allow_nil: true
   before_save :update_total
 
+  # Creates a ReceiptItem.
+  def set_associated(params)
+    if params[:receipt_item_type_id] && self.receipt_item_type_id != params[:receipt_item_type_id] then
+      self.receipt_item_type = self.user.receipt_item_types.find(params[:receipt_item_type_id])
+    end
+    if !params[:friendly_name].blank? then
+      # Try to reuse this user's receipt item type
+      self.receipt_item_type = user.receipt_item_types.where(friendly_name: params[:friendly_name], receipt_name: self.name).first
+      # or create a new one if necessary
+      if receipt_item_type.nil? then
+        self.receipt_item_type = user.receipt_item_types.create(friendly_name: params[:friendly_name], receipt_name: self.name)
+      end
+    else
+      self.receipt_item_type = user.receipt_item_types.where(receipt_name: self.name).first
+    end
+    if params[:receipt_item_category_id] and self.receipt_item_type.receipt_item_category_id != params[:receipt_item_category_id] then
+      self.receipt_item_type.receipt_item_category = self.user.receipt_item_categories.find(params[:receipt_item_category_id])
+    end
+      
+    if !params[:category_name].blank? then
+      # Try to reuse this user's receipt item type
+      self.receipt_item_type.receipt_item_category = user.receipt_item_categories.where(name: params[:category_name]).first
+      # or create a new one if necessary
+      if receipt_item_type.receipt_item_category.nil? then
+        self.receipt_item_type.receipt_item_category = user.receipt_item_categories.create(name: params[:category_name])
+      end
+    end
+  end
+  
+  
   def update_total
     if !self.total and self.quantity and self.unit_price
       self.total = self.quantity * self.unit_price
@@ -76,7 +106,4 @@ class ReceiptItem < ActiveRecord::Base
     notes
   end
 
-  def as_json(options={})
-    super(:include => [:receipt_item_type])
-  end
 end

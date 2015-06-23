@@ -44,7 +44,7 @@ class ReceiptItemTypesController < ApplicationController
   def create
     @receipt_item_type = current_account.receipt_item_types.new(receipt_item_type_params)
     if @receipt_item_type.save
-      @receipt_item_type.map
+      @receipt_item_type.set_name_and_category(current_account, self.receipt_name, self.friendly_name, self.category_id)
       add_flash :notice, t('receipt_item_type.created')
     end
     respond_with @receipt_item_type
@@ -88,7 +88,7 @@ class ReceiptItemTypesController < ApplicationController
     if params[:batch]
       params[:batch].each do |k, x|
         if !x[:friendly_name].blank?
-          result = ReceiptItemType.map(current_account, x[:receipt_name], x[:friendly_name], x[:receipt_item_category_id])
+          result = ReceiptItemType.set_name_and_category(current_account, x[:receipt_name], x[:friendly_name], x[:receipt_item_category_id])
           count += result[:count]
           @result[x[:receipt_name]] = result
         end
@@ -96,8 +96,10 @@ class ReceiptItemTypesController < ApplicationController
       if count > 0
         add_flash :notice, "#{count} receipt item(s) updated."
       end
+      respond_with @result
+    else
+      respond_with @unmapped
     end
-    respond_with @result
   end
 
   def get_autocomplete_items(parameters)

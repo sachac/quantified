@@ -5,6 +5,71 @@ describe ReceiptItem do
     @text = 'ID	File	Store	Date	Time	Name	Quantity or net weight	Unit	Unit price	Total	Notes
 2	2131936.jpg	Nofrills Lower Food Prices	2012-02-23	11:00	RN Dried Apricot M	1		4	4	'
   end
+  describe ".create_associated" do
+    it "creates the receipt item type if it does not yet exist" do
+      u = create(:user)
+      o = ReceiptItem.create(:user => u, :name => 'hamburgers')
+      o.set_associated({friendly_name: 'Hamburgers', category_name: 'Meat'})
+      o.save!
+      o.receipt_item_type.should_not be_nil
+      o.receipt_item_type.receipt_name.should eq 'hamburgers'
+      o.receipt_item_type.friendly_name.should eq 'Hamburgers'
+      o.receipt_item_type.receipt_item_category.name.should eq 'Meat'
+    end
+    it "guesses the receipt item type if it already exists" do
+      u = create(:user)
+      t = create(:receipt_item_type, user: u, receipt_name: 'hamburgers', friendly_name: 'Hamburgers')
+      o = ReceiptItem.create(:user => u, name: 'hamburgers')
+      o.set_associated(friendly_name: nil, category_name: nil)
+      o.save!
+      o.receipt_item_type.receipt_name.should eq 'hamburgers'
+      o.receipt_item_type.friendly_name.should eq 'Hamburgers'
+      o.receipt_item_type_id.should == t.id
+    end
+    it "reuses the receipt item type if it already exists" do
+      u = create(:user)
+      t = create(:receipt_item_type, user: u, receipt_name: 'hamburgers', friendly_name: 'Hamburgers')
+      o = ReceiptItem.create(:user => u, name: 'hamburgers')
+      o.set_associated(friendly_name: 'Hamburgers')
+      o.save!
+      o.receipt_item_type.should_not be_nil
+      o.receipt_item_type.receipt_name.should eq 'hamburgers'
+      o.receipt_item_type.friendly_name.should eq 'Hamburgers'
+      o.receipt_item_type.id.should == t.id
+    end
+    it "reuses the receipt item type if it already exists, even if specified" do
+      u = create(:user)
+      t = create(:receipt_item_type, user: u, receipt_name: 'hamburgers', friendly_name: 'Hamburgers')
+      o = ReceiptItem.create(:user => u, name: 'hamburgers')
+      o.set_associated(friendly_name: 'Hamburgers')
+      o.save!
+      o.receipt_item_type.id.should == t.id
+    end
+    it "creates the receipt item category if it does not yet exist" do
+      u = create(:user)
+      o = ReceiptItem.create(:user => u, :name => 'hamburgers')
+      o.set_associated(friendly_name: 'Hamburgers', category_name: 'Meat')
+      o.save!
+      o.receipt_item_type.receipt_item_category.name.should eq 'Meat'
+    end
+    it "reuses the receipt item category if it already exists" do
+      u = create(:user)
+      c = create(:receipt_item_category, user: u, name: 'Meat')
+      o = ReceiptItem.create(user: u, name: 'hamburgers')
+      o.set_associated(friendly_name: 'Hamburgers', category_name: 'Meat')
+      o.save!
+      o.receipt_item_type.receipt_item_category_id.should == c.id
+    end
+    it "doesn't steal other people's types" do
+      u = create(:user)
+      u2 = create(:user)
+      t = create(:receipt_item_type, user: u2, receipt_name: 'hamburgers', friendly_name: 'Hamburgers')
+      o = ReceiptItem.create(:user => u, name: 'hamburgers')
+      o.set_associated(friendly_name: nil, category_name: nil)
+      o.save!
+      o.receipt_item_type.should be_nil
+    end
+  end
   describe ".parse_batch" do
     it "converts to CSV with headers" do
       text = '2	2131936.jpg	Nofrills Lower Food Prices	2012-02-23	11:00	RN Dried Apricot M	1		4	4	'

@@ -1,6 +1,5 @@
 = setup_page 'receipt_item_types_batch', 'Batch entry', 'receipt_items/nav'
 - list = content_tag(:option, '', value: '') + options_from_collection_for_select(@receipt_item_categories, 'id', 'name')
-= list
 = form_tag batch_entry_receipt_item_types_path, method: :post do
   = submit_tag t('general.save'), class: 'btn btn-primary'
   %table.table.table-bordered
@@ -9,13 +8,18 @@
       %th Count
       %th Friendly name
       %th Category
+      %th Actions
     - @unmapped.each_with_index do |x, i|
       %tr
-        %td= x.name
+        %td
+          - if x.receipt_item_type_id
+            = link_to x.name, receipt_item_type_path(x)
+          - else
+            = x.name
         %td= x.name_count
         %td
           = hidden_field_tag "batch[#{i}][receipt_name]", x.name
-          = autocomplete_field_tag "batch[#{i}][friendly_name]", nil, autocomplete_receipt_item_type_path, :placeholder => "Friendly name"
+          = autocomplete_field_tag "batch[#{i}][friendly_name]", x.friendly_name, autocomplete_receipt_item_type_path, :placeholder => "Friendly name"
         %td
           = select_tag "batch[#{i}][receipt_item_category_id]", list
   = submit_tag t('general.save'), class: 'btn btn-primary'
