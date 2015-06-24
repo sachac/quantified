@@ -69,6 +69,19 @@ describe ReceiptItemsController, :type => :controller  do
         
       end
 
+      it "returns the friendly name" do
+        type = create(:receipt_item_type, user: @user, receipt_name: valid_attributes[:name])
+        post :create, {:receipt_item => valid_attributes}
+        assigns(:receipt_item).receipt_item_type_id.should == type.id
+        assigns(:receipt_item).friendly_name.should eq type.friendly_name
+      end
+
+      it "returns the friendly name even in JSON" do
+        type = create(:receipt_item_type, user: @user, receipt_name: 'Receipt item 1', friendly_name: 'This is a test')
+        post :create, {:receipt_item => valid_attributes.merge(name: 'Receipt item 1'), format: :json}
+        JSON.parse(response.body)['friendly_name'].should == type.friendly_name
+      end
+
       it "redirects to the created receipt_item" do
         post :create, {:receipt_item => valid_attributes}
         response.should redirect_to(ReceiptItem.last)
@@ -102,6 +115,14 @@ describe ReceiptItemsController, :type => :controller  do
         # submitted in the request.
         expect_any_instance_of(ReceiptItem).to receive(:update_attributes).with({ "filename" => "MyString" })
         put :update, {:id => receipt_item.to_param, :receipt_item => { "filename" => "MyString" }}
+      end
+
+      it "returns the friendly name even in JSON" do
+        type = create(:receipt_item_type, user: @user, receipt_name: 'Receipt item 1', friendly_name: 'This is a test')
+        receipt_item = create(:receipt_item, name: 'Receipt item 1', user: @user)
+        put :update, {:id => receipt_item.to_param, :receipt_item => {friendly_name: 'This is a test'}, format: :json}
+        JSON.parse(response.body)['friendly_name'].should == type.friendly_name
+        JSON.parse(response.body)['receipt_item_type_id'].should == type.id
       end
 
       it "assigns the requested receipt_item as @receipt_item" do

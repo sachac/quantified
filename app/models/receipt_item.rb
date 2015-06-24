@@ -3,6 +3,7 @@ class ReceiptItem < ActiveRecord::Base
   belongs_to :receipt_item_type, autosave: true
   delegate :friendly_name, to: :receipt_item_type, allow_nil: true
   delegate :category_name, to: :receipt_item_type, allow_nil: true
+  delegate :receipt_item_category_id, to: :receipt_item_type, allow_nil: true
   before_save :update_total
 
   # Creates a ReceiptItem.
@@ -10,15 +11,16 @@ class ReceiptItem < ActiveRecord::Base
     if params[:receipt_item_type_id] && self.receipt_item_type_id != params[:receipt_item_type_id] then
       self.receipt_item_type = self.user.receipt_item_types.find(params[:receipt_item_type_id])
     end
+      
     if !params[:friendly_name].blank? then
       # Try to reuse this user's receipt item type
-      self.receipt_item_type = user.receipt_item_types.where(friendly_name: params[:friendly_name], receipt_name: self.name).first
+      self.receipt_item_type = self.user.receipt_item_types.where(friendly_name: params[:friendly_name], receipt_name: self.name).first
       # or create a new one if necessary
       if receipt_item_type.nil? then
-        self.receipt_item_type = user.receipt_item_types.create(friendly_name: params[:friendly_name], receipt_name: self.name)
+        self.receipt_item_type = self.user.receipt_item_types.create(friendly_name: params[:friendly_name], receipt_name: self.name)
       end
     else
-      self.receipt_item_type = user.receipt_item_types.where(receipt_name: self.name).first
+      self.receipt_item_type = self.user.receipt_item_types.where(receipt_name: self.name).first
     end
     if params[:receipt_item_category_id] and self.receipt_item_type.receipt_item_category_id != params[:receipt_item_category_id] then
       self.receipt_item_type.receipt_item_category = self.user.receipt_item_categories.find(params[:receipt_item_category_id])
@@ -106,4 +108,5 @@ class ReceiptItem < ActiveRecord::Base
     notes
   end
 
+  scope :include_names, -> { joins('LEFT JOIN receipt_item_types ON receipt_items.receipt_item_type_id=receipt_item_types.id LEFT JOIN receipt_item_categories ON receipt_item_types.receipt_item_category_id=receipt_item_categories.id').select('receipt_items.*, receipt_item_types.friendly_name, receipt_item_types.receipt_item_category_id, receipt_item_categories.name AS category_name') }
 end
