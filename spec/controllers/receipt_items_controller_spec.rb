@@ -69,13 +69,6 @@ describe ReceiptItemsController, :type => :controller  do
         
       end
 
-      it "returns the friendly name" do
-        type = create(:receipt_item_type, user: @user, receipt_name: valid_attributes[:name])
-        post :create, {:receipt_item => valid_attributes}
-        assigns(:receipt_item).receipt_item_type_id.should == type.id
-        assigns(:receipt_item).friendly_name.should eq type.friendly_name
-      end
-
       it "returns the friendly name even in JSON" do
         type = create(:receipt_item_type, user: @user, receipt_name: 'Receipt item 1', friendly_name: 'This is a test')
         post :create, {:receipt_item => valid_attributes.merge(name: 'Receipt item 1'), format: :json}

@@ -30,4 +30,5 @@ class ReceiptItemType < ActiveRecord::Base
     user.receipt_items.joins('LEFT JOIN receipt_item_types ON (receipt_items.receipt_item_type_id=receipt_item_types.id)').where('receipt_item_type_id IS NULL OR receipt_item_category_id IS NULL').select('receipt_item_types.id, receipt_item_types.id AS receipt_item_type_id, name, friendly_name, count(name) AS name_count').group(:name).order('name_count DESC')
   end
 
+  scope :include_names, -> { joins('LEFT JOIN receipt_item_categories ON receipt_item_types.receipt_item_category_id=receipt_item_categories.id').select('receipt_item_types.*, receipt_item_categories.name AS category_name') }
 end

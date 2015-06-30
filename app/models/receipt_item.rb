@@ -1,9 +1,9 @@
 class ReceiptItem < ActiveRecord::Base
   belongs_to :user
   belongs_to :receipt_item_type, autosave: true
-  delegate :friendly_name, to: :receipt_item_type, allow_nil: true
-  delegate :category_name, to: :receipt_item_type, allow_nil: true
-  delegate :receipt_item_category_id, to: :receipt_item_type, allow_nil: true
+#  delegate :friendly_name, to: :receipt_item_type, allow_nil: true
+#  delegate :category_name, to: :receipt_item_type, allow_nil: true
+#  delegate :receipt_item_category_id, to: :receipt_item_type, allow_nil: true
   before_save :update_total
 
   # Creates a ReceiptItem.
@@ -99,8 +99,8 @@ class ReceiptItem < ActiveRecord::Base
     store
     date
     name
-    friendly_name
-    category_name
+    receipt_item_type :friendly_name => 'friendly_name'
+    receipt_item_type 'category_name' do |type| type.name if type end
     quantity
     unit
     unit_price

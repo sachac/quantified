@@ -120,6 +120,14 @@ describe ReceiptItemTypesController, :type => :controller  do
         put :update, {:id => receipt_item_type.to_param, :receipt_item_type => valid_attributes}
         response.should redirect_to(receipt_item_type)
       end
+
+      it "returns the category name even in JSON" do
+        type = create(:receipt_item_type, user: @user, receipt_name: 'Receipt item 1', friendly_name: 'This is a test')
+        cat = create(:receipt_item_category, user: @user, name: 'Category A')
+        put :update, {:id => type.to_param, :receipt_item_type => {receipt_item_category_id: cat.id}, format: :json}
+        JSON.parse(response.body)['category_name'].should == 'Category A'
+      end
+
     end
 
     describe "with invalid params" do

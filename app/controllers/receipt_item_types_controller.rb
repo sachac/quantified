@@ -7,7 +7,7 @@ class ReceiptItemTypesController < ApplicationController
   # GET /receipt_item_types.json
   def index
     order = filter_sortable_column_order %w{friendly_name receipt_name receipt_item_category.name}
-    @receipt_item_types = current_account.receipt_item_types.joins('LEFT JOIN receipt_item_categories ON (receipt_item_types.receipt_item_category_id=receipt_item_categories.id)').select('receipt_item_types.*, receipt_item_categories.name AS receipt_item_category_name').order(order)
+    @receipt_item_types = current_account.receipt_item_types.include_names.order(order)
     respond_with @receipt_item_types
   end
 
@@ -43,7 +43,13 @@ class ReceiptItemTypesController < ApplicationController
   # POST /receipt_item_types.json
   def create
     @receipt_item_type = current_account.receipt_item_types.create(receipt_item_type_params)
-    respond_with @receipt_item_type
+    if @receipt_item_type
+      respond_with @receipt_item_type do |format|
+        format.json { render :json => current_account.receipt_item_types.include_names.find(@receipt_item_type.id) }
+      end
+    else
+      respond_with @receipt_item_type
+    end
   end
 
   # PUT /receipt_item_types/1
@@ -58,8 +64,12 @@ class ReceiptItemTypesController < ApplicationController
     end
     if @receipt_item_type.update_attributes(receipt_item_type_params)
       add_flash :notice, t('receipt_item_type.updated')
+      respond_with @receipt_item_type do |format|
+        format.json { render :json => current_account.receipt_item_types.include_names.find(@receipt_item_type.id) }
+      end
+    else
+      respond_with @receipt_item_type
     end
-    respond_with @receipt_item_type
   end
 
   # DELETE /receipt_item_types/1

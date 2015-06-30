@@ -9,7 +9,7 @@ describe ReceiptItemType do
       item = create(:receipt_item, user: @user, name: 'RCPT ITEM')
       x = ReceiptItemType.set_name_and_category(@user, {receipt_name: 'RCPT ITEM', friendly_name: 'Receipt item'})
       expect(item.reload.receipt_item_type_id).to eq x[:type].id
-      expect(item.reload.friendly_name).to eq 'Receipt item'
+      expect(item.reload.receipt_item_type.friendly_name).to eq 'Receipt item'
       expect(x[:count]).to eq 1
     end
     it "does not override mapped items" do
