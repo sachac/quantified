@@ -10,7 +10,7 @@
     %tr
       %td= link_to receipt_item_type.friendly_name, receipt_item_type
       %td= link_to receipt_item_type.receipt_name, receipt_item_type
-      %td= link_to receipt_item_type.receipt_item_category_name, receipt_item_type.receipt_item_category if receipt_item_type.receipt_item_category_id
+      %td= link_to receipt_item_type.category_name, receipt_item_type.receipt_item_category if receipt_item_type.receipt_item_category_id
       %td= action_list receipt_item_type
 %br
 
