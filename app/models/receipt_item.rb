@@ -100,7 +100,7 @@ class ReceiptItem < ActiveRecord::Base
     date
     name
     receipt_item_type :friendly_name => 'friendly_name'
-    receipt_item_type 'category_name' do |type| type.name if type end
+    receipt_item_type 'category_name' do |type| type.receipt_item_category.name if type and type.receipt_item_category end
     quantity
     unit
     unit_price
