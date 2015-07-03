@@ -7,7 +7,7 @@
           %li= msg
   .inputs
     = f.input :name
-    = f.input :friendly_name
+    = f.input :receipt_item_type_id, as: :select, collection: current_account.receipt_item_types.order('friendly_name, receipt_name').map { |x| [ (x.friendly_name || '') + ' (' + (x.receipt_name || '') + ')', x.id ]}
     = f.input :store
     = f.input :date, as: :string
     = f.input :quantity
