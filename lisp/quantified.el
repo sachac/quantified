@@ -99,8 +99,8 @@ PAYLOAD may contain extra arguments to certain API calls."
   (let* ((entries
           (quantified-parse-json
            (quantified-request
-            (concat "time/review.json?start=" start "&end=" end "&category_tree=full&display_type=time&commit=Filter")
-            (list (cons 'auth_token (quantified-token))) "GET")))
+            (concat "time/review.json?start=" start "&end=" end "&category_tree=full&display_type=time&commit=Filter&auth_token=" (quantified-token))
+            nil "GET")))
           (categories (gethash "categories" entries))
           my-list)
     (maphash
