@@ -25,5 +25,10 @@ Feature: Users
     When I send feedback
     Then the administrator should receive a feedback email
     And I should see "Thank you!"
+  Scenario: Delete the user
+    Given I am a new user
+    And I log in
+    And I delete my account
+    Then my account should be deleted
 
 

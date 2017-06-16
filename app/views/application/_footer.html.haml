@@ -11,8 +11,9 @@
       = link_to "Privacy, terms, etc.", privacy_path
       \-
       = link_to "Blog", "http://sachachua.com/blog/category/quantified"
-      \-
-      = feedback_link "Send feedback"
+      - if can? :send_feedback, @account
+        \-
+        = feedback_link "Send feedback"
       \-
       = link_to 'Source', 'https://github.com/sachac/quantified'
       - if @account

@@ -24,5 +24,6 @@
           %li= link_to t("web-app-theme.logout", :default => "log out"), destroy_user_session_path, :method => "delete"
         - else
           %li.track= link_to t('app.user.login'), new_user_session_path
-        %li.feedback{:class => active_menu('/feedback')}= feedback_link
+        - if can? :send_feedback, @account
+          %li.feedback{:class => active_menu('/feedback')}= feedback_link
       %ul.nav.navbar-nav-navbar-right  

@@ -22,7 +22,9 @@ class Ability
       can :delete, User, id: user.id
       can :view_tap_log_records, User, id: user.id
       can :view_time, User
-      can :send_feedback, User
+      can :send_feedback, User do |o|
+	!o.demo?
+      end
     end
     can :view, LibraryItem do |o| o.public? and o.user.demo? end
     can :view, Memory do |o| o.public? and o.user.demo? end
@@ -37,6 +39,5 @@ class Ability
       (!o.private? and o.user.demo?) || (o.user_id == user.id)
     end
     can :view_site, User
-    can :send_feedback, User
   end
 end
