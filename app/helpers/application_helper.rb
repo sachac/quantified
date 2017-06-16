@@ -103,9 +103,9 @@ module ApplicationHelper
       end
     elsif o.is_a? Record
       if can? :manage_account, current_account
-        actions << edit_icon(o, destination: request.fullpath)
-        actions << delete_icon(record_path(o, destination: request.fullpath))
-        actions << link_to('Clone', clone_record_path(o, destination: request.fullpath), method: :post)
+        actions << edit_icon(o, destination: request.original_fullpath)
+        actions << delete_icon(record_path(o, destination: request.original_fullpath))
+        actions << link_to('Clone', clone_record_path(o, destination: request.original_fullpath), method: :post)
       end
     elsif o.is_a? Context
       if managing?
