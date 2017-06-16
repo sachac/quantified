@@ -37,7 +37,7 @@ class RecordsController < ApplicationController
         :entries => @records
       }
     end
-    respond_with @data
+    respond_with @data, :location => params[:destination] 
   end
 
   # GET /records/1
@@ -114,7 +114,7 @@ class RecordsController < ApplicationController
     authorize! :manage_account, current_account
     @record = current_account.records.find(params[:id])
     @record.destroy
-    respond_with @record, :location => records_url
+    respond_with @record, :location => (params[:destination] || records_path)
   end
 
   def clone
