@@ -70,10 +70,10 @@ class UsersController < ApplicationController
   # DELETE /users/1.xml
   def destroy
     @user = User.find(params[:id])
-    authorize! :manage, User
+    authorize! :manage_account, @user 
     @user.destroy
     respond_to do |format|
-      format.html { redirect_to(users_url) }
+      format.html { redirect_to(root_url) }
       format.any  { head :ok }
     end
   end
