@@ -29,6 +29,7 @@ RSpec.configure do |config|
   config.use_transactional_fixtures = false
   config.infer_base_class_for_anonymous_controllers = false
   config.alias_example_to :expect_it
+  config.example_status_persistence_file_path = "examples.txt"
 
   config.expect_with :rspec do |c|
     c.syntax = [:should, :expect]

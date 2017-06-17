@@ -99,7 +99,7 @@ group :test do
   gem 'forgery'
   gem 'factory_girl_rails'  
   gem 'email_spec'
-  gem 'rspec'
+  gem 'rspec', '~> 3.6'
   gem 'rspec-mocks'
   gem 'guard-cucumber'
   gem 'spring'
