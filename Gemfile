@@ -5,7 +5,7 @@ gem 'dotenv-rails', :groups => [:development, :test]
 gem 'haml-rails', '~> 0.4'  # templating language
 gem 'comma' # For easy CSV output
 gem 'timeline_fu'
-gem 'mysql2'
+gem 'mysql2', '~> 0.3.18'
 gem "paperclip", ">= 2.0"
 gem 'will_paginate-bootstrap'
 gem 'color'

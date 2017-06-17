@@ -1,57 +1,3 @@
-GIT
-  remote: git://github.com/intridea/omniauth.git
-  revision: 5121fde10d64612289047f1d6c97b5bdf5e0af8a
-  specs:
-    omniauth (1.2.2)
-      hashie (>= 1.2, < 4)
-      rack (~> 1.0)
-
-GIT
-  remote: git://github.com/mbleigh/acts-as-taggable-on.git
-  revision: 45df196b66b52087f59b1b6b03f17bbdec40a782
-  specs:
-    acts-as-taggable-on (3.4.2)
-      activerecord (>= 3.2, < 5)
-
-GIT
-  remote: git://github.com/nhowell/subdomain-fu.git
-  revision: c6fbf945cf3f4ab344f9c8e0604dc5dcca9ee6cf
-  specs:
-    subdomain-fu (1.0.0.beta2)
-
-GIT
-  remote: git://github.com/wycats/rack-offline.git
-  revision: 355b2ecd88667857b26852a84a297c60fed7fc2d
-  specs:
-    rack-offline (0.6.4)
-
-GIT
-  remote: https://github.com/glejeune/Ruby-Graphviz.git
-  revision: 6659c3c21060c5c67375642631d9aac284a93149
-  specs:
-    ruby-graphviz (1.2.2)
-
-GIT
-  remote: https://github.com/jamesgolick/timeline_fu.git
-  revision: 45b695375045ff80e852dbe52ecbd600d64b14a5
-  specs:
-    timeline_fu (0.4.1)
-
-GIT
-  remote: https://github.com/makandra/cucumber_factory.git
-  revision: f569bc6a4528555b798b9d9f3f9ac2239a2e7fe8
-  specs:
-    cucumber_factory (1.9.2)
-      activesupport
-      cucumber
-
-GIT
-  remote: https://github.com/tma/acts-as-tree-with-dotted-ids.git
-  revision: 0123082f688940218ff9d618a4635e222bd98d72
-  specs:
-    acts-as-tree-with-dotted-ids (1.1.1)
-      activerecord (>= 3.0.0)
-
 GEM
   remote: http://rubygems.org/
   remote: https://rails-assets.org/
@@ -60,8 +6,6 @@ GEM
       actionpack (= 4.1.7)
       actionview (= 4.1.7)
       mail (~> 2.5, >= 2.5.4)
-    actionmailer-with-request (0.4.0)
-      rails (>= 3)
     actionpack (4.1.7)
       actionview (= 4.1.7)
       activesupport (= 4.1.7)
@@ -84,12 +28,14 @@ GEM
       minitest (~> 5.1)
       thread_safe (~> 0.1)
       tzinfo (~> 1.1)
+    acts-as-taggable-on (4.0.0)
+      activerecord (>= 4.0)
+    acts-as-tree-with-dotted-ids (1.2.0)
+      activerecord (~> 4.0, >= 4.0.0)
     addressable (2.3.6)
     angular_rails_csrf (1.0.2)
       rails (>= 3, < 5)
     arel (5.0.1.20140414130214)
-    autoprefixer-rails (3.1.2.20141016)
-      execjs
     bcrypt (3.1.9)
     bootstrap-sass (3.2.0.2)
       sass (~> 3.2)
@@ -148,6 +94,13 @@ GEM
       mime-types (>= 1.16, < 3)
       nokogiri (~> 1.5)
       rails (>= 3, < 5)
+    cucumber_factory (1.11.6)
+      activerecord
+      activesupport
+      cucumber
+      cucumber_priority (>= 0.2.0)
+    cucumber_priority (0.2.0)
+      cucumber
     database_cleaner (1.3.0)
     devise (3.4.1)
       bcrypt (~> 3.0)
@@ -169,8 +122,6 @@ GEM
     email_spec (1.6.0)
       launchy (~> 2.1)
       mail (~> 2.2)
-    email_validator (1.4.0)
-      activemodel
     erubis (2.7.0)
     exception_notification (4.0.1)
       actionmailer (>= 3.0.4)
@@ -189,7 +140,6 @@ GEM
     forgery (0.6.0)
     formatador (0.2.5)
     fssm (0.2.10)
-    gdata_19 (1.1.5)
     gem_bench (0.0.8)
       bundler (> 1.2)
     gherkin (2.12.2)
@@ -217,7 +167,7 @@ GEM
       haml (>= 3.1, < 5.0)
       railties (>= 4.0.1)
     handles_sortable_columns (0.1.4)
-    hashie (3.3.1)
+    hashie (3.5.5)
     hike (1.2.3)
     hitimes (1.2.2)
     http-cookie (1.0.2)
@@ -255,7 +205,7 @@ GEM
     multi_test (0.1.2)
     multi_xml (0.5.5)
     multipart-post (2.0.0)
-    mysql2 (0.3.16)
+    mysql2 (0.3.21)
     narray (0.6.0.9)
     net-http-digest_auth (1.4)
     net-http-persistent (2.9.4)
@@ -271,6 +221,9 @@ GEM
       multi_json (~> 1.3)
       multi_xml (~> 0.5)
       rack (~> 1.2)
+    omniauth (1.4.2)
+      hashie (>= 1.2, < 4)
+      rack (>= 1.0, < 3)
     omniauth-facebook (2.0.0)
       omniauth-oauth2 (~> 1.2)
     omniauth-google-oauth2 (0.2.6)
@@ -293,7 +246,6 @@ GEM
       activesupport (>= 3.0.0)
       cocaine (~> 0.5.3)
       mime-types
-    passgen (1.0.2)
     pry (0.10.1)
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
@@ -312,10 +264,6 @@ GEM
       railties (= 4.1.7)
       sprockets-rails (~> 2.0)
     rails-assets-angular (1.3.1)
-    rails-assets-angular-devise (1.0.2)
-      rails-assets-angular (>= 1.2.0, < 1.4.0)
-    rails-assets-angular-filter (0.5.4)
-      rails-assets-angular
     rails-assets-angular-mocks (1.3.1)
       rails-assets-angular (= 1.3.1)
     rails-observers (0.1.2)
@@ -363,8 +311,6 @@ GEM
       rspec-mocks (~> 3.1.0)
       rspec-support (~> 3.1.0)
     rspec-support (3.1.2)
-    ruby_parser (3.6.3)
-      sexp_processor (~> 4.1)
     rubyzip (1.1.6)
     sass (3.2.19)
     sass-rails (4.0.4)
@@ -377,7 +323,6 @@ GEM
       multi_json (~> 1.0)
       rubyzip (~> 1.0)
       websocket (~> 1.0)
-    sexp_processor (4.4.4)
     simple_form (3.0.2)
       actionpack (~> 4.0)
       activemodel (~> 4.0)
@@ -411,6 +356,7 @@ GEM
     thread_safe (0.3.4)
     tilt (1.4.1)
     timecop (0.7.1)
+    timeline_fu (0.3.0)
     timers (4.0.1)
       hitimes
     tins (1.3.3)
@@ -429,7 +375,6 @@ GEM
     will_paginate (3.0.7)
     will_paginate-bootstrap (1.0.1)
       will_paginate (>= 3.0.3)
-    workflow (1.2.0)
     xpath (2.0.0)
       nokogiri (~> 1.3)
     yaml_db (0.3.0)
@@ -440,11 +385,9 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  actionmailer-with-request
-  acts-as-taggable-on!
-  acts-as-tree-with-dotted-ids!
+  acts-as-taggable-on
+  acts-as-tree-with-dotted-ids
   angular_rails_csrf
-  autoprefixer-rails
   bootstrap-sass (~> 3.2.0)
   bower-rails
   cancancan (~> 1.9)
@@ -457,19 +400,17 @@ DEPENDENCIES
   coveralls
   cucumber
   cucumber-rails
-  cucumber_factory!
+  cucumber_factory
   database_cleaner
   devise (~> 3.4.0)
   devise_invitable
   dotenv-rails
   email_spec
-  email_validator
   exception_notification (~> 4)
   factory_girl_rails
   fakeweb
   fastercsv
   forgery
-  gdata_19 (= 1.1.5)
   gem_bench
   guard-cucumber
   guard-rspec
@@ -479,31 +420,23 @@ DEPENDENCIES
   jquery-rails (~> 2.1.4)
   libv8 (~> 3.11)
   mechanize
-  mysql2
+  mysql2 (~> 0.3.18)
   narray
   nifty-generators
-  omniauth!
+  omniauth
   omniauth-facebook
   omniauth-google-oauth2
   omniauth-twitter
   paperclip (>= 2.0)
-  passgen
-  rack-offline!
   rails (~> 4.1)
-  rails-assets-angular!
-  rails-assets-angular-devise!
-  rails-assets-angular-filter!
   rails-assets-angular-mocks!
   rails-observers
   rails-settings-cached (~> 0.4)
   rails4-autocomplete
-  rake
   rspec
   rspec-activemodel-mocks
   rspec-mocks
   rspec-rails
-  ruby-graphviz!
-  ruby_parser
   sass-rails (~> 4.0.2)
   selenium-webdriver
   simple_form
@@ -513,11 +446,12 @@ DEPENDENCIES
   spring-commands-cucumber
   spring-commands-rspec
   sprockets (~> 2.11.0)
-  subdomain-fu!
   therubyracer (~> 0.11.4)
   timecop
-  timeline_fu!
+  timeline_fu
   uglifier
   will_paginate-bootstrap
-  workflow
   yaml_db
+
+BUNDLED WITH
+   1.15.1
