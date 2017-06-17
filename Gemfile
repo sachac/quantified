@@ -4,8 +4,7 @@ gem 'rails', '~> 4.1'
 gem 'dotenv-rails', :groups => [:development, :test]
 gem 'haml-rails', '~> 0.4'  # templating language
 gem 'comma' # For easy CSV output
-gem 'timeline_fu', :git => 'https://github.com/jamesgolick/timeline_fu.git'  # for viewing events in a timeline
-gem 'rake'
+gem 'timeline_fu'
 gem 'mysql2'
 gem "paperclip", ">= 2.0"
 gem 'will_paginate-bootstrap'
@@ -20,24 +19,24 @@ gem 'cancancan', '~> 1.9'  # permissions
 gem 'rails-observers'      # to trigger timeline events
 #gem 'n_gram'
 #gem 'statsample'
-gem 'rails-assets-angular', :source => 'https://rails-assets.org'
-gem 'rails-assets-angular-filter', :source => 'https://rails-assets.org'
-gem 'rails-assets-angular-devise', :source => 'https://rails-assets.org'
+# gem 'rails-assets-angular', :source => 'https://rails-assets.org'
+# gem 'rails-assets-angular-filter', :source => 'https://rails-assets.org'
+# gem 'rails-assets-angular-devise', :source => 'https://rails-assets.org'
 gem 'exception_notification', '~> 4', :require => 'exception_notifier'
-group :under_consideration do
-  gem 'rack-offline', :git => 'git://github.com/wycats/rack-offline.git'
-  gem 'ruby-graphviz', :git => "https://github.com/glejeune/Ruby-Graphviz.git"
+# group :under_consideration do
+#   gem 'rack-offline', :git => 'git://github.com/wycats/rack-offline.git'
+#   gem 'ruby-graphviz', :git => "https://github.com/glejeune/Ruby-Graphviz.git"
   
- # handled by bower instead?
-  gem 'gdata_19', '1.1.5'
-  gem 'workflow'
-  gem 'actionmailer-with-request'
-  gem 'subdomain-fu', :git => "git://github.com/nhowell/subdomain-fu.git"
-  gem 'passgen'
-  gem 'ruby_parser'
-  gem 'autoprefixer-rails'
-  gem 'email_validator'
-end
+#  # handled by bower instead?
+#   gem 'gdata_19', '1.1.5'
+#   gem 'workflow'
+#   gem 'actionmailer-with-request'
+#   gem 'subdomain-fu', :git => "git://github.com/nhowell/subdomain-fu.git"
+#   gem 'passgen'
+#   gem 'ruby_parser'
+#   gem 'autoprefixer-rails'
+#   gem 'email_validator'
+# end
 
 # Use unicorn as the web server
 # gem 'unicorn'
@@ -61,14 +60,14 @@ end
 # group :development, :test do
 #   gem 'webrat'
 # end
-gem 'acts-as-taggable-on', :git => 'git://github.com/mbleigh/acts-as-taggable-on.git'
+gem 'acts-as-taggable-on'
 gem 'chronic'  # time
-gem 'acts-as-tree-with-dotted-ids', :git => 'https://github.com/tma/acts-as-tree-with-dotted-ids.git'
+gem 'acts-as-tree-with-dotted-ids'
 gem 'nifty-generators'
 gem 'devise', '~> 3.4.0'
 gem 'devise_invitable'
 #gem 'aizuchi'
-gem 'omniauth', :git => 'git://github.com/intridea/omniauth.git'
+gem 'omniauth'
 gem 'omniauth-facebook'
 gem 'omniauth-twitter'
 gem 'omniauth-google-oauth2'
@@ -116,7 +115,7 @@ group :test do
   gem 'simplecov', '>= 0.8', :require => false
   gem 'cucumber-rails', :require => false
   gem 'capybara'
-  gem 'cucumber_factory', :git => 'https://github.com/makandra/cucumber_factory.git'
+  gem 'cucumber_factory'
 end
 group :console do
   gem 'gem_bench', :require => false
