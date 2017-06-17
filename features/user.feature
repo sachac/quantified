@@ -21,7 +21,7 @@ Feature: Users
     When I sign up as a new user
     Then I should see "Thank you for signing up!"
   Scenario: Send feedback
-    Given there is a demo user
+    Given I log in with my username
     When I send feedback
     Then the administrator should receive a feedback email
     And I should see "Thank you!"
