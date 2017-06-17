@@ -225,10 +225,10 @@ describe ReceiptItemsController, :type => :controller  do
       chicken_breast = create(:receipt_item_type, friendly_name: 'Chicken breast', receipt_item_category: poultry, user: @user)
       fruit = create(:receipt_item_category, name: 'Fruit', user: @user)
       grapefruit = create(:receipt_item_type, friendly_name: 'Grapefruit', receipt_item_category: fruit, user: @user)
-      x = create(:receipt_item, user: @user, name: 'CHKN', receipt_item_type: chicken, total: 4, user: @user)
-      y = create(:receipt_item, user: @user, name: 'CHKN', receipt_item_type: chicken, total: 5, user: @user)
-      y = create(:receipt_item, user: @user, name: 'CHKN BREAST', receipt_item_type: chicken_breast, total: 6, user: @user)
-      z = create(:receipt_item, user: @user, name: 'Grapefruit', receipt_item_type: grapefruit, total: 7, user: @user)
+      x = create(:receipt_item, name: 'CHKN', receipt_item_type: chicken, total: 4, user: @user)
+      y = create(:receipt_item, name: 'CHKN', receipt_item_type: chicken, total: 5, user: @user)
+      y = create(:receipt_item, name: 'CHKN BREAST', receipt_item_type: chicken_breast, total: 6, user: @user)
+      z = create(:receipt_item, name: 'Grapefruit', receipt_item_type: grapefruit, total: 7, user: @user)
     end
     it "sums up the total" do
       get :graph
