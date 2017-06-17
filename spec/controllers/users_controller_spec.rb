@@ -52,7 +52,7 @@ describe UsersController, :type => :controller  do
       it "removes the item" do
         delete :destroy, id: @u2.id
         lambda { User.find(@u2.id) }.should raise_exception(ActiveRecord::RecordNotFound)
-        response.should redirect_to(users_url)
+        response.should redirect_to(root_url)
       end
     end
   end
@@ -123,9 +123,8 @@ describe UsersController, :type => :controller  do
       end
     end
     describe 'DELETE destroy' do
-      it "doesn't let me" do
+      it "allows me" do
         delete :destroy, id: @u2.id
-        flash[:error].should eq I18n.t('error.access_denied_logged_in')
         response.should redirect_to root_path
       end
     end

@@ -16,8 +16,14 @@ describe HomeController, :type => :controller  do
   end
   describe '#send_feedback' do
     it "asks people to fill in messages" do
+      @user = create(:user, :confirmed)
+      sign_in @user
       post :send_feedback
       expect(flash[:error]).to eq 'Please fill in your feedback message.'
+    end
+    it "doesn't work for anonymous users" do
+      post :send_feedback
+      expect(flash[:error]).to eq 'You are not authorized to access this page.'
     end
   end
 end
