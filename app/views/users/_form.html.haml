@@ -20,4 +20,6 @@
   .form-group
     .col-sm-offset-2
       = submit_tag I18n.t('app.general.submit'), :class => 'btn btn-primary'
+      - if can? :delete, @user
+        = link_to 'Delete this account', @user, :method => :delete, :confirm => 'Are you sure?', :class => 'btn btn-default'
 
