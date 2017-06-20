@@ -278,6 +278,19 @@ class RecordCategory < ActiveRecord::Base
     end
     records
   end
+
+  # Summarize this record category and its children
+  # Returns a hash of :last_entry, :count_today, :duration_today (minutes), :entries_today (list)
+  def status
+    results = {}
+    records = self.category_records(include_private: true, order: 'newest')
+    start_day = Time.zone.now.midnight
+    end_day = Time.zone.now.midnight + 1.day
+    results[:last_entry] = records.first
+    results[:entries_today] = records.where('(timestamp >= ? AND timestamp < ?) OR (timestamp < ? AND end_timestamp IS NULL)', start_day, end_day, start_day).all
+    results[:duration_today] = results[:entries_today].map {|x| x.calculated_duration(start_day, end_day) }.reduce(0, :+)
+    return results
+  end
   
   # CSV support
   comma do
