@@ -121,6 +121,32 @@ describe Record do
       expect(r2.reload.end_timestamp.to_s).to eq r1.timestamp.to_s
     end
   end
+  describe '#duration' do 
+    before :all do
+      Timecop.freeze
+      @u = FactoryGirl.create(:confirmed_user)
+      @c = FactoryGirl.create(:record_category, user: @u, category_type: 'activity')
+    end
+    after :all do
+      Timecop.return
+    end
+    it 'reports proper duration if the ending timestamp is set' do
+      r1 = FactoryGirl.create(:record, user: @u, record_category: @c, timestamp: Time.zone.now - 2.hours, end_timestamp: Time.zone.now - 1.hour)
+      r1.calculated_duration.should == 1.hour
+    end
+    it 'truncates to current timestamp if the ending timestamp is not set' do
+      r1 = FactoryGirl.create(:record, user: @u, record_category: @c, timestamp: Time.zone.now - 2.hours)
+      r1.calculated_duration.should == 2.hours
+    end
+    it 'truncates to provided start time and end time' do
+      r1 = FactoryGirl.create(:record, user: @u, record_category: @c, timestamp: Time.zone.now - 2.hours)
+      r1.calculated_duration(Time.zone.now - 1.hour, Time.zone.now - 30.minutes).should == 30.minutes
+    end
+    it "stays within the activity's bounds" do
+      r1 = FactoryGirl.create(:record, user: @u, record_category: @c, timestamp: Time.zone.now - 2.hours)
+      r1.calculated_duration(Time.zone.now - 4.hour, Time.zone.now + 30.minutes).should == 2.hours
+    end
+  end
   describe '.recalculate_durations' do
     it "fixes all the durations" do
       u = FactoryGirl.create(:confirmed_user)

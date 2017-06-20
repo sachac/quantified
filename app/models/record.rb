@@ -105,6 +105,9 @@ class Record < ActiveRecord::Base
     # Added guard for double-entry
     self.next.activities.where('(timestamp != end_timestamp OR end_timestamp IS NULL)').first
   end
+  def calculated_duration(provided_start_timestamp = nil, provided_end_timestamp = Time.zone.now)
+    return [Time.zone.now, provided_end_timestamp, self.end_timestamp || Time.zone.now].min - [self.timestamp, provided_start_timestamp || self.timestamp].max
+  end
   def self.recalculate_durations(user, start_time = nil, end_time = nil)
     span = user.records
     span = span.where('timestamp >= ?', start_time) if start_time
