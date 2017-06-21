@@ -1,5 +1,5 @@
 require 'spec_helper'
-describe Record do
+describe Record, focus: true do
   describe '#data=' do
     it 'handles strings' do
       x = FactoryGirl.create(:record)
@@ -409,7 +409,7 @@ describe Record do
       expect(o[1].day).to eq 2
       expect(o[1].year).to eq 2013
     end
-    it "handles starting from the last activity's start time" do
+    it "recognizes last+5m" do
       Timecop.freeze(Date.new(2017, 1, 1, 8))
       @user = FactoryGirl.create(:confirmed_user)
       @cat = FactoryGirl.create(:record_category, :user => @user, :name => 'ABCX', :category_type => 'activity')

@@ -323,7 +323,7 @@ class Record < ActiveRecord::Base
     regex = /(last)?\+([\.0-9]+)(m(ins?)?|h(rs?|ours?)?)\b */
     matches = new_string.match regex
     if matches
-      if matches[1].length > 0
+      if matches[1]
         if options[:user]
           # Get the last activity
           last_activity = options[:user].records.activities.order('timestamp desc').limit(1).first
