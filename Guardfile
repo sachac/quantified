@@ -1,7 +1,7 @@
 # A sample Guardfile
 # More info at https://github.com/guard/guard#readme
 
-guard :rspec, cmd: 'spring rspec', all_after_pass: true, all_on_start: true, failed_mode: :focus do
+def watch_rspec
   watch(%r{^spec/.+_spec\.rb$})
   watch(%r{^lib/(.+)\.rb$})     { |m| "spec/lib/#{m[1]}_spec.rb" }
   watch('spec/spec_helper.rb')  { "spec" }
@@ -22,6 +22,10 @@ guard :rspec, cmd: 'spring rspec', all_after_pass: true, all_on_start: true, fai
   watch(%r{^spec/acceptance/steps/(.+)_steps\.rb$})   { |m| Dir[File.join("**/#{m[1]}.feature")][0] || 'spec/acceptance' }
 end
 
+guard :rspec, cmd: 'spring rspec', all_after_pass: true, all_on_start: true, failed_mode: :focus do
+  watch_rspec
+end
+
 guard 'cucumber', cmd: 'spring cucumber', keep_failed: true, all_after_pass: true, all_after_start: true do
   watch(%r{^features/.+\.feature$})
   watch(%r{^features/support/.+$})                      { 'features' }
@@ -39,3 +43,11 @@ guard 'spring' do
   end
 end
 
+group :focus do
+  logger level: :warn
+  logger template: ':message'
+
+  guard :rspec, cmd: 'spring rspec --tag focus' do
+    watch_rspec
+  end
+end

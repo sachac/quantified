@@ -13,3 +13,4 @@ Home::Application.load_tasks
 if Rails.env.testing? then
   Coveralls::RakeTask.new
 end
+task :test_with_coveralls => [:spec, :features, 'coveralls:push']

@@ -1,16 +1,19 @@
-require 'rubygems'
+require 'simplecov'
 require 'coveralls'
-Coveralls.wear_merged!
+Coveralls.wear_merged!('rails')
+SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
+  SimpleCov::Formatter::HTMLFormatter,
+  Coveralls::SimpleCov::Formatter
+]
+SimpleCov.start 'rails' do
+   use_merging true
+   SimpleCov.merge_timeout 3600
+   SimpleCov.command_name 'rspec'
+   coverage_dir 'coverage'
+end
 ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("../../config/environment", __FILE__)
-require 'simplecov'
 ActiveRecord::Migration.maintain_test_schema!
-SimpleCov.start 'rails' do
-  use_merging true
-  SimpleCov.merge_timeout 3600
-  SimpleCov.command_name 'rspec'
-  coverage_dir 'coverage'
-end
 require 'rubygems'
 require 'database_cleaner'
 require 'paperclip/matchers'
