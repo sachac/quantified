@@ -1,5 +1,5 @@
 require 'spec_helper'
-describe RecordCategoriesController, :type => :controller  do
+describe RecordCategoriesController, type: :controller do
   before do
     @request.env["devise.mapping"] = Devise.mappings[:user]
   end
@@ -108,12 +108,6 @@ describe RecordCategoriesController, :type => :controller  do
       end
     end
 
-    describe 'GET status' do
-      it 'displays a summary' do
-        pending
-      end
-    end
-    
     describe 'GET new' do
       it "displays the new form" do
         get :new

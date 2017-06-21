@@ -1,10 +1,11 @@
 require 'spec_helper'
-describe RecordsController, :type => :controller  do
+describe RecordsController, type: :controller  do
   before do
     @request.env["devise.mapping"] = Devise.mappings[:user]
   end
   context "when logged in" do
     before do
+      Timecop.freeze
       @user = create(:user, :confirmed)
       sign_in @user
       @cat = create(:record_category, user: @user, name: 'ABC')
@@ -16,6 +17,9 @@ describe RecordsController, :type => :controller  do
       start = Time.zone.local(2013, 1, 1, 23)
       @record3 = create(:record, record_category: @cat4, source_name: 'older', user: @user, timestamp: start, end_timestamp: start + 3.hours)
       @record4 = create(:record, record_category: @cat4, source_name: 'older', user: @user, timestamp: start + 3.hours, end_timestamp: start + 4.hours)
+    end
+    after do
+      Timecop.return
     end
     describe 'GET /records' do
       it "returns the records" do
