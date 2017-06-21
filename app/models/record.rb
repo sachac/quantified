@@ -421,7 +421,7 @@ class Record < ActiveRecord::Base
         attributes[:category] = matches[1]
         record_data = matches[2]
       end
-      data = Record.guess_time(attributes[:category])
+      data = Record.guess_time(attributes[:category], user: account)
       time = data[1]
       end_time = data[2]
     end

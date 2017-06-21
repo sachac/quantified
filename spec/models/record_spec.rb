@@ -1,5 +1,5 @@
 require 'spec_helper'
-describe Record, focus: true do
+describe Record do
   describe '#data=' do
     it 'handles strings' do
       x = FactoryGirl.create(:record)

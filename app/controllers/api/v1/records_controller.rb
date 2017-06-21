@@ -2,6 +2,7 @@ class Api::V1::RecordsController  < ApplicationController
   respond_to :json, :xml
   def create          
     authorize! :manage_account, current_account
+    params[:user] = current_account
     if params[:category].blank? and params[:category_id].blank?
       status = 302
       message = {:message => 'Please specify a category.'}
