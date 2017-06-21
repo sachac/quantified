@@ -340,8 +340,8 @@ describe RecordCategory do
       status = cat.status
       status[:last_entry].timestamp.should eql(Time.now - 2.hours)
       status[:last_entry].end_timestamp.should eql(Time.now - 1.hour)
-      status[:duration_today].should == 2 * 60 * 60 # 2 hours
-      status[:entries_today].length.should == 2
+      status[:duration].should == 2 * 60 * 60 # 2 hours
+      status[:recent_entries].length.should == 2
             
     end
     it 'includes subcategories'  do
@@ -352,21 +352,21 @@ describe RecordCategory do
       one_hour_today = FactoryGirl.create(:record, record_category: cat1, timestamp: Time.zone.now - 4.hours, end_timestamp: Time.zone.now - 3.hour, user: @u, source_name: 'one_hour_today')
       different_cat_today = FactoryGirl.create(:record, record_category: cat2, timestamp: Time.zone.now - 3.hours, end_timestamp: Time.zone.now - 1.hour, user: @u, source_name: 'different_cat_today')
       status = parent.status
-      status[:duration_today].should == 1.hour
-      status[:entries_today].length.should == 1
+      status[:duration].should == 1.hour
+      status[:recent_entries].length.should == 1
     end
     it 'handles open-ended entries' do
       cat = FactoryGirl.create(:record_category, category_type: 'activity', name: 'Category A', user: @u)
       one_hour_today = FactoryGirl.create(:record, record_category: cat, timestamp: Time.zone.now - 1.hour, user: @u)
       status = cat.status
-      status[:duration_today].should == 1.hour
+      status[:duration].should == 1.hour
       status[:last_entry].should eql(one_hour_today)
     end
     it 'handles midnight spans' do
       cat = FactoryGirl.create(:record_category, category_type: 'activity', name: 'Category A', user: @u)
       long_entry = FactoryGirl.create(:record, record_category: cat, timestamp: Time.zone.now - 1.day, user: @u)
       status = cat.status
-      status[:duration_today].should == 8.hours
+      status[:duration].should == 8.hours
     end
   end
   
