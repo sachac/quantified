@@ -114,7 +114,7 @@ class TimeController < ApplicationController
     end
     rec = Record.parse(current_account, params)
     if category_input
-      data = Record.guess_time(category_input)
+      data = Record.guess_time(category_input, user: current_account)
       time = data[1]
     end
     unless params[:timestamp].blank?
