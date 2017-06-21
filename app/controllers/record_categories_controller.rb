@@ -16,7 +16,7 @@ class RecordCategoriesController < ApplicationController
   end
 
   def status
-    authorize! :view_time, current_account
+    authorize! :manage_account, current_account
     @record_category = current_account.record_categories.find(params[:id])
     respond_with @record_category.status
   end
