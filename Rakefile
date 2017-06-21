@@ -4,8 +4,12 @@
 require File.expand_path('../config/application', __FILE__)
 require 'rake'
 include Rake::DSL
-require 'dotenv/tasks'
-require 'coveralls/rake/task'
+if Rails.env.development? or Rails.env.testing? then
+  require 'dotenv/tasks'
+  require 'coveralls/rake/task'
+end
 Home::Application.load_tasks
 
-Coveralls::RakeTask.new
+if Rails.env.testing? then
+  Coveralls::RakeTask.new
+end
