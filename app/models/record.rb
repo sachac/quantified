@@ -318,19 +318,26 @@ class Record < ActiveRecord::Base
       new_string.sub! regex, ''
     end
 
-    # recognize +5m as a start time
-    regex = /\+([\.0-9]+)(m(ins?)?|h(rs?|ours?)?)\b */
+    # recognize (last)?+5m as a start time
+    # if last is specified, base it on the previous activity
+    regex = /(last)?\+([\.0-9]+)(m(ins?)?|h(rs?|ours?)?)\b */
     matches = new_string.match regex
     if matches
-      case matches[2]
+      if matches[1].length > 0
+        if options[:user]
+          # Get the last activity
+          last_activity = options[:user].records.activities.order('timestamp desc').limit(1).first
+          time = last_activity.timestamp
+        end
+      end
+      case matches[3]
       when "h", "hr", "hrs", "hour", "hours"
-        time = (time || Time.zone.now) + matches[1].to_i.hours
+        time = (time || Time.zone.now) + matches[2].to_i.hours
       when "m", "min", "mins"
-        time = (time || Time.zone.now) + matches[1].to_i.minutes
+        time = (time || Time.zone.now) + matches[2].to_i.minutes
       end
       new_string.sub! regex, ''
     end
-
     # At this point, time should be the correct time (except that it's based on today)
 
     # match m-d or m/d, and subtract as many days as needed to get to that date

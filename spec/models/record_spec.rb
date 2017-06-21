@@ -409,6 +409,14 @@ describe Record do
       expect(o[1].day).to eq 2
       expect(o[1].year).to eq 2013
     end
+    it "handles starting from the last activity's start time" do
+      Timecop.freeze(Date.new(2017, 1, 1, 8))
+      @user = FactoryGirl.create(:confirmed_user)
+      @cat = FactoryGirl.create(:record_category, :user => @user, :name => 'ABCX', :category_type => 'activity')
+      previous_rec = FactoryGirl.create(:record, record_category: @cat, user: @user, timestamp: Time.zone.now - 1.hour)
+      o = Record.guess_time('ABCX last+5m', user: @user)
+      (o[1] - previous_rec.timestamp).should eq 5.minutes
+    end
   end
 
   describe '#confirm_batch' do
