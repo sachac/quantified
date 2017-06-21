@@ -65,6 +65,7 @@ Home::Application.routes.draw do
     member do
       post :track
       get :records
+      get :status
     end
     collection do
       post :bulk_update

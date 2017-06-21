@@ -107,6 +107,12 @@ describe RecordCategoriesController, :type => :controller  do
         response.body.should match /note,Hello,label,world/
       end
     end
+
+    describe 'GET status' do
+      it 'displays a summary' do
+        pending
+      end
+    end
     
     describe 'GET new' do
       it "displays the new form" do

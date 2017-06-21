@@ -15,6 +15,12 @@ class RecordCategoriesController < ApplicationController
     respond_with @record_categories
   end
 
+  def status
+    authorize! :view_time, current_account
+    @record_category = current_account.record_categories.find(params[:id])
+    respond_with @record_category.status
+  end
+
   # GET /record_categories/1
   # GET /record_categories/1.xml
   def show
@@ -287,7 +293,7 @@ class RecordCategoriesController < ApplicationController
   def get_autocomplete_items(parameters)
     super(parameters).where(:user_id => current_account.id)
   end
-
+    
   private
   def record_category_params
     params.require(:record_category).permit(:name, :category_type, :parent_id, :full_name, :color, :active)
