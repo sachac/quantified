@@ -20,7 +20,7 @@ end
 World FactoryGirl::Syntax::Methods
 require 'cucumber/rails'
 begin
-  DatabaseCleaner.strategy = :truncation
+  DatabaseCleaner.strategy = [:truncation, pre_count: true]
 rescue NameError
   raise "You need to add database_cleaner to your Gemfile (in the :test group) if you wish to use it."
 end
@@ -33,7 +33,6 @@ end
 
 After do |scenario|
   DatabaseCleaner.clean
-  Timecop.return
 end
 
 # --- Instructions ---

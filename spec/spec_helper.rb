@@ -45,7 +45,14 @@ RSpec.configure do |config|
   config.include Devise::TestHelpers, :type => :controller
   config.extend ControllerMacros, :type => :controller
   config.before(:suite) do
-    DatabaseCleaner.strategy = :truncation
+    DatabaseCleaner.strategy = :transaction
+    DatabaseCleaner.clean_with(:truncation)
+  end
+  config.before(:each, type: :feature) do
+    DatabaseCleaner.strategy = [:truncation, pre_count: true]
+  end
+  config.before(:each, truncate: true) do
+    DatabaseCleaner.strategy = [:truncation, pre_count: true]
   end
   config.before(:each) do
     DatabaseCleaner.start

@@ -1,11 +1,12 @@
 require 'spec_helper'
-describe RecordsController, type: :controller  do
+# TODO Move these to request specs
+describe RecordsController, type: :controller do
   before do
     @request.env["devise.mapping"] = Devise.mappings[:user]
   end
   context "when logged in" do
     before do
-      Timecop.freeze
+      Timecop.freeze Time.zone.local(2017, 1, 1)
       @user = create(:user, :confirmed)
       sign_in @user
       @cat = create(:record_category, user: @user, name: 'ABC')
