@@ -189,7 +189,7 @@ describe RecordCategory do
     end
   end
 
-  describe '#get_color' do
+  describe '#get_color', focus: true do
     context 'when a color is specified' do
       it "returns that color" do
         u = FactoryGirl.create(:confirmed_user)
@@ -210,6 +210,22 @@ describe RecordCategory do
         y.reload
         y.parent.reload
         expect(y.get_color).to eq '0000ff'
+      end
+      it "inherits from grandparent colors if necessary" do
+        u = FactoryGirl.create(:confirmed_user)
+        x = RecordCategory.find_or_create(u, ['Discretionary'])
+        y = RecordCategory.find_or_create(u, ['Discretionary', 'Gardening'])
+        z = RecordCategory.find_or_create(u, ['Discretionary', 'Gardening', 'Backyard'])
+        x.color = '#0000ff'
+        x.save
+        y.color = ' '
+        y.save
+        z.color = ''
+        z.save
+        x.reload
+        y.reload
+        z.reload
+        z.get_color.should eq '#0000ff'
       end
     end
   end
