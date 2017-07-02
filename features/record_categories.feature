@@ -17,4 +17,15 @@ Feature: Record Categories
   Scenario: Delete the keys for a category
     When I delete the keys for a category
     Then the category fields should be updated
-
+  @focus
+  Scenario: Batch edit categories
+    Given I have the following categories:
+      | Name       | Type     | Parent     | Color |
+      | Category A | list     |            |       |
+      | Category B | activity | Category A |       |
+      | Category C | activity |            | #00ff00 |
+    When I batch-edit categories
+    And I change the name of "Category A" to "Category X"
+    Then I should see "Category X"
+    And I should see "Category X - Category B"
+    And I should see "Category C"

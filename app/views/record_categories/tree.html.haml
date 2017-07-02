@@ -1,22 +1,29 @@
 = setup_page 'categories', "Category tree", 'time/nav'
-= form_tag bulk_update_record_categories_path(:destination => request.fullpath), class: 'form-horizontal' do
+= form_tag bulk_update_record_categories_path(:destination => request.fullpath), class: 'form-horizontal batch' do
+  - if managing?
+    = submit_tag    
   %table.table
     %thead
       - if managing?
         %th Actions
-      %th Name
+      %th Full path
       - if !mobile? and managing?
+        %th Category name
+        %th Parent
         %th Type
+        %th Color
     %tbody  
       - @list.each do |c|
-        %tr
+        %tr{"data-id" => c.id}
           - if managing?
             %td= action_list(c)
           %td= link_to c.full_name, c
           - if !mobile? and managing?
-            %td
-              - %w{list activity record}.each do |type|
-                = radio_button_tag "category_type[#{c.id}]", type, c.category_type == type
-                = label_tag "category_type[#{c.id}][#{type}]", type.humanize, :class => 'inline'
-
+            %td= text_field_tag("cat[#{c.id}][name]", c.name)
+            %td= select_tag "cat[#{c.id}][parent_id]", options_for_select(@category_parents, c.parent_id), include_blank: true
+            %td= select_tag "cat[#{c.id}][category_type]", options_for_select(['activity', 'record', 'list'], c.category_type)
+            %td= text_field_tag("cat[#{c.id}][color]", c.color)
+  - if managing?
+    = submit_tag    
+  
 

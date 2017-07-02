@@ -242,24 +242,24 @@ class RecordCategoriesController < ApplicationController
   def bulk_update
     authorize! :manage_account, current_account
     @list = Array.new
-    if params[:category_type]
-      params[:category_type].each do |k,v|
-        cat = current_account.record_categories.find(k)
-        cat.category_type = v
-        cat.save!
-        @list << cat
-      end
+    if params[:cat]
+       params[:cat].each do |k,v|
+         cat = current_account.record_categories.find(k)
+         cat.category_type = v["category_type"]
+         cat.parent_id = v["parent_id"]
+         cat.name = v["name"]
+         cat.color = v["color"]
+         cat.save!
+         @list << cat
+       end
     end
-    if params[:commit] == t('records.index.recalculate_durations')
-      Record.recalculate_durations(current_account)
-      add_flash :notice, t('records.index.recalculated_durations')
-    end
-    respond_with @list, location: params[:destination] || record_categories_path
+    redirect_to tree_record_categories_path 
   end
 
   def tree
     authorize! :manage_account, current_account
     @list = current_account.record_categories.order(:full_name)
+    @category_parents = current_account.record_categories.where('category_type = ?', 'list').select('id, full_name').order('full_name').map { |x| [x.full_name, x.id] }
     respond_with @list
   end
 

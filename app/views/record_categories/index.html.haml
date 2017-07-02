@@ -2,14 +2,14 @@
 = setup_page 'categories', nil, 'time/nav'
 %ul.nav.nav-pills
   - show_all = params && params[:all] 
-  %li{class: !show_all ? 'active' : ''}
-    = link_to 'View by level', params.except(:all)
-  %li{class: show_all ? 'active' : ''}
-    = link_to 'View all', params.merge(all: 1)
 - if @record_categories.length > 0
   - if managing?
     = render 'quick_record'
-    %p= link_to 'Create record category', new_record_category_path, :class => 'btn btn-default'
+  %p
+    - if managing?
+      = link_to 'Create record category', new_record_category_path
+      |
+    = link_to 'View all / batch edit', tree_record_categories_path
   = render 'list', list: @record_categories, show_all: show_all
 - else
   - if managing?

@@ -48,3 +48,25 @@ Then(/^the category fields should be updated$/) do
   @cat.data.length.should eq 1
   @cat.data[0]['key'].should eq 'bar'
 end
+
+Given(/^I have the following categories:$/) do |table|
+   # Convert all headers to lower case symbol
+  table.map_headers! {|header| header.downcase.to_sym }
+  table.hashes.each do |x|
+    parent = nil
+    if x[:parent] 
+      parent = @user.record_categories.find_by(full_name: x[:parent])
+    end
+    RecordCategory.create(user: @user, name: x[:name], category_type: x[:type], color: x[:color], parent: parent)
+  end
+end
+
+When(/^I batch\-edit categories$/) do
+  visit tree_record_categories_path
+end
+
+When(/^I change the name of "(.*?)" to "(.*?)"$/) do |arg1, arg2|
+  cat = @user.record_categories.find_by(full_name: arg1)
+  fill_in "cat[#{cat.id}][name]", with: arg2
+  first('input[name="commit"]').click
+end
