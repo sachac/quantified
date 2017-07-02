@@ -189,7 +189,7 @@ describe RecordCategory do
     end
   end
 
-  describe '#get_color', focus: true do
+  describe '#get_color' do
     context 'when a color is specified' do
       it "returns that color" do
         u = FactoryGirl.create(:confirmed_user)

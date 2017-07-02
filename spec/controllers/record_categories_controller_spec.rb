@@ -172,10 +172,6 @@ describe RecordCategoriesController, type: :controller do
         expect(Record).to receive(:recalculate_durations)
         post :bulk_update, commit: I18n.t('records.index.recalculate_durations')
       end
-      it "updates category type" do
-        post :bulk_update, category_type: { @cat.id => 'record' }
-        @cat.reload.category_type.should == 'record'
-      end
     end
     describe 'GET tree' do
       it "displays all record categories" do

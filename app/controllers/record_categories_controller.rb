@@ -253,6 +253,10 @@ class RecordCategoriesController < ApplicationController
          @list << cat
        end
     end
+    if params[:commit] == t('records.index.recalculate_durations')
+      Record.recalculate_durations(current_account)
+      add_flash :notice, t('records.index.recalculated_durations')
+    end
     redirect_to tree_record_categories_path 
   end
 
