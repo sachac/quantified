@@ -22,14 +22,18 @@ def watch_rspec
   watch(%r{^spec/acceptance/steps/(.+)_steps\.rb$})   { |m| Dir[File.join("**/#{m[1]}.feature")][0] || 'spec/acceptance' }
 end
 
+def watch_cucumber
+  watch(%r{^features/.+\.feature$})
+  watch(%r{^features/support/.+$})                      { 'features' }
+  watch(%r{^features/step_definitions/(.+)_steps\.rb$}) { |m| Dir[File.join("**/#{m[1]}.feature")][0] || 'features' }
+end
+
 guard :rspec, cmd: 'spring rspec', all_after_pass: true, all_on_start: true, failed_mode: :focus do
   watch_rspec
 end
 
 guard 'cucumber', cmd: 'spring cucumber', keep_failed: true, all_after_pass: true, all_after_start: true do
-  watch(%r{^features/.+\.feature$})
-  watch(%r{^features/support/.+$})                      { 'features' }
-  watch(%r{^features/step_definitions/(.+)_steps\.rb$}) { |m| Dir[File.join("**/#{m[1]}.feature")][0] || 'features' }
+  watch_cucumber
 end
 
 
@@ -50,4 +54,15 @@ group :focus do
   guard :rspec, cmd: 'spring rspec --tag focus' do
     watch_rspec
   end
+
+end
+
+group :cfocus do
+  logger level: :warn
+  logger template: ':message'
+
+  guard :cucumber, cmd: 'spring cucumber', cli: '--tags @focus', all_on_start: false, all_after_pass: false do
+    watch_cucumber
+  end
+
 end
