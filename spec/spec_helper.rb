@@ -1,10 +1,10 @@
 require 'simplecov'
 require 'coveralls'
 Coveralls.wear_merged!('rails')
-SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
-  SimpleCov::Formatter::HTMLFormatter,
-  Coveralls::SimpleCov::Formatter
-]
+# SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
+#   SimpleCov::Formatter::HTMLFormatter,
+#   Coveralls::SimpleCov::Formatter
+# ]
 SimpleCov.start 'rails' do
    use_merging true
    SimpleCov.merge_timeout 3600
