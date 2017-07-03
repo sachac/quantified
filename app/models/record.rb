@@ -28,6 +28,15 @@ class Record < ActiveRecord::Base
       return nil
     end
   end
+
+  def duration
+    # Only activities have end timestamps
+    if self.record_category and self.activity?
+      return self[:duration]
+    else
+      return nil
+    end
+  end
   
   def end_timestamp_must_be_after_start
     if !end_timestamp.blank? and end_timestamp < timestamp

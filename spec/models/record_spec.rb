@@ -1,5 +1,5 @@
 require 'spec_helper'
-describe Record, type: :model, focus: true do
+describe Record, type: :model do
   before :all do
     Timecop.freeze
     @user = FactoryGirl.create(:confirmed_user)
@@ -402,7 +402,7 @@ END
     end
   end
 
-  describe '#create_batch', focus: true do
+  describe '#create_batch' do
     before :each do
       @user2 = FactoryGirl.create(:confirmed_user)
       @cat_abcx = FactoryGirl.create(:record_category, user: @user2, name: 'ABCX')
@@ -563,7 +563,7 @@ END
       expect(rec.beginning_of_week.to_date).to eq Time.zone.local(2012, 1, 28).to_date
     end
   end
-  describe '#prepare_graph', focus: true do
+  describe '#prepare_graph' do
     it "splits by date" do
       FactoryGirl.create(:record, user: @user, timestamp: Time.zone.now.midnight - 2.hours, 
                          end_timestamp: Time.zone.now.midnight + 1.hour, record_category: @cat) 
