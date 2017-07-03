@@ -2,7 +2,7 @@
 
 FactoryGirl.define do
   factory :record_category do
-    name "MyString"
+    sequence :name do |n| "Category#{n}Name" end
     user
     category_type "activity"
     trait :activity do category_type "activity" end

@@ -19,6 +19,15 @@ class Record < ActiveRecord::Base
     self.data ||= Hash.new
     self.data[name] = value
   end
+
+  def end_timestamp
+    # Only activities have end timestamps
+    if self.record_category and self.activity?
+      return self[:end_timestamp]
+    else
+      return nil
+    end
+  end
   
   def end_timestamp_must_be_after_start
     if !end_timestamp.blank? and end_timestamp < timestamp
@@ -30,29 +39,33 @@ class Record < ActiveRecord::Base
   def self.split(records)
     if records.is_a? Record
       start_time = records.timestamp
-      end_time = records.end_timestamp || Time.zone.now
-      list = Array.new
-      current = records
-      # While the end time crosses a midnight
-      while start_time.in_time_zone.midnight != end_time.in_time_zone.midnight
-        current = current.dup
-        current.timestamp = start_time.in_time_zone
-        current.end_timestamp = (start_time.in_time_zone + 1.day).midnight
-        current.duration = current.end_timestamp - current.timestamp
-        current.id = records.id
-        list << current
-        start_time = (start_time + 1.day).midnight
+      if records.activity?
+        end_time = records.end_timestamp || Time.zone.now
+        list = Array.new
+        current = records
+        # While the end time crosses a midnight
+        while start_time.in_time_zone.midnight != end_time.in_time_zone.midnight
+          current = current.dup
+          current.timestamp = start_time.in_time_zone
+          current.end_timestamp = (start_time.in_time_zone + 1.day).midnight
+          current.duration = current.end_timestamp - current.timestamp
+          current.id = records.id
+          list << current
+          start_time = (start_time + 1.day).midnight
+        end
+        if start_time < end_time
+          # At this point, start time and end time are on the same date
+          current = current.dup
+          current.timestamp = start_time
+          current.end_timestamp = end_time
+          current.duration = current.end_timestamp - current.timestamp
+          current.id = records.id
+          list << current
+        end
+        list.reverse
+      else
+        [records]
       end
-      if start_time < end_time
-        # At this point, start time and end time are on the same date
-        current = current.dup
-        current.timestamp = start_time
-        current.end_timestamp = end_time
-        current.duration = current.end_timestamp - current.timestamp
-        current.id = records.id
-        list << current
-      end
-      list.reverse
     else
       records.map { |x| Record.split(x) }.flatten
     end
@@ -252,15 +265,19 @@ class Record < ActiveRecord::Base
 
   # Return an array of [start time, end time, record] split over multiple days or over the range
   def split(range = nil)
-    entry_end = self.end_timestamp || Time.now
-    time = range ? [self.timestamp, range.begin.midnight.in_time_zone].max : self.timestamp
-    end_time = range ? [entry_end, range.end.midnight.in_time_zone].min : entry_end
-    list = Array.new
-    while time < end_time
-      new_end = [entry_end, (time + 1.day).midnight.in_time_zone].min
-      list << [time, new_end, self]
-      time = new_end
-    end                     
+    if self.record_category and self.activity?
+      entry_end = self.end_timestamp || Time.now
+      time = range ? [self.timestamp, range.begin.midnight.in_time_zone].max : self.timestamp
+      end_time = range ? [entry_end, range.end.midnight.in_time_zone].min : entry_end
+      list = Array.new
+      while time < end_time
+        new_end = [entry_end, (time + 1.day).midnight.in_time_zone].min
+        list << [time, new_end, self]
+        time = new_end
+      end
+    else
+      return [self.timestamp, nil, self]
+    end
     list
   end
 
@@ -405,8 +422,8 @@ class Record < ActiveRecord::Base
     end
     if options[:set_end]
       list.sort! { |a,b| a.timestamp <=> b.timestamp }
-      list.first.update_previous
-      list.last.update_next
+      list.first.update_previous if list.first 
+      list.last.update_next if list.last
     end
     list
   end
@@ -491,6 +508,7 @@ class Record < ActiveRecord::Base
     records
   end
 
+  delegate :activity_type, to: :record_category
   delegate :activity?, :to => :record_category
   delegate :full_name, :to => :record_category
   delegate :get_color, :to => :record_category
