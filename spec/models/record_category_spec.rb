@@ -227,6 +227,14 @@ describe RecordCategory do
         z.reload
         z.get_color.should eq '#0000ff'
       end
+      it "can handle loops" do
+        u = FactoryGirl.create(:confirmed_user)
+        x = RecordCategory.find_or_create(u, ['Discretionary'])
+        y = RecordCategory.find_or_create(u, ['Discretionary', 'Gardening'])
+        x.parent = x
+        x.save!
+        y.reload.get_color.should be_nil
+      end
     end
   end
   

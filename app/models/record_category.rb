@@ -197,10 +197,15 @@ class RecordCategory < ActiveRecord::Base
   end
   
   def get_color
+    seen = []
     x = self
     while x != nil
       return x.color unless x.color.blank?
+      seen.push x.id
       x = x.parent
+      if x != nil and seen.include? x.id
+        x = nil
+      end
     end
   end
 
