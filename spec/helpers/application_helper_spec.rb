@@ -1,11 +1,6 @@
 require 'spec_helper'
 
 describe ApplicationHelper, :type => :helper do
-  describe '#google_analytics_js' do
-    it "includes tag" do
-      helper.google_analytics_js.should match '2778'
-    end
-  end
   describe '#set_focus_to_id' do
     it "focuses on the ID" do
       helper.set_focus_to_id("#x").should =~ /#x/
