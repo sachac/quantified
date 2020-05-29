@@ -8,8 +8,7 @@
         Or log in with...
       .controls
         = link_to image_tag('google_32.png', :size => "32x32", :alt => "Google"), oauth_url(:google, :subdomain => false), :class => 'service'
-        = link_to image_tag('facebook_32.png', :size => "32x32", :alt => "Facebook"), oauth_url(:facebook, :subdomain => false), :class => 'service'
-
+        
   .form-group
     .col-sm-offset-2
       = f.submit "Send me reset password instructions", :class => 'btn btn-primary'
