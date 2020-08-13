@@ -1,0 +1,34 @@
+.git
+.gitignore
+README.md
+
+.*#
+
+#
+# Rails
+#
+.env
+.env.sample
+*.rbc
+capybara-*.html
+log
+tmp
+db/*.sqlite3
+db/*.sqlite3-journal
+public/system
+coverage/
+spec/tmp
+files
+**.orig
+quantified.sql
+.bundle
+
+.ruby-version
+.ruby-gemset
+
+.rvmrc
+
+# if using bower-rails ignore default bower_components path bower.json files
+vendor/assets/bower_components
+*.bowerrc
+bower.json
