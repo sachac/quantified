@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'rails', '~> 4.1'
+gem 'rails', '~> 4.2.11.3'
 gem 'dotenv-rails', :groups => [:development, :test]
 gem 'haml-rails', '~> 0.4'  # templating language
 gem 'comma' # For easy CSV output
@@ -74,7 +74,7 @@ gem 'omniauth-google-oauth2'
 #gem 'barometer'
 gem 'mechanize'  # for talking to the library website
 gem 'rails-settings-cached', '~> 0.4'
-gem 'bootstrap-sass', '~> 3.2.0'
+gem 'bootstrap-sass', '~> 3.4.1'
 gem 'sass-rails', '~> 4.0.2'
 gem 'sprockets', '~> 2.11.0'
 
