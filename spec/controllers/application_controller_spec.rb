@@ -25,7 +25,7 @@ describe ApplicationController, :type => :controller do
   describe '#before_awesome' do
     controller do
       skip_authorization_check :only => [:index]
-      skip_filter :authenticate_user!
+      skip_action :authenticate_user!
       def index
         @user = current_account
         render :plain => params.inspect

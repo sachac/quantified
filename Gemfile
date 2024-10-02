@@ -1,27 +1,26 @@
 source 'http://rubygems.org'
 
-gem 'rails', '~> 5.0'
+gem 'rails', '~> 5.1'
 gem 'dotenv-rails', :groups => [:development, :test]
-gem 'haml-rails', '~> 1.0'  # templating language
+gem 'haml-rails' # templating language
 gem 'comma' # For easy CSV output
 gem 'timeline_fu'
 gem 'mysql2'
-gem 'net-imap', '~> 0.3.7'
-gem 'loofah', '~> 2.19.1'
-gem 'nokogiri', '~> 1.4'
+gem 'net-imap'
+gem 'loofah', '>= 2.19.1'
+gem 'nokogiri', '>= 1.4'
 # gem "paperclip", ">= 2.0"
 gem 'will_paginate-bootstrap'
 gem 'will_paginate', '3.1.5'
 gem 'color'
 gem 'narray'
-gem 'simple_form', '~> 5.0.3'          # easy form markup
+gem 'simple_form', '>= 5.0.3'          # easy form markup
 gem 'jquery-ui-rails'
 gem 'jquery-rails' # add to page
-gem 'handles_sortable_columns'
 # gem 'angular_rails_csrf'
 gem 'cancancan'  # permissions
-gem 'rails-observers', '~> 0.1.5'      # to trigger timeline events
-gem 'actionpack', '~> 5.0.1'
+gem 'rails-observers', '>= 0.1.5'      # to trigger timeline events
+gem 'actionpack'
 #gem 'n_gram'
 #gem 'statsample'
 # gem 'rails-assets-angular', :source => 'https://rails-assets.org'
@@ -56,7 +55,6 @@ gem 'actionpack', '~> 5.0.1'
 # Bundle the extra gems:
 # gem 'bj'
 # gem 'nokogiri'
-gem 'sqlite3-ruby', :require => 'sqlite3'
 # gem 'aws-s3', :require => 'aws/s3'
 
 # Bundle gems for the local environment. Make sure to
@@ -78,7 +76,7 @@ gem 'rails-settings-cached'
 gem 'bootstrap-sass'
 gem 'sass-rails'
 gem 'sprockets'
-gem 'sqlite3', '>= 1.3.6'
+gem 'sqlite3'
 
 gem 'ffi', '>= 1.16.3'
 group :development do

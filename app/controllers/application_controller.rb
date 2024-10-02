@@ -2,16 +2,15 @@ require './lib/exceptions'
 class ApplicationController < ActionController::Base
   include Exceptions
   check_authorization :unless => :devise_controller?
-  handles_sortable_columns
   protect_from_forgery
   respond_to :html, :json
-  before_filter :before_awesome
-  before_filter :authenticate_user_from_token!
+  before_action :before_awesome
+  before_action :authenticate_user_from_token!
       
   helper_method :current_account  
   helper_method :mobile?
   helper_method :managing?
-  skip_filter :authenticate_user!
+  before_action :authenticate_user! # TODO, is this correct?
 
   def authenticate_managing!
     authorize! :manage_account, current_account

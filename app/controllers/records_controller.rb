@@ -1,6 +1,6 @@
 class RecordsController < ApplicationController
   respond_to :html, :json, :csv, :xml
-  skip_before_filter :verify_authenticity_token, :only => [:create]
+  skip_before_action :verify_authenticity_token, :only => [:create]
   # GET /records
   # GET /records.xml
   def index

@@ -49,6 +49,7 @@ module Home
     config.to_prepare do
       Devise::SessionsController.layout "sign"
     end
+    config.active_record.yaml_column_permitted_classes = [ActionController::Parameters]
     ActionDispatch::Callbacks.after do
       # Reload the factories
       if (Rails.env.test?) and FactoryGirl.factories.blank? # first init will load factories, this should only run on subsequent reloads

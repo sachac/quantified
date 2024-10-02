@@ -1,7 +1,7 @@
 class ContextsController < ApplicationController
-  before_filter :authenticate_user!, :except => [:index, :show, :start]
+  before_action :authenticate_user!, :except => [:index, :show, :start]
   respond_to :html, :xml, :json, :csv
-  before_filter :modify_context_rules, :only => :update
+  before_action :modify_context_rules, :only => :update
 
   # GET /contexts
   # GET /contexts.xml

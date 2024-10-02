@@ -475,6 +475,7 @@ class Record < ApplicationRecord
         cat.data = [{'key' => 'note', 'label' => 'Note', 'type' => 'string'}]
         cat.save!
       end
+      puts(cat)
       if cat.data
         if record_data
           record_key = cat.data.first['key']

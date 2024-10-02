@@ -1,5 +1,5 @@
 class Api::V1::TokensController  < ApplicationController      
-  skip_before_filter :verify_authenticity_token      
+  skip_before_action :verify_authenticity_token
   skip_authorization_check :only => [:create, :destroy]
   respond_to :json, :xml
   def create          

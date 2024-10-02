@@ -1,5 +1,5 @@
 class AdminController < ApplicationController
-  before_filter :authenticate_admin!
+  before_action :authenticate_admin!
   
   def index
     authorize! :manage, User

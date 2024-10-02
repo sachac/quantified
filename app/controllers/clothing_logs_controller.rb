@@ -1,7 +1,7 @@
 class ClothingLogsController < ApplicationController
   # GET /clothing_logs
   # GET /clothing_logs.xml
-  before_filter :authenticate_user!, :except => [:index, :show, :by_date]
+  before_action :authenticate_user!, :except => [:index, :show, :by_date]
   respond_to :html, :xml, :json, :csv
   def index
     authorize! :view_clothing, current_account
