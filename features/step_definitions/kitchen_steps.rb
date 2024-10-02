@@ -166,14 +166,14 @@ Then(/^I should see that "(.*?)" had the past price of (\d+)\.(\d+)$/) do |arg1,
   expect(page.body).to match arg3
 end
 
-When(/^the other user accepts the invitation$/) do
-  click_link I18n.t('app.user.logout')
-  @other = User.find_by(email: @other_user_email)
-  expect(@other.invitation_token).to_not be_nil
-  @other_password = 'test password'
-  visit accept_user_invitation_url(invitation_token: @other.invitation_token)
-  @other.reload
-end
+# When(/^the other user accepts the invitation$/) do
+#   click_link I18n.t('app.user.logout')
+#   @other = User.find_by(email: @other_user_email)
+#   expect(@other.invitation_token).to_not be_nil
+#   @other_password = 'test password'
+#   visit accept_user_invitation_url(invitation_token: @other.invitation_token)
+#   @other.reload
+# end
 
 When(/^the other user logs in$/) do
   click_link I18n.t('app.user.login')

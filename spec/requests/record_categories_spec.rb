@@ -1,10 +1,10 @@
-require 'spec_helper'
+require 'rails_helper'
 include Warden::Test::Helpers
 
 RSpec.describe "RecordCategories", type: :request do
   describe "GET /record_category/:id/status" do
     it "gives the JSON information" do
-      Timecop.freeze(2017, 1, 1, 8, 0) # 8:00 Jan 1
+      travel_to Time.zone.local(2017, 1, 1, 8, 0) # 8:00 Jan 1
       @u = FactoryGirl.create(:confirmed_user)
       login_as @u, scope: :user
 
@@ -16,7 +16,7 @@ RSpec.describe "RecordCategories", type: :request do
       json = JSON.parse(response.body)
       expect(response).to have_http_status(200)
       expect(json["duration"]).to eq 1.hour
-      Timecop.return
+      travel_back
     end
   end
 end

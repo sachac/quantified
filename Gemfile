@@ -1,31 +1,33 @@
 source 'http://rubygems.org'
 
-gem 'rails', '~> 4.2'
+gem 'rails', '~> 5.0'
 gem 'dotenv-rails', :groups => [:development, :test]
-gem 'haml-rails'  # templating language
+gem 'haml-rails', '~> 1.0'  # templating language
 gem 'comma' # For easy CSV output
 gem 'timeline_fu'
 gem 'mysql2'
 gem 'net-imap', '~> 0.3.7'
-gem 'loofah', '~>2.19.1'
-gem 'nokogiri', '~>1.13.10'
+gem 'loofah', '~> 2.19.1'
+gem 'nokogiri', '~> 1.4'
 # gem "paperclip", ">= 2.0"
 gem 'will_paginate-bootstrap'
+gem 'will_paginate', '3.1.5'
 gem 'color'
 gem 'narray'
-gem 'simple_form'          # easy form markup
+gem 'simple_form', '~> 5.0.3'          # easy form markup
+gem 'jquery-ui-rails'
 gem 'jquery-rails' # add to page
-gem 'rails4-autocomplete'
 gem 'handles_sortable_columns'
-gem 'angular_rails_csrf'
+# gem 'angular_rails_csrf'
 gem 'cancancan'  # permissions
-gem 'rails-observers'      # to trigger timeline events
+gem 'rails-observers', '~> 0.1.5'      # to trigger timeline events
+gem 'actionpack', '~> 5.0.1'
 #gem 'n_gram'
 #gem 'statsample'
 # gem 'rails-assets-angular', :source => 'https://rails-assets.org'
 # gem 'rails-assets-angular-filter', :source => 'https://rails-assets.org'
 # gem 'rails-assets-angular-devise', :source => 'https://rails-assets.org'
-gem 'exception_notification', :require => 'exception_notifier'
+#gem 'exception_notification', :require => 'exception_notifier'
 # group :under_consideration do
 #   gem 'rack-offline', :git => 'git://github.com/wycats/rack-offline.git'
 #   gem 'ruby-graphviz', :git => "https://github.com/glejeune/Ruby-Graphviz.git"
@@ -65,29 +67,27 @@ gem 'sqlite3-ruby', :require => 'sqlite3'
 # end
 gem 'acts-as-taggable-on'
 gem 'chronic'  # time
-gem 'acts-as-tree-with-dotted-ids'
+# gem 'acts-as-tree-with-dotted-ids'
+gem 'ancestry'
 gem 'nifty-generators'
 gem 'devise'
 #gem 'aizuchi'
-gem 'omniauth'
-gem 'omniauth-facebook'
-gem 'omniauth-twitter'
-gem 'omniauth-google-oauth2'
 #gem 'barometer'
 gem 'mechanize'  # for talking to the library website
 gem 'rails-settings-cached'
 gem 'bootstrap-sass'
 gem 'sass-rails'
 gem 'sprockets'
-gem 'sqlite3', '~> 1.3.6'
+gem 'sqlite3', '>= 1.3.6'
 
-gem 'ffi', '~> 1.16.3'
+gem 'ffi', '>= 1.16.3'
 group :development do
-  gem 'compass-rails', '~> 3.0.2'
+  gem 'compass-rails'
   gem 'coffee-rails'
   gem 'uglifier'
   gem 'libv8'
-  gem 'therubyracer', '~> 0.12.3'
+  gem 'therubyracer', '>= 0.12.3'
+  gem 'public_suffix', '>= 5.1.1'
 end
 
 group :development, :test do
@@ -110,15 +110,14 @@ group :test do
   gem 'spring-commands-rspec'
   gem 'spring-commands-cucumber'
   gem 'rspec-activemodel-mocks'
-  gem 'timecop'
   gem 'spork'
   gem 'guard-rspec'
   gem 'guard-spring'
-  gem 'cucumber'
+  gem 'cucumber', '>= 3.0.2'
   gem 'fakeweb'
   gem 'simplecov', :require => false
-  gem 'cucumber-rails', :require => false
-  gem 'capybara'
+  gem 'cucumber-rails', '>= 1.8', :require => false
+  gem 'capybara', '>= 3.36'
   gem 'cucumber_factory'
 end
 group :console do

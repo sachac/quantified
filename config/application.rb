@@ -1,8 +1,6 @@
-require File.expand_path('../boot', __FILE__)
-
+require_relative 'boot'
 require 'rails/all'
-
-require File.expand_path('../application.bundler', __FILE__)
+Bundler.require(*Rails.groups)
 
 module Home
   class Application < Rails::Application

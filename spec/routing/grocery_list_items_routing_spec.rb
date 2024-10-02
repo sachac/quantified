@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 RSpec.describe GroceryListItemsController, :type => :routing do
   describe "routing" do

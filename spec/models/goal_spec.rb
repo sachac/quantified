@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe Goal do
   before do
@@ -6,10 +6,10 @@ describe Goal do
     @cat = create(:record_category, user: @u, name: "ABC")
     @cat2 = create(:record_category, user: @u, name: "DEF")
     @time = Time.zone.local(2013, 1, 1, 8)
-    Timecop.freeze(@time + 1.day)
+    travel_to @time + 1.day
   end
   after do
-    Timecop.return
+    travel_back
   end
   describe '#recreate_from_parsed' do
     it "reconstructs direct comparisons" do

@@ -1,4 +1,4 @@
-class Clothing < ActiveRecord::Base
+class Clothing < ApplicationRecord
   belongs_to :user
   acts_as_taggable_on :tags
   has_many :clothing_logs, :dependent => :destroy

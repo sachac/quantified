@@ -1,4 +1,4 @@
-class ReceiptItemType < ActiveRecord::Base
+class ReceiptItemType < ApplicationRecord
   has_many :receipt_items, :dependent => :delete_all
   belongs_to :user
   belongs_to :receipt_item_category

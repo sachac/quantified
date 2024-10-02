@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe Clothing do
   it "has a friendly name for autocomplete" do

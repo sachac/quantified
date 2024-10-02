@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 include Warden::Test::Helpers
 
 describe ApplicationController, :type => :request do

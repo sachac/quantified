@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 # TODO Move these to request specs
 describe RecordsController, type: :controller do
   before do
@@ -6,7 +6,7 @@ describe RecordsController, type: :controller do
   end
   context "when logged in" do
     before do
-      Timecop.freeze Time.zone.local(2017, 1, 1)
+      travel_to Time.zone.local(2017, 1, 1)
       @user = create(:user, :confirmed)
       sign_in @user
       @cat = create(:record_category, user: @user, name: 'ABC')
@@ -20,7 +20,7 @@ describe RecordsController, type: :controller do
       @record4 = create(:record, record_category: @cat4, source_name: 'older', user: @user, timestamp: start + 3.hours, end_timestamp: start + 4.hours)
     end
     after do
-      Timecop.return
+      travel_back
     end
     describe 'GET /records' do
       it "returns the records" do

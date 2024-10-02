@@ -6,7 +6,7 @@ class Ability
     if user.role == 'admin'
       can :manage, :all
     elsif !user.id.blank?
-      [Clothing, ClothingLog, Context, ClothingMatch, CsaFood, DecisionLog, Decision, Food, LibraryItem, LocationHistory, MeasurementLog, Measurement, Stuff, TimeRecord, TorontoLibrary, Memory, TapLogRecord, RecordCategory, Goal, ReceiptItem, ReceiptItemType, ReceiptItemCategory].each do |item|
+      [Context, DecisionLog, Decision, Food, LibraryItem, LocationHistory, MeasurementLog, Measurement, Stuff, TimeRecord, TorontoLibrary, Memory, TapLogRecord, RecordCategory, Goal, ReceiptItem, ReceiptItemType, ReceiptItemCategory].each do |item|
         can :manage, item, user_id: user.id
         can :create, item
       end

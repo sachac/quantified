@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 describe Stuff do
   before(:each) do
   end

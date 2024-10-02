@@ -1,8 +1,8 @@
-Home::Application.routes.draw do
+Rails.application.routes.draw do
   resources :grocery_list_items
 
 
-  match 'receipt_item_types/autocomplete' => 'receipt_item_types#autocomplete_receipt_item_type_friendly_name', :as => :autocomplete_receipt_item_type, :via => :get
+  # match 'receipt_item_types/autocomplete' => 'receipt_item_types#autocomplete_receipt_item_type_friendly_name', :as => :autocomplete_receipt_item_type, :via => :get
   resources :receipt_item_types do
     collection do
       get :batch_entry
@@ -33,10 +33,6 @@ Home::Application.routes.draw do
     end
   end
   resources :goals
-  devise_scope :user do
-    match 'auth/:service/callback' => 'services#create', :via => [:get, :post]
-    match 'auth/:service' => 'sessions#setup', :as => :oauth, :via => [:get, :post]
-  end 
 
   resources :services, :only => [:index, :create, :destroy]
   get 'privacy' => 'home#privacy'

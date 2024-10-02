@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe ApplicationHelper, :type => :helper do
   describe '#set_focus_to_id' do

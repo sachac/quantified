@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 describe RecordCategoriesController, type: :controller do
   before do
     @request.env["devise.mapping"] = Devise.mappings[:user]
@@ -44,14 +44,14 @@ describe RecordCategoriesController, type: :controller do
         assigns(:title).should match I18n.t('general.inactive')
       end
       it "handles open-ended items" do
-        Timecop.freeze(Date.new(2014, 1, 3) + 3.hours)
+        travel_to (Date.new(2014, 1, 3) + 3.hours)
         record = create(:record,
                         record_category: @record_category,
                         user: @user,
                         timestamp: Date.new(2014, 1, 3) + 2.hours)
         get :show, id: @record_category.id
         assigns(:total).should == 3600
-        Timecop.return
+        travel_back
       end
       it "sorts in chronological order if requested" do
         @record = create(:record, record_category: @cat, timestamp: Time.zone.now - 1.hour)

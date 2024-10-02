@@ -1,4 +1,4 @@
-class Food < ActiveRecord::Base
+class Food < ApplicationRecord
   belongs_to :user
   has_many :csa_foods
 

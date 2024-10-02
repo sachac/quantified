@@ -1,4 +1,4 @@
-class ContextRule < ActiveRecord::Base
+class ContextRule < ApplicationRecord
   belongs_to :stuff
   belongs_to :location, :class_name => 'Stuff'
   belongs_to :context

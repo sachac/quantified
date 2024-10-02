@@ -1,4 +1,4 @@
-class TimeRecord < ActiveRecord::Base
+class TimeRecord < ApplicationRecord
   belongs_to :user
   def starts_at
     self.start_time

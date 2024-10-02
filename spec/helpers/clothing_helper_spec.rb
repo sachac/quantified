@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 describe ClothingHelper, :type => :helper do
   describe 'missing_clothing_info' do
     it "detects missing images" do

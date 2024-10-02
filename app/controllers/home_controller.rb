@@ -8,6 +8,7 @@ class HomeController < ApplicationController
       @contexts = current_account.contexts.select('id, name')
       @current_activity = current_account.records.activities.order('timestamp DESC').first
       @goal_summary = Goal.check_goals(current_account)
+      @categories = current_account.record_categories.select('id, name')
     end
     if mobile?
       render 'mobile_index'

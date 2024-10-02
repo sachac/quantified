@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 describe AdminController, :type => :controller  do
   context "when logged in as an administrator" do
     before do

@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 describe Api::V1::RecordsController, :type => :controller  do
   describe 'POST create' do
     before do

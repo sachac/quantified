@@ -1,4 +1,4 @@
-class ReceiptItem < ActiveRecord::Base
+class ReceiptItem < ApplicationRecord
   belongs_to :user
   belongs_to :receipt_item_type, autosave: true
 #  delegate :friendly_name, to: :receipt_item_type, allow_nil: true

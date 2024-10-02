@@ -1,4 +1,4 @@
-class TorontoLibrary < ActiveRecord::Base
+class TorontoLibrary < ApplicationRecord
   belongs_to :user
   has_many :library_items
   attr_accessor :agent  

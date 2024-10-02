@@ -1,4 +1,4 @@
-class GroceryListItem < ActiveRecord::Base
+class GroceryListItem < ApplicationRecord
   belongs_to :grocery_list
   belongs_to :receipt_item_category
   before_validation :guess_category

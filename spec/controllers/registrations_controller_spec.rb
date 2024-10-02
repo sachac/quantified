@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 describe RegistrationsController, :type => :controller  do
   it "lets me register" do
     @request.env["devise.mapping"] = Devise.mappings[:user]

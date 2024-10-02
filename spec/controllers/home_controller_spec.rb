@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 describe HomeController, :type => :controller  do
   it "shows a different mobile version" do
     @request.env["devise.mapping"] = Devise.mappings[:user]

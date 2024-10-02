@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe RecordCategory do
   describe '#add_data' do
@@ -347,11 +347,11 @@ describe RecordCategory do
 
   describe '#status' do
     before :all do
-      Timecop.freeze(2017, 1, 1, 8, 0) # 8:00 Jan 1
+      travel_to Time.zone.local(2017, 1, 1, 8, 0) # 8:00 Jan 1
       @u = FactoryGirl.create(:confirmed_user)
     end
     after :all do
-      Timecop.return
+      travel_back
     end
     it 'summarizes status' do
       cat = FactoryGirl.create(:record_category, category_type: 'activity', name: 'Category A', user: @u)
@@ -369,7 +369,7 @@ describe RecordCategory do
             
     end
     it 'includes subcategories'  do
-      Timecop.freeze(2017, 1, 1, 8, 0) # 8:00 Jan 1
+      travel_to Time.zone.local(2017, 1, 1, 8, 0) # 8:00 Jan 1
       parent = FactoryGirl.create(:record_category, category_type: 'list', name: 'Parent Category', user: @u)
       cat1 = FactoryGirl.create(:record_category, category_type: 'activity', name: 'Category A', parent: parent, user: @u)
       cat2 = FactoryGirl.create(:record_category, category_type: 'activity', name: 'Category X', user: @u)

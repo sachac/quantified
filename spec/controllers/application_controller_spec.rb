@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 describe ApplicationController, :type => :controller do
   describe '#filter_sortable_column_order' do
     it "limits the parameter to the columns specified" do
@@ -28,7 +28,7 @@ describe ApplicationController, :type => :controller do
       skip_filter :authenticate_user!
       def index
         @user = current_account
-        render :text => params.inspect
+        render :plain => params.inspect
       end
     end
     it "authenticates with username and password" do

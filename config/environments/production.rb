@@ -1,4 +1,4 @@
-Home::Application.configure do
+Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb
 
   config.eager_load = true
@@ -50,9 +50,11 @@ Home::Application.configure do
   # Specifies the header that your server uses for sending files
    # Disable Rails's static asset server (Apache or nginx will already do this)
    config.serve_static_assets = true
+   config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present?
+   config.assets.js_compressor = :uglifier
 
    config.assets.compress = true
-   config.assets.compile = true
+   config.assets.compile = false
    config.assets.digest = true
   config.action_mailer.default_url_options = { :host => "quantifiedawesome.com" }
 
@@ -61,5 +63,7 @@ Home::Application.configure do
 #    :email_prefix => "[Quantified Awesome Exception] ",
 #    :sender_address => %{"Exception Notifier" <sacha@quantifiedawesome.com>},
 #    :exception_recipients => %w{sacha@quantifiedawesome.com}
-#  end
+  #  end
+   config.active_record.dump_schema_after_migration = false
+
 end

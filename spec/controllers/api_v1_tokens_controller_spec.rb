@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 describe Api::V1::TokensController, :type => :controller  do
   before do
     @request.env["devise.mapping"] = Devise.mappings[:user]

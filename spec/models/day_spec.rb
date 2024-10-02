@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 describe Day do
   describe 'static methods' do
     it "can navigate to yesterday" do

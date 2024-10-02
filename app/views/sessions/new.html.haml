@@ -8,15 +8,9 @@
             %legend Sign in
             .inner
               .form-group
-                %label Sign in with
-                .controls
-                  .box#services
-                    = link_to image_tag(asset_path('google_32.png'), :size => "32x32", :alt => "Google"), oauth_url(:google_oauth2, :subdomain => false), :class => 'service'
-                    or fill in the form below
-              .form-group
                 = label_tag :login, "Login", class: 'control-label'
                 .controls= f.text_field :login, :class => "text_field"
-              .form-group  
+              .form-group
                 = label_tag :password, "Password", class: 'control-label'
                 .controls= f.password_field :password, :class => "text_field"
               - if devise_mapping.rememberable?

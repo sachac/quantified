@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe MeasurementLog do
   before(:each) do

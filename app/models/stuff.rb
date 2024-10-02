@@ -1,4 +1,4 @@
-class Stuff < ActiveRecord::Base
+class Stuff < ApplicationRecord
   belongs_to :user
   delegate :url_helpers, :to => 'Rails.application.routes' 
 

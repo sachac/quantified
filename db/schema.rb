@@ -1,4 +1,3 @@
-# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -11,14 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141103162500) do
+ActiveRecord::Schema.define(version: 20241002161025) do
 
   create_table "clothing", force: :cascade do |t|
     t.string   "name",                 limit: 255
     t.string   "color",                limit: 255
     t.string   "clothing_type",        limit: 255
     t.string   "notes",                limit: 255
-    t.boolean  "labeled",                          default: true
+    t.integer  "labeled",                          default: 1
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "status",               limit: 255
@@ -30,22 +29,20 @@ ActiveRecord::Schema.define(version: 20141103162500) do
     t.integer  "clothing_logs_count",              default: 0
     t.integer  "last_clothing_log_id"
     t.integer  "user_id"
-    t.string   "image_file_name"
+    t.string   "image_file_name",      limit: 255
     t.integer  "image_file_size"
-    t.string   "image_content_type"
+    t.string   "image_content_type",   limit: 255
     t.datetime "image_updated_at"
+    t.index ["user_id"], name: "idx_clothing_index_clothing_on_user_id"
   end
-
-  add_index "clothing", ["user_id"], name: "index_clothing_on_user_id"
 
   create_table "clothing_logs", force: :cascade do |t|
     t.integer "clothing_id"
     t.date    "date"
     t.integer "outfit_id",   default: 1
     t.integer "user_id"
+    t.index ["user_id"], name: "idx_clothing_logs_index_clothing_logs_on_user_id"
   end
-
-  add_index "clothing_logs", ["user_id"], name: "index_clothing_logs_on_user_id"
 
   create_table "clothing_matches", force: :cascade do |t|
     t.integer  "clothing_a_id"
@@ -56,9 +53,8 @@ ActiveRecord::Schema.define(version: 20141103162500) do
     t.datetime "updated_at"
     t.integer  "user_id"
     t.date     "clothing_log_date"
+    t.index ["user_id"], name: "idx_clothing_matches_index_clothing_matches_on_user_id"
   end
-
-  add_index "clothing_matches", ["user_id"], name: "index_clothing_matches_on_user_id"
 
   create_table "context_rules", force: :cascade do |t|
     t.integer  "stuff_id"
@@ -86,9 +82,8 @@ ActiveRecord::Schema.define(version: 20141103162500) do
     t.datetime "updated_at"
     t.date     "date_received"
     t.integer  "user_id"
+    t.index ["user_id"], name: "idx_csa_foods_index_csa_foods_on_user_id"
   end
-
-  add_index "csa_foods", ["user_id"], name: "index_csa_foods_on_user_id"
 
   create_table "days", force: :cascade do |t|
     t.date     "date"
@@ -100,9 +95,8 @@ ActiveRecord::Schema.define(version: 20141103162500) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "user_id"
+    t.index ["user_id"], name: "idx_days_index_days_on_user_id"
   end
-
-  add_index "days", ["user_id"], name: "index_days_on_user_id"
 
   create_table "decision_logs", force: :cascade do |t|
     t.text     "notes"
@@ -113,9 +107,8 @@ ActiveRecord::Schema.define(version: 20141103162500) do
     t.datetime "updated_at"
     t.integer  "decision_id"
     t.integer  "user_id"
+    t.index ["user_id"], name: "idx_decision_logs_index_decision_logs_on_user_id"
   end
-
-  add_index "decision_logs", ["user_id"], name: "index_decision_logs_on_user_id"
 
   create_table "decisions", force: :cascade do |t|
     t.string   "name",       limit: 255
@@ -127,9 +120,8 @@ ActiveRecord::Schema.define(version: 20141103162500) do
     t.datetime "updated_at"
     t.integer  "rating"
     t.integer  "user_id"
+    t.index ["user_id"], name: "idx_decisions_index_decisions_on_user_id"
   end
-
-  add_index "decisions", ["user_id"], name: "index_decisions_on_user_id"
 
   create_table "foods", force: :cascade do |t|
     t.string   "name",       limit: 255
@@ -137,25 +129,24 @@ ActiveRecord::Schema.define(version: 20141103162500) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "user_id"
+    t.index ["user_id"], name: "idx_foods_index_foods_on_user_id"
   end
-
-  add_index "foods", ["user_id"], name: "index_foods_on_user_id"
 
   create_table "goals", force: :cascade do |t|
     t.integer  "user_id"
-    t.string   "label"
-    t.string   "expression"
-    t.string   "period"
+    t.string   "label",      limit: 255
+    t.string   "expression", limit: 255
+    t.string   "period",     limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "status"
+    t.string   "status",     limit: 255
   end
 
   create_table "grocery_list_items", force: :cascade do |t|
-    t.string   "name"
+    t.string   "name",                     limit: 255
     t.integer  "grocery_list_id"
-    t.string   "quantity"
-    t.string   "status"
+    t.string   "quantity",                 limit: 255
+    t.string   "status",                   limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "receipt_item_category_id"
@@ -163,16 +154,16 @@ ActiveRecord::Schema.define(version: 20141103162500) do
 
   create_table "grocery_list_users", force: :cascade do |t|
     t.integer  "grocery_list_id"
-    t.string   "email"
+    t.string   "email",           limit: 255
     t.integer  "user_id"
-    t.string   "status"
+    t.string   "status",          limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "grocery_lists", force: :cascade do |t|
     t.integer  "user_id"
-    t.string   "name"
+    t.string   "name",       limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -192,15 +183,14 @@ ActiveRecord::Schema.define(version: 20141103162500) do
     t.date     "read_date"
     t.integer  "toronto_library_id"
     t.string   "isbn",               limit: 255
-    t.boolean  "public"
+    t.integer  "public"
     t.text     "notes"
     t.decimal  "price",                          precision: 10
     t.integer  "pages"
     t.integer  "user_id"
-    t.string   "details"
+    t.string   "details",            limit: 255
+    t.index ["user_id"], name: "idx_library_items_index_library_items_on_user_id"
   end
-
-  add_index "library_items", ["user_id"], name: "index_library_items_on_user_id"
 
   create_table "links", force: :cascade do |t|
     t.integer  "link_a_id"
@@ -211,11 +201,10 @@ ActiveRecord::Schema.define(version: 20141103162500) do
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["link_a_id", "link_a_type"], name: "idx_links_index_links_on_link_a_id_and_link_a_type"
+    t.index ["link_b_id", "link_b_type"], name: "idx_links_index_links_on_link_b_id_and_link_b_type"
+    t.index ["user_id"], name: "idx_links_index_links_on_user_id"
   end
-
-  add_index "links", ["link_a_id", "link_a_type"], name: "index_links_on_link_a_id_and_link_a_type"
-  add_index "links", ["link_b_id", "link_b_type"], name: "index_links_on_link_b_id_and_link_b_type"
-  add_index "links", ["user_id"], name: "index_links_on_user_id"
 
   create_table "location_histories", force: :cascade do |t|
     t.integer  "stuff_id"
@@ -225,9 +214,8 @@ ActiveRecord::Schema.define(version: 20141103162500) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "user_id"
+    t.index ["user_id"], name: "idx_location_histories_index_location_histories_on_user_id"
   end
-
-  add_index "location_histories", ["user_id"], name: "index_location_histories_on_user_id"
 
   create_table "locations", force: :cascade do |t|
     t.string   "name",       limit: 255
@@ -235,9 +223,8 @@ ActiveRecord::Schema.define(version: 20141103162500) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "user_id"
+    t.index ["user_id"], name: "idx_locations_index_locations_on_user_id"
   end
-
-  add_index "locations", ["user_id"], name: "index_locations_on_user_id"
 
   create_table "measurement_logs", force: :cascade do |t|
     t.integer  "measurement_id"
@@ -247,9 +234,8 @@ ActiveRecord::Schema.define(version: 20141103162500) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "user_id"
+    t.index ["user_id"], name: "idx_measurement_logs_index_measurement_logs_on_user_id"
   end
-
-  add_index "measurement_logs", ["user_id"], name: "index_measurement_logs_on_user_id"
 
   create_table "measurements", force: :cascade do |t|
     t.string   "name",       limit: 255
@@ -262,9 +248,8 @@ ActiveRecord::Schema.define(version: 20141103162500) do
     t.datetime "updated_at"
     t.decimal  "sum",                    precision: 10
     t.integer  "user_id"
+    t.index ["user_id"], name: "idx_measurements_index_measurements_on_user_id"
   end
-
-  add_index "measurements", ["user_id"], name: "index_measurements_on_user_id"
 
   create_table "memories", force: :cascade do |t|
     t.string   "name",       limit: 255
@@ -275,67 +260,67 @@ ActiveRecord::Schema.define(version: 20141103162500) do
     t.datetime "updated_at"
     t.datetime "timestamp"
     t.integer  "rating"
-    t.string   "date_entry"
+    t.string   "date_entry", limit: 255
     t.datetime "sort_time"
+    t.index ["name"], name: "idx_memories_index_memories_on_name"
+    t.index ["user_id"], name: "idx_memories_index_memories_on_user_id"
   end
 
-  add_index "memories", ["name"], name: "index_memories_on_name"
-  add_index "memories", ["user_id"], name: "index_memories_on_user_id"
-
   create_table "receipt_item_categories", force: :cascade do |t|
-    t.string   "name"
+    t.string   "name",       limit: 255
     t.integer  "user_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
   end
 
   create_table "receipt_item_types", force: :cascade do |t|
-    t.string   "receipt_name"
-    t.string   "friendly_name"
+    t.string   "receipt_name",             limit: 255
+    t.string   "friendly_name",            limit: 255
     t.integer  "user_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                           null: false
+    t.datetime "updated_at",                           null: false
     t.integer  "receipt_item_category_id"
   end
 
   create_table "receipt_items", force: :cascade do |t|
     t.integer  "user_id"
-    t.string   "filename"
-    t.string   "source_id"
-    t.string   "source_name"
-    t.string   "store"
+    t.string   "filename",             limit: 255
+    t.string   "source_id",            limit: 255
+    t.string   "source_name",          limit: 255
+    t.string   "store",                limit: 255
     t.date     "date"
-    t.string   "name"
-    t.decimal  "quantity",             precision: 10, scale: 3
-    t.string   "unit"
-    t.decimal  "unit_price",           precision: 10, scale: 3
-    t.decimal  "total",                precision: 10, scale: 2
-    t.string   "notes"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.string   "name",                 limit: 255
+    t.decimal  "quantity",                         precision: 10, scale: 3
+    t.string   "unit",                 limit: 255
+    t.decimal  "unit_price",                       precision: 10, scale: 3
+    t.decimal  "total",                            precision: 10, scale: 2
+    t.string   "notes",                limit: 255
+    t.datetime "created_at",                                                null: false
+    t.datetime "updated_at",                                                null: false
     t.integer  "receipt_item_type_id"
   end
 
   create_table "record_categories", force: :cascade do |t|
     t.integer  "user_id"
-    t.string   "name"
+    t.string   "name",          limit: 255
     t.integer  "parent_id"
-    t.string   "dotted_ids"
-    t.string   "category_type"
+    t.string   "dotted_ids",    limit: 255
+    t.string   "category_type", limit: 255
     t.text     "data"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "full_name"
-    t.string   "color"
-    t.boolean  "active",        default: true, null: false
+    t.string   "full_name",     limit: 255
+    t.string   "color",         limit: 255
+    t.integer  "active",                    default: 1, null: false
+    t.string   "ancestry"
+    t.index ["ancestry"], name: "index_record_categories_on_ancestry"
+    t.index ["dotted_ids"], name: "idx_record_categories_index_record_categories_on_dotted_ids"
+    t.index ["name"], name: "idx_record_categories_index_record_categories_on_name"
   end
-
-  add_index "record_categories", ["dotted_ids"], name: "index_record_categories_on_dotted_ids"
-  add_index "record_categories", ["name"], name: "index_record_categories_on_name"
 
   create_table "records", force: :cascade do |t|
     t.integer  "user_id"
-    t.string   "source_name"
+    t.string   "source_name",        limit: 255
     t.integer  "source_id"
     t.datetime "timestamp"
     t.integer  "record_category_id"
@@ -345,18 +330,17 @@ ActiveRecord::Schema.define(version: 20141103162500) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.date     "date"
-    t.boolean  "manual",             default: false
+    t.integer  "manual",                         default: 0
+    t.index ["record_category_id"], name: "idx_records_index_records_on_record_category_id"
+    t.index ["timestamp"], name: "idx_records_index_records_on_timestamp"
   end
-
-  add_index "records", ["record_category_id"], name: "index_records_on_record_category_id"
-  add_index "records", ["timestamp"], name: "index_records_on_timestamp"
 
   create_table "services", force: :cascade do |t|
     t.integer  "user_id"
-    t.string   "provider"
-    t.string   "uid"
-    t.string   "uname"
-    t.string   "uemail"
+    t.string   "provider",   limit: 255
+    t.string   "uid",        limit: 255
+    t.string   "uname",      limit: 255
+    t.string   "uemail",     limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -368,12 +352,11 @@ ActiveRecord::Schema.define(version: 20141103162500) do
     t.string   "thing_type", limit: 30
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["thing_type", "thing_id", "var"], name: "sqlite_autoindex_settings_1", unique: true
   end
 
-  add_index "settings", ["thing_type", "thing_id", "var"], name: "index_settings_on_thing_type_and_thing_id_and_var", unique: true
-
   create_table "signups", force: :cascade do |t|
-    t.string   "email"
+    t.string   "email",      limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -389,15 +372,14 @@ ActiveRecord::Schema.define(version: 20141103162500) do
     t.datetime "updated_at"
     t.integer  "location_id"
     t.integer  "home_location_id"
-    t.boolean  "in_place"
+    t.integer  "in_place"
     t.integer  "user_id"
-    t.string   "stuff_type",                                  default: "stuff"
+    t.string   "stuff_type",       limit: 255,                default: "stuff"
+    t.index ["location_id"], name: "idx_stuff_index_stuff_on_location_id"
+    t.index ["name", "location_id"], name: "idx_stuff_index_stuff_on_name_and_location_id"
+    t.index ["name"], name: "idx_stuff_index_stuff_on_name"
+    t.index ["user_id"], name: "idx_stuff_index_stuff_on_user_id"
   end
-
-  add_index "stuff", ["location_id"], name: "index_stuff_on_location_id"
-  add_index "stuff", ["name", "location_id"], name: "index_stuff_on_name_and_location_id"
-  add_index "stuff", ["name"], name: "index_stuff_on_name"
-  add_index "stuff", ["user_id"], name: "index_stuff_on_user_id"
 
   create_table "taggings", force: :cascade do |t|
     t.integer  "tag_id"
@@ -407,40 +389,37 @@ ActiveRecord::Schema.define(version: 20141103162500) do
     t.string   "tagger_type",   limit: 255
     t.string   "context",       limit: 255
     t.datetime "created_at"
+    t.index ["tag_id", "taggable_id", "taggable_type", "context", "tagger_id", "tagger_type"], name: "sqlite_autoindex_taggings_1", unique: true
+    t.index ["taggable_id", "taggable_type", "context"], name: "idx_taggings_index_taggings_on_taggable_id_and_taggable_type_and_context"
   end
-
-  add_index "taggings", ["tag_id", "taggable_id", "taggable_type", "context", "tagger_id", "tagger_type"], name: "taggings_idx", unique: true
-  add_index "taggings", ["taggable_id", "taggable_type", "context"], name: "index_taggings_on_taggable_id_and_taggable_type_and_context"
 
   create_table "tags", force: :cascade do |t|
     t.string  "name",           limit: 255
     t.integer "taggings_count",             default: 0
+    t.index ["name"], name: "sqlite_autoindex_tags_1", unique: true
   end
-
-  add_index "tags", ["name"], name: "index_tags_on_name", unique: true
 
   create_table "tap_log_records", force: :cascade do |t|
     t.integer  "user_id"
     t.integer  "tap_log_id"
     t.datetime "timestamp"
-    t.string   "catOne"
-    t.string   "catTwo"
-    t.string   "catThree"
-    t.decimal  "number",        precision: 10, scale: 2
+    t.string   "catOne",        limit: 255
+    t.string   "catTwo",        limit: 255
+    t.string   "catThree",      limit: 255
+    t.decimal  "number",                    precision: 10, scale: 2
     t.integer  "rating"
     t.text     "note"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "status"
+    t.string   "status",        limit: 255
     t.datetime "end_timestamp"
-    t.string   "entry_type"
+    t.string   "entry_type",    limit: 255
     t.integer  "duration"
-    t.string   "source"
+    t.string   "source",        limit: 255
+    t.index ["catOne", "catTwo", "catThree"], name: "idx_tap_log_records_index_tap_log_records_on_catOne_and_catTwo_and_catThree"
+    t.index ["end_timestamp"], name: "idx_tap_log_records_index_tap_log_records_on_end_timestamp"
+    t.index ["timestamp"], name: "idx_tap_log_records_index_tap_log_records_on_timestamp"
   end
-
-  add_index "tap_log_records", ["catOne", "catTwo", "catThree"], name: "index_tap_log_records_on_catOne_and_catTwo_and_catThree"
-  add_index "tap_log_records", ["end_timestamp"], name: "index_tap_log_records_on_end_timestamp"
-  add_index "tap_log_records", ["timestamp"], name: "index_tap_log_records_on_timestamp"
 
   create_table "time_records", force: :cascade do |t|
     t.string   "name",       limit: 255
@@ -449,15 +428,14 @@ ActiveRecord::Schema.define(version: 20141103162500) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "user_id"
+    t.index ["user_id"], name: "idx_time_records_index_time_records_on_user_id"
   end
 
-  add_index "time_records", ["user_id"], name: "index_time_records_on_user_id"
-
   create_table "timeline_events", force: :cascade do |t|
-    t.string   "event_type"
-    t.string   "subject_type"
-    t.string   "actor_type"
-    t.string   "secondary_subject_type"
+    t.string   "event_type",             limit: 255
+    t.string   "subject_type",           limit: 255
+    t.string   "actor_type",             limit: 255
+    t.string   "secondary_subject_type", limit: 255
     t.integer  "subject_id"
     t.integer  "actor_id"
     t.integer  "secondary_subject_id"
@@ -475,12 +453,11 @@ ActiveRecord::Schema.define(version: 20141103162500) do
     t.integer  "pickup_count"
     t.integer  "library_item_count"
     t.integer  "user_id"
+    t.index ["user_id"], name: "idx_toronto_libraries_index_toronto_libraries_on_user_id"
   end
 
-  add_index "toronto_libraries", ["user_id"], name: "index_toronto_libraries_on_user_id"
-
   create_table "users", force: :cascade do |t|
-    t.string   "email",                    limit: 255, default: "",    null: false
+    t.string   "email",                    limit: 255, default: "", null: false
     t.string   "encrypted_password",       limit: 128, default: ""
     t.string   "reset_password_token",     limit: 255
     t.datetime "reset_password_sent_at"
@@ -498,25 +475,24 @@ ActiveRecord::Schema.define(version: 20141103162500) do
     t.date     "projected_end"
     t.string   "role",                     limit: 255
     t.string   "username",                 limit: 255
-    t.string   "authentication_token"
+    t.string   "authentication_token",     limit: 255
     t.text     "data"
     t.string   "invitation_token",         limit: 60
     t.datetime "invitation_sent_at"
     t.datetime "invitation_accepted_at"
     t.integer  "invitation_limit"
     t.integer  "invited_by_id"
-    t.string   "invited_by_type"
-    t.string   "confirmation_token"
+    t.string   "invited_by_type",          limit: 255
+    t.string   "confirmation_token",       limit: 255
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
-    t.boolean  "approved",                             default: false, null: false
-    t.string   "unconfirmed_email"
+    t.integer  "approved",                             default: 0,  null: false
+    t.string   "unconfirmed_email",        limit: 255
+    t.index ["confirmation_token"], name: "sqlite_autoindex_users_3", unique: true
+    t.index ["email"], name: "sqlite_autoindex_users_1", unique: true
+    t.index ["invitation_token"], name: "idx_users_index_users_on_invitation_token"
+    t.index ["invited_by_id"], name: "idx_users_index_users_on_invited_by_id"
+    t.index ["reset_password_token"], name: "sqlite_autoindex_users_2", unique: true
   end
-
-  add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
-  add_index "users", ["email"], name: "index_users_on_email", unique: true
-  add_index "users", ["invitation_token"], name: "index_users_on_invitation_token"
-  add_index "users", ["invited_by_id"], name: "index_users_on_invited_by_id"
-  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
 
 end

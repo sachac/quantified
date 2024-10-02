@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 describe StuffObserver do
   it "watches for location changes" do
     stuff = FactoryGirl.create(:stuff)

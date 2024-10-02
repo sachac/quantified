@@ -264,7 +264,7 @@ Given /^there is a demo user$/ do
 end
 
 Given /^the date is ([\-0-9]+)$/ do |date|
-  Timecop.travel(Time.zone.parse(date))
+  Time.travel_to(Time.zone.parse(date))
 end
 
 When(/^I edit it$/) do

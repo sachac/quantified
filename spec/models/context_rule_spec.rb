@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe ContextRule do
   it "keeps track of things that are out of place" do

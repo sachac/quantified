@@ -1,4 +1,4 @@
-class Goal < ActiveRecord::Base
+class Goal < ApplicationRecord
   belongs_to :user
   validates_presence_of :period, :label, :expression
   attr_accessor :parsed, :expression_type, :target, :op, :op1, :op2, :val1, :val2, :record_category, :parsed

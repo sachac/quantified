@@ -1,4 +1,4 @@
-class ClothingMatch < ActiveRecord::Base
+class ClothingMatch < ApplicationRecord
   belongs_to :user
   belongs_to :clothing_a, :class_name => "Clothing"
   belongs_to :clothing_b, :class_name => "Clothing"

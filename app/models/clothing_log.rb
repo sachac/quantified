@@ -1,4 +1,4 @@
-class ClothingLog < ActiveRecord::Base
+class ClothingLog < ApplicationRecord
   belongs_to :user
   belongs_to :clothing, :counter_cache => true
   has_and_belongs_to_many :clothing_matches, \

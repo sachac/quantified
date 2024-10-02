@@ -1,4 +1,4 @@
-class TapLogRecord < ActiveRecord::Base
+class TapLogRecord < ApplicationRecord
   belongs_to :user
   validates :timestamp, :presence => true
   validates :catOne, :presence => true

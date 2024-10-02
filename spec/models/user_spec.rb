@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 describe User do
   before :each do
     @user = FactoryGirl.create(:user)
@@ -15,9 +15,9 @@ describe User do
   end
 
   it "adjusts the end of the week" do
-    Timecop.freeze(Time.zone.parse("May 1, 2014"))
+    travel_to Time.zone.parse("May 1, 2014")
     expect(@user.end_of_week.day).to eq 2
-    Timecop.return
+    travel_back
   end
 
   it "returns the beginning of this week" do

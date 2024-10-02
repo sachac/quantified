@@ -1,13 +1,13 @@
-require 'spec_helper'
+require 'rails_helper'
 describe Record, type: :model do
   before :all do
-    Timecop.freeze
+    freeze_time
     @user = FactoryGirl.create(:confirmed_user)
     @cat = FactoryGirl.create(:record_category, user: @user)
-    @record_cat = FactoryGirl.create(:record_category, user: @user, category_type: 'record')
+    @record_cat = FactoryGirl.create(:record_category, user: @freeuser, category_type: 'record')
   end
   after :all do
-    Timecop.return
+    travel_back
   end
   describe '#data=' do
     before :each do
@@ -367,12 +367,12 @@ describe Record, type: :model do
       expect(o[1].year).to eq 2013
     end
     it "recognizes last+5m" do
-      Timecop.freeze(Date.new(2017, 1, 1, 8))
+      travel_to Date.new(2017, 1, 1, 8)
       cat = FactoryGirl.create(:record_category, :user => @user, :name => 'ABCX', :category_type => 'activity')
       previous_rec = FactoryGirl.create(:record, record_category: cat, user: @user, timestamp: Time.zone.now - 1.hour)
       o = Record.guess_time(@cat.name + ' last+5m', user: @user)
       (o[1] - previous_rec.timestamp).should eq 5.minutes
-      Timecop.return
+      travel_back
     end
   end
 

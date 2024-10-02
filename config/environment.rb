@@ -1,8 +1,8 @@
 # Load the rails application
-require File.expand_path('../application', __FILE__)
 
+require_relative 'application'
 # Initialize the rails application
-Home::Application.initialize!
+Rails.application.initialize!
 Time.zone = "Eastern Time (US & Canada)"
 #my_date_formats = { :default => '%Y-%m-%d' }
 #ActiveSupport::CoreExtensions::Time::Conversions::DATE_FORMATS.merge!(my_date_formats) 

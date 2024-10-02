@@ -1,4 +1,4 @@
-class Context < ActiveRecord::Base
+class Context < ApplicationRecord
   belongs_to :user
   has_many :context_rules
   accepts_nested_attributes_for :context_rules, :allow_destroy => true

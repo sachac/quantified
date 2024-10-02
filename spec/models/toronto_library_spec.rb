@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 describe TorontoLibrary do
   describe '#login' do
     it "finds the form in the login page" do

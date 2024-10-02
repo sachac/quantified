@@ -1,15 +1,15 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe LibraryItem do
   before do
-    Timecop.freeze(2014, 10, 22)
+    traveL_to Time.zone.local(2014, 10, 22)
     @u = FactoryGirl.create(:user)
     @i1 = FactoryGirl.create(:library_item, user: @u, status: 'due', due: Time.zone.today, public: true, library_id: '12345', title: 'Hello world', author: 'Joe Schmoe', checkout_date: Time.zone.now.yesterday)
     @i2 = FactoryGirl.create(:library_item, user: @u, status: 'due', due: Time.zone.today, public: false)
     @i3 = FactoryGirl.create(:library_item, user: @u, status: 'returned', due: Time.zone.today, public: true)
   end
   after do
-    Timecop.return
+    travel_back
   end
   it "keeps track of current items" do
     expect(LibraryItem.current_items(@u)).to eq [@i1, @i2]

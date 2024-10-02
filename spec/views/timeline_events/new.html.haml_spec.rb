@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe "timeline_events/new.html.haml", type: :view do
   before(:each) do

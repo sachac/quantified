@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe LocationHistory do
   context "when stuff changes location" do

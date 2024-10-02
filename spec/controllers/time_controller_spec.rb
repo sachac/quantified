@@ -1,12 +1,13 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe TimeController, :type => :controller  do
   before do
     @request.env["devise.mapping"] = Devise.mappings[:user]
-    Timecop.freeze(Time.zone.now.midnight)
+    travel_to Time.zone.now.midnight
+    freeze_time
   end
   after do
-    Timecop.return
+    travel_back
   end
   context "when logged in, but without data" do
     before do

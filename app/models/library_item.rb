@@ -1,4 +1,4 @@
-class LibraryItem < ActiveRecord::Base
+class LibraryItem < ApplicationRecord
   belongs_to :user
   belongs_to :toronto_library
   acts_as_taggable_on :tags

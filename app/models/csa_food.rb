@@ -1,4 +1,4 @@
-class CsaFood < ActiveRecord::Base
+class CsaFood < ApplicationRecord
   belongs_to :user
   belongs_to :food
   def self.log(account, options)

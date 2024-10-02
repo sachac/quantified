@@ -1,4 +1,4 @@
-class Day < ActiveRecord::Base
+class Day < ApplicationRecord
   belongs_to :user
   def self.today(user)
     y = user.days.find_or_create_by(date: Time.zone.today)

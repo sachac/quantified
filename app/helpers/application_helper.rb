@@ -185,7 +185,7 @@ module ApplicationHelper
 
   def record_category_full(category)
     return "(deleted?)" unless category
-    category.self_and_ancestors.reverse.map{ |c| link_to c.name, c }.join(' &raquo; ').html_safe
+    category.ancestors.to_a.concat([category]).map{ |c| link_to c.name, c }.join(' &raquo; ').html_safe
   end
 
   def record_data(data)

@@ -1,4 +1,4 @@
-class User < ActiveRecord::Base
+class User < ApplicationRecord
   has_many :clothing_logs
   has_many :receipt_items
   has_many :receipt_item_types

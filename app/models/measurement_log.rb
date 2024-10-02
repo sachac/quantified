@@ -1,4 +1,4 @@
-class MeasurementLog < ActiveRecord::Base
+class MeasurementLog < ApplicationRecord
   belongs_to :measurement
   after_save :update_measurement
   after_destroy :update_measurement

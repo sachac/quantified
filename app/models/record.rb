@@ -1,4 +1,4 @@
-class Record < ActiveRecord::Base
+class Record < ApplicationRecord
   belongs_to :record_category
   belongs_to :user
   serialize :data

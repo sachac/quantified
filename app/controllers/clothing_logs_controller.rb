@@ -84,7 +84,7 @@ class ClothingLogsController < ApplicationController
     @clothing_log.outfit_id = params[:outfit_id]
     if @clothing_log.save
       respond_with @clothing_log do |format|
-        format.html { redirect_to(:back, :notice => "Logged #{@clothing_log.date}.") }
+        format.html { redirect_back(fallback_location: root_path, :notice => "Logged #{@clothing_log.date}.") }
       end
     else
       respond_with @clothing_log

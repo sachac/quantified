@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 describe StuffHelper, :type => :helper do
   before :each do
     @user = create(:user, :demo)

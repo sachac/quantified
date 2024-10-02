@@ -1,4 +1,4 @@
-class Memory < ActiveRecord::Base
+class Memory < ApplicationRecord
 
   acts_as_taggable_on :tags
   has_many :links

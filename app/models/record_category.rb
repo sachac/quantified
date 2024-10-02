@@ -1,12 +1,16 @@
-class RecordCategory < ActiveRecord::Base
+require 'ancestry'
+class RecordCategory < ApplicationRecord
   require 'comma'
-  acts_as_tree_with_dotted_ids
+  # acts_as_tree_with_dotted_ids
+  has_ancestry
   serialize :data
   has_many :records
   belongs_to :user
   before_save :add_data
   validates_presence_of :name
   validates_presence_of :category_type
+  belongs_to :record_category, optional: true, foreign_key: 'parent_id'
+  has_many :record_categories
 
   after_initialize do
     if self.new_record?
@@ -16,7 +20,7 @@ class RecordCategory < ActiveRecord::Base
   end
   
   def add_data
-    self.full_name = self_and_ancestors.reverse.map{ |c| c.name }.join(' - ').html_safe
+    self.full_name = ancestors.map{ |c| c.name }.join(' - ').html_safe + ' - ' + self.name
   end
 
   def update_data(data_fields)

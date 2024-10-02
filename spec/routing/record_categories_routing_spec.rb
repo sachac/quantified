@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 describe RecordCategoriesController, :type => :routing do
   describe "routing" do
