@@ -1,6 +1,6 @@
 class ReceiptItemsController < ApplicationController
   respond_to :html, :xml, :json, :csv
-  before_filter :authenticate_managing!
+  before_action :authenticate_managing!
   
   # GET /receipt_items
   # GET /receipt_items.json

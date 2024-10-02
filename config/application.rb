@@ -58,5 +58,6 @@ module Home
         FactoryGirl.find_definitions
       end
     end
+    config.active_support.cache_format_version = 6.1
   end
 end

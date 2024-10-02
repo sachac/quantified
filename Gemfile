@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'rails', '~> 5.1'
+gem 'rails', '~> 7.0'
 gem 'dotenv-rails', :groups => [:development, :test]
 gem 'haml-rails' # templating language
 gem 'comma' # For easy CSV output
@@ -11,7 +11,7 @@ gem 'loofah', '>= 2.19.1'
 gem 'nokogiri', '>= 1.4'
 # gem "paperclip", ">= 2.0"
 gem 'will_paginate-bootstrap'
-gem 'will_paginate', '3.1.5'
+gem 'will_paginate' # , '3.1.5'
 gem 'color'
 gem 'narray'
 gem 'simple_form', '>= 5.0.3'          # easy form markup

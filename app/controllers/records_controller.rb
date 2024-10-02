@@ -24,6 +24,7 @@ class RecordsController < ApplicationController
       end
       @data = @records
     else
+      list = @records
       @records = @records.paginate :page => params[:page], :per_page => params[:per_page]
       base = @records
       @pre_split = @records
@@ -33,7 +34,7 @@ class RecordsController < ApplicationController
       @data = { 
         :current_page => base.current_page,
         :per_page => base.per_page,
-        :total_entries => base.total_entries,
+        :total_entries => list.pluck(:id).count,
         :entries => @records
       }
     end

@@ -57,7 +57,7 @@
                         = (values[date] || 0) / 3600.0
                     - date += 1.day
             %td
-              = link_to((show_full_path ? category.full_name : category.name), time_review_path(params.to_h.merge({:action => 'review', :controller => 'time', :parent_id => category.id})), :title => category.full_name)
+              = link_to((show_full_path ? category.full_name : category.name), time_review_path(params.to_unsafe_h.merge({:action => 'review', :controller => 'time', :parent_id => category.id})), :title => category.full_name)
               = " &raquo; ".html_safe if category.list?
             - date = summary_start.to_date
             - total = 0
