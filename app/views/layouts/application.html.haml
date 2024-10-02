@@ -6,7 +6,7 @@
         = yield :title
         \-
       quantified awesome
-    = stylesheet_link_tag "http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.8/themes/ui-lightness/jquery-ui.css"
+    = stylesheet_link_tag "https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css"
     = stylesheet_link_tag 'application', :media => 'screen, projection'
     - conditional_html
     - if session['layout'] == 'mobile'
@@ -23,8 +23,7 @@
       .content
         - if current_user.nil? and !(controller_name == 'sessions' || controller_name == 'registrations' || controller_name == 'passwords')
           .alert.alert-block.alert-info
-            Sacha Chua here. You can see how I've been using Quantified Awesome to track my life. I'm working on making it easier for other people to track their lives too. Interested? Join the experiment! (Warning: Here there be bugs.)
-            = link_to "Sign up!", new_user_session_path
+            I might wind down this project at some point (or keep it as just for me), so I've disabled signups. Please consider finding something else to use for tracking, and maybe we can figure out how to migrate your data to it. Thanks for joining me on this experiment!
         .flash
           - flash.each do |type, message|
             %div{:class => "alert alert-#{type}"}

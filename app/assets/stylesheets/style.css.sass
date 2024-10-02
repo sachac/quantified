@@ -35,16 +35,16 @@ form .clear-fix
 .actions .btn
   margin-right: 10px
 .category
-  @extend .row
+  @extend .row !optional
 .category_label
-  @extend .span3
+  @extend .span3 !optional
   text-align: right
   display: block
   float: left
 .category_detail
   padding-top: 13px
   margin-left: 230px
-  @extend .span13
+  @extend .span13 !optional
 .contexts .category_detail, .time .category_detail
   padding-top: 0
 .category_detail .pills
@@ -67,11 +67,11 @@ a[data-method]
 .status
   font-weight: normal
   display: inline
-  @extend .label
+  @extend .label !optional
 .private
   font-weight: normal
   display: inline
-  @extend .label
+  @extend .label !optional
 .collapsible > legend
   font-weight: bold
   margin-bottom: 10px
@@ -106,7 +106,7 @@ label.inline, .inline label
 .clearfix
   clear: both
 .full .login, .full .sign_up
-  @extend .span8
+  @extend .span8 !optional
   display: table-cell
 input.imagebtn
   height: auto
@@ -158,17 +158,17 @@ th.number, td.number, div.number
   text-align: right
 .form-horizontal
   .control-group
-    @extend .form-group
+    @extend .form-group !optional
   .control-label
-    @extend .col-sm-2
+    @extend .col-sm-2 !optional
   .control-group > .form-control, .form-group > .form-control, .form-group > .collection
-    @extend .col-sm-10
+    @extend .col-sm-10 !optional
   .help-block
-    @extend .col-sm-offset-2
+    @extend .col-sm-offset-2 !optional
   .control-label.boolean
     text-align: left
     font-weight: normal
-    @extend .col-sm-offset-2
+    @extend .col-sm-offset-2 !optional
   label.radio
     font-weight: normal
 .groceries

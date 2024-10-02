@@ -10,7 +10,7 @@
         %th Duration
       - if can? :manage_account, current_account  
         %th
-      %th Data
+        %th Data
   %tbody      
     - records.each do |record|
       %tr
@@ -26,8 +26,5 @@
           %td= duration record.duration
         - if can? :manage_account, current_account  
           %td= action_list(record)
-        %td
-          - if can? :manage_account, current_account or !record.private?
-            = record_data(record.data).html_safe
-          = object_labels(record)  
+          %td= record_data(record.data).html_safe
             

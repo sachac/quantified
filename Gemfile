@@ -1,28 +1,31 @@
 source 'http://rubygems.org'
 
-gem 'rails', '~> 4.2.11.3'
+gem 'rails', '~> 4.2'
 gem 'dotenv-rails', :groups => [:development, :test]
-gem 'haml-rails', '~> 0.4'  # templating language
+gem 'haml-rails'  # templating language
 gem 'comma' # For easy CSV output
 gem 'timeline_fu'
-gem 'mysql2', '~> 0.3.18'
-gem "paperclip", ">= 2.0"
+gem 'mysql2'
+gem 'net-imap', '~> 0.3.7'
+gem 'loofah', '~>2.19.1'
+gem 'nokogiri', '~>1.13.10'
+# gem "paperclip", ">= 2.0"
 gem 'will_paginate-bootstrap'
 gem 'color'
 gem 'narray'
 gem 'simple_form'          # easy form markup
-gem 'jquery-rails', '~> 2.1.4' # add to page
+gem 'jquery-rails' # add to page
 gem 'rails4-autocomplete'
 gem 'handles_sortable_columns'
 gem 'angular_rails_csrf'
-gem 'cancancan', '~> 1.9'  # permissions
+gem 'cancancan'  # permissions
 gem 'rails-observers'      # to trigger timeline events
 #gem 'n_gram'
 #gem 'statsample'
 # gem 'rails-assets-angular', :source => 'https://rails-assets.org'
 # gem 'rails-assets-angular-filter', :source => 'https://rails-assets.org'
 # gem 'rails-assets-angular-devise', :source => 'https://rails-assets.org'
-gem 'exception_notification', '~> 4', :require => 'exception_notifier'
+gem 'exception_notification', :require => 'exception_notifier'
 # group :under_consideration do
 #   gem 'rack-offline', :git => 'git://github.com/wycats/rack-offline.git'
 #   gem 'ruby-graphviz', :git => "https://github.com/glejeune/Ruby-Graphviz.git"
@@ -51,7 +54,7 @@ gem 'exception_notification', '~> 4', :require => 'exception_notifier'
 # Bundle the extra gems:
 # gem 'bj'
 # gem 'nokogiri'
-# gem 'sqlite3-ruby', :require => 'sqlite3'
+gem 'sqlite3-ruby', :require => 'sqlite3'
 # gem 'aws-s3', :require => 'aws/s3'
 
 # Bundle gems for the local environment. Make sure to
@@ -64,8 +67,7 @@ gem 'acts-as-taggable-on'
 gem 'chronic'  # time
 gem 'acts-as-tree-with-dotted-ids'
 gem 'nifty-generators'
-gem 'devise', '~> 3.4.0'
-gem 'devise_invitable'
+gem 'devise'
 #gem 'aizuchi'
 gem 'omniauth'
 gem 'omniauth-facebook'
@@ -73,17 +75,19 @@ gem 'omniauth-twitter'
 gem 'omniauth-google-oauth2'
 #gem 'barometer'
 gem 'mechanize'  # for talking to the library website
-gem 'rails-settings-cached', '~> 0.4'
-gem 'bootstrap-sass', '~> 3.4.1'
-gem 'sass-rails', '~> 4.0.2'
-gem 'sprockets', '~> 2.11.0'
+gem 'rails-settings-cached'
+gem 'bootstrap-sass'
+gem 'sass-rails'
+gem 'sprockets'
+gem 'sqlite3', '~> 1.3.6'
 
+gem 'ffi', '~> 1.16.3'
 group :development do
-  gem 'compass-rails', '~> 1.1.2'
-  gem 'coffee-rails', '~> 4'
+  gem 'compass-rails', '~> 3.0.2'
+  gem 'coffee-rails'
   gem 'uglifier'
-  gem 'libv8', '~> 3.11'
-  gem 'therubyracer', '~> 0.11.4'
+  gem 'libv8'
+  gem 'therubyracer', '~> 0.12.3'
 end
 
 group :development, :test do
@@ -94,12 +98,12 @@ end
 
 group :test do
   gem 'database_cleaner'
-  gem 'rails-assets-angular-mocks', :source => 'https://rails-assets.org'
+  gem 'rails-assets-angular-mocks', :source => 'http://insecure.rails-assets.org'
   gem 'selenium-webdriver'
   gem 'forgery'
   gem 'factory_girl_rails'  
   gem 'email_spec'
-  gem 'rspec', '~> 3.6'
+  gem 'rspec'
   gem 'rspec-mocks'
   gem 'guard-cucumber'
   gem 'spring'
@@ -112,7 +116,7 @@ group :test do
   gem 'guard-spring'
   gem 'cucumber'
   gem 'fakeweb'
-  gem 'simplecov', '>= 0.8', :require => false
+  gem 'simplecov', :require => false
   gem 'cucumber-rails', :require => false
   gem 'capybara'
   gem 'cucumber_factory'
@@ -122,4 +126,3 @@ group :console do
   gem 'fastercsv'  # loading CSVs
   gem 'yaml_db'
 end
-

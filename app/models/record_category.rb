@@ -1,10 +1,10 @@
 class RecordCategory < ActiveRecord::Base
   require 'comma'
   acts_as_tree_with_dotted_ids
+  serialize :data
   has_many :records
   belongs_to :user
   before_save :add_data
-  serialize :data
   validates_presence_of :name
   validates_presence_of :category_type
 

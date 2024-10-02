@@ -21,7 +21,7 @@ class TimeController < ApplicationController
     authorize! :view_time, current_account
     params[:start] ||= current_account.beginning_of_week.advance(:weeks => -1).strftime('%Y-%m-%d')
     params[:category_tree] ||= 'full'
-    params[:end] ||= Time.zone.now.strftime('%Y-%m-%d')
+    params[:end] ||= Time.zone.now.advance(:days => 1).strftime('%Y-%m-%d')
     prepare_filters [:date_range, :category_tree, :parent_id, :display_type, :zoom_level]
     @categories = current_account.record_categories.index_by(&:id)
     @summary_start = Time.zone.parse(params[:start])

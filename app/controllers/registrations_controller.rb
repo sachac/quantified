@@ -1,12 +1,10 @@
 class RegistrationsController < Devise::RegistrationsController
+  def new
+    redirect_to new_user_session_path and return
+    super
+  end
   def create
-    build_resource(resource_params)
-    if resource.save
-      go_to new_user_session_path, notice: "Thank you for signing up! Please check your e-mail for a message from sacha@quantifiedawesome.com containing your activation link. You can also log in right now through Google or Facebook."
-    else
-      clean_up_passwords resource
-      respond_with resource
-    end
+    redirect_to new_user_session_path and return
   end
   private
   def resource_params

@@ -1,6 +1,8 @@
 .git
 .gitignore
 README.md
+docker
+docker-compose*yml
 
 .*#
 
@@ -9,12 +11,16 @@ README.md
 #
 .env
 .env.sample
+.env.*
 *.rbc
 capybara-*.html
 log
 tmp
 db/*.sqlite3
 db/*.sqlite3-journal
+
+db/backup
+db/data.yml
 public/system
 coverage/
 spec/tmp
@@ -25,7 +31,7 @@ quantified.sql
 
 .ruby-version
 .ruby-gemset
-
+ruby-with-env
 .rvmrc
 
 # if using bower-rails ignore default bower_components path bower.json files

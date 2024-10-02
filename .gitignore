@@ -20,3 +20,7 @@ chef/
 node_modules
 vendor/assets/bower_components
 log/
+db/data.yml
+db/backup/
+.env*
+docker-compose.*yml

@@ -2,25 +2,17 @@
 # SQLite version 3.x
 #   gem install sqlite3
 development:
-  adapter: mysql2
-  encoding: utf8
-  pool: 5
-  username: <%= ENV['DB_USER'] %> 
-  password: <%= ENV['DB_PASSWORD'] %>
-  host: <%= ENV['DB_HOST'] %>
-  database: <%= ENV['DB_DATABASE'] %>_dev
+  adapter: sqlite3
+  encoding: utf83
+  database: db/development.sqlite3
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
 test: &test
-  adapter: mysql2
-  encoding: utf8
-  pool: 5
-  username: <%= ENV['DB_USER'] %> 
-  password: <%= ENV['DB_PASSWORD'] %>
-  host: <%= ENV['DB_HOST'] %>
-  database: <%= ENV['DB_DATABASE'] %>_test
+  adapter: sqlite3
+  encoding: utf83
+  database: db/development.sqlite3
 
 production:
   adapter: mysql2
@@ -29,6 +21,7 @@ production:
   username: <%= ENV['DB_USER'] %> 
   password: <%= ENV['DB_PASSWORD'] %>
   host: <%= ENV['DB_HOST'] %>
+  port: <%= ENV['DB_PORT'] %>
   database: <%= ENV['DB_DATABASE'] %>
 
 api:
@@ -37,14 +30,9 @@ api:
   pool: 5
   username: <%= ENV['DB_USER'] %> 
   password: <%= ENV['DB_PASSWORD'] %>
+  port: <%= ENV['DB_PORT'] %>
   host: <%= ENV['DB_HOST'] %>
   database: <%= ENV['DB_DATABASE'] %>
 
-wordpress:
-  adapter: mysql2
-  encoding: utf8
-  database: wp_sacha
-  username: home
-  
 cucumber:
   <<: *test

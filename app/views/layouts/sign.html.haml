@@ -22,8 +22,7 @@
       .content
         - if current_user.nil? and !(controller_name == 'sessions' || controller_name == 'registrations' || controller_name == 'passwords')
           .alert-message.block-message.success
-            Sacha Chua here. You can see how I've been using Quantified Awesome to track my life. I'm working on making it easier for other people to track their lives too. Interested? Join the experiment! (Warning: Here there be bugs.)
-            = link_to "Sign up!", new_user_session_path
+            Sacha Chua here. I'm starting to wind down Quantified Awesome, so no more sign-ups for now. If you're using this, please consider shifting to a different system. Thanks for being curious!
         .flash
           - flash.each do |type, message|
             %div{:class => "alert-message #{type}"}
