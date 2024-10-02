@@ -11,7 +11,6 @@ webrat.log
 config/initializers/local.rb
 public/assets/*
 config/initializers/secret_token.rb
-public/assets/*
 config/newrelic.yml
 coverage
 public/coverage
@@ -24,3 +23,4 @@ db/data.yml
 db/backup/
 .env*
 docker-compose.*yml
+db/*.sqlite3
