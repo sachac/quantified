@@ -30,7 +30,7 @@ class TimeController < ApplicationController
     range = @summary_start..@summary_end
     # Pick the appropriate level of review
     zoom_level = params[:zoom_level] || ''
-    if !zoom_level.blank? and [:daily, :weekly, :monthly].include?(zoom_level.to_sym)
+    if !zoom_level.blank? and [:daily, :weekly, :monthly, :yearly].include?(zoom_level.to_sym)
       @zoom = zoom_level.to_sym
     else
       @zoom = Record.choose_zoom_level(range)
