@@ -1,9 +1,7 @@
 class StuffController < ApplicationController
-  autocomplete :stuff, :name, :full => true
   skip_authorization_check :only => [:autocomplete_stuff_name]
   load_and_authorize_resource
   respond_to :html, :xml, :json, :csv
-  handles_sortable_columns
   # GET /stuff
   # GET /stuff.xml
   def index

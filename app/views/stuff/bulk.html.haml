@@ -3,7 +3,7 @@
 = form_tag bulk_update_stuff_index_path, method: :post, class: 'form-horizontal' do
   .control-group
     = label_tag :location, 'Location', class: 'control-label'
-    .controls= autocomplete_field_tag :location, params[:location], autocomplete_stuff_path, :autofocus => true, :placeholder => 'Location name', :required => true
+    .controls= text_field_tag :location, params[:location], :placeholder => 'Location name', :required => true
   .control-group
     = label_tag :batch, 'Items', class: 'control-label'
     .controls

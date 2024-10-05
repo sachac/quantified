@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'rails', '~> 7.0'
+gem 'rails', '~> 7.2.1'
 gem 'dotenv-rails', :groups => [:development, :test]
 gem 'haml-rails' # templating language
 gem 'comma' # For easy CSV output

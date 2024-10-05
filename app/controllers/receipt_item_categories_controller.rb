@@ -1,7 +1,6 @@
 class ReceiptItemCategoriesController < ApplicationController
   before_action :authenticate_managing!
   respond_to :html, :csv, :json, :xml
-  handles_sortable_columns
   # GET /receipt_item_categories
   # GET /receipt_item_categories.json
   def index

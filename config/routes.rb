@@ -55,8 +55,8 @@ Rails.application.routes.draw do
   match 'toronto_libraries/refresh_all' => 'toronto_libraries#refresh_all', :as => :library_refresh, :via => [:get, :post]
   match 'toronto_libraries/:id/request' => 'toronto_libraries#request_items', :as => :request_library_items, :via => :post
 
-  match 'record_categories/autocomplete' => 'record_categories#autocomplete_record_category_full_name', :as => :autocomplete_record_category, :via => :get
-  match 'stuff/autocomplete' => 'stuff#autocomplete_stuff_name', :as => :autocomplete_stuff, :via => :get
+  # match 'record_categories/autocomplete' => 'record_categories#autocomplete_record_category_full_name', :as => :autocomplete_record_category, :via => :get
+  # match 'stuff/autocomplete' => 'stuff#autocomplete_stuff_name', :as => :autocomplete_stuff, :via => :get
   resources :record_categories do
     member do
       post :track
@@ -155,9 +155,6 @@ Rails.application.routes.draw do
   match 'clothing/analyze(/:start(/:end))' => 'clothing#analyze', :as => :analyze_clothing, :via => :get
   match 'clothing/graph(/:start(/:end))' => 'clothing#graph', :as => :graph_clothing, :via => :get
   resources :clothing do
-    collection do
-      get :autocomplete_clothing_name
-    end
     member do
       get :clothing_logs
     end

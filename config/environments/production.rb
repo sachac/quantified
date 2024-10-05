@@ -65,5 +65,5 @@ Rails.application.configure do
 #    :exception_recipients => %w{sacha@quantifiedawesome.com}
   #  end
    config.active_record.dump_schema_after_migration = false
-
+   config.active_storage.service = :local
 end

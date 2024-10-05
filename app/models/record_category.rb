@@ -78,7 +78,7 @@ class RecordCategory < ApplicationRecord
     parent = options[:parent]
     categories = user.record_categories.select('color, id, full_name, category_type, dotted_ids').index_by(&:id)
     if parent
-      all_children = parent.all_children.index_by(&:id)
+      all_children = parent.descendants.index_by(&:id)
     end
     # Cache the record categories for performance instead of retrieving them one at a time
     records.each do |rec|

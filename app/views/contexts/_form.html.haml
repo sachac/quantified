@@ -15,8 +15,8 @@
           %th Location
         = f.fields_for :context_rules do |r|
           %tr
-            %td= r.autocomplete_field :stuff, autocomplete_stuff_path, value: r.object.stuff ? r.object.stuff.name : '', class: 'form-control'
-            %td= r.autocomplete_field :location, autocomplete_stuff_path, value: r.object.location ? r.object.location.name : '', class: 'form-control'
+            %td= r.input :stuff   # r.autocomplete_field :stuff, autocomplete_stuff_path, value: r.object.stuff ? r.object.stuff.name : '', class: 'form-control'
+            %td= r.input :location  # r.autocomplete_field :location, autocomplete_stuff_path, value: r.object.location ? r.object.location.name : '', class: 'form-control'
   .form-group
     .col-sm-offset-2
       = f.submit 'Save', :class => 'btn btn-primary'

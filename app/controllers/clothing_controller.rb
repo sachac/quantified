@@ -1,6 +1,4 @@
 class ClothingController < ApplicationController
-  autocomplete :clothing, :name, :display_value => :autocomplete_view, :extra_data => [:number], :full => true
-  handles_sortable_columns
   respond_to :html, :xml, :json, :csv
   # GET /clothing
   # GET /clothing.xml

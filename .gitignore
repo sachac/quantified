@@ -24,3 +24,4 @@ db/backup/
 .env*
 docker-compose.*yml
 db/*.sqlite3
+config/master.key

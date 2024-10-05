@@ -1,8 +1,6 @@
 class ReceiptItemTypesController < ApplicationController
   before_action :authenticate_managing!
-  autocomplete :receipt_item_type, :friendly_name, :full => true
   respond_to :html, :xml, :json, :csv
-  handles_sortable_columns
   # GET /receipt_item_types
   # GET /receipt_item_types.json
   def index

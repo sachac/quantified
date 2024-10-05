@@ -1,6 +1,5 @@
 class RecordCategoriesController < ApplicationController
   skip_authorization_check :only => [:autocomplete_record_category_full_name]
-  autocomplete :record_category, :full_name, :full => true, :scopes => [:active]
   respond_to :html, :json, :csv, :xml
   
   # GET /record_categories

@@ -1,4 +1,4 @@
-FROM ruby:2.1.10
+FROM ruby:3.1.0
 
 RUN apt-get -y update -qq
 RUN groupadd -g 1000 quantified && useradd -m -u 1000 -g quantified quantified

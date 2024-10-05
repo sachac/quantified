@@ -1,5 +1,4 @@
 class LibraryItemsController < ApplicationController
-  handles_sortable_columns
   before_action :authenticate_user!, :except => [:index, :show, :tag, :current]
   respond_to :html, :xml, :json, :csv
   # GET /library_items

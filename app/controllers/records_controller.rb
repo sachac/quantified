@@ -18,7 +18,10 @@ class RecordsController < ApplicationController
     if params[:category_type]
       @records = @records.where('record_categories.category_type=?', [params[:category_type]])
     end
-    if request.format.csv?
+    if params[:count]
+      @records = @records.limit(params[:count])
+    end
+    if request.format.csv? or request.format.json?
       if params[:split] and params[:split] == 'split'
         @records = Record.split(@records)
       end

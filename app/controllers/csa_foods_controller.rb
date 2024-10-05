@@ -1,5 +1,4 @@
 class CsaFoodsController < ApplicationController
-  autocomplete :food, :name
   respond_to :html, :xml, :json, :csv
 
   # GET /csa_foods

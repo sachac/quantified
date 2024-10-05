@@ -1,5 +1,4 @@
 class MemoriesController < ApplicationController
-  handles_sortable_columns
   respond_to :html, :xml, :json, :csv
   # GET /memories
   # GET /memories.xml
