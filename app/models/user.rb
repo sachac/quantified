@@ -182,6 +182,9 @@ class User < ApplicationRecord
     record
   end
 
+  def to_s
+    return "User: #{self.id} - #{self.email}"
+  end
   def self.find_record(username)
     where(["username = :value OR email = :value", { :value => username }]).first
   end

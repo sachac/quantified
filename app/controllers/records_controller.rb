@@ -1,6 +1,9 @@
+require 'csv'
 class RecordsController < ApplicationController
   respond_to :html, :json, :csv, :xml
   skip_before_action :verify_authenticity_token, :only => [:create]
+  skip_before_action :authenticate_user!, :only => [:index]
+
   # GET /records
   # GET /records.xml
   def index
@@ -41,7 +44,8 @@ class RecordsController < ApplicationController
         :entries => @records
       }
     end
-    respond_with @data, :location => params[:destination] 
+
+    respond_with @data, {all_attributes: managing?} #, :location => params[:destination]
   end
 
   # GET /records/1

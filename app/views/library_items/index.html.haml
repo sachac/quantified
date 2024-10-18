@@ -11,7 +11,7 @@
   %li= pluralize number_with_delimiter(@library_items.collect(&:pages).compact.sum), "page"
   %li= "$" + ("%.2f" % @library_items.collect(&:price).compact.sum)
 
-= download_as_spreadsheet
+= download_data
 %table.table.table-bordered
   %tr
     %th{:width => 100}= sortable_column 'Due', :column => 'due'

@@ -4,7 +4,6 @@
   %li{:class => active_class(active, 'review')}= link_to 'Summary', time_review_path(:start => params[:start], :end => params[:end])
   %li{:class => active_class(active, 'categories')}= link_to 'Categories', record_categories_path
   %li{:class => active_class(active, 'records')}= link_to 'Logs', records_path(:start => params[:start], :end => params[:end])
-  %li{:class => active_class(active, 'batch')}= link_to 'Batch', batch_records_path
   - if managing?
+    %li{:class => active_class(active, 'batch')}= link_to 'Batch', batch_records_path
     %li{:class => active_class(active, 'goals')}= link_to 'Goals', goals_path
-      

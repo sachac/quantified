@@ -18,7 +18,7 @@
         %li{:class => active_menu('/memories')}= link_to 'memories', memories_path
         - if user_signed_in?
           %li{:class => active_menu('/user')}= link_to 'account', edit_user_path(current_account.id)
-          %li= link_to t("web-app-theme.logout", :default => "log out"), destroy_user_session_path, :method => "delete"
+          %li= link_to t("web-app-theme.logout", :default => "log out"), destroy_user_session_path, data: { turbo_method: :delete }, :method => "delete"
         - else
           %li.track= link_to t('app.user.login'), new_user_session_path
         - if can? :send_feedback, @account

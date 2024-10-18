@@ -1,5 +1,10 @@
+require "application_responder"
+
 require './lib/exceptions'
 class ApplicationController < ActionController::Base
+  self.responder = ApplicationResponder
+  respond_to :html
+
   include Exceptions
   check_authorization :unless => :devise_controller?
   protect_from_forgery
@@ -25,7 +30,12 @@ class ApplicationController < ActionController::Base
   end
 
   def current_account
-    current_user || User.where('role=?', 'demo').first || User.where('email=?', 'sacha@sachachua.com').first 
+    if current_user and current_user.id then
+      return current_user
+    else
+      account = User.where('email=?', 'sacha@sachachua.com').first || User.where('role=?', 'demo').first
+      return account
+    end
   end  
 
   protected
@@ -61,7 +71,8 @@ class ApplicationController < ActionController::Base
 
     @account = current_account
     # Set the timezone
-    Time.zone = @account.settings.timezone if @account and @account.settings.timezone
+    # TODO: Add this setting again someday
+    # Time.zone = @account.settings.timezone if @account and @account.settings.timezone
     true
   end
   def notice_layout!

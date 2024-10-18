@@ -1,6 +1,7 @@
 # Challenges: 
 # I have to manually create my time graphs
 class TimeController < ApplicationController
+  skip_before_action :authenticate_user!, :only => [:index, :review, :graph, :dashboard]
   include ApplicationHelper
   respond_to :html, :xml, :json, :csv
   # POST

@@ -9,7 +9,7 @@
     - if managing?
       = link_to 'Create record category', new_record_category_path
       |
-    = link_to 'View all / batch edit', tree_record_categories_path
+      = link_to 'View all / batch edit', tree_record_categories_path
   = render 'list', list: @record_categories, show_all: show_all
 - else
   - if managing?

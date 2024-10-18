@@ -1,5 +1,7 @@
 class HomeController < ApplicationController
-  skip_authorization_check :only => [:feedback, :send_feedback, :privacy]
+  skip_authorization_check :only => [:feedback, :send_feedback, :privacy, :index]
+  skip_before_action :authenticate_user!, :only => [:feedback, :send_feedback, :privacy, :index]
+
   def index
     authorize! :view_dashboard, current_account
     flash.keep

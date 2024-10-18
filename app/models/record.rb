@@ -548,4 +548,24 @@ class Record < ApplicationRecord
   def to_s
     self.timestamp.to_s + " (" + self.duration.to_s + ") " + self.full_name
   end
+
+  def self.public_attributes
+    return [:id, :user_id, :timestamp, :end_timestamp, :record_category_id, :full_name, :name, :category, :duration, :date]
+  end
+  def as_json(options={})
+    if options[:all_attributes] then
+      super()
+    else
+      super(:only => Record.public_attributes)
+    end
+  end
+
+  def as_csv(options={})
+    if options[:all_attributes] then
+      super()
+    else
+      super(:only => Record.public_attributes)
+    end
+  end
+
 end

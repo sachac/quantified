@@ -9,6 +9,7 @@ en:
     sign_up: Sign up
     updated: User updated.
   general:
+    download_data: Download data
     download_as_spreadsheet: Download as spreadsheet
     save: Save
     delete: Delete

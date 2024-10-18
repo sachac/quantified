@@ -17,8 +17,8 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_06_135521) do
     t.string "clothing_type", limit: 255
     t.string "notes", limit: 255
     t.integer "labeled", default: 1
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.string "status", limit: 255
     t.float "hue"
     t.float "saturation"
@@ -31,7 +31,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_06_135521) do
     t.string "image_file_name", limit: 255
     t.integer "image_file_size"
     t.string "image_content_type", limit: 255
-    t.datetime "image_updated_at"
+    t.datetime "image_updated_at", precision: nil
     t.index ["user_id"], name: "idx_clothing_index_clothing_on_user_id"
   end
 
@@ -48,8 +48,8 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_06_135521) do
     t.integer "clothing_b_id"
     t.integer "clothing_log_a_id"
     t.integer "clothing_log_b_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.integer "user_id"
     t.date "clothing_log_date"
     t.index ["user_id"], name: "idx_clothing_matches_index_clothing_matches_on_user_id"
@@ -59,16 +59,16 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_06_135521) do
     t.integer "stuff_id"
     t.integer "location_id"
     t.integer "context_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
   end
 
   create_table "contexts", force: :cascade do |t|
     t.string "name", limit: 255
     t.text "rules"
     t.integer "user_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
   end
 
   create_table "csa_foods", force: :cascade do |t|
@@ -77,8 +77,8 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_06_135521) do
     t.string "unit", limit: 255
     t.string "disposition", limit: 255
     t.text "notes"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.date "date_received"
     t.integer "user_id"
     t.index ["user_id"], name: "idx_csa_foods_index_csa_foods_on_user_id"
@@ -91,8 +91,8 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_06_135521) do
     t.integer "library_checked_out"
     t.integer "library_pickup"
     t.integer "library_transit"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.integer "user_id"
     t.index ["user_id"], name: "idx_days_index_days_on_user_id"
   end
@@ -102,8 +102,8 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_06_135521) do
     t.text "notes_html"
     t.date "date"
     t.string "status", limit: 255
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.integer "decision_id"
     t.integer "user_id"
     t.index ["user_id"], name: "idx_decision_logs_index_decision_logs_on_user_id"
@@ -115,8 +115,8 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_06_135521) do
     t.text "notes"
     t.text "notes_html"
     t.string "status", limit: 255
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.integer "rating"
     t.integer "user_id"
     t.index ["user_id"], name: "idx_decisions_index_decisions_on_user_id"
@@ -125,8 +125,8 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_06_135521) do
   create_table "foods", force: :cascade do |t|
     t.string "name", limit: 255
     t.string "notes", limit: 255
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.integer "user_id"
     t.index ["user_id"], name: "idx_foods_index_foods_on_user_id"
   end
@@ -136,8 +136,8 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_06_135521) do
     t.string "label", limit: 255
     t.string "expression", limit: 255
     t.string "period", limit: 255
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.string "status", limit: 255
   end
 
@@ -146,8 +146,8 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_06_135521) do
     t.integer "grocery_list_id"
     t.string "quantity", limit: 255
     t.string "status", limit: 255
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.integer "receipt_item_category_id"
   end
 
@@ -156,15 +156,15 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_06_135521) do
     t.string "email", limit: 255
     t.integer "user_id"
     t.string "status", limit: 255
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
   end
 
   create_table "grocery_lists", force: :cascade do |t|
     t.integer "user_id"
     t.string "name", limit: 255
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
   end
 
   create_table "library_items", force: :cascade do |t|
@@ -174,8 +174,8 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_06_135521) do
     t.string "author", limit: 255
     t.date "due"
     t.integer "rating"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.string "status", limit: 255
     t.date "checkout_date"
     t.date "return_date"
@@ -198,8 +198,8 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_06_135521) do
     t.string "link_b_type", limit: 255
     t.text "data"
     t.integer "user_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.index ["link_a_id", "link_a_type"], name: "idx_links_index_links_on_link_a_id_and_link_a_type"
     t.index ["link_b_id", "link_b_type"], name: "idx_links_index_links_on_link_b_id_and_link_b_type"
     t.index ["user_id"], name: "idx_links_index_links_on_user_id"
@@ -208,10 +208,10 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_06_135521) do
   create_table "location_histories", force: :cascade do |t|
     t.integer "stuff_id"
     t.integer "location_id"
-    t.datetime "datetime"
+    t.datetime "datetime", precision: nil
     t.text "notes"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.integer "user_id"
     t.index ["user_id"], name: "idx_location_histories_index_location_histories_on_user_id"
   end
@@ -219,19 +219,19 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_06_135521) do
   create_table "locations", force: :cascade do |t|
     t.string "name", limit: 255
     t.text "notes"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.integer "user_id"
     t.index ["user_id"], name: "idx_locations_index_locations_on_user_id"
   end
 
   create_table "measurement_logs", force: :cascade do |t|
     t.integer "measurement_id"
-    t.datetime "datetime"
+    t.datetime "datetime", precision: nil
     t.text "notes"
     t.decimal "value", precision: 10
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.integer "user_id"
     t.index ["user_id"], name: "idx_measurement_logs_index_measurement_logs_on_user_id"
   end
@@ -243,8 +243,8 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_06_135521) do
     t.decimal "average", precision: 10
     t.decimal "max", precision: 10
     t.decimal "min", precision: 10
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.decimal "sum", precision: 10
     t.integer "user_id"
     t.index ["user_id"], name: "idx_measurements_index_measurements_on_user_id"
@@ -255,12 +255,12 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_06_135521) do
     t.text "body"
     t.string "access", limit: 255
     t.integer "user_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.datetime "timestamp"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
+    t.datetime "timestamp", precision: nil
     t.integer "rating"
     t.string "date_entry", limit: 255
-    t.datetime "sort_time"
+    t.datetime "sort_time", precision: nil
     t.index ["name"], name: "idx_memories_index_memories_on_name"
     t.index ["user_id"], name: "idx_memories_index_memories_on_user_id"
   end
@@ -268,16 +268,16 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_06_135521) do
   create_table "receipt_item_categories", force: :cascade do |t|
     t.string "name", limit: 255
     t.integer "user_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
   end
 
   create_table "receipt_item_types", force: :cascade do |t|
     t.string "receipt_name", limit: 255
     t.string "friendly_name", limit: 255
     t.integer "user_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "receipt_item_category_id"
   end
 
@@ -294,8 +294,8 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_06_135521) do
     t.decimal "unit_price", precision: 10, scale: 3
     t.decimal "total", precision: 10, scale: 2
     t.string "notes", limit: 255
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "receipt_item_type_id"
   end
 
@@ -306,8 +306,8 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_06_135521) do
     t.string "dotted_ids", limit: 255
     t.string "category_type", limit: 255
     t.text "data"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.string "full_name", limit: 255
     t.string "color", limit: 255
     t.integer "active", default: 1, null: false
@@ -321,13 +321,13 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_06_135521) do
     t.integer "user_id"
     t.string "source_name", limit: 255
     t.integer "source_id"
-    t.datetime "timestamp"
+    t.datetime "timestamp", precision: nil
     t.integer "record_category_id"
     t.text "data"
-    t.datetime "end_timestamp"
+    t.datetime "end_timestamp", precision: nil
     t.integer "duration"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.date "date"
     t.integer "manual", default: 0
     t.index ["record_category_id"], name: "idx_records_index_records_on_record_category_id"
@@ -340,8 +340,8 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_06_135521) do
     t.string "uid", limit: 255
     t.string "uname", limit: 255
     t.string "uemail", limit: 255
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
   end
 
   create_table "signups", force: :cascade do |t|
@@ -378,6 +378,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_06_135521) do
     t.string "tagger_type", limit: 255
     t.string "context", limit: 255
     t.datetime "created_at", precision: nil
+    t.index ["taggable_id", "taggable_type", "context"], name: "idx_taggings"
   end
 
   create_table "tags", force: :cascade do |t|
@@ -402,6 +403,9 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_06_135521) do
     t.string "entry_type", limit: 255
     t.integer "duration"
     t.string "source", limit: 255
+    t.index ["catOne", "catTwo", "catThree"], name: "idx_tap_log_records_index_cat"
+    t.index ["end_timestamp"], name: "idx_tap_log_records_index_tap_log_records_on_end_timestamp"
+    t.index ["timestamp"], name: "idx_tap_log_records_index_tap_log_records_on_timestamp"
   end
 
   create_table "time_records", force: :cascade do |t|

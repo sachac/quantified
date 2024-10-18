@@ -255,8 +255,8 @@ module ApplicationHelper
     end
   end
 
-  def download_as_spreadsheet
-    content_tag(:div, link_to(t('general.download_as_spreadsheet'), params.to_unsafe_h.merge(:format => :csv)), :class => 'spreadsheet')
+  def download_data
+    content_tag(:div, link_to(t('general.download_data'), params.to_unsafe_h.merge(:format => :json)), :class => 'data')
   end
 
   def feedback_link(text = 'send feedback')

@@ -1,9 +1,13 @@
 require_relative 'boot'
 require 'rails/all'
+require 'csv'
 Bundler.require(*Rails.groups)
 
 module Home
   class Application < Rails::Application
+    # Use the responders controller from the responders gem
+    config.app_generators.scaffold_controller :responders_controller
+
     if (Rails.env.development? || Rails.env.test?) 
       Dotenv.load Rails.root.join('.env')
     end
