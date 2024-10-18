@@ -90,19 +90,18 @@ end
 
 group :development, :test do
   gem 'bower-rails'
-  gem 'rspec-rails'
-  gem 'coveralls', require: false
+    gem 'coveralls', require: false
+    gem 'rspec-rails', '~> 7.0.0'
 end
 
 group :test do
-  gem 'database_cleaner'
+  gem 'database_cleaner-active_record'
   gem 'rails-assets-angular-mocks', :source => 'http://insecure.rails-assets.org'
   gem 'selenium-webdriver'
   gem 'forgery'
   gem 'factory_girl_rails'  
   gem 'email_spec'
-  gem 'rspec'
-  gem 'rspec-mocks'
+    gem 'rspec-mocks'
   gem 'guard-cucumber'
   gem 'spring'
   gem 'spring-commands-rspec'

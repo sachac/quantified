@@ -8,23 +8,15 @@ FactoryGirl.define do
     password_confirmation { password }
     trait :admin do
       role 'admin'
-      after(:create) { |user| user.confirm! }
-    end
-    trait(:confirmed) do |f|
-      f.after(:create) { |user| user.confirm! }
     end
     trait(:demo) do
       role 'demo'
-      after(:create) { |user| user.confirm! }
     end
   end
-  factory :confirmed_user, :parent => :user do |f|
-    f.after(:create) { |user| user.confirm! }
-  end
-  factory :demo_user, :parent => :confirmed_user do
+  factory :demo_user, :parent => :user do
     role 'demo'
   end
-  factory :admin, :parent => :confirmed_user do 
+  factory :admin, :parent => :user do
     role 'admin'
   end
   factory :stuff do 

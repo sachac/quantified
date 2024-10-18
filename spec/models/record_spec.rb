@@ -2,7 +2,7 @@ require 'rails_helper'
 describe Record, type: :model do
   before :all do
     freeze_time
-    @user = FactoryGirl.create(:confirmed_user)
+    @user = FactoryGirl.create(:user)
     @cat = FactoryGirl.create(:record_category, user: @user)
     @record_cat = FactoryGirl.create(:record_category, user: @freeuser, category_type: 'record')
   end
@@ -79,13 +79,15 @@ describe Record, type: :model do
   describe '#update_next' do
     context 'when the next activity has an ending timestamp' do
       it "adjusts the next activity's starting timestamp" do
-        r1 = FactoryGirl.create(:record, user: @user, record_category: @cat, timestamp: Time.zone.now - 30.minutes, end_timestamp: Time.zone.now - 15.minutes)
-        r2 = FactoryGirl.create(:record, user: @user, record_category: @cat, timestamp: Time.zone.now - 1.hour)
-        r2.end_timestamp = r2.end_timestamp + 1.minute
-        r2.save
-        r2.update_next
-        expect(r1.reload.timestamp.to_s).to eq r2.end_timestamp.to_s
-        expect(r1.duration).to eq r1.end_timestamp - r1.timestamp
+        freeze_time do
+          r1 = FactoryGirl.create(:record, user: @user, record_category: @cat, timestamp: Time.zone.now - 30.minutes, end_timestamp: Time.zone.now - 15.minutes)
+          r2 = FactoryGirl.create(:record, user: @user, record_category: @cat, timestamp: Time.zone.now - 1.hour)
+          r2.end_timestamp = r2.end_timestamp + 1.minute
+          r2.save
+          r2.update_next
+          expect(r1.reload.timestamp.to_s).to eq r2.end_timestamp.to_s
+          expect(r1.duration).to eq r1.end_timestamp - r1.timestamp
+        end
       end
     end
     context 'when the next activity has no ending timestamp' do
@@ -250,7 +252,7 @@ describe Record, type: :model do
 
   describe '.refresh_from_tap_log' do
     before :each do
-      @user3 = FactoryGirl.create(:confirmed_user)
+      @user3 = FactoryGirl.create(:user)
     end
     it "loads the information" do
       file = File.new(Rails.root.join('spec/fixtures/files/sample-tap-log.csv'))
@@ -368,6 +370,7 @@ describe Record, type: :model do
     end
     it "recognizes last+5m" do
       travel_to Date.new(2017, 1, 1, 8)
+      freeze_time
       cat = FactoryGirl.create(:record_category, :user => @user, :name => 'ABCX', :category_type => 'activity')
       previous_rec = FactoryGirl.create(:record, record_category: cat, user: @user, timestamp: Time.zone.now - 1.hour)
       o = Record.guess_time(@cat.name + ' last+5m', user: @user)
@@ -404,7 +407,7 @@ END
 
   describe '#create_batch' do
     before :each do
-      @user2 = FactoryGirl.create(:confirmed_user)
+      @user2 = FactoryGirl.create(:user)
       @cat_abcx = FactoryGirl.create(:record_category, user: @user2, name: 'ABCX')
       @cat_xyz = FactoryGirl.create(:record_category, user: @user2, name: 'XYZ')
     end

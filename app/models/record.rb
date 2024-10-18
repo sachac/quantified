@@ -97,25 +97,25 @@ class Record < ApplicationRecord
   end
 
   def update_next
-    if !self.manual and self.record_category.category_type == 'activity'
-      next_activity = self.next_activity
-      if next_activity and self.end_timestamp and next_activity.timestamp != self.end_timestamp
-        next_activity.timestamp = self.end_timestamp
-        if next_activity.end_timestamp
-          next_activity.duration = next_activity.end_timestamp - next_activity.timestamp
+    if self.manual == 0 and self.record_category.category_type == 'activity'
+      x = self.next_activity
+      if x and self.end_timestamp and x.timestamp != self.end_timestamp
+        x.timestamp = self.end_timestamp
+        if x.end_timestamp
+          x.duration = x.end_timestamp - x.timestamp
         else
-          next_activity.duration = nil
+          x.duration = nil
         end
-        next_activity.save
+        x.save
       end
     end
   end
   def update_previous
-    previous_activity = self.previous_activity
-    if self.record_category.category_type == 'activity' and previous_activity and !previous_activity.manual? and (!previous_activity.end_timestamp or previous_activity.end_timestamp != self.timestamp)
-      previous_activity.end_timestamp = self.timestamp
-      previous_activity.duration = previous_activity.end_timestamp - previous_activity.timestamp
-      previous_activity.save
+    x = self.previous_activity
+    if self.record_category.category_type == 'activity' and x and x.manual == 0 and (!x.end_timestamp or x.end_timestamp != self.timestamp)
+      x.end_timestamp = self.timestamp
+      x.duration = x.end_timestamp - x.timestamp
+      x.save
     end
   end
 
@@ -128,7 +128,7 @@ class Record < ApplicationRecord
     self.next.activities.where('(timestamp != end_timestamp OR end_timestamp IS NULL)').first
   end
   def calculated_duration(provided_start_timestamp = nil, provided_end_timestamp = Time.zone.now)
-    return [Time.zone.now, provided_end_timestamp, self.end_timestamp || Time.zone.now].min - [self.timestamp, provided_start_timestamp || self.timestamp].max
+    return ([Time.zone.now, provided_end_timestamp, self.end_timestamp || Time.zone.now].min - [self.timestamp, provided_start_timestamp || self.timestamp].max).round
   end
   def self.recalculate_durations(user, start_time = nil, end_time = nil)
     span = user.records
@@ -137,7 +137,7 @@ class Record < ApplicationRecord
     span.where('manual = FALSE').update_all('duration = NULL, end_timestamp = NULL')
     last_time_record = nil
     span.joins(:record_category).where(:record_categories => { :category_type => 'activity' }).readonly(false).order('timestamp DESC').each do |x|
-      unless x.manual
+      unless x.manual != 0
         if last_time_record and x.end_timestamp != last_time_record.timestamp
           x.end_timestamp = last_time_record.timestamp
           if x.end_timestamp
@@ -232,7 +232,7 @@ class Record < ApplicationRecord
       attributes = {:user => user, :timestamp => time, :record_category => cat, :data => {:number => row['number'], :rating => row['rating'], :note => row['note']}.reject { |k,v| v.blank? }, :source_id => row['_id'], :source_name => 'tap_log'}
       if time
         if x
-          x.update_attributes(attributes)
+          x.update(attributes)
         else
           x = Record.create(attributes)
         end
@@ -475,7 +475,6 @@ class Record < ApplicationRecord
         cat.data = [{'key' => 'note', 'label' => 'Note', 'type' => 'string'}]
         cat.save!
       end
-      puts(cat)
       if cat.data
         if record_data
           record_key = cat.data.first['key']
@@ -546,4 +545,7 @@ class Record < ApplicationRecord
 
   fires :new, :on => :create, :actor => :user, :secondary_subject => :record_category
 
+  def to_s
+    self.timestamp.to_s + " (" + self.duration.to_s + ") " + self.full_name
+  end
 end

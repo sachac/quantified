@@ -12,7 +12,7 @@ development:
 test: &test
   adapter: sqlite3
   encoding: utf83
-  database: db/development.sqlite3
+  database: db/test.sqlite3
 
 production:
   adapter: sqlite3
