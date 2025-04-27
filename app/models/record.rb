@@ -504,7 +504,7 @@ class Record < ApplicationRecord
       records = account.records.order('timestamp DESC')
     end
     if options[:start] and options[:end]
-      records = records.where(:timestamp => options[:start]..options[:end])
+      records = records.where('end_timestamp >= ? and timestamp < ?', options[:start], options[:end])
     end
     unless options[:filter_string].blank?
       query = "%" + options[:filter_string].downcase + "%"
@@ -550,7 +550,7 @@ class Record < ApplicationRecord
   end
 
   def self.public_attributes
-    return [:id, :user_id, :timestamp, :end_timestamp, :record_category_id, :full_name, :name, :category, :duration, :date]
+    return [:id, :user_id, :timestamp, :end_timestamp, :record_category_id, :full_name, :name, :category, :duration, :date, :color]
   end
   def as_json(options={})
     if options[:all_attributes] then
