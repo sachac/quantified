@@ -48,6 +48,7 @@ class TimeController < ApplicationController
     params[:end] ||= Time.zone.now.strftime('%Y-%m-%d')
     prepare_filters [:date_range]
     @range = Time.zone.parse(params[:start]).to_date..Time.zone.parse(params[:end]).to_date
+    @num_days = @range.end - @range.begin
     entries = Record.get_entries_for_time_range(current_account, @range)
     @records = Record.prepare_graph(@range, entries)
     unsorted = RecordCategory.summarize(:key => :date, :range => @range, :records => entries, :zoom => :daily, :user => current_account, :tree => :individual)[:rows]
