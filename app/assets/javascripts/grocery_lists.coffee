@@ -23,6 +23,5 @@ class GroceriesController
     $scope.loadData()
     
     $interval($scope.loadData, 5000)
-angular.module('groceries', ['Devise', 'angular.filter'])
-  .controller 'GroceriesController', GroceriesController
-
+# angular.module('groceries', ['Devise', 'angular.filter'])
+#   .controller 'GroceriesController', GroceriesController
