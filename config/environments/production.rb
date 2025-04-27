@@ -51,10 +51,10 @@ Rails.application.configure do
    # Disable Rails's static asset server (Apache or nginx will already do this)
    config.serve_static_assets = true
    config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present?
-   config.assets.js_compressor = :uglifier
+   # config.assets.js_compressor = :uglifier
 
    config.assets.compress = true
-   config.assets.compile = false
+   config.assets.compile = true
    config.assets.digest = true
   config.action_mailer.default_url_options = { :host => "quantifiedawesome.com" }
 
