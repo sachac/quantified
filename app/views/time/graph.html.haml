@@ -3,10 +3,10 @@
 = render 'filters' 
 
 %h2 Schedule
-#canvas{style: 'width: 900px; height: 500px;'}
+#canvas{style: 'width: 100%; height: 500px;'}
 
 %h2 Totals (sorted by category)
-#canvas_totals{style: 'width: 900px; height: 500px'}
+#canvas_totals{style: 'width: 100%; height: 500px'}
 
 :javascript
   var canvasID = "canvas";
@@ -17,25 +17,31 @@
   var canvas_totals;
   var yMargin = 10;
   var xMargin = 40;
+  canvas = Raphael("canvas");
+  canvas_totals = Raphael("canvas_totals");
+  canvas.canvas.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
+  canvas_totals.canvas.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
   function setupCanvas(numDays) {
     canvasWidth = $("#canvas").width();
     canvasHeight = $("#canvas").height();
     dayWidth = (canvasWidth - xMargin) / numDays;
-    dayWidth = Math.min(dayWidth, 20);
+    dayWidth = Math.min(dayWidth, 30);
     dayHeight = canvasHeight - yMargin * 2;
     hourHeight = dayHeight * 3600.0 / 86400.0;
-    canvas = Raphael("canvas");
-    canvas_totals = Raphael("canvas_totals");
+    if (canvas) {
+      canvas.clear();
+      canvas_totals.clear();
+    }
+    canvas.setViewBox(0, 0, canvasWidth, canvasHeight, true);
+    canvas.setSize('100%', '100%');
+    canvas_totals.setViewBox(0, 0, canvasWidth, canvasHeight, true);
+    canvas_totals.setSize('100%', '100%');
     // Labels
-    canvas.text(xMargin - 5, yMargin, "12 AM").attr({'text-anchor': 'end'});
-    canvas.text(xMargin - 5, yMargin + 3 * hourHeight, "3 AM").attr({'text-anchor': 'end'});
-    canvas.text(xMargin - 5, yMargin + 6 * hourHeight, "6 AM").attr({'text-anchor': 'end'});
-    canvas.text(xMargin - 5, yMargin + 9 * hourHeight, "9 AM").attr({'text-anchor': 'end'});
-    canvas.text(xMargin - 5, yMargin + 12 * hourHeight, "12 PM").attr({'text-anchor': 'end'});
-    canvas.text(xMargin - 5, yMargin + 15 * hourHeight, "3 PM").attr({'text-anchor': 'end'});
-    canvas.text(xMargin - 5, yMargin + 18 * hourHeight, "6 PM").attr({'text-anchor': 'end'});
-    canvas.text(xMargin - 5, yMargin + 21 * hourHeight, "9 PM").attr({'text-anchor': 'end'});
-    canvas.text(xMargin - 5, yMargin + 24 * hourHeight, "12 AM").attr({'text-anchor': 'end'});
+    var times = ["12 AM", "3 AM", "6 AM", "9 AM", "12 PM", "3 PM", "6 PM", "9 PM", "12 AM"];
+    times.forEach(function(time, i) {
+      canvas.text(xMargin - 5, yMargin + (i * 3) * hourHeight, time)
+          .attr({'text-anchor': 'end'});
+    });
   }
 
   var sets = new Array();
@@ -43,7 +49,7 @@
     x = (dayOffset * dayWidth) + xMargin;
     y = (startOffset * dayHeight / 86400.0) + yMargin;
     height = (endOffset - startOffset) * dayHeight / 86400;
-    r = canvas.rect(x, y, dayWidth, height).attr({fill: color, stroke: '#000', title: title, href: link});
+    r = canvas.rect(x, y, dayWidth, height).attr({fill: color, title: title, href: window.location.origin + link, stroke: 'rgba(0,0,0,0.2)'});
     if (!sets[entryClass]) { sets[entryClass] = canvas.set(); }
     sets[entryClass].push(r);
     r.hover(
@@ -51,17 +57,28 @@
       function(event) { sets[entryClass].attr({'fill': color}) });
   }
 
-  $(document).ready(function() {
-    setupCanvas(#{@records.size});
-    #{ @records.map { |day_offset, row| row.map { |entry| graph_time_entry('canvas', day_offset, entry) }.join('') }.join('') }
-    #{ @totals.map { |days| 
+  function initializeGraphs() {
+    setupCanvas(#{@num_days});
+    #{ @records.map { |day_offset, row| row.map { |entry| graph_time_entry('canvas', day_offset, entry) }.join('\n') }.join('\n') }
+    #{ @totals.map { |days|
        day = days[0]
        list = days[1]
-       list.map { |item| 
+       list.map { |item|
          category = @categories[item[0]] if item[0].is_a? Integer
          total = item[1]
          next if category.nil?
          graph_time_total('canvas_totals', @range, day, category, total) }.join('') }.join('') }
+  }
+  $(document).ready(function() {
+    initializeGraphs();
   });
+  $(window).resize(function() {
+    // Use debounce to prevent excessive recalculation
+    clearTimeout(window.resizeTimer);
+    window.resizeTimer = setTimeout(function() {
+      initializeGraphs();
+    }, 250);
+  });
+
 
 = render "hierarchical_graph"    
