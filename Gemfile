@@ -12,7 +12,7 @@ gem 'nokogiri', '>= 1.4'
 # gem "paperclip", ">= 2.0"
 gem 'will_paginate-bootstrap'
 gem 'will_paginate' # , '3.1.5'
-gem 'color'
+gem 'color', '~> 1.7.1'
 gem 'narray'
 gem 'simple_form', '>= 5.0.3'          # easy form markup
 gem 'jquery-ui-rails'
