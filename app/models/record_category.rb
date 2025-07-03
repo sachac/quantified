@@ -90,6 +90,7 @@ class RecordCategory < ApplicationRecord
         when :full
           if categories[rec.record_category_id].has_attribute?(:ancestry) and categories[rec.record_category_id].ancestry
             ids = categories[rec.record_category_id].ancestry.split('/')
+            ids.append(rec.record_category_id)
           end
         when :next_level
           if options[:parent]
@@ -172,7 +173,7 @@ class RecordCategory < ApplicationRecord
   end
 
   def tree_records
-    self.user.records.joins(:record_category).where('ancestry LIKE ?', self.ancestry + '/%')
+    self.user.records.joins(:record_category).where('(record_categories.ancestry = ? OR record_categories.ancestry LIKE ?)', if self.ancestry then self.ancestry + '/' + self.id.to_s else self.id.to_s end, if self.ancestry then self.ancestry + '/' + self.id.to_s + '/%' else self.id.to_s + '/%' end)
   end
 
   # Given: 1.2.3, 1.2.3.4.5, return 4 (the next-level child of parent)
@@ -230,7 +231,7 @@ class RecordCategory < ApplicationRecord
   end
 
   def child_records
-    self.user.records.joins(:record_category).where('(record_categories.ancestry = ? OR record_categories.ancestry LIKE ?)', self.ancestry, self.ancestry + "/%")
+    self.user.records.joins(:record_category).where('(record_categories.ancestry = ? OR record_categories.ancestry LIKE ?)', if self.ancestry then self.ancestry + '/' + self.id.to_s else self.id.to_s end, if self.ancestry then self.ancestry + '/' + self.id.to_s + '/%' else self.id.to_s + '/%' end)
   end
 
   def cumulative_time(range = nil)

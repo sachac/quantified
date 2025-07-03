@@ -24,7 +24,7 @@ class TimeController < ApplicationController
     params[:category_tree] ||= 'full'
     params[:end] ||= Time.zone.now.advance(:days => 1).strftime('%Y-%m-%d')
     prepare_filters [:date_range, :category_tree, :parent_id, :display_type, :zoom_level]
-    @categories = current_account.record_categories.index_by(&:id)
+    @categories = current_account.record_categories.select('color, id, full_name, category_type, ancestry').index_by(&:id)
     @summary_start = Time.zone.parse(params[:start])
     @summary_end = Time.zone.parse(params[:end])
     @category = !params[:parent_id].blank? ? current_account.record_categories.find(params[:parent_id]) : nil
