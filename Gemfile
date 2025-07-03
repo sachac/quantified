@@ -86,6 +86,7 @@ group :development do
   gem 'libv8'
   gem 'therubyracer', '>= 0.12.3'
   gem 'public_suffix', '>= 5.1.1'
+  gem "error_highlight", ">= 0.4.0"
 end
 
 group :development, :test do
