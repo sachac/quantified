@@ -91,6 +91,8 @@ class RecordCategory < ApplicationRecord
           if categories[rec.record_category_id].has_attribute?(:ancestry) and categories[rec.record_category_id].ancestry
             ids = categories[rec.record_category_id].ancestry.split('/')
             ids.append(rec.record_category_id)
+          else
+            ids = [rec.record_category_id]
           end
         when :next_level
           if options[:parent]
