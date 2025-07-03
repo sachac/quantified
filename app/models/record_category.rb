@@ -76,7 +76,7 @@ class RecordCategory < ApplicationRecord
     end
     # Filter by categories
     parent = options[:parent]
-    categories = user.record_categories.select('color, id, full_name, category_type, dotted_ids').index_by(&:id)
+    categories = user.record_categories.select('color, id, full_name, category_type, ancestry').index_by(&:id)
     if parent
       all_children = parent.descendants.index_by(&:id)
     end
@@ -89,8 +89,8 @@ class RecordCategory < ApplicationRecord
       if categories[rec.record_category_id]
         case options[:tree]
         when :full
-          if categories[rec.record_category_id].dotted_ids
-            ids = categories[rec.record_category_id].dotted_ids.split('.')
+          if categories[rec.record_category_id].has_attribute?(:ancestry) and categories[rec.record_category_id].ancestry
+            ids = categories[rec.record_category_id].ancestry.split('/')
           end
         when :next_level
           if options[:parent]
