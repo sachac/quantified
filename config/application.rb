@@ -53,7 +53,6 @@ module Home
     config.to_prepare do
       Devise::SessionsController.layout "sign"
     end
-    config.active_record.yaml_column_permitted_classes = [ActionController::Parameters, ActiveSupport::HashWithIndifferentAccess]
     ActionDispatch::Callbacks.after do
       # Reload the factories
       if (Rails.env.test?) and FactoryGirl.factories.blank? # first init will load factories, this should only run on subsequent reloads
@@ -64,6 +63,6 @@ module Home
     end
     config.active_support.cache_format_version = 7
     # https://stackoverflow.com/questions/74312283/tried-to-load-unspecified-class-activesupporttimewithzone-psychdisallowed
-    config.active_record.yaml_column_permitted_classes = [Symbol, Date, Time, ActiveSupport::TimeWithZone, ActiveSupport::TimeZone]
+    config.active_record.yaml_column_permitted_classes = [ActionController::Parameters, ActiveSupport::HashWithIndifferentAccess, Symbol, Date, Time, ActiveSupport::TimeWithZone, ActiveSupport::TimeZone]
   end
 end
