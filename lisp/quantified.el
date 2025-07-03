@@ -122,6 +122,60 @@ PAYLOAD may contain extra arguments to certain API calls."
 
 ;;; SVG
 
+(defun quantified-svg-to-text (svg)
+	(with-temp-buffer
+		(svg-print svg)
+		(buffer-string)))
+
+(defun quantified-svg-days (day num-days &optional direction g modify-func records)
+	(let* ((start (quantified-midnight day))
+				 (next-day (quantified-next-midnight day))
+				 (end (quantified-next-midnight day nil num-days))
+				 (direction (or direction 'horizontal))
+				 (time-factor (/ 100.0 (- (time-to-seconds end) (time-to-seconds next-day))))
+				 (day-size 20)
+				 (main-size 1000)
+				 (i 0))
+		(unless records
+			(setq records (quantified-records (format-time-string "%Y-%m-%d" start)
+															(format-time-string "%Y-%m-%d" end))))
+		(unless g
+			(setq g
+						(cond
+						 ((eq direction 'horizontal)
+							(svg-create main-size (* day-size num-days)))
+						 (t
+							(svg-create (* day-size num-days) main-size))))
+			(dom-set-attribute g 'viewBox
+												 (format "0 0 %s %s" (dom-attr g 'width)
+																 (dom-attr g 'height)))
+			(dom-set-attribute g 'preserveAspectRatio "none"))
+		(dotimes (i num-days)
+			(let ((group (dom-node 'g
+															(if (eq direction 'horizontal)
+																	`((width . ,main-size)
+																		(height . ,day-size)
+																		(transform . ,(format "translate(0 %d)" (* i day-size))))
+																`((width . ,day-size)
+																	(height . ,main-size)
+																	(transform . ,(format "translate(%d 0)" (* i day-size)))))))
+						(day-records (seq-filter
+									 (lambda (o)
+										 (let-alist o
+											 (let* ((record-start (date-to-time .timestamp))
+															(record-end (date-to-time .end_timestamp)))
+												 (or (and (time-less-p record-end next-day)
+																	(time-less-p start record-end))
+														 (and (time-less-p record-start next-day)
+																	(time-less-p start record-end))))))
+									 records)))
+				(dom-append-child g group)
+				(quantified-svg-day start direction group nil
+									day-records))
+			(setq start next-day
+						next-day (quantified-next-midnight start)))
+		g))
+
 (defun quantified-svg-day (day direction &optional g modify-func records)
 	"Add segments for RECORDS for DAY for G.
 DIRECTION should be 'horizontal or 'vertical."
@@ -130,47 +184,57 @@ DIRECTION should be 'horizontal or 'vertical."
 				 (time-factor (/ 100.0 (- (time-to-seconds end) (time-to-seconds start)))))
 		(unless records
 			(setq records (quantified-records (format-time-string "%Y-%m-%d" start)
-																				(format-time-string "%Y-%m-%d" end))))
-		(setq g (or g (svg-create 500 20)))
+															(format-time-string "%Y-%m-%d" end))))
+		(unless g
+			(cond
+			 ((eq direction 'horizontal)
+				(setq g (svg-create 500 20))
+				(dom-set-attribute g 'viewBox "0 0 500 20"))
+			 (t
+				(setq g (svg-create 20 500))
+				(dom-set-attribute g 'viewBox "0 0 20 500")))
+			(dom-set-attribute g 'preserveAspectRatio "none"))
 		(dolist (o records)
 			(let-alist o
-				;; calculate time offset from start
-				(let* ((record-start (date-to-time .timestamp))
-							 (record-end (date-to-time .end_timestamp))
-							 (clamped-start (if (time-less-p record-start start) start record-start))
-							 (clamped-end (if (time-less-p end record-end) end record-end))
-							 (start-pos (format "%.3f%%" (* time-factor (- (time-to-seconds clamped-start) (time-to-seconds start)))))
-							 (record-dim (format "%.3f%%" (* time-factor (- (time-to-seconds clamped-end) (time-to-seconds clamped-start)))))
-							 (attrs `((fill . ,.color) (stroke . ,.color) (stroke-opacity . 0.3)))
-							 (rect
-								(if (eq direction 'horizontal)
+				(when (and .timestamp .end_timestamp)
+					;; calculate time offset from start
+					(let* ((record-start (date-to-time .timestamp))
+								 (record-end (date-to-time .end_timestamp))
+								 (clamped-start (if (time-less-p record-start start) start record-start))
+								 (clamped-end (if (time-less-p end record-end) end record-end))
+								 (start-pos-n (* time-factor (- (time-to-seconds clamped-start) (time-to-seconds start))))
+								 (dim-n (* time-factor (- (time-to-seconds clamped-end) (time-to-seconds clamped-start))))
+								 (attrs `((fill . ,.color) (stroke . ,.color) (stroke-opacity . 0.3)))
+								 (rect
+									(if (eq direction 'horizontal)
+											(dom-node 'rect
+																 `((width . ,(format "%.3f%%" dim-n))
+																	 (height . "100%")
+																	 (x . ,(format "%.3f%%" start-pos-n))
+																	 (y . 0)
+																	 ,@attrs))
 										(dom-node 'rect
-															`((width . ,record-dim)
-																(height . "100%")
-																(x . ,start-pos)
-																(y . 0)
-																,@attrs))
-									(dom-node 'rect
-														`((height . ,record-dim)
-															(width . "100%")
-															(y . ,start-pos)
-															(x . 0)
-															,@attrs)))))
-					(dom-append-child
-					 rect
-					 (dom-node 'title nil
-										 (format "%s - %s: %s"
-														 (format-time-string
-															"%H:%M"
-															(date-to-time (alist-get 'timestamp o)))
-														 (format-time-string
-															"%H:%M"
-															(date-to-time (alist-get 'end_timestamp o)))
-														 (alist-get 'full_name o))))
-					(when modify-func
-						(setq rect (funcall modify-func g rect o)))
-					(when rect
-						(dom-append-child g rect)))))
+															 `((height . ,(format "%.3f%%" dim-n))
+																 (width . "100%")
+																 (y . ,(format "%.3f%%" start-pos-n))
+																 (x . 0)
+																 ,@attrs)))))
+						(when (and (>= start-pos-n 0) (> dim-n 0))
+							(dom-append-child
+							 rect
+							 (dom-node 'title nil
+													(format "%s - %s: %s"
+																	(format-time-string
+																	 "%Y-%m-%d %H:%M"
+																	 (date-to-time (alist-get 'timestamp o)))
+																	(format-time-string
+																	 "%H:%M"
+																	 (date-to-time (alist-get 'end_timestamp o)))
+																	(alist-get 'full_name o))))
+							(when modify-func
+								(setq rect (funcall modify-func g rect o)))
+							(when rect
+								(dom-append-child g rect)))))))
 		g))
 
 (defun quantified-midnight (day &optional zone)
@@ -184,13 +248,14 @@ DIRECTION should be 'horizontal or 'vertical."
 			(elt day 5)
 			nil -1 zone))))
 
-(defun quantified-next-midnight (day &optional zone)
-	"Return Emacs time value for the day after DAY at midnight in local time or ZONE if specified."
+(defun quantified-next-midnight (day &optional zone num-days)
+	"Return Emacs time value for the day after DAY at midnight in local time or ZONE if specified.
+If NUM-DAYS is specified, add that many days."
 	(let ((day (decode-time (if (stringp day) (date-to-time day) day))))
 		(encode-time
 		 (list
 			0 0 0
-			(1+ (elt day 3))
+			(+ (elt day 3) (or num-days 1))
 			(elt day 4)
 			(elt day 5)
 			nil -1 zone))))
