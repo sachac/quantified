@@ -1,7 +1,6 @@
 require 'ancestry'
 class RecordCategory < ApplicationRecord
   require 'comma'
-  # acts_as_tree_with_dotted_ids
   has_ancestry
   serialize :data
   has_many :records
@@ -173,7 +172,7 @@ class RecordCategory < ApplicationRecord
   end
 
   def tree_records
-    self.user.records.joins(:record_category).where('dotted_ids LIKE ?', self.dotted_ids + '.%')
+    self.user.records.joins(:record_category).where('ancestry LIKE ?', self.ancestry + '/%')
   end
 
   # Given: 1.2.3, 1.2.3.4.5, return 4 (the next-level child of parent)
@@ -231,7 +230,7 @@ class RecordCategory < ApplicationRecord
   end
 
   def child_records
-    self.user.records.joins(:record_category).where('(record_categories.dotted_ids = ? OR record_categories.dotted_ids LIKE ?)', self.dotted_ids, self.dotted_ids + ".%")
+    self.user.records.joins(:record_category).where('(record_categories.ancestry = ? OR record_categories.ancestry LIKE ?)', self.ancestry, self.ancestry + "/%")
   end
 
   def cumulative_time(range = nil)
@@ -309,7 +308,7 @@ class RecordCategory < ApplicationRecord
     full_name
     color
     parent_id
-    dotted_ids
+    ancestry
     data 'Data' do |data| data.to_json if data and data.size > 0 end
   end
 
