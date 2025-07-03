@@ -37,6 +37,7 @@
     canvas_totals.setViewBox(0, 0, canvasWidth, canvasHeight, true);
     canvas_totals.setSize('100%', '100%');
     // Labels
+    canvas.rect(0, 0, xMargin, '100%').attr({fill: 'white', stroke: 'none'});
     var times = ["12 AM", "3 AM", "6 AM", "9 AM", "12 PM", "3 PM", "6 PM", "9 PM", "12 AM"];
     times.forEach(function(time, i) {
       canvas.text(xMargin - 5, yMargin + (i * 3) * hourHeight, time)
