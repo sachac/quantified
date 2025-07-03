@@ -73,21 +73,24 @@ class TimeController < ApplicationController
     @cumulative_totals = Hash.new { |h,k| h[k] = 0 }
     # Reconstruct the category tree
     # Goal: parent -> { label: c{ children { ... } }
-    @categories.values.sort_by(&:dotted_ids).reverse.each do |x|
+    (@categories.values.sort_by { |x| x.ancestry or ''}).reverse.each do |x|
       start = @data
-      x.dotted_ids.split(".").each do |id|
-        @cumulative_totals[id.to_i] += @category_totals[x.id]
-        start[:children] ||= Hash.new
-        start[:total] ||= 0
-        start[:total] += @category_totals[x.id]
-        start[:children][id.to_i] ||= Hash.new
-        start = start[:children][id.to_i]
+      if x.ancestry
+        x.ancestry.split("/").each do |id|
+          @cumulative_totals[id.to_i] += @category_totals[x.id]
+          start[:children] ||= Hash.new
+          start[:total] ||= 0
+          start[:total] += @category_totals[x.id]
+          start[:children][id.to_i] ||= Hash.new
+          start = start[:children][id.to_i]
+        end
       end
       start[:name] = x.name
       start[:label] = "#{x.name} - #{duration @cumulative_totals[x.id]} (#{'%d' % ((@cumulative_totals[x.id] * 100.0) / @total)}%) "
       start[:total] = @category_totals[x.id]
       start[:color] = x.get_color || '#ccc'
-      start[:children] = start[:children].values if start[:children]
+      # ??
+      # start[:children] = start[:children].values if start[:children]
     end
     @total = duration(@total)
     @data[:label] = "Time - #{@total}"

@@ -211,7 +211,7 @@ class RecordCategoriesController < ApplicationController
     if params[:record_category][:data]
       @record_category.update_data(params[:record_category][:data])
     end
-    if @record_category.update_attributes(record_category_params)
+    if @record_category.update(record_category_params)
       add_flash :notice, t('record_category.updated')
     end
     respond_with @record_category
