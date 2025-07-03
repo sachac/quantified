@@ -118,7 +118,7 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.8.0)
-    color (1.7.1)
+    color (1.8)
     comma (3.2.2)
       activesupport (>= 3.0.0)
     compass (1.0.3)
@@ -505,7 +505,7 @@ DEPENDENCIES
   capybara (>= 3.36)
   chronic
   coffee-rails
-  color
+  color (~> 1.8)
   comma
   compass-rails
   coveralls
