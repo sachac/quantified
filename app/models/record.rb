@@ -504,7 +504,7 @@ class Record < ApplicationRecord
       records = account.records.order('timestamp DESC')
     end
     if options[:start] and options[:end]
-      records = records.where('end_timestamp >= ? and timestamp < ?', options[:start], options[:end])
+      records = records.where('(end_timestamp >= ? and timestamp < ?) or (end_timestamp is null and timestamp >= ? AND timestamp < ?)', options[:start], options[:end], options[:start], options[:end])
     end
     unless options[:filter_string].blank?
       query = "%" + options[:filter_string].downcase + "%"
